@@ -3096,8 +3096,9 @@ pako@~1.0.5:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.6.tgz#0101211baa70c4bca4a0f63f2206e97b7dfaf258"
 
-"paratii-contracts@file:../paratii-contracts":
+"paratii-contracts@github:Paratii-Video/paratii-contracts#master":
   version "0.0.1"
+  resolved "https://codeload.github.com/Paratii-Video/paratii-contracts/tar.gz/654eafa1cc06147a9ed3b33189461170f12447f7"
   dependencies:
     babel-cli "^6.26.0"
     default-options "^1.0.0"
