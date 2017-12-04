@@ -18,4 +18,4 @@ It is still under development.
 
 In the future, the library will also offer access to IPFS and other aspects of the Paratii ecosystem
 
-See [example-session.md](./example-session.md) and [details.md](./details.md) for more information.
+See [example-session.md](./example-session.md) and [api.md](./api.md) for more information.

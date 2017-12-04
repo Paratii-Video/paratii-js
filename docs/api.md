@@ -26,6 +26,17 @@ The Paratii object serves as the general entry point for interacting with the fa
       registry: '0x23445abcdefg', // optional - the address where the Paratii Contract registry can be found
     })
 
+TBD: #7, 
+
+### `config`
+
+TBD: see issue #6
+
+`config` holds the configuration of the paratii object:
+
+    paratii.config // returns { 'provider': 'http:/...', ''}
+
+
 ### `deployAllContracts()`
 
 This function will deploy are contracts and link them to the
