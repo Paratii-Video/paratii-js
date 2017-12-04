@@ -60,7 +60,9 @@
       "it",
       "web3"
     ],
-    "ignore": []
+    "ignore": [
+      "dist"
+    ]
   },
   "pre-commit": [
     "lint-fix",
