@@ -359,72 +359,44 @@ var Paratii = function Paratii(opts) {
     return PARATIIREGISTRYADDRESS;
   }
 
-  function getOrDeployContracts() {
-    var contracts;
-    return regeneratorRuntime.async(function getOrDeployContracts$(_context6) {
+  // async function getOrDeployContracts () {
+  //   // get the paratii contracts if a registryaddress is known, otherwise deploy them
+  //   let contracts
+  //   if (PARATIIREGISTRYADDRESS) {
+  //     contracts = await getContracts()
+  //   } else {
+  //     console.log('deploying new contracts')
+  //     contracts = await deployContracts()
+  //     console.log('setting registry address')
+  //     PARATIIREGISTRYADDRESS = contracts['ParatiiRegistry'].address
+  //   }
+  //   return contracts
+  // }
+
+  function diagnose() {
+    var msg, address, msgs, log, registry, i, name;
+    return regeneratorRuntime.async(function diagnose$(_context6) {
       while (1) {
         switch (_context6.prev = _context6.next) {
           case 0:
-            // get the paratii contracts if a registryaddress is known, otherwise deploy them
-            contracts = void 0;
-
-            if (!PARATIIREGISTRYADDRESS) {
-              _context6.next = 7;
-              break;
-            }
-
-            _context6.next = 4;
-            return regeneratorRuntime.awrap(getContracts());
-
-          case 4:
-            contracts = _context6.sent;
-            _context6.next = 13;
-            break;
-
-          case 7:
-            console.log('deploying new contracts');
-            _context6.next = 10;
-            return regeneratorRuntime.awrap(deployContracts());
-
-          case 10:
-            contracts = _context6.sent;
-
-            console.log('setting registry address');
-            PARATIIREGISTRYADDRESS = contracts['ParatiiRegistry'].address;
-
-          case 13:
-            return _context6.abrupt('return', contracts);
-
-          case 14:
-          case 'end':
-            return _context6.stop();
-        }
-      }
-    }, null, this);
-  }
-
-  function diagnose() {
-    var msg, address, log, registry, i, name;
-    return regeneratorRuntime.async(function diagnose$(_context7) {
-      while (1) {
-        switch (_context7.prev = _context7.next) {
-          case 0:
             log = function log(msg) {
-              console.log(msg);
+              msgs.push(msg);
             };
 
-            // print some info and try to find imperfections...
-            msg = void 0, address = void 0;
+            // return an array of strings with diagnostic info
+            msg = void 0, address = void 0, msgs = void 0;
+
+            msgs = [];
 
             log('Paratii was initialized with the following options:');
             log(config);
             address = getRegistryAddress();
             log('checking deployed code of Registry...');
-            _context7.next = 8;
+            _context6.next = 9;
             return regeneratorRuntime.awrap(web3.eth.getCode(address));
 
-          case 8:
-            msg = _context7.sent;
+          case 9:
+            msg = _context6.sent;
 
             if (msg === '0x') {
               log('ERROR: no code was found on the registry address ' + address);
@@ -435,45 +407,46 @@ var Paratii = function Paratii(opts) {
               // log(msg)
             }
             log('checking for addresses');
-            _context7.next = 13;
+            _context6.next = 14;
             return regeneratorRuntime.awrap(getContract('ParatiiRegistry'));
 
-          case 13:
-            registry = _context7.sent;
+          case 14:
+            registry = _context6.sent;
             i = 0;
 
-          case 15:
+          case 16:
             if (!(i < contractNames.length)) {
-              _context7.next = 25;
+              _context6.next = 26;
               break;
             }
 
             name = contractNames[i];
 
             if (!(name !== 'ParatiiRegistry')) {
-              _context7.next = 22;
+              _context6.next = 23;
               break;
             }
 
-            _context7.next = 20;
+            _context6.next = 21;
             return regeneratorRuntime.awrap(registry.methods.getContract(name).call());
 
-          case 20:
-            address = _context7.sent;
+          case 21:
+            address = _context6.sent;
 
             log('address of ' + name + ': ' + address);
 
-          case 22:
+          case 23:
             i++;
-            _context7.next = 15;
+            _context6.next = 16;
             break;
 
-          case 25:
-            log('thats it!');
-
           case 26:
+            log('thats it!');
+            return _context6.abrupt('return', msgs);
+
+          case 28:
           case 'end':
-            return _context7.stop();
+            return _context6.stop();
         }
       }
     }, null, this);
@@ -487,7 +460,7 @@ var Paratii = function Paratii(opts) {
       getContract: getContract,
       getContracts: getContracts,
       getContractAddress: getContractAddress,
-      getOrDeployContracts: getOrDeployContracts,
+      // getOrDeployContracts,
       getRegistryAddress: getRegistryAddress
     },
     init: init,
