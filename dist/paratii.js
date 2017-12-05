@@ -15,7 +15,7 @@ var Paratii = function Paratii(opts) {
   var PARATIIREGISTRYADDRESS = void 0;
   var CONTRACTS = void 0;
   var account = void 0; // the account that will be the sender of all transactions
-  var options = void 0; // options for the Paratii object
+  var config = void 0; // options for the Paratii object
   var web3 = void 0;
 
   var contractNames = ['ParatiiAvatar', 'ParatiiToken', 'ParatiiRegistry', 'SendEther', 'UserRegistry', 'VideoRegistry', 'VideoStore'];
@@ -32,12 +32,12 @@ var Paratii = function Paratii(opts) {
       account: null,
       privateKey: null
     };
-    options = dopts(opts, defaults);
+    config = dopts(opts, defaults);
     var Web3 = require('web3');
     web3 = new Web3();
-    web3.setProvider(new web3.providers.HttpProvider(options.provider));
+    web3.setProvider(new web3.providers.HttpProvider(config.provider));
 
-    if (!options.account) {
+    if (!config.account) {
       // this is the first account generated with testprc/ganache using the --deterministic flag
       // we use it here as default, but probably should not..
       account = {
@@ -47,9 +47,9 @@ var Paratii = function Paratii(opts) {
       web3.eth.accounts.wallet.add(account.privateKey);
     } else {
       account = {
-        address: options.account
+        address: config.account
       };
-      web3.eth.accounts.wallet.add(options.privateKey);
+      web3.eth.accounts.wallet.add(config.privateKey);
     }
 
     PARATIIREGISTRYADDRESS = opts.registryAddress;
@@ -412,7 +412,7 @@ var Paratii = function Paratii(opts) {
             msg = void 0, address = void 0;
 
             log('Paratii was initialized with the following options:');
-            log(options);
+            log(config);
             address = getRegistryAddress();
             log('checking deployed code of Registry...');
             _context7.next = 8;
@@ -475,6 +475,7 @@ var Paratii = function Paratii(opts) {
   }
 
   return {
+    config: config,
     diagnose: diagnose,
     deployContract: deployContract,
     deployContracts: deployContracts,

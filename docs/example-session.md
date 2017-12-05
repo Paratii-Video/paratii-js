@@ -26,7 +26,7 @@ Create an instance of 'Paratii' using default settings:
 
 We can now deploy the paratii contracts:
 
-    contracts = await paratii.deployAllContracts()
+    contracts = await paratii.eth.deployAllContracts()
 
 At this point, all Paratii contracts will be available in `contracts`, under their class names.
 
