@@ -1,31 +1,22 @@
-// import { Paratii } from '../lib/paratii.js'
-//
-// describe('Paratii API:', function () {
-//   let paratii, contracts
-//
-//   beforeEach(async function () {
-//     paratii = Paratii()
-//     // paratii.init()
-//     contracts = await paratii.getOrDeployContracts()
-//   })
-//
-//   it('paratiicontract functions should work', async function () {
-//     let paratiiRegistryAddress = await paratii.getRegistryAddress()
-//     assert.equal(paratiiRegistryAddress, contracts.ParatiiRegistry.address)
-//
-//     let paratiiTokenAddress = await paratii.getContractAddress('ParatiiToken')
-//     assert.equal(paratiiTokenAddress, contracts.ParatiiToken.address)
-//   })
-//
-//   it('should have sane default settings', async function () {
-//     // the `VideoRedistributionPoolShare` should be set to some reasonable number
-//     let paratiiRegistry = await paratii.getContract('ParatiiRegistry')
-//     let paratiiAvatar = await paratii.getContract('ParatiiAvatar')
-//     let videoStore = await paratii.getContract('VideoStore')
-//     let share = await paratiiRegistry.getUint('VideoRedistributionPoolShare')
-//     assert.equal(Number(share), web3.toWei(0.3))
-//     // check if the VideoStore is whitelisted
-//     let isOnWhiteList = await paratiiAvatar.isOnWhiteList(videoStore.address)
-//     assert.equal(isOnWhiteList, true)
-//   })
-// })
+import { Paratii } from '../lib/paratii.js'
+import { account } from './utils.js'
+let assert = require('assert')
+
+describe('Paratii API:', function () {
+  it('paratii.config should return the configuration with default values', async function () {
+    let privateKey = '4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d'
+    let paratii = Paratii({
+      // this address and key are the first accounts on testrpc when started with the --deterministic flag
+      account: account,
+      privateKey: privateKey
+    })
+
+    let expected = {
+      account,
+      privateKey,
+      provider: 'http://localhost:8545',
+      registryAddress: null
+    }
+    assert.deepEqual(paratii.config, expected)
+  })
+})

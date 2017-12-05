@@ -53,13 +53,20 @@ TBD: issue #9
 
 TBD: issue #10
 
+## `personal.wallet`
+### `personal.wallet.create(numberOfAccounts, seedPhrase)`
+### `personal.wallet.encrypt()`
+### `personal.wallet.decrypt(....)`
+### `personal.wallet.mnemonic`
+
+
 ### `eth.deployAllContracts()`
 
 This function will deploy are contracts and link them to the
 
-  contracts = await paratii.deployAllContracts()
+  contracts = await paratii.eth.deployAllContracts()
 
-  contracts = await paratii.deployAllContracts({owner: '0x1234435'})
+  contracts = await paratii.eth.deployAllContracts({owner: '0x1234435'})
 
 ### `eth.contracts`
 
