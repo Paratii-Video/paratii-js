@@ -10,8 +10,8 @@ describe('Paratii API:', function () {
       privateKey: '4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d'
     })
 
-    let contracts = await paratii.deployContracts()
-    let paratiiToken = await paratii.getContract('ParatiiToken')
+    let contracts = await paratii.eth.deployContracts()
+    let paratiiToken = await paratii.eth.getContract('ParatiiToken')
     assert.equal(contracts.ParatiiToken.options.address, paratiiToken.options.address)
 
     // check for balance

@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+var Web3 = require('web3');
 var dopts = require('default-options');
 
 /**
@@ -17,6 +18,7 @@ var Paratii = function Paratii(opts) {
   var account = void 0; // the account that will be the sender of all transactions
   var config = void 0; // options for the Paratii object
   var web3 = void 0;
+  var contracts = {};
 
   var contractNames = ['ParatiiAvatar', 'ParatiiToken', 'ParatiiRegistry', 'SendEther', 'UserRegistry', 'VideoRegistry', 'VideoStore'];
 
@@ -33,7 +35,7 @@ var Paratii = function Paratii(opts) {
       privateKey: null
     };
     config = dopts(opts, defaults);
-    var Web3 = require('web3');
+
     web3 = new Web3();
     web3.setProvider(new web3.providers.HttpProvider(config.provider));
 
@@ -52,7 +54,10 @@ var Paratii = function Paratii(opts) {
       web3.eth.accounts.wallet.add(config.privateKey);
     }
 
-    PARATIIREGISTRYADDRESS = opts.registryAddress;
+    if (opts.registryAddress) {
+      PARATIIREGISTRYADDRESS = opts.registryAddress;
+    }
+
     var ParatiiToken = requireContract('ParatiiToken');
     var ParatiiAvatar = requireContract('ParatiiAvatar');
     var ParatiiRegistry = requireContract('ParatiiRegistry');
@@ -84,6 +89,7 @@ var Paratii = function Paratii(opts) {
       }
     };
   }
+
   function requireContract(contractName) {
     var artifact = require('paratii-contracts/build/contracts/' + contractName + '.json');
     var contract = new web3.eth.Contract(artifact.abi, {
@@ -302,36 +308,35 @@ var Paratii = function Paratii(opts) {
     }, null, this, [[2, 12]]);
   }
 
-  function getParatiiContracts() {
-    var contracts, i;
-    return regeneratorRuntime.async(function getParatiiContracts$(_context5) {
+  function getContracts() {
+    var i;
+    return regeneratorRuntime.async(function getContracts$(_context5) {
       while (1) {
         switch (_context5.prev = _context5.next) {
           case 0:
-            contracts = {};
             i = 0;
 
-          case 2:
-            if (!(i < CONTRACTS.length)) {
-              _context5.next = 9;
+          case 1:
+            if (!(i < contractNames.length)) {
+              _context5.next = 8;
               break;
             }
 
-            _context5.next = 5;
+            _context5.next = 4;
             return regeneratorRuntime.awrap(getContract(contractNames[i]));
 
-          case 5:
+          case 4:
             contracts[contractNames[i]] = _context5.sent;
 
-          case 6:
+          case 5:
             i++;
-            _context5.next = 2;
+            _context5.next = 1;
             break;
 
-          case 9:
+          case 8:
             return _context5.abrupt('return', contracts);
 
-          case 10:
+          case 9:
           case 'end':
             return _context5.stop();
         }
@@ -369,7 +374,7 @@ var Paratii = function Paratii(opts) {
             }
 
             _context6.next = 4;
-            return regeneratorRuntime.awrap(getParatiiContracts());
+            return regeneratorRuntime.awrap(getContracts());
 
           case 4:
             contracts = _context6.sent;
@@ -477,12 +482,14 @@ var Paratii = function Paratii(opts) {
   return {
     config: config,
     diagnose: diagnose,
-    deployContract: deployContract,
-    deployContracts: deployContracts,
-    getContract: getContract,
-    getContractAddress: getContractAddress,
-    getOrDeployContracts: getOrDeployContracts,
-    getRegistryAddress: getRegistryAddress,
+    eth: {
+      deployContracts: deployContracts,
+      getContract: getContract,
+      getContracts: getContracts,
+      getContractAddress: getContractAddress,
+      getOrDeployContracts: getOrDeployContracts,
+      getRegistryAddress: getRegistryAddress
+    },
     init: init,
     web3: web3
   };

@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "babel-cli": "^6.26.0",
+    "chai": "^4.1.2",
     "default-options": "^1.0.0",
     "paratii-contracts": "github:Paratii-Video/paratii-contracts#master",
     "promisify-node": "^0.4.0",

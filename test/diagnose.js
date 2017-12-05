@@ -9,7 +9,7 @@ describe('Paratii API:', function () {
       privateKey: '4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d'
     })
 
-    await paratii.deployContracts()
+    await paratii.eth.deployContracts()
     await paratii.diagnose()
   })
 })
