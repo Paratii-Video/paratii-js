@@ -24,9 +24,11 @@ The Paratii object serves as the general entry point for interacting with the fa
     paratii = Paratii({
       provider: 'chain.paratii.video', // optional - the address of an ethereum node (defaults to localhost:8754)
       registry: '0x23445abcdefg', // optional - the address where the Paratii Contract registry can be found
+      privatekey: '...', // optional - private key of the user
+      wallet: walletObject, // optional, a (possibly password-locked) wallet object [?]
     })
 
-TBD: #7, 
+TBD: #7
 
 ### `config`
 
@@ -37,7 +39,21 @@ TBD: see issue #6
     paratii.config // returns { 'provider': 'http:/...', ''}
 
 
-### `deployAllContracts()`
+### `personal.address`
+
+If the paratii object has been initialized with a `wallet` or `privateKey`, then `paratii.personal.address` returns the Ethereum address of the user
+
+TBD: issue #8
+
+### `personal.getPTIBalance()`
+
+TBD: issue #9
+
+### `personal.getETHBalance()`
+
+TBD: issue #10
+
+### `eth.deployAllContracts()`
 
 This function will deploy are contracts and link them to the
 
@@ -45,11 +61,11 @@ This function will deploy are contracts and link them to the
 
   contracts = await paratii.deployAllContracts({owner: '0x1234435'})
 
-### `contracts`
+### `eth.contracts`
 
-The `paratii.contracts` attribute of gives access to the different contracts, and returns an array mapping contract names to addresses. For example
+The `paratii.eth.contracts` attribute of gives access to the different contracts, and returns an array mapping contract names to addresses. For example
 
-  paratii.contracts.ParatiiToken
+  paratii.eth.contracts.ParatiiToken
 
 ## ParatiiRegistry
 
