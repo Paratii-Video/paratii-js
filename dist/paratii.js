@@ -36,8 +36,6 @@ var Paratii = function () {
     var config = dopts(opts, defaults);
     this.config = config;
 
-    var account = void 0;
-
     this.web3 = new Web3();
     this.web3.setProvider(new this.web3.providers.HttpProvider(config.provider));
 
@@ -48,12 +46,14 @@ var Paratii = function () {
         address: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
         privateKey: '4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d'
       };
-      this.web3.eth.accounts.wallet.add(account.privateKey);
+      this.web3.eth.accounts.wallet.add(this.account.privateKey);
     } else {
       this.account = {
         address: config.account
       };
-      this.web3.eth.accounts.wallet.add(config.privateKey);
+      if (config.privateKey) {
+        this.web3.eth.accounts.wallet.add(config.privateKey);
+      }
     }
 
     this.eth = new _paratiiEth.ParatiiEth(this);

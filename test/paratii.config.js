@@ -37,4 +37,18 @@ describe('Paratii configuration:', function () {
 
     assert.deepEqual(paratii.config, paratii2.config)
   })
+
+  it('should be possible to create a Paratii instance without an account', async function () {
+    let paratii = new Paratii({
+      provider: 'http://127.0.0.1:8545'
+    })
+    let expected = {
+      account: null,
+      privateKey: null,
+      provider: 'http://127.0.0.1:8545',
+      registryAddress: null
+    }
+
+    assert.deepEqual(paratii.config, expected)
+  })
 })
