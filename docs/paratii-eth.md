@@ -30,8 +30,7 @@ When called with a second argument, returns the balance of that Token:
 
 When called without an argument, returns information about all relevant balances
 
-    eth.balanceOf(0x1245)
-    // returns an array of all balances of 0x1245 that are relevant for PTI
+    eth.balanceOf(0x1245) // returns an array of all balances of 0x1245 
     // {
     //    PTI: 12300000002144,
     //    ETH: 0,
