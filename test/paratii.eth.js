@@ -26,42 +26,42 @@ describe('paratii.eth API: :', function () {
     assert.isOk(contract)
   })
 
-  it('getBalance() should return the right balances', async function () {
+  it('balanceOf() should return the right balances', async function () {
     let balance
 
     // test ETH balance
-    balance = await paratii.eth.getBalance(account, 'ETH')
+    balance = await paratii.eth.balanceOf(account, 'ETH')
     assert.isOk(Number(balance) > 0)
-    balance = await paratii.eth.getBalance(account99, 'ETH')
+    balance = await paratii.eth.balanceOf(account99, 'ETH')
     assert.equal(Number(balance), 0)
 
     // test PTI balance
-    balance = await paratii.eth.getBalance(account, 'PTI')
+    balance = await paratii.eth.balanceOf(account, 'PTI')
     assert.equal(Number(balance), 21e24)
-    balance = await paratii.eth.getBalance(account99, 'PTI')
+    balance = await paratii.eth.balanceOf(account99, 'PTI')
     assert.equal(Number(balance), 0)
 
     // test without second arg - should return an array with info
-    balance = await paratii.eth.getBalance(account)
+    balance = await paratii.eth.balanceOf(account)
     assert.isOk(Number(balance.ETH) > 0)
     assert.equal(Number(balance.PTI), 21e24)
   })
 
   it('transfer ETH should work as expected', async function () {
     let beneficiary = account1
-    let balance0 = await paratii.eth.getBalance(beneficiary, 'ETH')
+    let balance0 = await paratii.eth.balanceOf(beneficiary, 'ETH')
     let amount = paratii.web3.utils.toWei('3', 'ether')
     await paratii.eth.transfer(beneficiary, amount, 'ETH')
-    let balance1 = await paratii.eth.getBalance(beneficiary, 'ETH')
-    assert.equal(balance1-balance0, amount)
+    let balance1 = await paratii.eth.balanceOf(beneficiary, 'ETH')
+    assert.equal(balance1 - balance0, amount)
   })
 
   it('transfer PTI should work as expected', async function () {
     let beneficiary = account1
     let amount = paratii.web3.utils.toWei('3', 'ether')
-    let balance0 = await paratii.eth.getBalance(beneficiary, 'PTI')
+    let balance0 = await paratii.eth.balanceOf(beneficiary, 'PTI')
     await paratii.eth.transfer(beneficiary, amount, 'PTI')
-    let balance1 = await paratii.eth.getBalance(beneficiary, 'PTI')
-    assert.equal(balance1-balance0, amount)
+    let balance1 = await paratii.eth.balanceOf(beneficiary, 'PTI')
+    assert.equal(balance1 - balance0, amount)
   })
 })

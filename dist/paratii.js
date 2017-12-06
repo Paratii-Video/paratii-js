@@ -366,9 +366,9 @@ var Paratii = function Paratii(opts) {
   //   return contracts
   // }
 
-  function getBalance(account, symbol) {
+  function balanceOf(account, symbol) {
     var balance, balances, contract;
-    return regeneratorRuntime.async(function getBalance$(_context6) {
+    return regeneratorRuntime.async(function balanceOf$(_context6) {
       while (1) {
         switch (_context6.prev = _context6.next) {
           case 0:
@@ -618,7 +618,7 @@ var Paratii = function Paratii(opts) {
     diagnose: diagnose,
     eth: {
       deployContracts: deployContracts,
-      getBalance: getBalance,
+      balanceOf: balanceOf,
       getContract: getContract,
       getContracts: getContracts,
       getContractAddress: getContractAddress,

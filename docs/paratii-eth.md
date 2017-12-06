@@ -21,16 +21,16 @@ The `paratii.eth.contracts` attribute of gives access to the different contracts
   paratii.eth.contracts.ParatiiToken
 
 
-### `eth.getBalance(account, symbol)`
+### `eth.balanceOf(account, symbol)`
 
 When called with a second argument, returns the balance of that Token:
 
-    eth.getBalance(0x1245, 'ETH') // returns the ETH balance of the given address
-    eth.getBalance(0x1245, 'PTI') // returns the PTI balance of the given address
+    eth.balanceOf(0x1245, 'ETH') // returns the ETH balance of the given address
+    eth.balanceOf(0x1245, 'PTI') // returns the PTI balance of the given address
 
 When called without an argument, returns information about all relevant balances
 
-   eth.getBalance(0x1245)
+   eth.balanceOf(0x1245)
    // returns an array of all balances of 0x1245 that are relevant for PTI
    // {
    //    PTI: 12300000002144,
