@@ -10,15 +10,15 @@ The `eth` namespace contains functions to interact with the Ethereum blockchain 
 
 This function will deploy are contracts and link them to the
 
-   contracts = await paratii.eth.deployAllContracts()
+    contracts = await paratii.eth.deployAllContracts()
 
-   contracts = await paratii.eth.deployAllContracts({owner: '0x1234435'})
+    contracts = await paratii.eth.deployAllContracts({owner: '0x1234435'})
 
 ### `eth.contracts`
 
 The `paratii.eth.contracts` attribute of gives access to the different contracts, and returns an array mapping contract names to addresses. For example
 
-  paratii.eth.contracts.ParatiiToken
+    paratii.eth.contracts.ParatiiToken
 
 
 ### `eth.balanceOf(account, symbol)`
@@ -30,12 +30,12 @@ When called with a second argument, returns the balance of that Token:
 
 When called without an argument, returns information about all relevant balances
 
-   eth.balanceOf(0x1245)
-   // returns an array of all balances of 0x1245 that are relevant for PTI
-   // {
-   //    PTI: 12300000002144,
-   //    ETH: 0,
-   // }
+    eth.balanceOf(0x1245)
+    // returns an array of all balances of 0x1245 that are relevant for PTI
+    // {
+    //    PTI: 12300000002144,
+    //    ETH: 0,
+    // }
 
 
  ### `eth.transfer(beneficiary, amount, symbol)`
