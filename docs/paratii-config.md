@@ -37,3 +37,8 @@ TBD: see issue #6
 `config` holds the configuration of the paratii object:
 
     paratii.config // returns { 'provider': 'http:/...', ''}
+
+
+### `web3`
+
+`paratii.web3` exposts the web3 library

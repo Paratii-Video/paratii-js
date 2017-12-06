@@ -1,3 +1,18 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.add0x = add0x;
+function add0x(input) {
+  if (typeof input !== 'string') {
+    return input;
+  } else if (input.length < 2 || input.slice(0, 2) !== '0x') {
+    return '0x' + input;
+  }
+  return input;
+}
+
 // // some utility functions
 // export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000'
 // export const NULL_HASH = '0x0000000000000000000000000000000000000000000000000000000000000000'
@@ -266,4 +281,3 @@
 //     return overrideValue || '0x00000000'
 //   }
 // }
-"use strict";

@@ -3,8 +3,13 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.utils = exports.Paratii = undefined;
+
+var _utils = require('./utils.js');
+
 var Web3 = require('web3');
 var dopts = require('default-options');
+var utils = require('./utils.js');
 
 /**
  * Paratii Library
@@ -128,7 +133,7 @@ var Paratii = function Paratii(opts) {
   }
 
   function deployContracts() {
-    var paratiiRegistry, paratiiRegistryAddress, paratiiAvatar, paratiiToken, sendEther, userRegistry, videoRegistry, videoStore, result;
+    var paratiiRegistry, paratiiRegistryAddress, paratiiAvatar, paratiiToken, sendEther, userRegistry, videoRegistry, videoStore;
     return regeneratorRuntime.async(function deployContracts$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
@@ -204,7 +209,8 @@ var Paratii = function Paratii(opts) {
             return regeneratorRuntime.awrap(paratiiAvatar.methods.addToWhitelist(videoStore.address).send());
 
           case 39:
-            result = {
+
+            contracts = {
               ParatiiAvatar: paratiiAvatar,
               ParatiiRegistry: paratiiRegistry,
               ParatiiToken: paratiiToken,
@@ -213,7 +219,8 @@ var Paratii = function Paratii(opts) {
               VideoRegistry: videoRegistry,
               VideoStore: videoStore
             };
-            return _context2.abrupt('return', result);
+
+            return _context2.abrupt('return', contracts);
 
           case 41:
           case 'end':
@@ -224,38 +231,36 @@ var Paratii = function Paratii(opts) {
   }
 
   function getContract(name) {
-    var contractInfo, address, contract;
+    var contractInfo, contract, address;
     return regeneratorRuntime.async(function getContract$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
+            contractInfo = void 0, contract = void 0;
+
             contractInfo = CONTRACTS[name];
 
             if (contractInfo) {
-              _context3.next = 3;
+              _context3.next = 4;
               break;
             }
 
             throw Error('No contract with name "' + name + '" is known');
 
-          case 3:
-            _context3.next = 5;
+          case 4:
+            _context3.next = 6;
             return regeneratorRuntime.awrap(getContractAddress(name));
 
-          case 5:
+          case 6:
             address = _context3.sent;
 
-            if (!address) {
-              _context3.next = 10;
-              break;
+            if (address) {
+              contract = contractInfo.contract;
+              contract.options.address = address;
             }
-
-            contract = contractInfo.contract;
-
-            contract.options.address = address;
             return _context3.abrupt('return', contract);
 
-          case 10:
+          case 9:
           case 'end':
             return _context3.stop();
         }
@@ -284,59 +289,47 @@ var Paratii = function Paratii(opts) {
 
           case 5:
             registry = _context4.sent;
-            _context4.next = 8;
+
+            if (registry) {
+              _context4.next = 8;
+              break;
+            }
+
+            throw Error('No contract!');
+
+          case 8:
+            _context4.next = 10;
             return regeneratorRuntime.awrap(registry.methods.getContract(name).call({
               from: account.address
             }));
 
-          case 8:
+          case 10:
             address = _context4.sent;
             return _context4.abrupt('return', address);
 
-          case 12:
-            _context4.prev = 12;
+          case 14:
+            _context4.prev = 14;
             _context4.t0 = _context4['catch'](2);
 
             console.log(_context4.t0);
             throw _context4.t0;
 
-          case 16:
+          case 18:
           case 'end':
             return _context4.stop();
         }
       }
-    }, null, this, [[2, 12]]);
+    }, null, this, [[2, 14]]);
   }
 
   function getContracts() {
-    var i;
     return regeneratorRuntime.async(function getContracts$(_context5) {
       while (1) {
         switch (_context5.prev = _context5.next) {
           case 0:
-            i = 0;
-
-          case 1:
-            if (!(i < contractNames.length)) {
-              _context5.next = 8;
-              break;
-            }
-
-            _context5.next = 4;
-            return regeneratorRuntime.awrap(getContract(contractNames[i]));
-
-          case 4:
-            contracts[contractNames[i]] = _context5.sent;
-
-          case 5:
-            i++;
-            _context5.next = 1;
-            break;
-
-          case 8:
             return _context5.abrupt('return', contracts);
 
-          case 9:
+          case 1:
           case 'end':
             return _context5.stop();
         }
@@ -373,11 +366,139 @@ var Paratii = function Paratii(opts) {
   //   return contracts
   // }
 
-  function diagnose() {
-    var msg, address, msgs, log, registry, i, name;
-    return regeneratorRuntime.async(function diagnose$(_context6) {
+  function getBalance(account, symbol) {
+    var balance, balances;
+    return regeneratorRuntime.async(function getBalance$(_context6) {
       while (1) {
         switch (_context6.prev = _context6.next) {
+          case 0:
+            balance = void 0;
+            balances = {};
+
+            if (!(!symbol || symbol === 'ETH')) {
+              _context6.next = 13;
+              break;
+            }
+
+            _context6.next = 5;
+            return regeneratorRuntime.awrap(web3.eth.getBalance(account));
+
+          case 5:
+            balance = _context6.sent;
+
+            if (!symbol) {
+              _context6.next = 10;
+              break;
+            }
+
+            return _context6.abrupt('return', balance);
+
+          case 10:
+            balances[symbol] = balance;
+
+          case 11:
+            _context6.next = 17;
+            break;
+
+          case 13:
+            if (!(symbol === 'PTI')) {
+              _context6.next = 16;
+              break;
+            }
+
+            _context6.next = 17;
+            break;
+
+          case 16:
+            throw Error('Unknown symbol "' + symbol + '", must be one of "ETH", "PTI"');
+
+          case 17:
+            return _context6.abrupt('return', balances);
+
+          case 18:
+          case 'end':
+            return _context6.stop();
+        }
+      }
+    }, null, this);
+  }
+  function sendETH(beneficiary, amount) {
+    var fromAddress, result;
+    return regeneratorRuntime.async(function sendETH$(_context7) {
+      while (1) {
+        switch (_context7.prev = _context7.next) {
+          case 0:
+            if (config.account) {
+              _context7.next = 2;
+              break;
+            }
+
+            throw Error('No account set! Cannot send transactions');
+
+          case 2:
+            fromAddress = config.account;
+            _context7.next = 5;
+            return regeneratorRuntime.awrap(web3.eth.sendTransaction({
+              from: (0, _utils.add0x)(fromAddress),
+              to: (0, _utils.add0x)(beneficiary),
+              value: amount,
+              gasPrice: 20000000000
+            }));
+
+          case 5:
+            result = _context7.sent;
+            return _context7.abrupt('return', result);
+
+          case 7:
+          case 'end':
+            return _context7.stop();
+        }
+      }
+    }, null, this);
+  }
+
+  function sendPTI(beneficiary, amount) {
+    var contract, fromAddress, result;
+    return regeneratorRuntime.async(function sendPTI$(_context8) {
+      while (1) {
+        switch (_context8.prev = _context8.next) {
+          case 0:
+            _context8.next = 2;
+            return regeneratorRuntime.awrap(getContract('ParatiiToken'));
+
+          case 2:
+            contract = _context8.sent;
+            fromAddress = config.account;
+
+            if (config.account) {
+              _context8.next = 6;
+              break;
+            }
+
+            throw Error('No account set! Cannot send transactions');
+
+          case 6:
+            console.log('Sending ' + amount + ' PTI from ' + fromAddress + ' to ' + beneficiary + ' using contract ' + contract);
+            _context8.next = 9;
+            return regeneratorRuntime.awrap(contract.methods.transfer(beneficiary, amount).send({ gas: 200000, from: fromAddress }));
+
+          case 9:
+            result = _context8.sent;
+            return _context8.abrupt('return', result);
+
+          case 11:
+          case 'end':
+            return _context8.stop();
+        }
+      }
+    }, null, this);
+  }
+
+  function diagnose() {
+    var msg, address, msgs, log, registry, i, name;
+    return regeneratorRuntime.async(function diagnose$(_context9) {
+      while (1) {
+        switch (_context9.prev = _context9.next) {
           case 0:
             log = function log(msg) {
               msgs.push(msg);
@@ -392,11 +513,11 @@ var Paratii = function Paratii(opts) {
             log(config);
             address = getRegistryAddress();
             log('checking deployed code of Registry...');
-            _context6.next = 9;
+            _context9.next = 9;
             return regeneratorRuntime.awrap(web3.eth.getCode(address));
 
           case 9:
-            msg = _context6.sent;
+            msg = _context9.sent;
 
             if (msg === '0x') {
               log('ERROR: no code was found on the registry address ' + address);
@@ -407,46 +528,46 @@ var Paratii = function Paratii(opts) {
               // log(msg)
             }
             log('checking for addresses');
-            _context6.next = 14;
+            _context9.next = 14;
             return regeneratorRuntime.awrap(getContract('ParatiiRegistry'));
 
           case 14:
-            registry = _context6.sent;
+            registry = _context9.sent;
             i = 0;
 
           case 16:
             if (!(i < contractNames.length)) {
-              _context6.next = 26;
+              _context9.next = 26;
               break;
             }
 
             name = contractNames[i];
 
             if (!(name !== 'ParatiiRegistry')) {
-              _context6.next = 23;
+              _context9.next = 23;
               break;
             }
 
-            _context6.next = 21;
+            _context9.next = 21;
             return regeneratorRuntime.awrap(registry.methods.getContract(name).call());
 
           case 21:
-            address = _context6.sent;
+            address = _context9.sent;
 
             log('address of ' + name + ': ' + address);
 
           case 23:
             i++;
-            _context6.next = 16;
+            _context9.next = 16;
             break;
 
           case 26:
             log('thats it!');
-            return _context6.abrupt('return', msgs);
+            return _context9.abrupt('return', msgs);
 
           case 28:
           case 'end':
-            return _context6.stop();
+            return _context9.stop();
         }
       }
     }, null, this);
@@ -457,11 +578,14 @@ var Paratii = function Paratii(opts) {
     diagnose: diagnose,
     eth: {
       deployContracts: deployContracts,
+      getBalance: getBalance,
       getContract: getContract,
       getContracts: getContracts,
       getContractAddress: getContractAddress,
       // getOrDeployContracts,
-      getRegistryAddress: getRegistryAddress
+      getRegistryAddress: getRegistryAddress,
+      sendETH: sendETH,
+      sendPTI: sendPTI
     },
     init: init,
     web3: web3
@@ -469,3 +593,4 @@ var Paratii = function Paratii(opts) {
 };
 
 exports.Paratii = Paratii;
+exports.utils = utils;

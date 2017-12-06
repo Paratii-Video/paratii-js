@@ -1,8 +1,10 @@
 # Paratii Library documentation
 
+## paratii.eth
 
 
-### `eth.deployAllContracts()`
+
+### `eth.deployContracts()`
 
 This function will deploy are contracts and link them to the
 
@@ -16,7 +18,41 @@ The `paratii.eth.contracts` attribute of gives access to the different contracts
 
   paratii.eth.contracts.ParatiiToken
 
-## ParatiiRegistry
+### `eth.sendETH(beneficiary, amount)`
+
+_? perhaps this should be `personal.sendETH` as it uses the personal account as the sender?_
+Uses the `SendEther` contract to send ether and  log an event
+
+* TBD: https://github.com/Paratii-Video/paratii-lib/issues/15
+* TBD: https://github.com/Paratii-Video/paratii-lib/issues/16
+
+### `eth.sendPTI(beneficiary, amount)`
+
+_? perhaps this should be `personal.sendETH` as it uses the personal account as the sender?_
+
+Uses the `ParatiiToken` contract to send ether and  log an event
+
+* TBD: https://github.com/Paratii-Video/paratii-lib/issues/16
+
+
+### `eth.getBalance()`
+
+When called with a second argument, returns the balance of that Token:
+
+  `eth.getBalance(0x1245, 'ETH')` // returns the ETH balance of the given address
+  `eth.getBalance(0x1245, 'PTI')` // returns the PTI balance of the given address
+
+When called without an argument, returns information about all relevant balances
+
+   `eth.getBalance(0x1245)`
+   // returns an array of all balances of 0x1245 that are relevant for PTI
+   // {
+   //    PTI: 12300000002144,
+   //    ETH: 0,
+   // }
+
+
+##  `eth.contracts.ParatiiRegistry`k
 
 The [ParatiiRegistry.sol](../contracts/paratii/ParatiiRegistry.sol) contract is a simple key-value store on the blockchain that holds Paratii general settings. In particular, this is the place where the addresses of the deployed Paratii contracts are stored.
 
