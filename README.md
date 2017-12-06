@@ -29,6 +29,11 @@ and in another:
     yarn test
 
 
+## building the package
+
+    yarn build
+
+
 ## Contributing
 
 Most of the code is fresh and undocumented. Contributions are welcome - just be on the lookout for the 🐲s. [Here](https://github.com/Paratii-Video/wiki/blob/master/CONTRIBUTING.md) you can find some guidelines and the kind of help we would be interested in.
