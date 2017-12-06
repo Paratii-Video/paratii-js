@@ -6,7 +6,17 @@
 
 If the paratii object has been initialized with a `wallet` or `privateKey`, then `paratii.personal.address` returns the Ethereum address of the user
 
+    personal.address // returns the address of the account
+
 TBD: issue #8
+
+### `personal.setAccount(addressOrKeyOrWallet)`
+
+    personal.setAccount('0x1234')
+    personal.setAccount(privateKey)
+    personal.setAccount('0x1234')
+
+TBD: issue XXX
 
 ### `personal.getPTIBalance()`
 

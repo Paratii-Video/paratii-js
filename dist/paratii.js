@@ -94,6 +94,20 @@ var Paratii = function Paratii(opts) {
       }
     };
   }
+  function setAccount(address, privateKey) {
+    account = {
+      address: account,
+      privateKey: privateKey
+      // account = {
+      //   address: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
+      //   privateKey: '4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d'
+      // }
+
+    };
+    if (privateKey) {
+      web3.eth.accounts.wallet.add(privateKey);
+    }
+  }
 
   function requireContract(contractName) {
     var artifact = require('paratii-contracts/build/contracts/' + contractName + '.json');
@@ -626,7 +640,11 @@ var Paratii = function Paratii(opts) {
       getRegistryAddress: getRegistryAddress,
       transfer: transfer
     },
-    init: init,
+    personal: {
+      address: account.address,
+      setAccount: setAccount,
+      account: account
+    },
     web3: web3
   };
 };
