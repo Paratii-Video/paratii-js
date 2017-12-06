@@ -8,8 +8,7 @@
   },
   "scripts": {
     "build": "babel ./lib -d ./dist",
-    "mocha": "mocha --require truffle.js test/*.js",
-    "test": "yarn mocha",
+    "test": "mocha --require truffle.js test/*.js",
     "testrpc": "testrpc --deterministic",
     "lint": "standard",
     "lint-fix": "standard --fix",

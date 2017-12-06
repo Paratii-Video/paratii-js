@@ -20,38 +20,42 @@ The `paratii.eth.contracts` attribute of gives access to the different contracts
 
   paratii.eth.contracts.ParatiiToken
 
-### `eth.sendETH(beneficiary, amount)`
 
-_? perhaps this should be `personal.sendETH` as it uses the personal account as the sender?_
-Uses the `SendEther` contract to send ether and  log an event
-
-* TBD: https://github.com/Paratii-Video/paratii-lib/issues/15
-* TBD: https://github.com/Paratii-Video/paratii-lib/issues/16
-
-### `eth.sendPTI(beneficiary, amount)`
-
-_? perhaps this should be `personal.sendETH` as it uses the personal account as the sender?_
-
-Uses the `ParatiiToken` contract to send ether and  log an event
-
-* TBD: https://github.com/Paratii-Video/paratii-lib/issues/16
-
-
-### `eth.getBalance()`
+### `eth.getBalance(account, symbol)`
 
 When called with a second argument, returns the balance of that Token:
 
-  `eth.getBalance(0x1245, 'ETH')` // returns the ETH balance of the given address
-  `eth.getBalance(0x1245, 'PTI')` // returns the PTI balance of the given address
+    eth.getBalance(0x1245, 'ETH') // returns the ETH balance of the given address
+    eth.getBalance(0x1245, 'PTI') // returns the PTI balance of the given address
 
 When called without an argument, returns information about all relevant balances
 
-   `eth.getBalance(0x1245)`
+   eth.getBalance(0x1245)
    // returns an array of all balances of 0x1245 that are relevant for PTI
    // {
    //    PTI: 12300000002144,
    //    ETH: 0,
    // }
+
+
+ ### `eth.transfer(beneficiary, amount, symbol)`
+
+_? perhaps this should be `personal.transfer(...)` instead of `eth.transfer(...)` as it uses the personal account as the sender?_
+
+
+Use this to send ETH or PTI
+
+
+Transfer the given amount of ETH to the benificiary. Uses the `SendEther` contract to send ether and log an event:
+
+    eth.transfer(0x12344, 3e24, 'ETH')
+
+Transfer the given amount of PTI. This uses the `ParatiiToken` contract to send ether and  log an event
+
+    eth.transfer(0x12344, 1000000, 'PTI')
+
+ * TBD: https://github.com/Paratii-Video/paratii-lib/issues/15
+ * TBD: https://github.com/Paratii-Video/paratii-lib/issues/16
 
 
 ##  `eth.contracts.ParatiiRegistry`k
