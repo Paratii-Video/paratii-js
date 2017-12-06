@@ -22,7 +22,7 @@ You will need `yarn` (or `npm`) installed. First get the latest version of the c
 
 Create an instance of 'Paratii' using default settings:
 
-    paratii = Paratii()
+    paratii = new Paratii()
 
 We can now deploy the paratii contracts:
 

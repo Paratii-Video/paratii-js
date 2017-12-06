@@ -2,11 +2,11 @@
 
 
 
-### `personal.address`
+### `personal.account`
 
-If the paratii object has been initialized with a `wallet` or `privateKey`, then `paratii.personal.address` returns the Ethereum address of the user
+If the paratii object has been initialized with a `wallet` or `privateKey`, then `paratii.personal.account` returns information about the registered account 
 
-    personal.address // returns the address of the account
+    personal.account.address // returns the address of the account
 
 TBD: issue #8
 

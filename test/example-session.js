@@ -1,10 +1,10 @@
 import { Paratii } from '../lib/paratii.js'
 import { account } from './utils.js'
-let assert = require('assert')
+import { assert } from 'chai'
 
 describe('Paratii API:', function () {
   it('example session from ../docs/example-session.md should work', async function () {
-    let paratii = Paratii({
+    let paratii = new Paratii({
       // this address and key are the first accounts on testrpc when started with the --deterministic flag
       account: account,
       privateKey: '4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d'
