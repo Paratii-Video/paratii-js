@@ -10,9 +10,9 @@ The `eth` namespace contains functions to interact with the Ethereum blockchain 
 
 This function will deploy are contracts and link them to the
 
-  contracts = await paratii.eth.deployAllContracts()
+   contracts = await paratii.eth.deployAllContracts()
 
-  contracts = await paratii.eth.deployAllContracts({owner: '0x1234435'})
+   contracts = await paratii.eth.deployAllContracts({owner: '0x1234435'})
 
 ### `eth.contracts`
 
