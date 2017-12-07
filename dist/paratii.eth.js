@@ -16,9 +16,6 @@ var ParatiiEth = exports.ParatiiEth = function () {
     _classCallCheck(this, ParatiiEth);
 
     this.context = context;
-    this.web3 = context.web3;
-    this.account = context.account;
-    this.config = context.config;
 
     var ParatiiToken = this.requireContract('ParatiiToken');
     var ParatiiAvatar = this.requireContract('ParatiiAvatar');
@@ -59,12 +56,12 @@ var ParatiiEth = exports.ParatiiEth = function () {
     key: 'requireContract',
     value: function requireContract(contractName) {
       var artifact = require('paratii-contracts/build/contracts/' + contractName + '.json');
-      var contract = new this.web3.eth.Contract(artifact.abi, {
-        from: this.account.address,
-        gas: this.web3.utils.toHex(4e6),
+      var contract = new this.context.web3.eth.Contract(artifact.abi, {
+        from: this.context.account.address,
+        gas: this.context.web3.utils.toHex(4e6),
         data: artifact.bytecode
       });
-      contract.setProvider(this.web3.currentProvider);
+      contract.setProvider(this.context.web3.currentProvider);
       return contract;
     }
   }, {
@@ -163,7 +160,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
             case 34:
               _context2.next = 36;
-              return regeneratorRuntime.awrap(paratiiRegistry.methods.registerUint('VideoRedistributionPoolShare', this.web3.utils.toWei('0.3')).send());
+              return regeneratorRuntime.awrap(paratiiRegistry.methods.registerUint('VideoRedistributionPoolShare', this.context.web3.utils.toWei('0.3')).send());
 
             case 36:
               _context2.next = 38;
@@ -266,7 +263,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 8:
               _context4.next = 10;
               return regeneratorRuntime.awrap(registry.methods.getContract(name).call({
-                from: this.account.address
+                from: this.context.account.address
               }));
 
             case 10:
@@ -347,7 +344,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
               }
 
               _context6.next = 7;
-              return regeneratorRuntime.awrap(this.web3.eth.getBalance(account));
+              return regeneratorRuntime.awrap(this.context.web3.eth.getBalance(account));
 
             case 7:
               balance = _context6.sent;
@@ -402,7 +399,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
               // @args amount is in Wei
               // TODO: use the SendEther contract
               // TODO: this will only work on testrpc with unlocked accounts..
-              fromAddress = this.config.account;
+              fromAddress = this.context.config.account;
 
               if (fromAddress) {
                 _context7.next = 3;
@@ -413,7 +410,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
             case 3:
               _context7.next = 5;
-              return regeneratorRuntime.awrap(this.web3.eth.sendTransaction({
+              return regeneratorRuntime.awrap(this.context.web3.eth.sendTransaction({
                 from: (0, _utils.add0x)(fromAddress),
                 to: (0, _utils.add0x)(beneficiary),
                 value: amount,
@@ -444,7 +441,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
             case 2:
               contract = _context8.sent;
-              fromAddress = this.config.account;
+              fromAddress = this.context.config.account;
 
               if (fromAddress) {
                 _context8.next = 6;
