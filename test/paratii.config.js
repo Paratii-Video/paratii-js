@@ -7,7 +7,6 @@ describe('Paratii configuration:', function () {
 
   before(function () {
     paratii = new Paratii({
-      // this address and key are the first accounts on testrpc when started with the --deterministic flag
       account: account,
       privateKey: privateKey
     })

@@ -18,8 +18,11 @@
     "babel-cli": "^6.26.0",
     "chai": "^4.1.2",
     "default-options": "^1.0.0",
+    "ipfs": "github:ya7ya/js-ipfs#paratii/v0.27",
     "paratii-contracts": "github:Paratii-Video/paratii-contracts#master",
+    "paratii-protocol": "github:ya7ya/paratii-protocol#master",
     "promisify-node": "^0.4.0",
+    "pull-filereader": "^1.0.1",
     "web3": "^1.0.0-beta.24"
   },
   "devDependencies": {

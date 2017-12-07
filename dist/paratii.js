@@ -60,7 +60,7 @@ var Paratii = function () {
 
     this.eth = new _paratiiEth.ParatiiEth(this);
 
-    this.ipfs = new _paratiiIpfs.ParatiiIPFS(this);
+    this.ipfs = new _paratiiIpfs.ParatiiIPFS();
     this.personal = {
       setAccount: this.setAccount,
       account: this.account
