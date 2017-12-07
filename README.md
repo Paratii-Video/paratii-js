@@ -12,7 +12,7 @@ This is the repository for developing the Paratii Core Smart Contracts.
 
 More information about the Paratii Project can be found on [paratii.video](http://paratii.video/), or in our [blueprint](https://github.com/Paratii-Video/paratii-player/wiki/Paratii-Blueprint). Join the discussion on [gitter](https://gitter.im/Paratii-Video).
 
-
+hi!
 
 ## Installation
 
