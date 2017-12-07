@@ -2,8 +2,10 @@ import { Paratii } from '../lib/paratii.js'
 import { account, privateKey } from './utils.js'
 import { assert } from 'chai'
 
-describe('paratii.eth.videos: :', function () {
+describe('paratii.eth.vids: :', function () {
   let paratii
+  let title = 'The Human Centipede'
+
   beforeEach(async function () {
     paratii = await new Paratii({
       provider: 'http://localhost:8545',
@@ -13,7 +15,8 @@ describe('paratii.eth.videos: :', function () {
     await paratii.eth.deployContracts()
   })
 
-  it.skip('vids.registerVideo() should work', async function () {
+  it.skip('vids.register() should work', async function () {
+    await paratii.vids.register(title)
     assert.isOk(true)
   })
 

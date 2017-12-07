@@ -2,7 +2,7 @@ import { Paratii } from '../lib/paratii.js'
 import { account, privateKey } from './utils.js'
 import { assert } from 'chai'
 
-describe('paratii.eth.videos: :', function () {
+describe('paratii.eth.users: :', function () {
   let paratii
   beforeEach(async function () {
     paratii = await new Paratii({
@@ -13,12 +13,12 @@ describe('paratii.eth.videos: :', function () {
     await paratii.eth.deployContracts()
   })
 
-  it.skip('vids.registerVideo() should work', async function () {
+  it.skip('users.registerUser() should work', async function () {
     assert.isOk(true)
   })
 
-  it.skip('vids.unregisterVideo() should work', async function () {
+  it.skip('users.unregisterUser() should work', async function () {
   })
-  it.skip('vids.updateVideo() should work', async function () {
+  it.skip('users.updateUser() should work', async function () {
   })
 })
