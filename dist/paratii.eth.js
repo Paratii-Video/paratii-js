@@ -305,18 +305,6 @@ var ParatiiEth = exports.ParatiiEth = function () {
     value: function getRegistryAddress() {
       return this.context.config.registryAddress;
     }
-
-    // getParatiiRegistry () {
-    //
-    //   let address = getRegistryAddress()
-    //   if (!address) {
-    //     let msg = `No paratii registry address known!`
-    //     throw Error(msg)
-    //   }
-    //   CONTRACTS.ParatiiRegistry.contract.options.address = address
-    //   return CONTRACTS.ParatiiRegistry.contract
-    // }
-
   }, {
     key: 'balanceOf',
     value: function balanceOf(account, symbol) {
@@ -391,7 +379,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: '_transferETH',
     value: function _transferETH(beneficiary, amount) {
-      var fromAddress, result;
+      var from, result;
       return regeneratorRuntime.async(function _transferETH$(_context7) {
         while (1) {
           switch (_context7.prev = _context7.next) {
@@ -399,9 +387,9 @@ var ParatiiEth = exports.ParatiiEth = function () {
               // @args amount is in Wei
               // TODO: use the SendEther contract
               // TODO: this will only work on testrpc with unlocked accounts..
-              fromAddress = this.context.config.account;
+              from = this.context.config.account;
 
-              if (fromAddress) {
+              if (from) {
                 _context7.next = 3;
                 break;
               }
@@ -409,19 +397,33 @@ var ParatiiEth = exports.ParatiiEth = function () {
               throw Error('No account set! Cannot send transactions');
 
             case 3:
-              _context7.next = 5;
+              if (beneficiary) {
+                _context7.next = 5;
+                break;
+              }
+
+              throw Error('No beneficiary given.');
+
+            case 5:
+              from = (0, _utils.add0x)(from);
+              beneficiary = (0, _utils.add0x)(beneficiary);
+              console.log('000000000000000000000000000000000000000000000000000000000000000');
+              console.log(from);
+              console.log(beneficiary);
+              console.log('000000000000000000000000000000000000000000000000000000000000000');
+              _context7.next = 13;
               return regeneratorRuntime.awrap(this.context.web3.eth.sendTransaction({
-                from: (0, _utils.add0x)(fromAddress),
-                to: (0, _utils.add0x)(beneficiary),
+                from: from,
+                to: beneficiary,
                 value: amount,
                 gasPrice: 20000000000
               }));
 
-            case 5:
+            case 13:
               result = _context7.sent;
               return _context7.abrupt('return', result);
 
-            case 7:
+            case 15:
             case 'end':
               return _context7.stop();
           }
@@ -431,7 +433,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: '_transferPTI',
     value: function _transferPTI(beneficiary, amount) {
-      var contract, fromAddress, result;
+      var contract, from, result;
       return regeneratorRuntime.async(function _transferPTI$(_context8) {
         while (1) {
           switch (_context8.prev = _context8.next) {
@@ -441,24 +443,40 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
             case 2:
               contract = _context8.sent;
-              fromAddress = this.context.config.account;
 
-              if (fromAddress) {
-                _context8.next = 6;
+              if (!(!contract.options || !contract.options.address)) {
+                _context8.next = 5;
+                break;
+              }
+
+              throw Error('No ParaktiiToken contract known - please run paratii.diagnose()');
+
+            case 5:
+              from = this.context.config.account;
+
+              if (from) {
+                _context8.next = 8;
                 break;
               }
 
               throw Error('No account set! Cannot send transactions');
 
-            case 6:
-              _context8.next = 8;
-              return regeneratorRuntime.awrap(contract.methods.transfer(beneficiary, amount).send({ gas: 200000, from: fromAddress }));
-
             case 8:
+              from = (0, _utils.add0x)(from);
+              beneficiary = (0, _utils.add0x)(beneficiary);
+              console.log('000000000000000000000000000000000000000000000000000000000000000');
+              console.log(from);
+              console.log(beneficiary);
+              console.log('000000000000000000000000000000000000000000000000000000000000000');
+              // console.log(`Sending ${amount} PTI from ${fromAddress} to ${beneficiary} using contract ${contract}`)
+              _context8.next = 16;
+              return regeneratorRuntime.awrap(contract.methods.transfer(beneficiary, amount).send({ gas: 200000, from: from }));
+
+            case 16:
               result = _context8.sent;
               return _context8.abrupt('return', result);
 
-            case 10:
+            case 18:
             case 'end':
               return _context8.stop();
           }
