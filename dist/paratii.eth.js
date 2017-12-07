@@ -407,11 +407,11 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 5:
               from = (0, _utils.add0x)(from);
               beneficiary = (0, _utils.add0x)(beneficiary);
-              console.log('000000000000000000000000000000000000000000000000000000000000000');
-              console.log(from);
-              console.log(beneficiary);
-              console.log('000000000000000000000000000000000000000000000000000000000000000');
-              _context7.next = 13;
+              // console.log('000000000000000000000000000000000000000000000000000000000000000')
+              // console.log(from)
+              // console.log(beneficiary)
+              // console.log('000000000000000000000000000000000000000000000000000000000000000')
+              _context7.next = 9;
               return regeneratorRuntime.awrap(this.context.web3.eth.sendTransaction({
                 from: from,
                 to: beneficiary,
@@ -419,11 +419,11 @@ var ParatiiEth = exports.ParatiiEth = function () {
                 gasPrice: 20000000000
               }));
 
-            case 13:
+            case 9:
               result = _context7.sent;
               return _context7.abrupt('return', result);
 
-            case 15:
+            case 11:
             case 'end':
               return _context7.stop();
           }
@@ -464,19 +464,19 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 8:
               from = (0, _utils.add0x)(from);
               beneficiary = (0, _utils.add0x)(beneficiary);
-              console.log('000000000000000000000000000000000000000000000000000000000000000');
-              console.log(from);
-              console.log(beneficiary);
-              console.log('000000000000000000000000000000000000000000000000000000000000000');
+              // console.log('000000000000000000000000000000000000000000000000000000000000000')
+              // console.log(from)
+              // console.log(beneficiary)
+              // console.log('000000000000000000000000000000000000000000000000000000000000000')
               // console.log(`Sending ${amount} PTI from ${fromAddress} to ${beneficiary} using contract ${contract}`)
-              _context8.next = 16;
+              _context8.next = 12;
               return regeneratorRuntime.awrap(contract.methods.transfer(beneficiary, amount).send({ gas: 200000, from: from }));
 
-            case 16:
+            case 12:
               result = _context8.sent;
               return _context8.abrupt('return', result);
 
-            case 18:
+            case 14:
             case 'end':
               return _context8.stop();
           }
