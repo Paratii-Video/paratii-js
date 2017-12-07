@@ -15,8 +15,8 @@ describe('paratii.eth.vids: :', function () {
     await paratii.eth.deployContracts()
   })
 
-  it.skip('vids.register() should work', async function () {
-    await paratii.vids.register(title)
+  it('vids.register() should work', async function () {
+    await paratii.eth.vids.register(title)
     assert.isOk(true)
   })
 

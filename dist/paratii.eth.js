@@ -16,40 +16,18 @@ var ParatiiEth = exports.ParatiiEth = function () {
     _classCallCheck(this, ParatiiEth);
 
     this.context = context;
-
-    var ParatiiToken = this.requireContract('ParatiiToken');
-    var ParatiiAvatar = this.requireContract('ParatiiAvatar');
-    var ParatiiRegistry = this.requireContract('ParatiiRegistry');
-    var SendEther = this.requireContract('SendEther');
-    var UserRegistry = this.requireContract('UserRegistry');
-    var VideoRegistry = this.requireContract('VideoRegistry');
-    var VideoStore = this.requireContract('VideoStore');
+    this.contracts = {};
+    this.contracts.ParatiiToken = this.requireContract('ParatiiToken');
+    this.contracts.ParatiiAvatar = this.requireContract('ParatiiAvatar');
+    this.contracts.ParatiiRegistry = this.requireContract('ParatiiRegistry');
+    this.contracts.SendEther = this.requireContract('SendEther');
+    this.contracts.UserRegistry = this.requireContract('UserRegistry');
+    this.contracts.VideoRegistry = this.requireContract('VideoRegistry');
+    this.contracts.VideoStore = this.requireContract('VideoStore');
 
     this.contractNames = ['ParatiiAvatar', 'ParatiiToken', 'ParatiiRegistry', 'SendEther', 'UserRegistry', 'VideoRegistry', 'VideoStore'];
 
-    this.CONTRACTS = {
-      'ParatiiAvatar': {
-        contract: ParatiiAvatar
-      },
-      'ParatiiRegistry': {
-        contract: ParatiiRegistry
-      },
-      'ParatiiToken': {
-        contract: ParatiiToken
-      },
-      'SendEther': {
-        contract: SendEther
-      },
-      'UserRegistry': {
-        contract: UserRegistry
-      },
-      'VideoRegistry': {
-        contract: VideoRegistry
-      },
-      'VideoStore': {
-        contract: VideoStore
-      }
-    };
+    this.vids = new ParatiiEthVids(this);
   }
 
   _createClass(ParatiiEth, [{
@@ -76,7 +54,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              contract = this.CONTRACTS[name].contract;
+              contract = this.contracts[name];
               _context.next = 3;
               return regeneratorRuntime.awrap(contract.deploy({ arguments: args }).send());
 
@@ -191,36 +169,33 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: 'getContract',
     value: function getContract(name) {
-      var contractInfo, contract, address;
+      var contract, address;
       return regeneratorRuntime.async(function getContract$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              contractInfo = void 0, contract = void 0;
+              contract = this.contracts[name];
 
-              contractInfo = this.CONTRACTS[name];
-
-              if (contractInfo) {
-                _context3.next = 4;
+              if (contract) {
+                _context3.next = 3;
                 break;
               }
 
               throw Error('No contract with name "' + name + '" is known');
 
-            case 4:
-              _context3.next = 6;
+            case 3:
+              _context3.next = 5;
               return regeneratorRuntime.awrap(this.getContractAddress(name));
 
-            case 6:
+            case 5:
               address = _context3.sent;
 
               if (address) {
-                contract = contractInfo.contract;
                 contract.options.address = address;
               }
               return _context3.abrupt('return', contract);
 
-            case 9:
+            case 8:
             case 'end':
               return _context3.stop();
           }
@@ -515,4 +490,19 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }]);
 
   return ParatiiEth;
+}();
+
+var ParatiiEthVids = function () {
+  function ParatiiEthVids(context) {
+    _classCallCheck(this, ParatiiEthVids);
+
+    this.context = context;
+  }
+
+  _createClass(ParatiiEthVids, [{
+    key: 'register',
+    value: function register(title) {}
+  }]);
+
+  return ParatiiEthVids;
 }();
