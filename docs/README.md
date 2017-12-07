@@ -16,6 +16,6 @@ The paratii library is divided into the following modules:
 * [`paratii.eth`](./paratii-eth.md) for interaction with the blockchain
 * `paratii.ipfs` for interaction with IPFS
 * `paratii.db` for interaction with the Paratii blockchain index
-* [`paratii.general`](./paratii-general.md) for methods that operate over different submodules
+* [`paratii.core`](./paratii-core.md) for methods that operate over different submodules
 
 See [example-session.md](./example-session.md) and [api.md](./api.md) for more information.
