@@ -9,59 +9,67 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _utils = require('./utils.js');
 
+var _paratiiEthVids = require('./paratii.eth.vids.js');
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var Web3 = require('web3');
+var dopts = require('default-options');
+
 var ParatiiEth = exports.ParatiiEth = function () {
-  function ParatiiEth(context) {
+  function ParatiiEth(config) {
     _classCallCheck(this, ParatiiEth);
 
-    this.context = context;
+    var defaults = {
+      provider: 'http://localhost:8545',
+      registryAddress: null,
+      account: {
+        address: null,
+        privateKey: null
+      },
+      web3: null,
+      isTestNet: false
+    };
+    var options = dopts(config, defaults, { allowUnknown: true });
+    this.config = config;
 
-    var ParatiiToken = this.requireContract('ParatiiToken');
-    var ParatiiAvatar = this.requireContract('ParatiiAvatar');
-    var ParatiiRegistry = this.requireContract('ParatiiRegistry');
-    var SendEther = this.requireContract('SendEther');
-    var UserRegistry = this.requireContract('UserRegistry');
-    var VideoRegistry = this.requireContract('VideoRegistry');
-    var VideoStore = this.requireContract('VideoStore');
+    if (options.web3) {
+      this.web3 = options.web3;
+    } else {
+      this.web3 = new Web3();
+      this.web3.setProvider(new this.web3.providers.HttpProvider(options.provider));
+    }
+
+    if (this.config.account.privateKey) {
+      this.web3.eth.accounts.wallet.add(this.config.account.privateKey);
+    }
+
+    this.contracts = {};
+    this.contracts.ParatiiToken = this.requireContract('ParatiiToken');
+    this.contracts.ParatiiAvatar = this.requireContract('ParatiiAvatar');
+    this.contracts.ParatiiRegistry = this.requireContract('ParatiiRegistry');
+    this.contracts.SendEther = this.requireContract('SendEther');
+    this.contracts.UserRegistry = this.requireContract('UserRegistry');
+    this.contracts.VideoRegistry = this.requireContract('VideoRegistry');
+    this.contracts.VideoStore = this.requireContract('VideoStore');
 
     this.contractNames = ['ParatiiAvatar', 'ParatiiToken', 'ParatiiRegistry', 'SendEther', 'UserRegistry', 'VideoRegistry', 'VideoStore'];
 
-    this.CONTRACTS = {
-      'ParatiiAvatar': {
-        contract: ParatiiAvatar
-      },
-      'ParatiiRegistry': {
-        contract: ParatiiRegistry
-      },
-      'ParatiiToken': {
-        contract: ParatiiToken
-      },
-      'SendEther': {
-        contract: SendEther
-      },
-      'UserRegistry': {
-        contract: UserRegistry
-      },
-      'VideoRegistry': {
-        contract: VideoRegistry
-      },
-      'VideoStore': {
-        contract: VideoStore
-      }
-    };
+    this.vids = new _paratiiEthVids.ParatiiEthVids(this);
   }
 
   _createClass(ParatiiEth, [{
     key: 'requireContract',
     value: function requireContract(contractName) {
       var artifact = require('paratii-contracts/build/contracts/' + contractName + '.json');
-      var contract = new this.context.web3.eth.Contract(artifact.abi, {
-        from: this.context.account.address,
-        gas: this.context.web3.utils.toHex(4e6),
+      var from = this.config.account.address;
+
+      var contract = new this.web3.eth.Contract(artifact.abi, {
+        from: from,
+        gas: this.web3.utils.toHex(4e6),
         data: artifact.bytecode
       });
-      contract.setProvider(this.context.web3.currentProvider);
+      contract.setProvider(this.web3.currentProvider);
       return contract;
     }
   }, {
@@ -76,7 +84,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              contract = this.CONTRACTS[name].contract;
+              contract = this.contracts[name];
               _context.next = 3;
               return regeneratorRuntime.awrap(contract.deploy({ arguments: args }).send());
 
@@ -160,7 +168,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
             case 34:
               _context2.next = 36;
-              return regeneratorRuntime.awrap(paratiiRegistry.methods.registerUint('VideoRedistributionPoolShare', this.context.web3.utils.toWei('0.3')).send());
+              return regeneratorRuntime.awrap(paratiiRegistry.methods.registerUint('VideoRedistributionPoolShare', this.web3.utils.toWei('0.3')).send());
 
             case 36:
               _context2.next = 38;
@@ -177,7 +185,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
                 VideoRegistry: videoRegistry,
                 VideoStore: videoStore
               };
-              this.context.config.registryAddress = paratiiRegistryAddress;
+              this.config.registryAddress = paratiiRegistryAddress;
 
               return _context2.abrupt('return', this.contracts);
 
@@ -191,36 +199,33 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: 'getContract',
     value: function getContract(name) {
-      var contractInfo, contract, address;
+      var contract, address;
       return regeneratorRuntime.async(function getContract$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              contractInfo = void 0, contract = void 0;
+              contract = this.contracts[name];
 
-              contractInfo = this.CONTRACTS[name];
-
-              if (contractInfo) {
-                _context3.next = 4;
+              if (contract) {
+                _context3.next = 3;
                 break;
               }
 
               throw Error('No contract with name "' + name + '" is known');
 
-            case 4:
-              _context3.next = 6;
+            case 3:
+              _context3.next = 5;
               return regeneratorRuntime.awrap(this.getContractAddress(name));
 
-            case 6:
+            case 5:
               address = _context3.sent;
 
-              if (address) {
-                contract = contractInfo.contract;
+              if (address && address !== '0x0') {
                 contract.options.address = address;
               }
               return _context3.abrupt('return', contract);
 
-            case 9:
+            case 8:
             case 'end':
               return _context3.stop();
           }
@@ -233,56 +238,64 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: 'getContractAddress',
     value: function getContractAddress(name) {
-      var registry, address;
+      var registryAddress, registry, address;
       return regeneratorRuntime.async(function getContractAddress$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
+              registryAddress = this.getRegistryAddress();
+
               if (!(name === 'ParatiiRegistry')) {
-                _context4.next = 2;
+                _context4.next = 3;
                 break;
               }
 
               return _context4.abrupt('return', this.getRegistryAddress());
 
-            case 2:
-              _context4.prev = 2;
-              _context4.next = 5;
-              return regeneratorRuntime.awrap(this.getContract('ParatiiRegistry'));
+            case 3:
+              if (registryAddress) {
+                _context4.next = 5;
+                break;
+              }
+
+              throw Error('No registry address configured');
 
             case 5:
+              _context4.prev = 5;
+              _context4.next = 8;
+              return regeneratorRuntime.awrap(this.getContract('ParatiiRegistry'));
+
+            case 8:
               registry = _context4.sent;
 
               if (registry) {
-                _context4.next = 8;
+                _context4.next = 11;
                 break;
               }
 
               throw Error('No registry contract!');
 
-            case 8:
-              _context4.next = 10;
-              return regeneratorRuntime.awrap(registry.methods.getContract(name).call({
-                from: this.context.account.address
-              }));
+            case 11:
+              _context4.next = 13;
+              return regeneratorRuntime.awrap(registry.methods.getContract(name).call());
 
-            case 10:
+            case 13:
               address = _context4.sent;
               return _context4.abrupt('return', address);
 
-            case 14:
-              _context4.prev = 14;
-              _context4.t0 = _context4['catch'](2);
+            case 17:
+              _context4.prev = 17;
+              _context4.t0 = _context4['catch'](5);
 
               console.log(_context4.t0);
               throw _context4.t0;
 
-            case 18:
+            case 21:
             case 'end':
               return _context4.stop();
           }
         }
-      }, null, this, [[2, 14]]);
+      }, null, this, [[5, 17]]);
     }
   }, {
     key: 'getContracts',
@@ -303,23 +316,11 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: 'getRegistryAddress',
     value: function getRegistryAddress() {
-      return this.context.config.registryAddress;
+      return this.config.registryAddress;
     }
-
-    // getParatiiRegistry () {
-    //
-    //   let address = getRegistryAddress()
-    //   if (!address) {
-    //     let msg = `No paratii registry address known!`
-    //     throw Error(msg)
-    //   }
-    //   CONTRACTS.ParatiiRegistry.contract.options.address = address
-    //   return CONTRACTS.ParatiiRegistry.contract
-    // }
-
   }, {
     key: 'balanceOf',
-    value: function balanceOf(account, symbol) {
+    value: function balanceOf(address, symbol) {
       var balance, balances, contract;
       return regeneratorRuntime.async(function balanceOf$(_context6) {
         while (1) {
@@ -344,7 +345,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
               }
 
               _context6.next = 7;
-              return regeneratorRuntime.awrap(this.context.web3.eth.getBalance(account));
+              return regeneratorRuntime.awrap(this.web3.eth.getBalance(address));
 
             case 7:
               balance = _context6.sent;
@@ -363,7 +364,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 12:
               contract = _context6.sent;
               _context6.next = 15;
-              return regeneratorRuntime.awrap(contract.methods.balanceOf(account).call());
+              return regeneratorRuntime.awrap(contract.methods.balanceOf(address).call());
 
             case 15:
               balance = _context6.sent;
@@ -391,7 +392,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: '_transferETH',
     value: function _transferETH(beneficiary, amount) {
-      var fromAddress, result;
+      var from, result;
       return regeneratorRuntime.async(function _transferETH$(_context7) {
         while (1) {
           switch (_context7.prev = _context7.next) {
@@ -399,9 +400,9 @@ var ParatiiEth = exports.ParatiiEth = function () {
               // @args amount is in Wei
               // TODO: use the SendEther contract
               // TODO: this will only work on testrpc with unlocked accounts..
-              fromAddress = this.context.config.account;
+              from = this.config.account.address;
 
-              if (fromAddress) {
+              if (from) {
                 _context7.next = 3;
                 break;
               }
@@ -409,19 +410,33 @@ var ParatiiEth = exports.ParatiiEth = function () {
               throw Error('No account set! Cannot send transactions');
 
             case 3:
-              _context7.next = 5;
-              return regeneratorRuntime.awrap(this.context.web3.eth.sendTransaction({
-                from: (0, _utils.add0x)(fromAddress),
-                to: (0, _utils.add0x)(beneficiary),
+              if (beneficiary) {
+                _context7.next = 5;
+                break;
+              }
+
+              throw Error('No beneficiary given.');
+
+            case 5:
+              from = (0, _utils.add0x)(from);
+              beneficiary = (0, _utils.add0x)(beneficiary);
+              // console.log('000000000000000000000000000000000000000000000000000000000000000')
+              // console.log(from)
+              // console.log(beneficiary)
+              // console.log('000000000000000000000000000000000000000000000000000000000000000')
+              _context7.next = 9;
+              return regeneratorRuntime.awrap(this.web3.eth.sendTransaction({
+                from: from,
+                to: beneficiary,
                 value: amount,
                 gasPrice: 20000000000
               }));
 
-            case 5:
+            case 9:
               result = _context7.sent;
               return _context7.abrupt('return', result);
 
-            case 7:
+            case 11:
             case 'end':
               return _context7.stop();
           }
@@ -431,7 +446,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: '_transferPTI',
     value: function _transferPTI(beneficiary, amount) {
-      var contract, fromAddress, result;
+      var contract, from, result;
       return regeneratorRuntime.async(function _transferPTI$(_context8) {
         while (1) {
           switch (_context8.prev = _context8.next) {
@@ -441,24 +456,41 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
             case 2:
               contract = _context8.sent;
-              fromAddress = this.context.config.account;
 
-              if (fromAddress) {
-                _context8.next = 6;
+              if (!(!contract.options || !contract.options.address)) {
+                _context8.next = 5;
+                break;
+              }
+
+              throw Error('No ParatiiToken contract known - please run paratii.diagnose()');
+
+            case 5:
+              from = this.config.account.address;
+
+              if (from) {
+                _context8.next = 8;
                 break;
               }
 
               throw Error('No account set! Cannot send transactions');
 
-            case 6:
-              _context8.next = 8;
-              return regeneratorRuntime.awrap(contract.methods.transfer(beneficiary, amount).send({ gas: 200000, from: fromAddress }));
-
             case 8:
+              from = (0, _utils.add0x)(from);
+              beneficiary = (0, _utils.add0x)(beneficiary);
+              // console.log('000000000000000000000000000000000000000000000000000000000000000')
+              // console.log(from)
+              // console.log(beneficiary)
+              // console.log(contract.options.address)
+              // console.log('000000000000000000000000000000000000000000000000000000000000000')
+              // console.log(`Sending ${amount} PTI from ${fromAddress} to ${beneficiary} using contract ${contract}`)
+              _context8.next = 12;
+              return regeneratorRuntime.awrap(contract.methods.transfer(beneficiary, amount).send({ gas: 200000, from: from }));
+
+            case 12:
               result = _context8.sent;
               return _context8.abrupt('return', result);
 
-            case 10:
+            case 14:
             case 'end':
               return _context8.stop();
           }

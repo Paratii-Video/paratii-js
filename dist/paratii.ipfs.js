@@ -23,8 +23,10 @@ var Ipfs = require('ipfs');
 var dopts = require('default-options');
 
 var ParatiiIPFS = exports.ParatiiIPFS = function () {
-  function ParatiiIPFS(opts) {
+  function ParatiiIPFS(config) {
     _classCallCheck(this, ParatiiIPFS);
+
+    this.config = config;
 
     var defaults = {
       protocol: null,
@@ -36,7 +38,8 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
       'account': null // 'Ethereum acccounts'
 
     };
-    this.config = dopts(opts, defaults);
+    var options = dopts(config, defaults, { allowUnknown: true });
+    Object.assign(this.config, options);
   }
 
   _createClass(ParatiiIPFS, [{
