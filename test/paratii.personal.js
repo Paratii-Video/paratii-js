@@ -1,6 +1,5 @@
 import { Paratii } from '../lib/paratii.js'
-import { account, privateKey, account99 } from './utils.js'
-import { assert } from 'chai'
+import { account, privateKey } from './utils.js'
 
 describe('paratii.personal API: :', function () {
   let paratii
@@ -11,14 +10,5 @@ describe('paratii.personal API: :', function () {
       privateKey: privateKey
     })
     await paratii.eth.deployContracts()
-  })
-
-  it('personal.address should return address', async function () {
-    assert.equal(paratii.config.account.address, account)
-  })
-
-  it('personal.setAccount should set the address', async function () {
-    await paratii.personal.setAccount(account99)
-    assert.equal(paratii.config.account.address, account99)
   })
 })
