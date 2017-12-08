@@ -10,15 +10,16 @@ describe('Paratii configuration:', function () {
   let paratii
 
   beforeEach(function () {
+  })
+
+  it('paratii.config should return the configuration with default values', async function () {
     paratii = new Paratii({
       // this address and key are the first accounts on testrpc when started with the --deterministic flag
       provider: 'http://localhost:8545',
       account: account,
       privateKey: privateKey
     })
-  })
 
-  it('paratii.config should return the configuration with default values', async function () {
     let expected = {
       account: {
         address: account,
@@ -33,6 +34,13 @@ describe('Paratii configuration:', function () {
 
   it('should be possible to create a second Paratii object with the same settings', async function () {
     // deploy the contracts so we have a registry address
+    paratii = new Paratii({
+      // this address and key are the first accounts on testrpc when started with the --deterministic flag
+      provider: 'http://localhost:8545',
+      account: account,
+      privateKey: privateKey
+    })
+
     await paratii.eth.deployContracts()
     assert.isOk(paratii.eth.config.registryAddress)
     // assert.isOk(paratii.config.registryAddress)
@@ -83,5 +91,17 @@ describe('Paratii configuration:', function () {
     assert.equal(paratii.eth.config.account.address, account)
     // promise = paratii.eth.transfer(beneficiary, amount, 'PTI')
     // await assert.isFulfilled(promise)
+  })
+  it('play', async function () {
+    let paratii = new Paratii({})
+    paratii.eth.config.x = 'y'
+    assert.equal(paratii.eth.config.x, 'y')
+    assert.deepEqual(paratii.config, paratii.eth.config)
+    assert.deepEqual(paratii.config, paratii.ipfs.config)
+
+    paratii.ipfs.config.foo = 'bar'
+    assert.equal(paratii.ipfs.config.foo, 'bar')
+    assert.deepEqual(paratii.config, paratii.eth.config)
+    assert.deepEqual(paratii.config, paratii.ipfs.config)
   })
 })

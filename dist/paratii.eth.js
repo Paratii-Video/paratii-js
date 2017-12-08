@@ -17,7 +17,7 @@ var Web3 = require('web3');
 var dopts = require('default-options');
 
 var ParatiiEth = exports.ParatiiEth = function () {
-  function ParatiiEth(opts) {
+  function ParatiiEth(config) {
     _classCallCheck(this, ParatiiEth);
 
     var defaults = {
@@ -30,14 +30,14 @@ var ParatiiEth = exports.ParatiiEth = function () {
       web3: null,
       isTestNet: false
     };
-    var config = dopts(opts, defaults);
+    var options = dopts(config, defaults);
     this.config = config;
 
-    if (config.web3) {
-      this.web3 = config.web3;
+    if (options.web3) {
+      this.web3 = options.web3;
     } else {
       this.web3 = new Web3();
-      this.web3.setProvider(new this.web3.providers.HttpProvider(config.provider));
+      this.web3.setProvider(new this.web3.providers.HttpProvider(options.provider));
     }
 
     if (this.config.account.privateKey) {
