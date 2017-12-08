@@ -9,6 +9,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _utils = require('./utils.js');
 
+var _paratiiEthVids = require('./paratii.eth.vids.js');
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ParatiiEth = exports.ParatiiEth = function () {
@@ -27,7 +29,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
     this.contractNames = ['ParatiiAvatar', 'ParatiiToken', 'ParatiiRegistry', 'SendEther', 'UserRegistry', 'VideoRegistry', 'VideoStore'];
 
-    this.vids = new ParatiiEthVids(this);
+    this.vids = new _paratiiEthVids.ParatiiEthVids(this);
   }
 
   _createClass(ParatiiEth, [{
@@ -190,7 +192,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 5:
               address = _context3.sent;
 
-              if (address) {
+              if (address && address !== '0x0') {
                 contract.options.address = address;
               }
               return _context3.abrupt('return', contract);
@@ -208,56 +210,64 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: 'getContractAddress',
     value: function getContractAddress(name) {
-      var registry, address;
+      var registryAddress, registry, address;
       return regeneratorRuntime.async(function getContractAddress$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
+              registryAddress = this.getRegistryAddress();
+
               if (!(name === 'ParatiiRegistry')) {
-                _context4.next = 2;
+                _context4.next = 3;
                 break;
               }
 
               return _context4.abrupt('return', this.getRegistryAddress());
 
-            case 2:
-              _context4.prev = 2;
-              _context4.next = 5;
-              return regeneratorRuntime.awrap(this.getContract('ParatiiRegistry'));
+            case 3:
+              if (registryAddress) {
+                _context4.next = 5;
+                break;
+              }
+
+              throw Error('No registry address configured');
 
             case 5:
+              _context4.prev = 5;
+              _context4.next = 8;
+              return regeneratorRuntime.awrap(this.getContract('ParatiiRegistry'));
+
+            case 8:
               registry = _context4.sent;
 
               if (registry) {
-                _context4.next = 8;
+                _context4.next = 11;
                 break;
               }
 
               throw Error('No registry contract!');
 
-            case 8:
-              _context4.next = 10;
-              return regeneratorRuntime.awrap(registry.methods.getContract(name).call({
-                from: this.context.account.address
-              }));
+            case 11:
+              _context4.next = 13;
+              return regeneratorRuntime.awrap(registry.methods.getContract(name).call());
 
-            case 10:
+            case 13:
               address = _context4.sent;
               return _context4.abrupt('return', address);
 
-            case 14:
-              _context4.prev = 14;
-              _context4.t0 = _context4['catch'](2);
+            case 17:
+              _context4.prev = 17;
+              _context4.t0 = _context4['catch'](5);
 
               console.log(_context4.t0);
               throw _context4.t0;
 
-            case 18:
+            case 21:
             case 'end':
               return _context4.stop();
           }
         }
-      }, null, this, [[2, 14]]);
+      }, null, this, [[5, 17]]);
     }
   }, {
     key: 'getContracts',
@@ -424,7 +434,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
                 break;
               }
 
-              throw Error('No ParaktiiToken contract known - please run paratii.diagnose()');
+              throw Error('No ParatiiToken contract known - please run paratii.diagnose()');
 
             case 5:
               from = this.context.config.account;
@@ -442,6 +452,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
               // console.log('000000000000000000000000000000000000000000000000000000000000000')
               // console.log(from)
               // console.log(beneficiary)
+              // console.log(contract.options.address)
               // console.log('000000000000000000000000000000000000000000000000000000000000000')
               // console.log(`Sending ${amount} PTI from ${fromAddress} to ${beneficiary} using contract ${contract}`)
               _context8.next = 12;
@@ -490,19 +501,4 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }]);
 
   return ParatiiEth;
-}();
-
-var ParatiiEthVids = function () {
-  function ParatiiEthVids(context) {
-    _classCallCheck(this, ParatiiEthVids);
-
-    this.context = context;
-  }
-
-  _createClass(ParatiiEthVids, [{
-    key: 'register',
-    value: function register(title) {}
-  }]);
-
-  return ParatiiEthVids;
 }();
