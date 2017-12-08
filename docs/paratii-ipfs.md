@@ -23,3 +23,21 @@ Here is an example of all default options:
       'repo': 'paratii-alpha-' + String(math.random()),
       'bitswap.maxMessageSize': 32 * 1024,
     })
+
+## API
+
+### `paratii.ipfs.uploader`
+
+#### `grabYt(url, [onResponse], [callback])`
+
+Grabs a Youtube video and adds it to IPFS.
+
+`onResponse` is an initial callback when Youtube first responds with the requested
+video. params are `onResponse(err, starttime)`
+
+`callback` is the final callback, triggered when the original file is added to IPFS.
+
+
+#### `grabVimeo(url, [onResponse], [callback])`
+
+Grabs a Vimeo video and adds it to IPFS.

@@ -23,6 +23,8 @@
     "paratii-protocol": "github:ya7ya/paratii-protocol#master",
     "promisify-node": "^0.4.0",
     "pull-filereader": "^1.0.1",
+    "stream-to-pull-stream": "^1.7.2",
+    "vimeo-downloader": "^1.0.3",
     "web3": "^1.0.0-beta.24"
   },
   "devDependencies": {

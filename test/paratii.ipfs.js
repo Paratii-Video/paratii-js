@@ -5,7 +5,7 @@ import { assert } from 'chai'
 
 describe('ParatiiIPFS: :', function () {
   let paratiiIPFS
-  this.timeout(10000)
+  this.timeout(30000)
 
   beforeEach(async function () {
     paratiiIPFS = await new ParatiiIPFS({})
@@ -26,7 +26,35 @@ describe('ParatiiIPFS: :', function () {
   it('should allow for file upload', async function () {
     let files = []
     await paratiiIPFS.getIPFSInstance()
-    return paratiiIPFS.uploadFiles(files)
+    return paratiiIPFS.uploader.uploadFiles(files)
+  })
+
+  it('should be able to grab a youtube video and upload it', (done) => {
+    paratiiIPFS.getIPFSInstance().then(() => {
+      paratiiIPFS.uploader.grabYt('https://www.youtube.com/watch?v=IGQBtbKSVhY', (err) => {
+        if (err) return done(err)
+        done()
+      }, (err, file) => {
+        if (err) return done(err)
+        // assert.isOk(file)
+        console.log(file)
+        // done()
+      })
+    }).catch(done)
+  })
+
+  it('should be able to grab a vimeo video and upload it', (done) => {
+    paratiiIPFS.getIPFSInstance().then(() => {
+      paratiiIPFS.uploader.grabVimeo('https://vimeo.com/129522659', (err) => {
+        if (err) return done(err)
+        done()
+      }, (err, file) => {
+        if (err) return done(err)
+        // assert.isOk(file)
+        console.log(file)
+        // done()
+      })
+    }).catch(done)
   })
 })
 
