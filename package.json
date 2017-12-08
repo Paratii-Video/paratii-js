@@ -68,7 +68,7 @@
     ]
   },
   "pre-commit": [
-    "lint-fix",
+    "lint",
     "build"
   ]
 }
