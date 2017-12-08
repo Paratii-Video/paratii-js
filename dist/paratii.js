@@ -66,7 +66,7 @@ var Paratii = function () {
 
     this.eth = new _paratiiEth.ParatiiEth(this.config);
     this.ipfs = new _paratiiIpfs.ParatiiIPFS(this.config);
-    this.personal = new _paratiiPersonal.ParatiiPersonal(this);
+    this.personal = new _paratiiPersonal.ParatiiPersonal(this.config);
   }
 
   _createClass(Paratii, [{
