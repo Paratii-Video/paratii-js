@@ -35,7 +35,8 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
       'config.Bootstrap': ['/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'],
       'repo': '/tmp/paratii-alpha-' + String(Math.random()), // key where to save information
       'bitswap.maxMessageSize': 32 * 1024,
-      'account': null // 'Ethereum acccounts'
+      'account': null, // 'Ethereum acccounts'
+      'verbose': false
 
     };
     var options = dopts(config, defaults, { allowUnknown: true });
@@ -43,6 +44,27 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
   }
 
   _createClass(ParatiiIPFS, [{
+    key: 'log',
+    value: function log(msg) {
+      if (this.config.verbose) {
+        console.log(msg);
+      }
+    }
+  }, {
+    key: 'warn',
+    value: function warn(msg) {
+      if (this.config.verbose) {
+        console.warn(msg);
+      }
+    }
+  }, {
+    key: 'error',
+    value: function error(msg) {
+      if (this.config.verbose) {
+        console.error(msg);
+      }
+    }
+  }, {
     key: 'getIPFSInstance',
     value: function getIPFSInstance() {
       var _this = this;
@@ -68,28 +90,28 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
           var ipfs = _this.ipfs;
 
           ipfs.on('ready', function () {
-            console.log('[IPFS] node Ready.');
+            _this.log('[IPFS] node Ready.');
 
             ipfs._bitswap.notifications.on('receivedNewBlock', function (peerId, block) {
-              console.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length);
-              console.log('---------[IPFS] bitswap LedgerMap ---------------------');
+              _this.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length);
+              _this.log('---------[IPFS] bitswap LedgerMap ---------------------');
               ipfs._bitswap.engine.ledgerMap.forEach(function (ledger, peerId, ledgerMap) {
-                console.log(peerId + ' : ' + JSON.stringify(ledger.accounting) + '\n');
+                _this.log(peerId + ' : ' + JSON.stringify(ledger.accounting) + '\n');
               });
-              console.log('-------------------------------------------------------');
+              _this.log('-------------------------------------------------------');
             });
 
             ipfs.id().then(function (id) {
               var peerInfo = id;
               _this.id = id;
-              console.log('[IPFS] id: ', peerInfo);
+              _this.log('[IPFS] id: ', peerInfo);
               var ptiAddress = _this.config.account || 'no_address';
               _this.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
               // add ETH Address here.
               ptiAddress);
 
               _this.protocol.notifications.on('message:new', function (peerId, msg) {
-                console.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
+                _this.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
               });
 
               // setTimeout(() => {
@@ -106,8 +128,8 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
 
           ipfs.on('error', function (err) {
             if (err) {
-              console.log('IPFS node ', ipfs);
-              console.error('[IPFS] ', err);
+              _this.log('IPFS node ', ipfs);
+              _this.error('[IPFS] ', err);
               reject(err);
             }
           });
@@ -154,7 +176,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
             case 0:
               updateProgress = function updateProgress(chunkLength) {
                 total += chunkLength;
-                console.log('Progress \t', total, ' / ', fileSize, ' = ', Math.floor(total / fileSize * 100));
+                this.log('Progress \t', total, ' / ', fileSize, ' = ', Math.floor(total / fileSize * 100));
               };
 
               fileSize = 0;
@@ -168,12 +190,12 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
                 // replace this by a callback?
                 // setInterval(() => {
                 //   this.ipfs._bitswap.engine.ledgerMap.forEach((ledger, peerId, ledgerMap) => {
-                //     console.log(`${peerId} : ${JSON.stringify(ledger.accounting)}\n`)
+                //     this.log(`${peerId} : ${JSON.stringify(ledger.accounting)}\n`)
                 //   })
                 // }, 5000)
 
                 pull(pull.values(files), pull.through(function (file) {
-                  console.log('Adding ', file);
+                  _this2.log('Adding ', file);
                   fileSize = file.size;
                   total = 0;
                 }), pull.asyncMap(function (file, cb) {
@@ -189,7 +211,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
                       return cb(err);
                     }
                     var file = res[0];
-                    console.log('Adding %s finished', file.path);
+                    _this2.log('Adding %s finished', file.path);
 
                     // statusEl.innerHTML += `Added ${file.path} as ${file.hash} ` + '<br>'
                     // Trigger paratii transcoder signal
@@ -198,12 +220,12 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
                     _this2.ipfs.swarm.connect('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW', function (err, success) {
                       if (err) throw err;
                       _this2.ipfs.swarm.peers(function (err, peers) {
-                        console.log('peers: ', peers);
+                        _this2.log('peers: ', peers);
                         if (err) throw err;
                         peers.map(function (peer) {
-                          console.log('sending transcode msg to ', peer.peer.id.toB58String());
+                          _this2.log('sending transcode msg to ', peer.peer.id.toB58String());
                           _this2.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
-                            if (err) console.warn('[Paratii-protocol] Error ', err);
+                            if (err) _this2.warn('[Paratii-protocol] Error ', err);
                           });
 
                           if (peer.addr) {}
@@ -224,16 +246,16 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
 
                 // paratii transcoder signal.
                 _this2.protocol.notifications.on('command', function (peerId, command) {
-                  console.log('paratii protocol: Got Command ', command);
+                  _this2.log('paratii protocol: Got Command ', command);
                   if (command.payload.toString() === 'transcoding:done') {
                     var args = JSON.parse(command.args.toString());
                     var result = JSON.parse(args.result);
-                    console.log('args: ', args);
-                    console.log('result: ', result);
+                    _this2.log('args: ', args);
+                    _this2.log('result: ', result);
                     // statusEl.innerHTML += `Video HLS link: /ipfs/${result.master.hash}\n`
 
                     // titleEl = document.querySelector('#input-title')
-                    // console.log('titleEl: ', titleEl)
+                    // this.log('titleEl: ', titleEl)
                     //   Meteor.call('videos.create', {
                     //     id: String(Math.random()).split('.')[1],
                     //     title: titleEl.value,
@@ -245,7 +267,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
                     //       dislikes: 0
                     //     }}, (err, videoId) => {
                     //       if (err) throw err
-                    //       console.log('[upload] Video Uploaded: ', videoId)
+                    //       this.log('[upload] Video Uploaded: ', videoId)
                     //       statusEl.innerHTML += '\n Video Uploaded go to <b><a href="/play/' + videoId + '">/play/' + videoId + '</a></b>\n'
                     //     })
                   }

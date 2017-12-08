@@ -45,6 +45,8 @@ var Paratii = function () {
 
     if (this.config.provider === 'http://localhost:8545') {
       this.config.isTestNet = true;
+    } else if (this.config.provider === 'http://127.0.0.1:8545') {
+      this.config.isTestNet = true;
     } else {
       this.config.isTestNet = false;
     }

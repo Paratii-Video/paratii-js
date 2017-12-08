@@ -30,6 +30,13 @@ describe('Paratii configuration:', function () {
     assert.deepInclude(paratii.config, expected)
   })
 
+  it('testnet configuration should be recognized', async function () {
+    paratii = new Paratii({provider: 'http://127.0.0.1:8545'})
+    assert.isOk(paratii.config.isTestNet)
+    paratii = new Paratii({provider: 'http://localhost:8545'})
+    assert.isOk(paratii.config.isTestNet)
+  })
+
   it('should be possible to create a second Paratii object with the same settings', async function () {
     // deploy the contracts so we have a registry address
     paratii = new Paratii({
@@ -78,7 +85,6 @@ describe('Paratii configuration:', function () {
     let paratii = new Paratii({
       provider: 'http://127.0.0.1:8545'
     })
-    // await paratii.eth.deployContracts()
     // let beneficiary = account1
     // let amount = 0.3 * 10 ** 18
     // let promise = paratii.eth.transfer(beneficiary, amount, 'PTI')
@@ -90,16 +96,8 @@ describe('Paratii configuration:', function () {
     // promise = paratii.eth.transfer(beneficiary, amount, 'PTI')
     // await assert.isFulfilled(promise)
   })
-  it('play', async function () {
+  it('paratii.eth.web3 should be available', async function () {
     let paratii = new Paratii({})
-    paratii.eth.config.x = 'y'
-    assert.equal(paratii.eth.config.x, 'y')
-    assert.deepEqual(paratii.config, paratii.eth.config)
-    assert.deepEqual(paratii.config, paratii.ipfs.config)
-
-    paratii.ipfs.config.foo = 'bar'
-    assert.equal(paratii.ipfs.config.foo, 'bar')
-    assert.equal(paratii.config, paratii.eth.config)
-    assert.equal(paratii.config, paratii.ipfs.config)
+    assert.isOk(paratii.eth.web3)
   })
 })
