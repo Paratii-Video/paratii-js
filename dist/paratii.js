@@ -15,7 +15,6 @@ var _paratiiPersonal = require('./paratii.personal.js');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Web3 = require('web3');
 var dopts = require('default-options');
 var utils = require('./utils.js');
 
@@ -34,50 +33,48 @@ var Paratii = function () {
     var defaults = {
       provider: 'http://localhost:8545',
       registryAddress: null,
-      account: null,
+      account: null, // TODO: rename to 'address'
       privateKey: null
     };
-    var config = dopts(opts, defaults);
-    this.config = config;
+    var options = dopts(opts, defaults);
 
-    this.web3 = new Web3();
-    this.web3.setProvider(new this.web3.providers.HttpProvider(config.provider));
+    this.config = {};
+    this.config.provider = options.provider;
 
-    if (!config.account) {
+    if (this.config.provider === 'http://localhost:8545') {
+      this.config.isTestNet = true;
+    } else {
+      this.config.isTestNet = false;
+    }
+    this.config.registryAddress = options.registryAddress;
+
+    if (!options.account && this.config.isTestNet) {
       // this is the first account generated with testprc/ganache using the --deterministic flag
       // we use it here as default, but probably should not..
-      this.account = {
+      this.config.account = {
         address: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
         privateKey: '4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d'
       };
-      this.web3.eth.accounts.wallet.add(this.account.privateKey);
     } else {
-      this.account = {
-        address: config.account
+      this.config.account = {
+        address: options.account,
+        privateKey: options.privateKey
       };
-      if (config.privateKey) {
-        this.web3.eth.accounts.wallet.add(config.privateKey);
-      }
     }
 
-    this.eth = new _paratiiEth.ParatiiEth(this);
-
-    this.ipfs = new _paratiiIpfs.ParatiiIPFS(this);
+    this.eth = new _paratiiEth.ParatiiEth(this.config);
+    this.ipfs = new _paratiiIpfs.ParatiiIPFS(this.config);
     this.personal = new _paratiiPersonal.ParatiiPersonal(this);
   }
 
   _createClass(Paratii, [{
     key: 'setAccount',
     value: function setAccount(address, privateKey) {
-      this.account = {
+      this.config.account = {
         address: address,
         privateKey: privateKey
-        // account = {
-        //   address: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
-        //   privateKey: '4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d'
-        // }
-
-      };
+        // TODO: config should be a singleton object, not something that is copied everywhere
+      };this.eth.config.account = this.config.account;
       if (privateKey) {
         this.web3.eth.accounts.wallet.add(privateKey);
       }
@@ -110,7 +107,7 @@ var Paratii = function () {
                 break;
               }
 
-              log('No registry address found!');
+              log('*** No registry address found!');
               log('Value of this.config.registryAddress: ' + this.config.registryAddress);
               isOk = false;
               _context.next = 33;
@@ -119,7 +116,7 @@ var Paratii = function () {
             case 13:
               log('checking deployed code of Registry...');
               _context.next = 16;
-              return regeneratorRuntime.awrap(this.web3.eth.getCode(address));
+              return regeneratorRuntime.awrap(this.eth.web3.eth.getCode(address));
 
             case 16:
               msg = _context.sent;
@@ -167,19 +164,14 @@ var Paratii = function () {
               break;
 
             case 33:
-              log('thats it!');
-
               if (isOk) {
-                _context.next = 36;
-                break;
+                log('---- everything seems fine -----');
+              } else {
+                log('***** Something is wrong *****');
               }
-
-              throw Error(msgs);
-
-            case 36:
               return _context.abrupt('return', msgs);
 
-            case 37:
+            case 35:
             case 'end':
               return _context.stop();
           }

@@ -50,7 +50,7 @@ describe('paratii.eth API: :', function () {
   it('transfer ETH should work as expected', async function () {
     let beneficiary = account1
     let balance0 = await paratii.eth.balanceOf(beneficiary, 'ETH')
-    let amount = paratii.web3.utils.toWei('3', 'ether')
+    let amount = paratii.eth.web3.utils.toWei('3', 'ether')
     await paratii.eth.transfer(beneficiary, amount, 'ETH')
     let balance1 = await paratii.eth.balanceOf(beneficiary, 'ETH')
     assert.equal(balance1 - balance0, amount)
@@ -58,7 +58,7 @@ describe('paratii.eth API: :', function () {
 
   it('transfer PTI should work as expected', async function () {
     let beneficiary = account1
-    let amount = paratii.web3.utils.toWei('3', 'ether')
+    let amount = paratii.eth.web3.utils.toWei('3', 'ether')
     let balance0 = await paratii.eth.balanceOf(beneficiary, 'PTI')
     await paratii.eth.transfer(beneficiary, amount, 'PTI')
     let balance1 = await paratii.eth.balanceOf(beneficiary, 'PTI')

@@ -14,11 +14,11 @@ describe('paratii.personal API: :', function () {
   })
 
   it('personal.address should return address', async function () {
-    assert.equal(paratii.account.address, account)
+    assert.equal(paratii.config.account.address, account)
   })
 
   it('personal.setAccount should set the address', async function () {
     await paratii.personal.setAccount(account99)
-    assert.equal(paratii.account.address, account99)
+    assert.equal(paratii.config.account.address, account99)
   })
 })

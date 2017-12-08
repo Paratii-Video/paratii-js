@@ -13,11 +13,37 @@ var _paratiiEthVids = require('./paratii.eth.vids.js');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var Web3 = require('web3');
+var dopts = require('default-options');
+
 var ParatiiEth = exports.ParatiiEth = function () {
-  function ParatiiEth(context) {
+  function ParatiiEth(opts) {
     _classCallCheck(this, ParatiiEth);
 
-    this.context = context;
+    var defaults = {
+      provider: 'http://localhost:8545',
+      registryAddress: null,
+      account: {
+        address: null,
+        privateKey: null
+      },
+      web3: null,
+      isTestNet: false
+    };
+    var config = dopts(opts, defaults);
+    this.config = config;
+
+    if (config.web3) {
+      this.web3 = config.web3;
+    } else {
+      this.web3 = new Web3();
+      this.web3.setProvider(new this.web3.providers.HttpProvider(config.provider));
+    }
+
+    if (this.config.account.privateKey) {
+      this.web3.eth.accounts.wallet.add(this.config.account.privateKey);
+    }
+
     this.contracts = {};
     this.contracts.ParatiiToken = this.requireContract('ParatiiToken');
     this.contracts.ParatiiAvatar = this.requireContract('ParatiiAvatar');
@@ -36,12 +62,14 @@ var ParatiiEth = exports.ParatiiEth = function () {
     key: 'requireContract',
     value: function requireContract(contractName) {
       var artifact = require('paratii-contracts/build/contracts/' + contractName + '.json');
-      var contract = new this.context.web3.eth.Contract(artifact.abi, {
-        from: this.context.account.address,
-        gas: this.context.web3.utils.toHex(4e6),
+      var from = this.config.account.address;
+
+      var contract = new this.web3.eth.Contract(artifact.abi, {
+        from: from,
+        gas: this.web3.utils.toHex(4e6),
         data: artifact.bytecode
       });
-      contract.setProvider(this.context.web3.currentProvider);
+      contract.setProvider(this.web3.currentProvider);
       return contract;
     }
   }, {
@@ -140,7 +168,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
             case 34:
               _context2.next = 36;
-              return regeneratorRuntime.awrap(paratiiRegistry.methods.registerUint('VideoRedistributionPoolShare', this.context.web3.utils.toWei('0.3')).send());
+              return regeneratorRuntime.awrap(paratiiRegistry.methods.registerUint('VideoRedistributionPoolShare', this.web3.utils.toWei('0.3')).send());
 
             case 36:
               _context2.next = 38;
@@ -157,7 +185,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
                 VideoRegistry: videoRegistry,
                 VideoStore: videoStore
               };
-              this.context.config.registryAddress = paratiiRegistryAddress;
+              this.config.registryAddress = paratiiRegistryAddress;
 
               return _context2.abrupt('return', this.contracts);
 
@@ -288,11 +316,11 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: 'getRegistryAddress',
     value: function getRegistryAddress() {
-      return this.context.config.registryAddress;
+      return this.config.registryAddress;
     }
   }, {
     key: 'balanceOf',
-    value: function balanceOf(account, symbol) {
+    value: function balanceOf(address, symbol) {
       var balance, balances, contract;
       return regeneratorRuntime.async(function balanceOf$(_context6) {
         while (1) {
@@ -317,7 +345,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
               }
 
               _context6.next = 7;
-              return regeneratorRuntime.awrap(this.context.web3.eth.getBalance(account));
+              return regeneratorRuntime.awrap(this.web3.eth.getBalance(address));
 
             case 7:
               balance = _context6.sent;
@@ -336,7 +364,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 12:
               contract = _context6.sent;
               _context6.next = 15;
-              return regeneratorRuntime.awrap(contract.methods.balanceOf(account).call());
+              return regeneratorRuntime.awrap(contract.methods.balanceOf(address).call());
 
             case 15:
               balance = _context6.sent;
@@ -372,7 +400,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
               // @args amount is in Wei
               // TODO: use the SendEther contract
               // TODO: this will only work on testrpc with unlocked accounts..
-              from = this.context.config.account;
+              from = this.config.account.address;
 
               if (from) {
                 _context7.next = 3;
@@ -397,7 +425,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
               // console.log(beneficiary)
               // console.log('000000000000000000000000000000000000000000000000000000000000000')
               _context7.next = 9;
-              return regeneratorRuntime.awrap(this.context.web3.eth.sendTransaction({
+              return regeneratorRuntime.awrap(this.web3.eth.sendTransaction({
                 from: from,
                 to: beneficiary,
                 value: amount,
@@ -437,7 +465,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
               throw Error('No ParatiiToken contract known - please run paratii.diagnose()');
 
             case 5:
-              from = this.context.config.account;
+              from = this.config.account.address;
 
               if (from) {
                 _context8.next = 8;
