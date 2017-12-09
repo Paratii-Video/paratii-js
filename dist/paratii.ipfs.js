@@ -35,24 +35,45 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
       'config.Bootstrap': ['/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'],
       'repo': '/tmp/paratii-alpha-' + String(Math.random()), // key where to save information
       'bitswap.maxMessageSize': 32 * 1024,
-      'account': null // 'Ethereum acccounts'
-
+      'address': null, // 'Ethereum address'
+      'verbose': false
     };
     var options = dopts(config, defaults, { allowUnknown: true });
     Object.assign(this.config, options);
   }
 
   _createClass(ParatiiIPFS, [{
+    key: 'log',
+    value: function log(msg) {
+      if (this.config.verbose) {
+        console.log(msg);
+      }
+    }
+  }, {
+    key: 'warn',
+    value: function warn(msg) {
+      if (this.config.verbose) {
+        console.warn(msg);
+      }
+    }
+  }, {
+    key: 'error',
+    value: function error(msg) {
+      if (this.config.verbose) {
+        console.error(msg);
+      }
+    }
+  }, {
     key: 'getIPFSInstance',
     value: function getIPFSInstance() {
-      var _this = this;
+      var _this2 = this;
 
       return new Promise(function (resolve, reject) {
-        if (_this.ipfs) {
-          resolve(_this.ipfs);
+        if (_this2.ipfs) {
+          resolve(_this2.ipfs);
         } else {
-          var config = _this.config;
-          _this.ipfs = new Ipfs({
+          var config = _this2.config;
+          _this2.ipfs = new Ipfs({
             bitswap: {
               maxMessageSize: config['bitswap.maxMessageSize']
             },
@@ -65,31 +86,31 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
             }
           });
 
-          var ipfs = _this.ipfs;
+          var ipfs = _this2.ipfs;
 
           ipfs.on('ready', function () {
-            console.log('[IPFS] node Ready.');
+            _this2.log('[IPFS] node Ready.');
 
             ipfs._bitswap.notifications.on('receivedNewBlock', function (peerId, block) {
-              console.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length);
-              console.log('---------[IPFS] bitswap LedgerMap ---------------------');
+              _this2.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length);
+              _this2.log('---------[IPFS] bitswap LedgerMap ---------------------');
               ipfs._bitswap.engine.ledgerMap.forEach(function (ledger, peerId, ledgerMap) {
-                console.log(peerId + ' : ' + JSON.stringify(ledger.accounting) + '\n');
+                _this2.log(peerId + ' : ' + JSON.stringify(ledger.accounting) + '\n');
               });
-              console.log('-------------------------------------------------------');
+              _this2.log('-------------------------------------------------------');
             });
 
             ipfs.id().then(function (id) {
               var peerInfo = id;
-              _this.id = id;
-              console.log('[IPFS] id: ', peerInfo);
-              var ptiAddress = _this.config.account || 'no_address';
-              _this.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
+              _this2.id = id;
+              _this2.log('[IPFS] id: ', peerInfo);
+              var ptiAddress = _this2.config.address || 'no_address';
+              _this2.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
               // add ETH Address here.
               ptiAddress);
 
-              _this.protocol.notifications.on('message:new', function (peerId, msg) {
-                console.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
+              _this2.protocol.notifications.on('message:new', function (peerId, msg) {
+                _this2.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
               });
 
               // setTimeout(() => {
@@ -97,7 +118,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
               //   this.triggerOnReady()
               // }, 10)
 
-              _this.ipfs = ipfs;
+              _this2.ipfs = ipfs;
               resolve(ipfs);
               // callback()
             });
@@ -106,8 +127,8 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
 
           ipfs.on('error', function (err) {
             if (err) {
-              console.log('IPFS node ', ipfs);
-              console.error('[IPFS] ', err);
+              _this2.log('IPFS node ', ipfs);
+              _this2.error('[IPFS] ', err);
               reject(err);
             }
           });
@@ -144,36 +165,54 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
     }
   }, {
     key: 'uploadFiles',
-    value: function uploadFiles(files) {
-      var _this2 = this;
+    value: function uploadFiles(files, options) {
+      var _this3 = this;
 
-      var fileSize, total, updateProgress;
+      var _this, defaults, fileSize, total;
+
       return regeneratorRuntime.async(function uploadFiles$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              updateProgress = function updateProgress(chunkLength) {
-                total += chunkLength;
-                console.log('Progress \t', total, ' / ', fileSize, ' = ', Math.floor(total / fileSize * 100));
+              // TODO return proper promsie with status updates
+              _this = this;
+              defaults = {
+                onStart: function onStart() {
+                  _this.log('Upload started');
+                  // setInterval(() => {
+                  //   this.ipfs._bitswap.engine.ledgerMap.forEach((ledger, peerId, ledgerMap) => {
+                  //     this.log(`${peerId} : ${JSON.stringify(ledger.accounting)}\n`)
+                  //   })
+                  // }, 5000)
+                },
+                onProgress: function onProgress(chunkLength) {
+                  total += chunkLength;
+                  this.log('Progress \t', total, ' / ', fileSize, ' = ', Math.floor(total / fileSize * 100));
+                },
+                onDone: function onDone(file) {
+                  this.log('Adding %s finished', file.path);
+                  // statusEl.innerHTML += `Added ${file.path} as ${file.hash} ` + '<br>'
+                  // Trigger paratii transcoder signal
+                  this.transcode({ hash: file.hash, author: this.id.id });
+                },
+                onFileReady: Function // function(file)
               };
 
+              options = dopts(options, defaults);
+
               fileSize = 0;
-              _context.next = 4;
+              _context.next = 6;
               return regeneratorRuntime.awrap(this.getIPFSInstance());
 
-            case 4:
+            case 6:
               total = 0;
 
               this.start(function () {
-                // replace this by a callback?
-                // setInterval(() => {
-                //   this.ipfs._bitswap.engine.ledgerMap.forEach((ledger, peerId, ledgerMap) => {
-                //     console.log(`${peerId} : ${JSON.stringify(ledger.accounting)}\n`)
-                //   })
-                // }, 5000)
+                // set this by passing onSTart
+                options.onStart();
 
                 pull(pull.values(files), pull.through(function (file) {
-                  console.log('Adding ', file);
+                  _this3.log('Adding ', file);
                   fileSize = file.size;
                   total = 0;
                 }), pull.asyncMap(function (file, cb) {
@@ -181,36 +220,15 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
                     path: file.name,
                     // content: pullFilereader(file)
                     content: pull(pullFilereader(file), pull.through(function (chunk) {
-                      return updateProgress(chunk.length);
+                      return options.onProgress(chunk.length);
                     }))
-                  }]), _this2.ipfs.files.createAddPullStream({ chunkerOptions: { maxChunkSize: 64048 } }), // default size 262144
+                  }]), _this3.ipfs.files.createAddPullStream({ chunkerOptions: { maxChunkSize: 64048 } }), // default size 262144
                   pull.collect(function (err, res) {
                     if (err) {
                       return cb(err);
                     }
                     var file = res[0];
-                    console.log('Adding %s finished', file.path);
-
-                    // statusEl.innerHTML += `Added ${file.path} as ${file.hash} ` + '<br>'
-                    // Trigger paratii transcoder signal
-
-                    var msg = _this2.protocol.createCommand('transcode', { hash: file.hash, author: _this2.id.id });
-                    _this2.ipfs.swarm.connect('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW', function (err, success) {
-                      if (err) throw err;
-                      _this2.ipfs.swarm.peers(function (err, peers) {
-                        console.log('peers: ', peers);
-                        if (err) throw err;
-                        peers.map(function (peer) {
-                          console.log('sending transcode msg to ', peer.peer.id.toB58String());
-                          _this2.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
-                            if (err) console.warn('[Paratii-protocol] Error ', err);
-                          });
-
-                          if (peer.addr) {}
-                        });
-                        cb(null, file);
-                      });
-                    });
+                    options.onDone(file);
                   }));
                 }), pull.collect(function (err, files) {
                   if (err) {
@@ -221,40 +239,86 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
                   //   statusEl.innerHTML += `Don't Close this window. signaling transcoder...\n`
                   // }
                 }));
+              });
 
-                // paratii transcoder signal.
-                _this2.protocol.notifications.on('command', function (peerId, command) {
-                  console.log('paratii protocol: Got Command ', command);
-                  if (command.payload.toString() === 'transcoding:done') {
-                    var args = JSON.parse(command.args.toString());
-                    var result = JSON.parse(args.result);
-                    console.log('args: ', args);
-                    console.log('result: ', result);
-                    // statusEl.innerHTML += `Video HLS link: /ipfs/${result.master.hash}\n`
+            case 8:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, null, this);
+    }
+  }, {
+    key: 'transcode',
+    value: function transcode(options) {
+      var _this4 = this;
 
-                    // titleEl = document.querySelector('#input-title')
-                    // console.log('titleEl: ', titleEl)
-                    //   Meteor.call('videos.create', {
-                    //     id: String(Math.random()).split('.')[1],
-                    //     title: titleEl.value,
-                    //     price: 0.0,
-                    //     src: '/ipfs/' + result.master.hash,
-                    //     mimetype: 'video/mp4',
-                    //     stats: {
-                    //       likes: 0,
-                    //       dislikes: 0
-                    //     }}, (err, videoId) => {
-                    //       if (err) throw err
-                    //       console.log('[upload] Video Uploaded: ', videoId)
-                    //       statusEl.innerHTML += '\n Video Uploaded go to <b><a href="/play/' + videoId + '">/play/' + videoId + '</a></b>\n'
-                    //     })
-                  }
+      var defaults, msg;
+      return regeneratorRuntime.async(function transcode$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              // TODO: return a promise
+              // sends a message to the transcoding server to start transcoding the file with the given hash
+              defaults = {
+                hash: String,
+                author: String,
+                onError: function onError(err) {
+                  if (err) this.warn('[Paratii-protocol] Error ', err);
+                },
+                onDone: function onDone(args, result) {
+                  //
+                  this.log('args: ', args);
+                  this.log('result: ', result);
+                  // statusEl.innerHTML += `Video HLS link: /ipfs/${result.master.hash}\n`
+                  // titleEl = document.querySelector('#input-title')
+                  // this.log('titleEl: ', titleEl)
+                  //   Meteor.call('videos.create', {
+                  //     id: String(Math.random()).split('.')[1],
+                  //     title: titleEl.value,
+                  //     price: 0.0,
+                  //     src: '/ipfs/' + result.master.hash,
+                  //     mimetype: 'video/mp4',
+                  //     stats: {
+                  //       likes: 0,
+                  //       dislikes: 0
+                  //     }}, (err, videoId) => {
+                  //       if (err) throw err
+                  //       this.log('[upload] Video Uploaded: ', videoId)
+                  //       statusEl.innerHTML += '\n Video Uploaded go to <b><a href="/play/' + videoId + '">/play/' + videoId + '</a></b>\n'
+                  //     })
+                }
+              };
+
+              options = dopts(options, defaults);
+              msg = this.protocol.createCommand('transcode', { hash: options.hash, author: options.author });
+
+              this.ipfs.swarm.connect('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW', function (err, success) {
+                if (err) throw err;
+                _this4.ipfs.swarm.peers(function (err, peers) {
+                  _this4.log('peers: ', peers);
+                  if (err) throw err;
+                  peers.map(function (peer) {
+                    _this4.log('sending transcode msg to ', peer.peer.id.toB58String());
+                    _this4.protocol.network.sendMessage(peer.peer.id, msg, options.onError);
+                    if (peer.addr) {}
+                  });
                 });
               });
 
-            case 6:
+              // wait for paratii transcoder signal.
+              this.protocol.notifications.on('command', function (peerId, command) {
+                _this4.log('paratii protocol: Got Command ', command);
+                if (command.payload.toString() === 'transcoding:done') {
+                  var args = JSON.parse(command.args.toString());
+                  var result = JSON.parse(args.result);
+                  options.onDone(args, result);
+                }
+              });
+
+            case 5:
             case 'end':
-              return _context.stop();
+              return _context2.stop();
           }
         }
       }, null, this);

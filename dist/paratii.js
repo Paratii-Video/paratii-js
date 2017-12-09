@@ -33,7 +33,7 @@ var Paratii = function () {
     var defaults = {
       provider: 'http://localhost:8545',
       registryAddress: null,
-      account: null, // TODO: rename to 'address'
+      address: null, //  Ethereum address
       privateKey: null,
       'repo': null
     };
@@ -45,12 +45,14 @@ var Paratii = function () {
 
     if (this.config.provider === 'http://localhost:8545') {
       this.config.isTestNet = true;
+    } else if (this.config.provider === 'http://127.0.0.1:8545') {
+      this.config.isTestNet = true;
     } else {
       this.config.isTestNet = false;
     }
     this.config.registryAddress = options.registryAddress;
 
-    if (!options.account && this.config.isTestNet) {
+    if (!options.address && this.config.isTestNet) {
       // this is the first account generated with testprc/ganache using the --deterministic flag
       // we use it here as default, but probably should not..
       this.config.account = {
@@ -59,7 +61,7 @@ var Paratii = function () {
       };
     } else {
       this.config.account = {
-        address: options.account,
+        address: options.address,
         privateKey: options.privateKey
       };
     }

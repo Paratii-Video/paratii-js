@@ -1,6 +1,6 @@
 import { Paratii } from '../lib/paratii.js'
 import { ParatiiIPFS } from '../lib/paratii.ipfs.js'
-import { account, privateKey } from './utils.js'
+import { address, privateKey } from './utils.js'
 import { assert } from 'chai'
 
 describe('ParatiiIPFS: :', function () {
@@ -64,7 +64,7 @@ describe('paratii.ipfs: :', function () {
   beforeEach(async function () {
     paratii = await new Paratii({
       provider: 'http://localhost:8545',
-      account: account,
+      address: address,
       privateKey: privateKey
     })
   })

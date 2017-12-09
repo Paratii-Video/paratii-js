@@ -24,6 +24,7 @@ The Paratii object serves as the general entry point for interacting with the fa
     paratii = Paratii({
       provider: 'chain.paratii.video', // optional - the address of an ethereum node (defaults to localhost:8754)
       registry: '0x23445abcdefg', // optional - the address where the Paratii Contract registry can be found
+      address: '0x12455', // address of the operator/user
       privatekey: '...', // optional - private key of the user
       wallet: walletObject, // optional, a (possibly password-locked) wallet object [?]
     })
