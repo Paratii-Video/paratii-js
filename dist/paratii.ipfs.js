@@ -37,7 +37,6 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
       'bitswap.maxMessageSize': 32 * 1024,
       'account': null, // 'Ethereum acccounts'
       'verbose': false
-
     };
     var options = dopts(config, defaults, { allowUnknown: true });
     Object.assign(this.config, options);
