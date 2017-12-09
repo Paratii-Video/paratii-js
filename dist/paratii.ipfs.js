@@ -35,7 +35,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
       'config.Bootstrap': ['/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'],
       'repo': '/tmp/paratii-alpha-' + String(Math.random()), // key where to save information
       'bitswap.maxMessageSize': 32 * 1024,
-      'account': null, // 'Ethereum acccounts'
+      'address': null, // 'Ethereum address'
       'verbose': false
     };
     var options = dopts(config, defaults, { allowUnknown: true });
@@ -104,7 +104,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
               var peerInfo = id;
               _this.id = id;
               _this.log('[IPFS] id: ', peerInfo);
-              var ptiAddress = _this.config.account || 'no_address';
+              var ptiAddress = _this.config.address || 'no_address';
               _this.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
               // add ETH Address here.
               ptiAddress);
