@@ -27,6 +27,41 @@ Here is an example of all default options:
       'repo': 'path/to/repo', // this identifies the repository
       'repo': '/tmp/paratii-alpha-' + String(Math.random()), // key where to save information
       'bitswap.maxMessageSize': 32 * 1024,
-      'account': '0x12345',  // 'Ethereum acccounts'
+      'address': '0x12345',  // 'Ethereum acccounts'
       'verbose': false
+    })
+
+
+## `ipfs.upload`
+
+    ipfs.upload(file, {
+      onStart: Function, // function()
+      onFileReady: Function, // function(file)
+      onProgress: Function, // function(chunkLength)
+      onDone: Function // function(file)
+    })
+
+## `ipfs.transcode`
+
+
+Set transcode signal
+
+    transcode('hash-of-file')
+
+    transcode ('hash-of-file', {
+        author: String,
+        onError: function (err) {
+          if (err) this.warn('[Paratii-protocol] Error ', err)
+        },
+        onDone: function (err, result) {
+          if (err) this.warn('[Paratii-protocol] Error ', err)
+        }
+      })
+
+## Upload and transcode
+
+    ipfs.upload(file, {
+      onDone: function(file) {
+        this.transcode(file.hash, {author: this.id.id})
+      }
     })
