@@ -16,11 +16,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var pull = require('pull-stream');
-var pullFilereader = require('pull-filereader');
-
 var Ipfs = require('ipfs');
 var dopts = require('default-options');
+var Uploader = require('./ipfs/uploader');
+var pull = require('pull-stream');
+var pullFilereader = require('pull-filereader');
 
 var ParatiiIPFS = exports.ParatiiIPFS = function () {
   function ParatiiIPFS(config) {
@@ -109,6 +109,12 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
               // add ETH Address here.
               ptiAddress);
 
+              // uploader
+              _this2.uploader = new Uploader(_this2, {
+                node: ipfs,
+                chunkSize: 64048
+              });
+
               _this2.protocol.notifications.on('message:new', function (peerId, msg) {
                 _this2.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
               });
@@ -119,7 +125,12 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
               // }, 10)
 
               _this2.ipfs = ipfs;
+
               resolve(ipfs);
+
+              // setImmediate(() => {
+              //
+              // })
               // callback()
             });
             // resolve(ipfs)

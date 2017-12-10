@@ -38,6 +38,7 @@ describe('Paratii configuration:', function () {
   })
 
   it('should be possible to create a second Paratii object with the same settings', async function () {
+    console.log(1)
     // deploy the contracts so we have a registry address
     paratii = new Paratii({
       // this address and key are the first accounts on testrpc when started with the --deterministic flag
