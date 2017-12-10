@@ -86,7 +86,7 @@ var Paratii = function () {
   }, {
     key: 'diagnose',
     value: function diagnose() {
-      var msg, address, msgs, isOk, log, registry, i, name;
+      var msg, address, msgs, isOk, log, registry, name;
       return regeneratorRuntime.async(function diagnose$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -114,7 +114,7 @@ var Paratii = function () {
               log('*** No registry address found!');
               log('Value of this.config.registryAddress: ' + this.config.registryAddress);
               isOk = false;
-              _context.next = 33;
+              _context.next = 32;
               break;
 
             case 13:
@@ -139,15 +139,15 @@ var Paratii = function () {
 
             case 21:
               registry = _context.sent;
-              i = 0;
+              _context.t0 = regeneratorRuntime.keys(this.eth.contracts);
 
             case 23:
-              if (!(i < this.eth.contractNames.length)) {
-                _context.next = 33;
+              if ((_context.t1 = _context.t0()).done) {
+                _context.next = 32;
                 break;
               }
 
-              name = this.eth.contractNames[i];
+              name = _context.t1.value;
 
               if (!(name !== 'ParatiiRegistry')) {
                 _context.next = 30;
@@ -163,11 +163,10 @@ var Paratii = function () {
               log('address of ' + name + ': ' + address);
 
             case 30:
-              i++;
               _context.next = 23;
               break;
 
-            case 33:
+            case 32:
               if (isOk) {
                 log('---- everything seems fine -----');
               } else {
@@ -175,7 +174,7 @@ var Paratii = function () {
               }
               return _context.abrupt('return', msgs);
 
-            case 35:
+            case 34:
             case 'end':
               return _context.stop();
           }

@@ -20,7 +20,8 @@ describe('paratii.eth API: :', function () {
 
   it('contracts should have their address set', async function () {
     let contract, contracts, registryAddress
-    // each contract should have its address set
+
+    // After .depoyContracts() was called
     contract = await paratii.eth.getContract('ParatiiRegistry')
     assert.isOk(contract.options.address)
     registryAddress = contract.options.address
@@ -31,11 +32,29 @@ describe('paratii.eth API: :', function () {
     assert.isOk(contracts.ParatiiAvatar.options.address)
     assert.isOk(contracts.ParatiiRegistry.options.address)
 
+    // If created with a registeryAddress
     paratii = await new Paratii({
       provider: 'http://localhost:8545',
       registryAddress: registryAddress
     })
 
+    contract = await paratii.eth.getContract('ParatiiRegistry')
+    assert.isOk(contract.options.address)
+    // contract = await paratii.eth.getContract('ParatiiAvatar')
+    // assert.isOk(contract.options.address)
+    contracts = await paratii.eth.getContracts()
+    assert.isOk(contracts.ParatiiAvatar.options.address)
+    assert.isOk(contracts.ParatiiRegistry.options.address)
+
+    // if the reigstryAddress was set at a later stage
+    paratii = await new Paratii({
+      provider: 'http://localhost:8545'
+    })
+
+    contract = await paratii.eth.getContract('ParatiiRegistry')
+    assert.isNotOk(contract.options.address)
+
+    await paratii.eth.setRegistryAddress(registryAddress)
     contract = await paratii.eth.getContract('ParatiiRegistry')
     assert.isOk(contract.options.address)
     // contract = await paratii.eth.getContract('ParatiiAvatar')
