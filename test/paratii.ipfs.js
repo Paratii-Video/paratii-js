@@ -19,17 +19,17 @@ describe('ParatiiIPFS: :', function () {
     assert.isOk(paratiiIPFS)
   })
 
-  it('should create an instance without trouble', async function () {
+  it.skip('should create an instance without trouble', async function () {
     return paratiiIPFS.getIPFSInstance()
   })
 
-  it('should allow for file upload', async function () {
+  it.skip('should allow for file upload', async function () {
     let files = []
     await paratiiIPFS.getIPFSInstance()
     return paratiiIPFS.uploader.uploadFiles(files)
   })
 
-  it('should be able to grab a youtube video and upload it', (done) => {
+  it.skip('should be able to grab a youtube video and upload it', (done) => {
     paratiiIPFS.getIPFSInstance().then(() => {
       paratiiIPFS.uploader.grabYt('https://www.youtube.com/watch?v=IGQBtbKSVhY', (err) => {
         if (err) return done(err)

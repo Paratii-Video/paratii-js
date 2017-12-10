@@ -34,7 +34,8 @@ Here is an example of all default options:
 
 # `ipfs.uploader`
 
-## `ipfs.uploader.upload`
+## `ipfs.uploader.upload(file, options)`
+
 
     ipfs.upload(file, {
       onStart: Function, // function()
@@ -43,10 +44,10 @@ Here is an example of all default options:
       onDone: Function // function(file)
     })
 
-## `ipfs.uploader.transcode`
+## `ipfs.uploader.transcode(fileHash, options)`
 
 
-Set transcode signal
+Send transcode signal:
 
     transcode('hash-of-file')
 
@@ -62,6 +63,7 @@ Set transcode signal
 
 ## Upload and transcode
 
+
     ipfs.upload(file, {
       onDone: function(file) {
         this.transcode(file.hash, {author: this.id.id})
@@ -69,16 +71,30 @@ Set transcode signal
     })
 
 
-#### `ipfs.uploader.grabYt(url, [onResponse], [callback])`
+#### `ipfs.uploader.grabYt(url, options)
+
+
+    ipfs.uploader.grabYT(url, {
+      onResponse: function(err, starttime) { },
+      onDone: function(err, result) { }
+    })
+
 
 Grabs a Youtube video and adds it to IPFS.
 
 `onResponse` is an initial callback when Youtube first responds with the requested
 video. params are `onResponse(err, starttime)`
 
-`callback` is the final callback, triggered when the original file is added to IPFS.
+`onDone` is the final callback, triggered when the original file is added to IPFS.
 
 
-#### `ipfs.uploader.grabVimeo(url, [onResponse], [callback])`
+#### `ipfs.uploader.grabVimeo(url, options)
+
+
+    ipfs.uploader.grabVimeo(url, {
+      onResponse: function(err, starttime) { },
+      onDone: function(err, result) { }
+    })
+
 
 Grabs a Vimeo video and adds it to IPFS.
