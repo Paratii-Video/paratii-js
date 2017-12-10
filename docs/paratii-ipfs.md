@@ -32,6 +32,14 @@ Here is an example of all default options:
     })
 
 
+## `ipfs.start()`
+
+## `ipfs.stop()`
+
+## `ipfs.getFile(ipfsHash)`
+
+Gets the file, returns a promise
+
 # `ipfs.uploader`
 
 ## `ipfs.uploader.upload(file, options)`
