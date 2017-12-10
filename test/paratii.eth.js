@@ -18,6 +18,33 @@ describe('paratii.eth API: :', function () {
     assert.isOk(contracts.ParatiiAvatar)
   })
 
+  it('contracts should have their address set', async function () {
+    let contract, contracts, registryAddress
+    // each contract should have its address set
+    contract = await paratii.eth.getContract('ParatiiRegistry')
+    assert.isOk(contract.options.address)
+    registryAddress = contract.options.address
+    contract = await paratii.eth.getContract('ParatiiAvatar')
+    assert.isOk(contract.options.address)
+
+    contracts = await paratii.eth.getContracts()
+    assert.isOk(contracts.ParatiiAvatar.options.address)
+    assert.isOk(contracts.ParatiiRegistry.options.address)
+
+    paratii = await new Paratii({
+      provider: 'http://localhost:8545',
+      registryAddress: registryAddress
+    })
+
+    contract = await paratii.eth.getContract('ParatiiRegistry')
+    assert.isOk(contract.options.address)
+    // contract = await paratii.eth.getContract('ParatiiAvatar')
+    // assert.isOk(contract.options.address)
+    contracts = await paratii.eth.getContracts()
+    assert.isOk(contracts.ParatiiAvatar.options.address)
+    assert.isOk(contracts.ParatiiRegistry.options.address)
+  })
+
   it('getContract() should return the correct contract', async function () {
     let contract
     contract = await paratii.eth.getContract('ParatiiToken')

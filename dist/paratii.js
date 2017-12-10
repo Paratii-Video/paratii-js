@@ -50,6 +50,7 @@ var Paratii = function () {
     } else {
       this.config.isTestNet = false;
     }
+
     this.config.registryAddress = options.registryAddress;
 
     if (!options.address && this.config.isTestNet) {

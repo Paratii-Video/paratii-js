@@ -3,7 +3,7 @@ import { ParatiiIPFS } from '../lib/paratii.ipfs.js'
 import { address, privateKey } from './utils.js'
 import { assert } from 'chai'
 
-describe('ParatiiIPFS: :', function () {
+describe.skip('ParatiiIPFS: :', function () {
   let paratiiIPFS
   this.timeout(30000)
 
@@ -19,17 +19,17 @@ describe('ParatiiIPFS: :', function () {
     assert.isOk(paratiiIPFS)
   })
 
-  it.skip('should create an instance without trouble', async function () {
+  it('should create an instance without trouble', async function () {
     return paratiiIPFS.getIPFSInstance()
   })
 
-  it.skip('should allow for file upload', async function () {
+  it('should allow for file upload', async function () {
     let files = []
     await paratiiIPFS.getIPFSInstance()
     return paratiiIPFS.uploader.uploadFiles(files)
   })
 
-  it.skip('should be able to grab a youtube video and upload it', (done) => {
+  it('should be able to grab a youtube video and upload it', (done) => {
     paratiiIPFS.getIPFSInstance().then(() => {
       paratiiIPFS.uploader.grabYt('https://www.youtube.com/watch?v=IGQBtbKSVhY', (err) => {
         if (err) return done(err)

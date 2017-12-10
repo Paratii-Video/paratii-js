@@ -197,23 +197,22 @@ var ParatiiEth = exports.ParatiiEth = function () {
       }, null, this);
     }
   }, {
-    key: 'getContract',
-    value: function getContract(name) {
-      var contract, address;
-      return regeneratorRuntime.async(function getContract$(_context3) {
+    key: 'getContracts',
+    value: function getContracts() {
+      var name, address;
+      return regeneratorRuntime.async(function getContracts$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              contract = this.contracts[name];
+              _context3.t0 = regeneratorRuntime.keys(this.contracts);
 
-              if (contract) {
-                _context3.next = 3;
+            case 1:
+              if ((_context3.t1 = _context3.t0()).done) {
+                _context3.next = 9;
                 break;
               }
 
-              throw Error('No contract with name "' + name + '" is known');
-
-            case 3:
+              name = _context3.t1.value;
               _context3.next = 5;
               return regeneratorRuntime.awrap(this.getContractAddress(name));
 
@@ -221,13 +220,53 @@ var ParatiiEth = exports.ParatiiEth = function () {
               address = _context3.sent;
 
               if (address && address !== '0x0') {
+                this.contracts[name].options.address = address;
+              }
+              _context3.next = 1;
+              break;
+
+            case 9:
+              return _context3.abrupt('return', this.contracts);
+
+            case 10:
+            case 'end':
+              return _context3.stop();
+          }
+        }
+      }, null, this);
+    }
+  }, {
+    key: 'getContract',
+    value: function getContract(name) {
+      var contract, address;
+      return regeneratorRuntime.async(function getContract$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              contract = this.contracts[name];
+
+              if (contract) {
+                _context4.next = 3;
+                break;
+              }
+
+              throw Error('No contract with name "' + name + '" is known');
+
+            case 3:
+              _context4.next = 5;
+              return regeneratorRuntime.awrap(this.getContractAddress(name));
+
+            case 5:
+              address = _context4.sent;
+
+              if (address && address !== '0x0') {
                 contract.options.address = address;
               }
-              return _context3.abrupt('return', contract);
+              return _context4.abrupt('return', contract);
 
             case 8:
             case 'end':
-              return _context3.stop();
+              return _context4.stop();
           }
         }
       }, null, this);
@@ -239,79 +278,63 @@ var ParatiiEth = exports.ParatiiEth = function () {
     key: 'getContractAddress',
     value: function getContractAddress(name) {
       var registryAddress, registry, address;
-      return regeneratorRuntime.async(function getContractAddress$(_context4) {
+      return regeneratorRuntime.async(function getContractAddress$(_context5) {
         while (1) {
-          switch (_context4.prev = _context4.next) {
+          switch (_context5.prev = _context5.next) {
             case 0:
               registryAddress = this.getRegistryAddress();
 
               if (!(name === 'ParatiiRegistry')) {
-                _context4.next = 3;
+                _context5.next = 3;
                 break;
               }
 
-              return _context4.abrupt('return', this.getRegistryAddress());
+              return _context5.abrupt('return', registryAddress);
 
             case 3:
               if (registryAddress) {
-                _context4.next = 5;
+                _context5.next = 5;
                 break;
               }
 
               throw Error('No registry address configured');
 
             case 5:
-              _context4.prev = 5;
-              _context4.next = 8;
+              _context5.prev = 5;
+              _context5.next = 8;
               return regeneratorRuntime.awrap(this.getContract('ParatiiRegistry'));
 
             case 8:
-              registry = _context4.sent;
+              registry = _context5.sent;
 
               if (registry) {
-                _context4.next = 11;
+                _context5.next = 11;
                 break;
               }
 
               throw Error('No registry contract!');
 
             case 11:
-              _context4.next = 13;
+              _context5.next = 13;
               return regeneratorRuntime.awrap(registry.methods.getContract(name).call());
 
             case 13:
-              address = _context4.sent;
-              return _context4.abrupt('return', address);
+              address = _context5.sent;
+              return _context5.abrupt('return', address);
 
             case 17:
-              _context4.prev = 17;
-              _context4.t0 = _context4['catch'](5);
+              _context5.prev = 17;
+              _context5.t0 = _context5['catch'](5);
 
-              console.log(_context4.t0);
-              throw _context4.t0;
+              console.log(_context5.t0);
+              throw _context5.t0;
 
             case 21:
-            case 'end':
-              return _context4.stop();
-          }
-        }
-      }, null, this, [[5, 17]]);
-    }
-  }, {
-    key: 'getContracts',
-    value: function getContracts() {
-      return regeneratorRuntime.async(function getContracts$(_context5) {
-        while (1) {
-          switch (_context5.prev = _context5.next) {
-            case 0:
-              return _context5.abrupt('return', this.contracts);
-
-            case 1:
             case 'end':
               return _context5.stop();
           }
         }
-      }, null, this);
+      }, null, this, [[5, 17]]);
     }
   }, {
     key: 'getRegistryAddress',
