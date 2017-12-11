@@ -7,6 +7,7 @@ Contains functions to interact with the IPFS instance
 It can also be instantiated directly:
 
     import { paratiiIPFS } from '../path/to/paratii.ipfs.js'
+
     paratiiIPFS = new ParatiiIPFS({
         opt1: val1, opt2: val2, ...
     })
