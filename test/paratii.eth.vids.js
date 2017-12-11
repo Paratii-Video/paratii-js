@@ -14,26 +14,32 @@ describe('paratii.eth.vids: :', function () {
     await paratii.eth.deployContracts()
   })
 
-  it('vids.register() should work', async function () {
+  it('vids.create(),  .get(), .update() and .delete() should work', async function () {
     let price = 3 * 10 ** 18
     let ipfsHash = 'xyz'
+    let videoId = 'some-id'
+    let vid
 
-    let videoId = await paratii.eth.vids.register({
-      id: '0x12355',
+    let result = await paratii.eth.vids.create({
+      id: videoId,
       price: price,
       owner: address1,
       ipfsHash: ipfsHash
     })
-    assert.equal(videoId, '0x12355')
+    assert.equal(videoId, result)
 
-    let vid = await paratii.eth.vids.get(videoId)
-    console.log(vid)
+    vid = await paratii.eth.vids.get(videoId)
     assert.equal(vid.price, price)
     assert.equal(vid.ipfsHash, ipfsHash)
-  })
 
-  it.skip('vids.unregisterVideo() should work', async function () {
-  })
-  it.skip('vids.updateVideo() should work', async function () {
+    vid = await paratii.eth.vids.get(videoId)
+    assert.equal(vid.price, price)
+    assert.equal(vid.ipfsHash, 'new-hash')
+
+    await paratii.eth.vids.delete(videoId)
+
+    vid = await paratii.eth.vids.get(videoId)
+    assert.equal(vid.ipfsHash, '') // or should we raise an error?
+    assert.equal(vid.price, 0) // or should we raise an error?
   })
 })

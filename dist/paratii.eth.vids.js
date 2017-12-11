@@ -38,10 +38,10 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
       }, null, this);
     }
   }, {
-    key: 'register',
-    value: function register(options) {
-      var defaults, contract, tx, videoId;
-      return regeneratorRuntime.async(function register$(_context2) {
+    key: 'create',
+    value: function create(options) {
+      var defaults, msg, contract, tx, videoId;
+      return regeneratorRuntime.async(function create$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
@@ -52,22 +52,30 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
                 ipfsHash: String
               };
 
+              if (this.eth.web3.utils.isAddress(options.owner)) {
+                _context2.next = 4;
+                break;
+              }
 
-              options = dopts(options, defaults);
-              _context2.next = 4;
-              return regeneratorRuntime.awrap(this.getRegistry());
+              msg = 'The owner argument should be a valid address, not ' + options.owner;
+              throw Error(msg);
 
             case 4:
-              contract = _context2.sent;
+              options = dopts(options, defaults);
               _context2.next = 7;
-              return regeneratorRuntime.awrap(contract.methods.registerVideo(options.id, options.owner, options.price, options.ipfsHash).send());
+              return regeneratorRuntime.awrap(this.getRegistry());
 
             case 7:
+              contract = _context2.sent;
+              _context2.next = 10;
+              return regeneratorRuntime.awrap(contract.methods.registerVideo(options.id, options.owner, options.price, options.ipfsHash).send());
+
+            case 10:
               tx = _context2.sent;
               videoId = (0, _utils.getInfoFromLogs)(tx, 'LogRegisterVideo', 'videoId');
               return _context2.abrupt('return', videoId);
 
-            case 10:
+            case 13:
             case 'end':
               return _context2.stop();
           }
@@ -92,9 +100,6 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
 
             case 5:
               videoInfo = _context3.sent;
-
-              console.log(videoInfo);
-              console.log(contract.abi);
               result = {
                 id: videoId,
                 owner: videoInfo[0],
@@ -103,9 +108,63 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
               };
               return _context3.abrupt('return', result);
 
-            case 10:
+            case 8:
             case 'end':
               return _context3.stop();
+          }
+        }
+      }, null, this);
+    }
+  }, {
+    key: 'update',
+    value: function update(videoId, options) {
+      var data, key;
+      return regeneratorRuntime.async(function update$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              options.id = videoId;
+              _context4.next = 3;
+              return regeneratorRuntime.awrap(this.get(videoId));
+
+            case 3:
+              data = _context4.sent;
+
+              for (key in options) {
+                data[key] = options[key];
+              }
+              _context4.next = 7;
+              return regeneratorRuntime.awrap(this.create(data));
+
+            case 7:
+              return _context4.abrupt('return', videoId);
+
+            case 8:
+            case 'end':
+              return _context4.stop();
+          }
+        }
+      }, null, this);
+    }
+  }, {
+    key: 'delete',
+    value: function _delete(videoId) {
+      var contract, tx;
+      return regeneratorRuntime.async(function _delete$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              _context5.next = 2;
+              return regeneratorRuntime.awrap(this.getRegistry());
+
+            case 2:
+              contract = _context5.sent;
+              tx = contract.methods.unregisterVideo(videoId).send();
+              return _context5.abrupt('return', tx);
+
+            case 5:
+            case 'end':
+              return _context5.stop();
           }
         }
       }, null, this);
