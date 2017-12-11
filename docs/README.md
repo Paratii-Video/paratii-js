@@ -9,13 +9,14 @@ The Paratii javascript library is the preferred way for clients to interact with
 
 It is still very much under development, and most of the things in this documentation are not implemented yet
 
+
 The paratii library is divided into the following modules:
 
+* [`paratii.core`](./paratii-core.md) for methods that operate transversally over different submodules.
 * [`paratii.config`](./paratii-config.md) configuration of the paratii object
-* [`paratii.personal`](./paratii-personal.md) handles personal info
 * [`paratii.eth`](./paratii-eth.md) for interaction with the blockchain
-* `paratii.ipfs` for interaction with IPFS
-* `paratii.db` for interaction with the Paratii blockchain index
-* [`paratii.core`](./paratii-core.md) for methods that operate over different submodules
+* [`paratii.ipfs`](./paratii-ipfs.md) for interaction with IPFS
+* [`paratii.db`](./paratii-db.md) for interaction with the Paratii blockchain index
+
 
 See [example-session.md](./example-session.md) and [api.md](./api.md) for more information.

@@ -29,7 +29,7 @@ describe('paratii.eth.vids: :', function () {
     let vid = await paratii.eth.vids.get(videoId)
     console.log(vid)
     assert.equal(vid.price, price)
-    // assert.equal(vid.ipfsHash, ipfsHash)
+    assert.equal(vid.ipfsHash, ipfsHash)
   })
 
   it.skip('vids.unregisterVideo() should work', async function () {

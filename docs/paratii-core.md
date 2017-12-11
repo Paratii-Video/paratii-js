@@ -40,5 +40,3 @@ Takes all configuration options of the Paratii object
     // search in videos
     // this call will send a request the db index, i.e. simply forward this request to paratii.db.vids.search()
     core.vids.search({'title': 'xyz'})
-
-    
