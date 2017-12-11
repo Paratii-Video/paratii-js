@@ -2,18 +2,22 @@
 
 ## `paratii.ipfs`
 
-Contains functions to interact with the IPFS instance
+Contains functions to interact with the IPFS instance.
 
-It can also be instantiated directly:
 
-    import { paratiiIPFS } from '../path/to/paratii.ipfs.js'
-    paratiiIPFS = new ParatiiIPFS({
-        opt1: val1, opt2: val2, ...
-    })
+    import { ParatiiIPFS } from 'ipfs-lib'
+    paratiiIPFS = new ParatiiIPFS({})
+
+
+It is also available as `ipfs` in `Paratii` instances:
+
+    import { Paratii } from 'ipfs-lib'
+
+- TBD: https://github.com/Paratii-Video/paratii-lib/issues/18
 
 ## configuration
 
-Here is an example of all default options:
+Here is an example with default options:
 
     paratiiIPFS = new ParatiiIPFS({
       protocol: null,
@@ -34,16 +38,34 @@ Here is an example of all default options:
 
 ## `ipfs.start()`
 
+Starts the IPFS node
+
+    ipfs.start()
+
+
+- TBD:  https://github.com/Paratii-Video/paratii-lib/issues/19
+
 ## `ipfs.stop()`
 
-## `ipfs.getFile(ipfsHash)`
+Stops the IPFS node.
 
-Gets the file, returns a promise
+    ipfs.stop()
+
+- TBD:  https://github.com/Paratii-Video/paratii-lib/issues/19
+
+## `ipfs.get(ipfsHash, options)`
+
+Returns a promise that resolves into a file stream.
+
+- TBD: Define what the `options` are, here, if any (presumably, some callbacks)
+- TBD:  https://github.com/Paratii-Video/paratii-lib/issues/20
+
 
 # `ipfs.uploader`
 
 ## `ipfs.uploader.upload(file, options)`
 
+This will just upload the file _as is_ to your local IPFS node.
 
     ipfs.upload(file, {
       onStart: Function, // function()
@@ -51,6 +73,8 @@ Gets the file, returns a promise
       onProgress: Function, // function(chunkLength)
       onDone: Function // function(file)
     })
+
+- TBD:
 
 ## `ipfs.uploader.transcode(fileHash, options)`
 
@@ -69,6 +93,8 @@ Send transcode signal:
         }
       })
 
+- TBD:
+
 ## Upload and transcode
 
 
@@ -78,6 +104,7 @@ Send transcode signal:
       }
     })
 
+TBD: decide if we want an `uploadAndTrancode(..)` helper funtion in our API.
 
 #### `ipfs.uploader.grabYt(url, options)
 
@@ -89,6 +116,10 @@ Send transcode signal:
 
 
 Grabs a Youtube video and adds it to IPFS.
+
+- TBD: make it return a promise
+
+
 
 `onResponse` is an initial callback when Youtube first responds with the requested
 video. params are `onResponse(err, starttime)`
@@ -106,3 +137,31 @@ video. params are `onResponse(err, starttime)`
 
 
 Grabs a Vimeo video and adds it to IPFS.
+
+- TBD: make it return a promise
+
+## `ipfs.metrics`
+
+The `metrics` object keeps in-memory statistics.
+
+    $ ipfs.metrics['ipfsHash']
+    {
+      hash: currentVideo.src,
+      totalBytes: 0,
+      received: 0,
+      elapsed: null,
+      started: null,
+      finished: null,
+      dupRatio: 0,
+      queue: [],
+      chunks: [],
+      rates: {
+        min: 0,
+        max: 0,
+        avg: 0,
+        median: 0
+      },
+      overallRate: 0
+    }
+
+- TBD: still has to be implemented/migrated    
