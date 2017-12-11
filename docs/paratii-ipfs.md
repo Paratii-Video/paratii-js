@@ -12,6 +12,8 @@ Contains functions to interact with the IPFS instance.
 It is also available as `ipfs` in `Paratii` instances:
 
     import { Paratii } from 'ipfs-lib'
+    paratii = new Paratii()
+    paratii.ipfs // is a ParatiiIPFS instance
 
 - TBD: https://github.com/Paratii-Video/paratii-lib/issues/18
 
@@ -117,15 +119,12 @@ TBD: decide if we want an `uploadAndTrancode(..)` helper funtion in our API.
 
 Grabs a Youtube video and adds it to IPFS.
 
-- TBD: make it return a promise
-
-
-
 `onResponse` is an initial callback when Youtube first responds with the requested
 video. params are `onResponse(err, starttime)`
 
 `onDone` is the final callback, triggered when the original file is added to IPFS.
 
+- TBD: make it return a promise
 
 #### `ipfs.uploader.grabVimeo(url, options)`
 
