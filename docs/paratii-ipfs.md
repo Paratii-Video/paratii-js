@@ -106,7 +106,7 @@ Send transcode signal:
 
 TBD: decide if we want an `uploadAndTrancode(..)` helper funtion in our API.
 
-#### `ipfs.uploader.grabYT(url, options)``
+#### `ipfs.uploader.grabYT(url, options)`
 
 
     ipfs.uploader.grabYT(url, {
