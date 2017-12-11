@@ -49,17 +49,41 @@ Transfer the given amount of ETH to the benificiary. Uses the `SendEther` contra
 
 The `eth.vids` namespace contains functions to interact with the video registration on the blockchain
 
-### `eth.vids.register()`
+### `eth.vids.create()`
+
+    let videoId = await paratii.eth.vids.create({
+      id: '0x12355',
+      price: price,
+      owner: address1,
+      ipfsHash: ipfsHash
+    })
+
 ### `eth.vids.get()`
-### `eth.vids.unregister()`
+
+    eth.vids.get('0x12345')
+    // returns:
+    // { id: '0x12355',
+    //   owner: '0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0',
+    //   price: '3000000000000000000',
+    //   ipfsHash: undefined }
+
+### `eth.vids.update()`
+
+    let videoId = await paratii.eth.vids.update(videoId, { ipfsHash: '' })
+
+### `eth.vids.delete()`
 
 ## `eth.users`
 
 The `eth.user` namespace contains functions to interact with the video registration on the blockchain
 
-### `eth.users.register()`
+### `eth.users.create()`
+
+### `eth.users.update()`
+
+
 ### `eth.users.get()`
-### `eth.users.unregister()`
+### `eth.users.delete()`
 
 
 ## `eth.store`
