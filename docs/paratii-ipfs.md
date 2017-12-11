@@ -106,7 +106,7 @@ Send transcode signal:
 
 TBD: decide if we want an `uploadAndTrancode(..)` helper funtion in our API.
 
-#### `ipfs.uploader.grabYt(url, options)
+#### `ipfs.uploader.grabYT(url, options)``
 
 
     ipfs.uploader.grabYT(url, {
@@ -127,7 +127,7 @@ video. params are `onResponse(err, starttime)`
 `onDone` is the final callback, triggered when the original file is added to IPFS.
 
 
-#### `ipfs.uploader.grabVimeo(url, options)
+#### `ipfs.uploader.grabVimeo(url, options)`
 
 
     ipfs.uploader.grabVimeo(url, {
