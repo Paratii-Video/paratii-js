@@ -9,15 +9,45 @@ The `eth` namespace contains functions to interact with the Ethereum blockchain 
 
 The web3 object used by this paratii instance.
 
-### `eth.contracts`
+### `eth.getContract`
 
-The `paratii.eth.contracts` attribute of gives access to the different contracts, and returns an array mapping contract names to addresses. For example
+The `paratii.eth.getContract` attribute of gives access to the different contracts, and returns an array mapping contract names to addresses. For example
 
-    paratii.eth.contracts.ParatiiToken
+    paratii.eth.getContract('ParatiiToken')
+    paratii.eth.getContract('ParatiiRegistry')
+
+### `eth.getContracts`
+
+Returns all contracts
 
 ## `eth.wallet`
 
-Functions having to do with wallet and storage
+Functions having to do with wallet and storage. These implement (and are mostly identical) to the `web3.eth.accounts.wallet` functions that are described here: http://web3js.readthedocs.io/en/1.0/web3-eth-accounts.html#wallet, except that we added support for BIP32/39 mnemonic seed phrases
+
+## `eth.wallet.create(mnemonic)`
+
+Create a wallet with a given number of accounts from a BIP32/BIP39 seedPhrase
+
+    let mnemonic =  "jelly better achieve collect unaware mountain thought cargo oxygen act hood bridge",
+    let wallet = eth.wallet.create(mnemonic, 2) // create a wallet with 2 accounts
+
+## `eth.wallet.encrypt([password])`
+
+Encrypts all wallet accounts to and array of encrypted keystore v3 objects. *This does not include the seedPhrase*
+
+      ``
+
+## `eth.wallet.decrypt([password])`
+
+## `eth.wallet.save(password, [keyname])`
+
+Saves both encrypted v3 objects as well as the seed phrase in local storage
+
+## `eth.wallet.load(password, [keyname])`
+
+Load both encrypted v3 objects as well as the seed phrase from local storage
+
+
 
 ### `eth.balanceOf(account, symbol)`
 
