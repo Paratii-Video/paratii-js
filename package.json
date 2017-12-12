@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "babel ./lib -d ./dist",
-    "test": "mocha --require truffle.js test/*.js",
+    "test": "mocha --require truffle.js test/*.js --exit",
     "testrpc": "testrpc --deterministic",
     "lint": "standard",
     "lint-fix": "standard --fix",
