@@ -3,7 +3,7 @@ import { ParatiiIPFS } from '../lib/paratii.ipfs.js'
 import { address, privateKey } from './utils.js'
 import { assert } from 'chai'
 
-describe.skip('ParatiiIPFS: :', function () {
+describe('ParatiiIPFS: :', function () {
   let paratiiIPFS
   this.timeout(30000)
 
