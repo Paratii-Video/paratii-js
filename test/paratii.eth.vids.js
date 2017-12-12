@@ -32,7 +32,7 @@ describe('paratii.eth.vids: :', function () {
     assert.equal(vid.price, price)
     assert.equal(vid.ipfsHash, ipfsHash)
 
-    vid = await paratii.eth.vids.get(videoId)
+    vid = await paratii.eth.vids.update(videoId, {ipfsHash: 'new-hash'})
     assert.equal(vid.price, price)
     assert.equal(vid.ipfsHash, 'new-hash')
 

@@ -137,7 +137,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
               return regeneratorRuntime.awrap(this.create(data));
 
             case 7:
-              return _context4.abrupt('return', videoId);
+              return _context4.abrupt('return', data);
 
             case 8:
             case 'end':
