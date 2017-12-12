@@ -24,12 +24,12 @@ Returns all contracts
 
 Functions having to do with wallet and storage. These implement (and are mostly identical) to the `web3.eth.accounts.wallet` functions that are described here: http://web3js.readthedocs.io/en/1.0/web3-eth-accounts.html#wallet, except that we added support for BIP32/39 mnemonic seed phrases
 
-## `eth.wallet.create(mnemonic)`
+## `eth.wallet.create(numberOfAccounts, mnemonic)`
 
 Create a wallet with a given number of accounts from a BIP32/BIP39 seedPhrase
 
     let mnemonic =  "jelly better achieve collect unaware mountain thought cargo oxygen act hood bridge",
-    let wallet = eth.wallet.create(mnemonic, 2) // create a wallet with 2 accounts
+    let wallet = eth.wallet.create(1, mnemonic) // create a wallet with 2 accounts
 
 ## `eth.wallet.encrypt([password])`
 

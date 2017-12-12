@@ -11,6 +11,8 @@ var _utils = require('./utils.js');
 
 var _paratiiEthVids = require('./paratii.eth.vids.js');
 
+var _paratiiEthWallet = require('./paratii.eth.wallet.js');
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Web3 = require('web3');
@@ -40,10 +42,6 @@ var ParatiiEth = exports.ParatiiEth = function () {
       this.web3.setProvider(new this.web3.providers.HttpProvider(options.provider));
     }
 
-    if (this.config.account.privateKey) {
-      this.web3.eth.accounts.wallet.add(this.config.account.privateKey);
-    }
-
     this.contracts = {};
     this.contracts.ParatiiToken = this.requireContract('ParatiiToken');
     this.contracts.ParatiiAvatar = this.requireContract('ParatiiAvatar');
@@ -54,6 +52,12 @@ var ParatiiEth = exports.ParatiiEth = function () {
     this.contracts.VideoStore = this.requireContract('VideoStore');
 
     this.vids = new _paratiiEthVids.ParatiiEthVids(this);
+
+    this.wallet = (0, _paratiiEthWallet.patchWallet)(this.web3.eth.accounts.wallet);
+
+    if (this.config.account.privateKey) {
+      this.web3.eth.accounts.wallet.add(this.config.account.privateKey);
+    }
   }
 
   _createClass(ParatiiEth, [{
@@ -285,9 +289,6 @@ var ParatiiEth = exports.ParatiiEth = function () {
         }
       }, null, this);
     }
-
-    // TODO: optimization: do not ask the contract addresses from the registry each time, only on startup/first access
-
   }, {
     key: 'getContractAddress',
     value: function getContractAddress(name) {
@@ -462,10 +463,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 5:
               from = (0, _utils.add0x)(from);
               beneficiary = (0, _utils.add0x)(beneficiary);
-              // console.log('000000000000000000000000000000000000000000000000000000000000000')
-              // console.log(from)
-              // console.log(beneficiary)
-              // console.log('000000000000000000000000000000000000000000000000000000000000000')
+
               _context7.next = 9;
               return regeneratorRuntime.awrap(this.web3.eth.sendTransaction({
                 from: from,
@@ -519,12 +517,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 8:
               from = (0, _utils.add0x)(from);
               beneficiary = (0, _utils.add0x)(beneficiary);
-              // console.log('000000000000000000000000000000000000000000000000000000000000000')
-              // console.log(from)
-              // console.log(beneficiary)
-              // console.log(contract.options.address)
-              // console.log('000000000000000000000000000000000000000000000000000000000000000')
-              // console.log(`Sending ${amount} PTI from ${fromAddress} to ${beneficiary} using contract ${contract}`)
+
               _context8.next = 12;
               return regeneratorRuntime.awrap(contract.methods.transfer(beneficiary, amount).send({ gas: 200000, from: from }));
 
