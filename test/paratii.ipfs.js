@@ -25,11 +25,10 @@ describe('ParatiiIPFS: :', function () {
 
   it('should allow for file upload', async function () {
     let files = []
-    await paratiiIPFS.getIPFSInstance()
     await paratiiIPFS.uploader.add(files)
   })
 
-  it('should allow for file addAndTranscode', async function () {
+  it('addAndTranscode() should work as expected', async function () {
     let files = []
     await paratiiIPFS.getIPFSInstance()
     await paratiiIPFS.uploader.addAndTranscode(files)

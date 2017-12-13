@@ -1,5 +1,9 @@
 'use strict';
 
+/**
+ * @module IPFS UPLOADER : Paratii IPFS uploader interface.
+ */
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -7,12 +11,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var dopts = require('default-options');
-
-/**
- * @module IPFS UPLOADER : Paratii IPFS uploader interface.
- */
 
 var _require = require('events'),
     EventEmitter = _require.EventEmitter;
@@ -23,6 +21,7 @@ var toPull = require('stream-to-pull-stream');
 var ytdl = require('ytdl-core');
 // const readline = require('readline')
 var vidl = require('vimeo-downloader');
+var dopts = require('default-options');
 
 var Uploader = function (_EventEmitter) {
   _inherits(Uploader, _EventEmitter);
@@ -32,31 +31,52 @@ var Uploader = function (_EventEmitter) {
 
     var _this2 = _possibleConstructorReturn(this, (Uploader.__proto__ || Object.getPrototypeOf(Uploader)).call(this));
 
-    if (!opts || !opts.node) {
-      throw new Error('IPFS Instance is required By UPloader.');
-    }
-
+    _this2.setOptions(opts);
     _this2._ipfs = paratiiIPFS; // this is the paratii.ipfs.js
-    _this2._node = opts.node; // this is the actual IPFS node.
-    _this2._chunkSize = opts.chunkSize || 64048;
     return _this2;
   }
 
   _createClass(Uploader, [{
+    key: 'setOptions',
+    value: function setOptions() {
+      var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+      // if (!opts || !opts.node) {
+      //   throw new Error('IPFS Instance is required By Uploader.')
+      // }
+      this._node = opts.node; // this is the actual IPFS node.
+      this._chunkSize = opts.chunkSize || 64048;
+    }
+  }, {
     key: 'onDrop',
     value: function onDrop(ev) {}
   }, {
     key: 'add',
     value: function add(file) {
-      if (Array.isArray(file)) {
-        return this.uploadFiles(file);
-      } else {
-        return this.uploadFiles([file]);
-      }
+      var that = this;
+      return new Promise(function (resolve, reject) {
+        var files = void 0;
+        if (Array.isArray(file)) {
+          files = file;
+        } else {
+          files = [file];
+        }
+
+        var opts = {
+          onDone: function onDone(files) {
+            resolve(files);
+          },
+          onError: function onError(err) {
+            reject(err);
+          }
+        };
+        console.log(opts);
+        return that.uploadFiles(files, opts);
+      });
     }
   }, {
     key: 'uploadFiles',
-    value: function uploadFiles(files, options) {
+    value: function uploadFiles(files, options, cb) {
       var _this3 = this;
 
       var _this, defaults, fileSize, total, updateProgress;
@@ -71,6 +91,15 @@ var Uploader = function (_EventEmitter) {
               };
 
               // TODO return proper promsie with status updates
+              console.log('func init');
+              console.log(options);
+              if (!cb) {
+                cb = function cb(err, files) {
+                  if (err) {
+                    throw err;
+                  }
+                };
+              }
               _this = this;
               defaults = {
                 onStart: function onStart() {
@@ -85,22 +114,44 @@ var Uploader = function (_EventEmitter) {
                   total += chunkLength;
                   this.log('Progress \t', total, ' / ', fileSize, ' = ', Math.floor(total / fileSize * 100));
                 },
-                onDone: function onDone(file) {
-                  this.log('Adding %s finished', file.path);
+                onDone: function onDone(files) {
+                  this.log('Adding %s finished', files);
                   // statusEl.innerHTML += `Added ${file.path} as ${file.hash} ` + '<br>'
                   // Trigger paratii transcoder signal
-                  this.transcode({ hash: file.hash, author: this.id.id });
+                  // this.transcode({hash: file.hash, author: this.id.id})
                 },
+                onError: Function,
                 onFileReady: Function // function(file)
               };
 
               options = dopts(options, defaults);
+              console.log(options);
 
               fileSize = 0;
               // await this._ipfs.getIPFSInstance()
 
               total = 0;
 
+              console.log('Starting ipfs..');
+
+              if (!(files.length === 0)) {
+                _context.next = 18;
+                break;
+              }
+
+              console.log(options);
+
+              if (!options.onDone) {
+                _context.next = 17;
+                break;
+              }
+
+              return _context.abrupt('return', options.onDone(files));
+
+            case 17:
+              return _context.abrupt('return', files);
+
+            case 18:
               this._ipfs.start(function () {
                 options.onStart();
                 // replace this by a callback?
@@ -125,8 +176,9 @@ var Uploader = function (_EventEmitter) {
                   options.onDone(file));
                 }), pull.collect(function (err, files) {
                   if (err) {
-                    throw err;
+                    options.onError(err);
                   }
+                  cb(null, files);
                   // if (files && files.length) {
                   //   statusEl.innerHTML += `All Done!\n`
                   //   statusEl.innerHTML += `Don't Close this window. signaling transcoder...\n`
@@ -134,7 +186,7 @@ var Uploader = function (_EventEmitter) {
                 }));
               });
 
-            case 7:
+            case 19:
             case 'end':
               return _context.stop();
           }
