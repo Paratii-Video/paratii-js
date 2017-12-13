@@ -9,16 +9,19 @@ The `eth` namespace contains functions to interact with the Ethereum blockchain 
 
 The web3 object used by this paratii instance.
 
-### `eth.getContract`
+### `eth.getContract(contractName)`
 
 The `paratii.eth.getContract` attribute of gives access to the different contracts, and returns an array mapping contract names to addresses. For example
 
     paratii.eth.getContract('ParatiiToken')
     paratii.eth.getContract('ParatiiRegistry')
 
-### `eth.getContracts`
+### `eth.getContractAddress(contractName)`
+
+### `eth.getContracts()`
 
 Returns all contracts
+
 
 ## `eth.wallet`
 
@@ -35,8 +38,6 @@ Create a wallet with a given number of accounts from a BIP32/BIP39 seedPhrase
 
 Encrypts all wallet accounts to and array of encrypted keystore v3 objects. *This does not include the seedPhrase*
 
-      ``
-
 ## `eth.wallet.decrypt([password])`
 
 ## `eth.wallet.save(password, [keyname])`
@@ -46,7 +47,6 @@ Saves both encrypted v3 objects as well as the seed phrase in local storage
 ## `eth.wallet.load(password, [keyname])`
 
 Load both encrypted v3 objects as well as the seed phrase from local storage
-
 
 
 ### `eth.balanceOf(account, symbol)`
