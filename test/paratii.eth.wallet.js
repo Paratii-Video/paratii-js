@@ -34,7 +34,7 @@ describe('paratii.eth.wallet: :', function () {
     let wallet = paratii.eth.wallet
     assert.equal(wallet.length, 0)
 
-    wallet = wallet.create(5, mnemonic)
+    wallet = await wallet.create(5, mnemonic)
     assert.equal(wallet.length, 5)
     assert.isTrue(paratii.eth.web3.utils.isAddress(wallet[1].address))
     assert.isTrue(paratii.eth.web3.utils.isAddress(wallet[2].address))
@@ -44,14 +44,14 @@ describe('paratii.eth.wallet: :', function () {
 
   it('wallet.create() does not create a new wallet object', async function () {
     paratii = await new Paratii()
-    let wallet = paratii.eth.wallet.create(5, mnemonic)
+    let wallet = await paratii.eth.wallet.create(5, mnemonic)
     assert.equal(wallet, paratii.eth.wallet)
   })
 
   it('wallet.create() creates a new mnenomic if not mnomic is given', async function () {
     paratii = await new Paratii()
     let wallet = paratii.eth.wallet
-    wallet.create()
+    await wallet.create()
     wallet.isValidMnemonic(wallet.getMnemonic())
   })
 
@@ -59,7 +59,7 @@ describe('paratii.eth.wallet: :', function () {
     paratii = await new Paratii()
     let wallet = paratii.eth.wallet
 
-    wallet = wallet.create(5, mnemonic)
+    wallet = await wallet.create(5, mnemonic)
     assert.equal(wallet[0].address, addresses[0])
 
     let data = wallet.encrypt(password)
@@ -109,12 +109,26 @@ describe('paratii.eth.wallet: :', function () {
     assert.notEqual(m1, m2)
     assert.isOk(paratii.eth.wallet.isValidMnemonic(m1))
   })
+  it('eth.wallet.create() should throw if a wallet already has an account', async function () {
+    paratii = await new Paratii({
+      address: address,
+      privateKey: privateKey
+    })
+    await assert.isRejected(paratii.eth.wallet.create())
+  })
 
   it('eth.wallet.getMnemonic() should work as expected', async function () {
     paratii = await new Paratii()
     assert.equal(paratii.eth.wallet.getMnemonic(), undefined)
-    let wallet = paratii.eth.wallet.create()
+    let wallet = await paratii.eth.wallet.create()
     assert.notEqual(wallet.getMnemonic(), undefined)
     assert.isOk(wallet.isValidMnemonic(wallet.getMnemonic()))
+
+    // if we construct the paratii object with
+    paratii = await new Paratii({
+      address: address,
+      privateKey: privateKey
+    })
+    assert.equal(paratii.eth.wallet.getMnemonic(), undefined)
   })
 })

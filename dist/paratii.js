@@ -35,6 +35,7 @@ var Paratii = function () {
       registryAddress: null,
       address: null, //  Ethereum address
       privateKey: null,
+      mnemonic: null,
       'repo': null
     };
     var options = dopts(opts, defaults);
