@@ -91,8 +91,6 @@ var Uploader = function (_EventEmitter) {
               };
 
               // TODO return proper promsie with status updates
-              console.log('func init');
-              console.log(options);
               if (!cb) {
                 cb = function cb(err, files) {
                   if (err) {
@@ -125,7 +123,6 @@ var Uploader = function (_EventEmitter) {
               };
 
               options = dopts(options, defaults);
-              console.log(options);
 
               fileSize = 0;
               // await this._ipfs.getIPFSInstance()
@@ -135,23 +132,23 @@ var Uploader = function (_EventEmitter) {
               console.log('Starting ipfs..');
 
               if (!(files.length === 0)) {
-                _context.next = 18;
+                _context.next = 15;
                 break;
               }
 
               console.log(options);
 
               if (!options.onDone) {
-                _context.next = 17;
+                _context.next = 14;
                 break;
               }
 
               return _context.abrupt('return', options.onDone(files));
 
-            case 17:
+            case 14:
               return _context.abrupt('return', files);
 
-            case 18:
+            case 15:
               this._ipfs.start(function () {
                 options.onStart();
                 // replace this by a callback?
@@ -186,7 +183,7 @@ var Uploader = function (_EventEmitter) {
                 }));
               });
 
-            case 19:
+            case 16:
             case 'end':
               return _context.stop();
           }
