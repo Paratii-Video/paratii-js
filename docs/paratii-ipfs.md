@@ -55,6 +55,21 @@ Stops the IPFS node.
 
 - TBD:  https://github.com/Paratii-Video/paratii-lib/issues/19
 
+## `ipfs.clearRepo()`
+
+TBD
+
+returns:  a Promise
+
+[the current code does not particularly 'clear': it instead sets the repo to a new value, and restarts ipfs]
+
+## `ipfs.isOnline()`
+
+TBD
+
+returns: a boolean
+
+
 ## `ipfs.get(ipfsHash, options)`
 
 Returns a promise that resolves into a file stream.
@@ -65,18 +80,27 @@ Returns a promise that resolves into a file stream.
 
 # `ipfs.uploader`
 
-## `ipfs.uploader.upload(file, options)`
+## `ipfs.uploader.add(file, options)`
 
 This will just upload the file _as is_ to your local IPFS node.
 
-    ipfs.upload(file, {
+    ipfs.add(file, {
       onStart: Function, // function()
       onFileReady: Function, // function(file)
       onProgress: Function, // function(chunkLength)
       onDone: Function // function(file)
     })
 
-- TBD:
+It can also handle uploads of lists of files:
+
+    ipfs.add([file1, file2], {
+      onStart: Function, // function()
+      onFileReady: Function, // function(file)
+      onProgress: Function, // function(chunkLength)
+      onDone: Function // function(file)
+    })
+
+TBD: promisify!
 
 ## `ipfs.uploader.transcode(fileHash, options)`
 
@@ -95,10 +119,12 @@ Send transcode signal:
         }
       })
 
-- TBD:
+TBD: Promisify
 
-## Upload and transcode
+##  `ipfs.uploader.addAndTrancode`
 
+
+The function `addAndTranscode` is an abbreviation for the following pattern:
 
     ipfs.upload(file, {
       onDone: function(file) {
@@ -106,7 +132,7 @@ Send transcode signal:
       }
     })
 
-TBD: decide if we want an `uploadAndTrancode(..)` helper funtion in our API.
+TBD: decide if we want an `addAndTranscode(..)` helper funtion in our API - also
 
 #### `ipfs.uploader.grabYT(url, options)`
 

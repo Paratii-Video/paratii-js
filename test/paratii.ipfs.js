@@ -26,10 +26,16 @@ describe('ParatiiIPFS: :', function () {
   it('should allow for file upload', async function () {
     let files = []
     await paratiiIPFS.getIPFSInstance()
-    return paratiiIPFS.uploader.uploadFiles(files)
+    await paratiiIPFS.uploader.add(files)
   })
 
-  it('should be able to grab a youtube video and upload it', (done) => {
+  it('should allow for file addAndTranscode', async function () {
+    let files = []
+    await paratiiIPFS.getIPFSInstance()
+    await paratiiIPFS.uploader.addAndTranscode(files)
+  })
+
+  it.skip('should be able to grab a youtube video and upload it', (done) => {
     paratiiIPFS.getIPFSInstance().then(() => {
       paratiiIPFS.uploader.grabYt('https://www.youtube.com/watch?v=IGQBtbKSVhY', (err) => {
         if (err) return done(err)
@@ -43,7 +49,7 @@ describe('ParatiiIPFS: :', function () {
     }).catch(done)
   })
 
-  it('should be able to grab a vimeo video and upload it', (done) => {
+  it.skip('should be able to grab a vimeo video and upload it', (done) => {
     paratiiIPFS.getIPFSInstance().then(() => {
       paratiiIPFS.uploader.grabVimeo('https://vimeo.com/129522659', (err) => {
         if (err) return done(err)

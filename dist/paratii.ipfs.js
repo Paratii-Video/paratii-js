@@ -18,7 +18,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Ipfs = require('ipfs');
 var dopts = require('default-options');
-var Uploader = require('./ipfs/uploader');
+var Uploader = require('./paratii.ipfs.uploader.js');
 var pull = require('pull-stream');
 var pullFilereader = require('pull-filereader');
 
@@ -259,81 +259,66 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
         }
       }, null, this);
     }
-  }, {
-    key: 'transcode',
-    value: function transcode(options) {
-      var _this4 = this;
 
-      var defaults, msg;
-      return regeneratorRuntime.async(function transcode$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              // TODO: return a promise
-              // sends a message to the transcoding server to start transcoding the file with the given hash
-              defaults = {
-                hash: String,
-                author: String,
-                onError: function onError(err) {
-                  if (err) this.warn('[Paratii-protocol] Error ', err);
-                },
-                onDone: function onDone(args, result) {
-                  //
-                  this.log('args: ', args);
-                  this.log('result: ', result);
-                  // statusEl.innerHTML += `Video HLS link: /ipfs/${result.master.hash}\n`
-                  // titleEl = document.querySelector('#input-title')
-                  // this.log('titleEl: ', titleEl)
-                  //   Meteor.call('videos.create', {
-                  //     id: String(Math.random()).split('.')[1],
-                  //     title: titleEl.value,
-                  //     price: 0.0,
-                  //     src: '/ipfs/' + result.master.hash,
-                  //     mimetype: 'video/mp4',
-                  //     stats: {
-                  //       likes: 0,
-                  //       dislikes: 0
-                  //     }}, (err, videoId) => {
-                  //       if (err) throw err
-                  //       this.log('[upload] Video Uploaded: ', videoId)
-                  //       statusEl.innerHTML += '\n Video Uploaded go to <b><a href="/play/' + videoId + '">/play/' + videoId + '</a></b>\n'
-                  //     })
-                }
-              };
+    // async transcode (options) {
+    //   // TODO: return a promise
+    //   // sends a message to the transcoding server to start transcoding the file with the given hash
+    //   let defaults = {
+    //     hash: String,
+    //     author: String,
+    //     onError: function (err) {
+    //       if (err) this.warn('[Paratii-protocol] Error ', err)
+    //     },
+    //     onDone: function (args, result) {
+    //       //
+    //       this.log('args: ', args)
+    //       this.log('result: ', result)
+    //       // statusEl.innerHTML += `Video HLS link: /ipfs/${result.master.hash}\n`
+    //       // titleEl = document.querySelector('#input-title')
+    //       // this.log('titleEl: ', titleEl)
+    //     //   Meteor.call('videos.create', {
+    //     //     id: String(Math.random()).split('.')[1],
+    //     //     title: titleEl.value,
+    //     //     price: 0.0,
+    //     //     src: '/ipfs/' + result.master.hash,
+    //     //     mimetype: 'video/mp4',
+    //     //     stats: {
+    //     //       likes: 0,
+    //     //       dislikes: 0
+    //     //     }}, (err, videoId) => {
+    //     //       if (err) throw err
+    //     //       this.log('[upload] Video Uploaded: ', videoId)
+    //     //       statusEl.innerHTML += '\n Video Uploaded go to <b><a href="/play/' + videoId + '">/play/' + videoId + '</a></b>\n'
+    //     //     })
+    //     }
+    //   }
+    //   options = dopts(options, defaults)
+    //   let msg = this.protocol.createCommand('transcode', {hash: options.hash, author: options.author})
+    //   this.ipfs.swarm.connect('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW', (err, success) => {
+    //     if (err) throw err
+    //     this.ipfs.swarm.peers((err, peers) => {
+    //       this.log('peers: ', peers)
+    //       if (err) throw err
+    //       peers.map((peer) => {
+    //         this.log('sending transcode msg to ', peer.peer.id.toB58String())
+    //         this.protocol.network.sendMessage(peer.peer.id, msg, options.onError)
+    //         if (peer.addr) {
+    //         }
+    //       })
+    //     })
+    //   })
+    //
+    //   // wait for paratii transcoder signal.
+    //   this.protocol.notifications.on('command', (peerId, command) => {
+    //     this.log('paratii protocol: Got Command ', command)
+    //     if (command.payload.toString() === 'transcoding:done') {
+    //       let args = JSON.parse(command.args.toString())
+    //       let result = JSON.parse(args.result)
+    //       options.onDone(args, result)
+    //     }
+    //   })
+    // }
 
-              options = dopts(options, defaults);
-              msg = this.protocol.createCommand('transcode', { hash: options.hash, author: options.author });
-
-              this.ipfs.swarm.connect('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW', function (err, success) {
-                if (err) throw err;
-                _this4.ipfs.swarm.peers(function (err, peers) {
-                  _this4.log('peers: ', peers);
-                  if (err) throw err;
-                  peers.map(function (peer) {
-                    _this4.log('sending transcode msg to ', peer.peer.id.toB58String());
-                    _this4.protocol.network.sendMessage(peer.peer.id, msg, options.onError);
-                    if (peer.addr) {}
-                  });
-                });
-              });
-
-              // wait for paratii transcoder signal.
-              this.protocol.notifications.on('command', function (peerId, command) {
-                _this4.log('paratii protocol: Got Command ', command);
-                if (command.payload.toString() === 'transcoding:done') {
-                  var args = JSON.parse(command.args.toString());
-                  var result = JSON.parse(args.result);
-                  options.onDone(args, result);
-                }
-              });
-
-            case 5:
-            case 'end':
-              return _context2.stop();
-          }
-        }
-      }, null, this);
-    }
   }]);
 
   return ParatiiIPFS;

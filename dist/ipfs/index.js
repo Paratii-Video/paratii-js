@@ -1,13 +1,17 @@
+/* globals Ipfs */
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.paratiiIPFS = undefined;
+var _meteor = require('meteor/meteor');
+
+var _users = require('/imports/api/users.js');
 
 var _lodash = require('lodash');
 
-// import Protocol from 'paratii-protocol'
+var _paratiiProtocol = require('paratii-protocol');
+
+var _paratiiProtocol2 = _interopRequireDefault(_paratiiProtocol);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var REPO_PATH = 'paratii-ipfs-repo';
 function noop() {}
@@ -20,13 +24,13 @@ var paratiiIPFS = {
   *
   * @param  {function} callback triggered when Ipfs node is ready
   */
-  // initIPFS: (callback) => {
-  //   if (window.ipfs && window.ipfs.isOnline()) {
-  //     callback()
-  //   } else {
-  //     paratiiIPFS.start(callback)
-  //   }
-  // },
+  initIPFS: function initIPFS(callback) {
+    if (window.ipfs && window.ipfs.isOnline()) {
+      callback();
+    } else {
+      paratiiIPFS.start(callback);
+    }
+  },
   triggerOnReady: function triggerOnReady() {
     // FIXME THSI IS DEV only
     // trigger functions once IPFS is ready.
@@ -214,134 +218,130 @@ var paratiiIPFS = {
 
     window.ipfs.stop(callback);
   }
+};
 
-  // $.getScript('/test/files/index.js', () => {
-  // function initialize () {
-  //   let isProduction = Meteor.settings.isProduction
-  //   let repo = paratiiIPFS.getRepoPath()
-  //   if (!repo) {
-  //     repo = paratiiIPFS.setRepoPath('paratii-alpha-' + String(Math.random()))
-  //   }
-  //   console.log('isProduction:', isProduction)
-  //   if (isProduction) {
-  //     // production settings.
-  //     window.ipfs = new Ipfs({
-  //       bitswap: {
-  //         maxMessageSize: 32 * 1024
-  //         // meterController: paratiiIPFS.meterController
-  //       },
-  //       repo: repo,
-  //       config: {
-  //         Addresses: {
-  //           Swarm: [
-  //             // '/dns4/star-signal.cloud.ipfs.team/wss/p2p-webrtc-star',
-  //             // run our own star-signal server.
-  //             // https://github.com/libp2p/js-libp2p-webrtc-star
-  //             // '/ip4/34.213.133.148/tcp/42000/wss/p2p-webrtc-star'
-  //             '/dns4/star.paratii.video/wss/p2p-webrtc-star'
-  //           ]
-  //         },
-  //         Bootstrap: [
-  //           // don't use official Bootstrap nodes cuz they keep f@#king thowing 403 errors
-  //           // https://github.com/ipfs/js-ipfs/issues/941
-  //           '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
-  //           // '/dns4/libp2p-webrtc-star/dns4/star-signal.cloud.ipfs.team/wss/ipfs/QmehDvwCWhcHSvFWKit59Liuxxu28N17Rm5pdpPN6uFC5H',
-  //           // '/ip4/212.71.247.117/tcp/4003/ws/ipfs/QmehDvwCWhcHSvFWKit59Liuxxu28N17Rm5pdpPN6uFC5H'
-  //           // official nodes that are stable.
-  //           // '/dns4/ams-1.bootstrap.libp2p.io/tcp/443/wss/ipfs/QmSoLer265NRgSp2LA3dPaeykiS1J6DifTC88f5uVQKNAd',
-  //           // '/dns4/sfo-1.bootstrap.libp2p.io/tcp/443/wss/ipfs/QmSoLju6m7xTh3DuokvT3886QRYqxAzb1kShaanJgW36yx',
-  //           // '/dns4/lon-1.bootstrap.libp2p.io/tcp/443/wss/ipfs/QmSoLMeWqB7YGVLJN3pNLQpmmEk35v6wYtsMGLzSr5QBU3',
-  //           // '/dns4/sgp-1.bootstrap.libp2p.io/tcp/443/wss/ipfs/QmSoLSafTMBsPKadTEgaXctDQVcqN88CNLHXMkTNwMKPnu',
-  //           // '/dns4/nyc-2.bootstrap.libp2p.io/tcp/443/wss/ipfs/QmSoLV4Bbm51jM9C4gDYZQ9Cy3U6aXMJDAbzgu2fzaDs64'
-  //         ]
-  //       }
-  //     })
-  //   } else {
-  //     window.ipfs = new Ipfs({
-  //       bitswap: {
-  //         maxMessageSize: 128 * 1024
-  //         // meterController: paratiiIPFS.meterController
-  //       },
-  //       repo: String(Math.random()),
-  //       config: {
-  //         Addresses: {
-  //           Swarm: [
-  //             // '/ip4/127.0.0.1/tcp/9090/wss/p2p-websocket-star/',
-  //             // '/dns4/star-signal.cloud.ipfs.team/wss/p2p-webrtc-star',
-  //             // run our own star-signal server.
-  //             // https://github.com/libp2p/js-libp2p-webrtc-star
-  //             // '/ip4/34.213.133.148/tcp/42000/wss/p2p-webrtc-star'
-  //             // '/dns4/star.paratii.video/wss/p2p-webrtc-star',
-  //             '/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star'
-  //             // '/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star'
-  //             // '/dns4/wrtc-star.discovery.libp2p.io/tcp/443/wss/p2p-webrtc-star'
-  //           ]
-  //         },
-  //         Bootstrap: [
-  //           // don't use official Bootstrap nodes cuz they keep f@#king thowing 403 errors
-  //           // https://github.com/ipfs/js-ipfs/issues/941
-  //           // '/dns4/wss1.bootstrap.libp2p.io/tcp/443/wss/ipfs/Qmbut9Ywz9YEDrz8ySBSgWyJk41Uvm2QJPhwDJzJyGFsD6'
-  //           // '/ip4/127.0.0.1/tcp/4003/ws/ipfs/Qmbd5jx8YF1QLhvwfLbCTWXGyZLyEJHrPbtbpRESvYs4FS',
-  //           // '/libp2p-webrtc-star/ip4/127.0.0.1/tcp/9091/wss/ipfs/Qmbd5jx8YF1QLhvwfLbCTWXGyZLyEJHrPbtbpRESvYs4FS',
-  //           // '/libp2p-webrtc-star/dns4/star-signal.cloud.ipfs.team/wss/ipfs/Qmbd5jx8YF1QLhvwfLbCTWXGyZLyEJHrPbtbpRESvYs4FS',
-  //           // '/ip4/34.213.133.148/tcp/4003/ws/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW',
-  //           '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
-  //           // '/dns4/star-signal.cloud.ipfs.team/wss/ipfs/QmehDvwCWhcHSvFWKit59Liuxxu28N17Rm5pdpPN6uFC5H',
-  //           // '/ip4/212.71.247.117/tcp/4003/ws/ipfs/QmehDvwCWhcHSvFWKit59Liuxxu28N17Rm5pdpPN6uFC5H',
-  //           // '/dns4/ams-1.bootstrap.libp2p.io/tcp/443/wss/ipfs/QmSoLer265NRgSp2LA3dPaeykiS1J6DifTC88f5uVQKNAd',
-  //           // '/dns4/sfo-1.bootstrap.libp2p.io/tcp/443/wss/ipfs/QmSoLju6m7xTh3DuokvT3886QRYqxAzb1kShaanJgW36yx',
-  //           // '/dns4/lon-1.bootstrap.libp2p.io/tcp/443/wss/ipfs/QmSoLMeWqB7YGVLJN3pNLQpmmEk35v6wYtsMGLzSr5QBU3',
-  //           // '/dns4/sgp-1.bootstrap.libp2p.io/tcp/443/wss/ipfs/QmSoLSafTMBsPKadTEgaXctDQVcqN88CNLHXMkTNwMKPnu',
-  //           // '/dns4/nyc-2.bootstrap.libp2p.io/tcp/443/wss/ipfs/QmSoLV4Bbm51jM9C4gDYZQ9Cy3U6aXMJDAbzgu2fzaDs64'
-  //         ]
-  //       }
-  //     })
-  //   }
-  //
-  //   window.ipfs.on('ready', () => {
-  //     console.log('[IPFS] node Ready.')
-  //     // callback()
-  //     window.ipfs._bitswap.notifications.on('receivedNewBlock', (peerId, block) => {
-  //       console.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length)
-  //       console.log('---------[IPFS] bitswap LedgerMap ---------------------')
-  //       window.ipfs._bitswap.engine.ledgerMap.forEach((ledger, peerId, ledgerMap) => {
-  //         console.log(`${peerId} : ${JSON.stringify(ledger.accounting)}\n`)
-  //       })
-  //       console.log('-------------------------------------------------------')
-  //     })
-  //
-  //     window.ipfs.id().then((id) => {
-  //       let peerInfo = id
-  //       paratiiIPFS.id = id
-  //       console.log('[IPFS] id: ', peerInfo)
-  //       let ptiAddress = getUserPTIAddress() || 'no_address'
-  //       paratiiIPFS.protocol = new Protocol(
-  //         window.ipfs._libp2pNode,
-  //         window.ipfs._repo.blocks,
-  //         // add ETH Address here.
-  //         ptiAddress
-  //       )
-  //
-  //       paratiiIPFS.protocol.notifications.on('message:new', (peerId, msg) => {
-  //         console.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg)
-  //       })
-  //
-  //       setTimeout(() => {
-  //         paratiiIPFS.protocol.start(noop)
-  //         paratiiIPFS.triggerOnReady()
-  //       }, 10)
-  //
-  //       // callback()
-  //     })
-  //   })
-  //
-  //   window.ipfs.on('error', (err) => {
-  //     if (err) {
-  //       console.log('IPFS node ', window.ipfs)
-  //       console.error('[IPFS] ', err)
-  //       // throw err
-  //     }
-  //   })
-  // }
+$.getScript('/test/files/index.js', function () {
+  var isProduction = _meteor.Meteor.settings.isProduction;
+  var repo = paratiiIPFS.getRepoPath();
+  if (!repo) {
+    repo = paratiiIPFS.setRepoPath('paratii-alpha-' + String(Math.random()));
+  }
+  console.log('isProduction:', isProduction);
+  if (isProduction) {
+    // production settings.
+    window.ipfs = new Ipfs({
+      bitswap: {
+        maxMessageSize: 32 * 1024
+        // meterController: paratiiIPFS.meterController
+      },
+      repo: repo,
+      config: {
+        Addresses: {
+          Swarm: [
+          // '/dns4/star-signal.cloud.ipfs.team/wss/p2p-webrtc-star',
+          // run our own star-signal server.
+          // https://github.com/libp2p/js-libp2p-webrtc-star
+          // '/ip4/34.213.133.148/tcp/42000/wss/p2p-webrtc-star'
+          '/dns4/star.paratii.video/wss/p2p-webrtc-star']
+        },
+        Bootstrap: [
+        // don't use official Bootstrap nodes cuz they keep f@#king thowing 403 errors
+        // https://github.com/ipfs/js-ipfs/issues/941
+        '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
+        // '/dns4/libp2p-webrtc-star/dns4/star-signal.cloud.ipfs.team/wss/ipfs/QmehDvwCWhcHSvFWKit59Liuxxu28N17Rm5pdpPN6uFC5H',
+        // '/ip4/212.71.247.117/tcp/4003/ws/ipfs/QmehDvwCWhcHSvFWKit59Liuxxu28N17Rm5pdpPN6uFC5H'
+        // official nodes that are stable.
+        // '/dns4/ams-1.bootstrap.libp2p.io/tcp/443/wss/ipfs/QmSoLer265NRgSp2LA3dPaeykiS1J6DifTC88f5uVQKNAd',
+        // '/dns4/sfo-1.bootstrap.libp2p.io/tcp/443/wss/ipfs/QmSoLju6m7xTh3DuokvT3886QRYqxAzb1kShaanJgW36yx',
+        // '/dns4/lon-1.bootstrap.libp2p.io/tcp/443/wss/ipfs/QmSoLMeWqB7YGVLJN3pNLQpmmEk35v6wYtsMGLzSr5QBU3',
+        // '/dns4/sgp-1.bootstrap.libp2p.io/tcp/443/wss/ipfs/QmSoLSafTMBsPKadTEgaXctDQVcqN88CNLHXMkTNwMKPnu',
+        // '/dns4/nyc-2.bootstrap.libp2p.io/tcp/443/wss/ipfs/QmSoLV4Bbm51jM9C4gDYZQ9Cy3U6aXMJDAbzgu2fzaDs64'
+        ]
+      }
+    });
+  } else {
+    window.ipfs = new Ipfs({
+      bitswap: {
+        maxMessageSize: 128 * 1024
+        // meterController: paratiiIPFS.meterController
+      },
+      repo: String(Math.random()),
+      config: {
+        Addresses: {
+          Swarm: [
+          // '/ip4/127.0.0.1/tcp/9090/wss/p2p-websocket-star/',
+          // '/dns4/star-signal.cloud.ipfs.team/wss/p2p-webrtc-star',
+          // run our own star-signal server.
+          // https://github.com/libp2p/js-libp2p-webrtc-star
+          // '/ip4/34.213.133.148/tcp/42000/wss/p2p-webrtc-star'
+          // '/dns4/star.paratii.video/wss/p2p-webrtc-star',
+          '/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star'
+          // '/dns4/ws-star.discovery.libp2p.io/tcp/443/wss/p2p-websocket-star'
+          // '/dns4/wrtc-star.discovery.libp2p.io/tcp/443/wss/p2p-webrtc-star'
+          ]
+        },
+        Bootstrap: [
+        // don't use official Bootstrap nodes cuz they keep f@#king thowing 403 errors
+        // https://github.com/ipfs/js-ipfs/issues/941
+        // '/dns4/wss1.bootstrap.libp2p.io/tcp/443/wss/ipfs/Qmbut9Ywz9YEDrz8ySBSgWyJk41Uvm2QJPhwDJzJyGFsD6'
+        // '/ip4/127.0.0.1/tcp/4003/ws/ipfs/Qmbd5jx8YF1QLhvwfLbCTWXGyZLyEJHrPbtbpRESvYs4FS',
+        // '/libp2p-webrtc-star/ip4/127.0.0.1/tcp/9091/wss/ipfs/Qmbd5jx8YF1QLhvwfLbCTWXGyZLyEJHrPbtbpRESvYs4FS',
+        // '/libp2p-webrtc-star/dns4/star-signal.cloud.ipfs.team/wss/ipfs/Qmbd5jx8YF1QLhvwfLbCTWXGyZLyEJHrPbtbpRESvYs4FS',
+        // '/ip4/34.213.133.148/tcp/4003/ws/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW',
+        '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
+        // '/dns4/star-signal.cloud.ipfs.team/wss/ipfs/QmehDvwCWhcHSvFWKit59Liuxxu28N17Rm5pdpPN6uFC5H',
+        // '/ip4/212.71.247.117/tcp/4003/ws/ipfs/QmehDvwCWhcHSvFWKit59Liuxxu28N17Rm5pdpPN6uFC5H',
+        // '/dns4/ams-1.bootstrap.libp2p.io/tcp/443/wss/ipfs/QmSoLer265NRgSp2LA3dPaeykiS1J6DifTC88f5uVQKNAd',
+        // '/dns4/sfo-1.bootstrap.libp2p.io/tcp/443/wss/ipfs/QmSoLju6m7xTh3DuokvT3886QRYqxAzb1kShaanJgW36yx',
+        // '/dns4/lon-1.bootstrap.libp2p.io/tcp/443/wss/ipfs/QmSoLMeWqB7YGVLJN3pNLQpmmEk35v6wYtsMGLzSr5QBU3',
+        // '/dns4/sgp-1.bootstrap.libp2p.io/tcp/443/wss/ipfs/QmSoLSafTMBsPKadTEgaXctDQVcqN88CNLHXMkTNwMKPnu',
+        // '/dns4/nyc-2.bootstrap.libp2p.io/tcp/443/wss/ipfs/QmSoLV4Bbm51jM9C4gDYZQ9Cy3U6aXMJDAbzgu2fzaDs64'
+        ]
+      }
+    });
+  }
 
-};exports.paratiiIPFS = paratiiIPFS;
+  window.ipfs.on('ready', function () {
+    console.log('[IPFS] node Ready.');
+    // callback()
+    window.ipfs._bitswap.notifications.on('receivedNewBlock', function (peerId, block) {
+      console.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length);
+      console.log('---------[IPFS] bitswap LedgerMap ---------------------');
+      window.ipfs._bitswap.engine.ledgerMap.forEach(function (ledger, peerId, ledgerMap) {
+        console.log(peerId + ' : ' + JSON.stringify(ledger.accounting) + '\n');
+      });
+      console.log('-------------------------------------------------------');
+    });
+
+    window.ipfs.id().then(function (id) {
+      var peerInfo = id;
+      paratiiIPFS.id = id;
+      console.log('[IPFS] id: ', peerInfo);
+      var ptiAddress = (0, _users.getUserPTIAddress)() || 'no_address';
+      paratiiIPFS.protocol = new _paratiiProtocol2.default(window.ipfs._libp2pNode, window.ipfs._repo.blocks,
+      // add ETH Address here.
+      ptiAddress);
+
+      paratiiIPFS.protocol.notifications.on('message:new', function (peerId, msg) {
+        console.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
+      });
+
+      setTimeout(function () {
+        paratiiIPFS.protocol.start(noop);
+        paratiiIPFS.triggerOnReady();
+      }, 10);
+
+      // callback()
+    });
+  });
+
+  window.ipfs.on('error', function (err) {
+    if (err) {
+      console.log('IPFS node ', window.ipfs);
+      console.error('[IPFS] ', err);
+      // throw err
+    }
+  });
+});
+
+module.exports = paratiiIPFS;
