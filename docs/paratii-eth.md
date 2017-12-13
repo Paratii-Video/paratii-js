@@ -48,6 +48,10 @@ Saves both encrypted v3 objects as well as the seed phrase in local storage
 
 Load both encrypted v3 objects as well as the seed phrase from local storage
 
+## eth.wallet.newMnemonic()
+
+Generate a random new mnemomic
+
 
 ### `eth.balanceOf(account, symbol)`
 
@@ -67,13 +71,11 @@ When called without an argument, returns information about all relevant balances
 
  ### `eth.transfer(beneficiary, amount, symbol)`
 
-_? perhaps this should be `personal.transfer(...)` instead of `eth.transfer(...)` as it uses the personal account as the sender?_
+Use this to send ETH or PTI from `paratii.config.address`:
 
+    eth.transfer('0x123', 2e18, 'PTI')
 
-Use this to send ETH or PTI
-
-
-Transfer the given amount of ETH to the benificiary. Uses the `SendEther` contract to send ether and log an event:
+Transfer the given amount of ETH to the benificiary. Uses the `SendEther` contract to send ether and log an event
 
 ## `eth.vids`
 

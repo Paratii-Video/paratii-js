@@ -4,6 +4,17 @@ let address = '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1'
 let privateKey = '4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d'
 
 let address1 = '0xffcf8fdee72ac11b5c542428b35eef5769c409f0'
+
+// an arbitrary but valid address
 let address99 = '0x0000000000000000000000000000000000000001'
 
-export { address, address1, address99, privateKey }
+// an address and privatey key not known in testrpc
+let address17 = '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01'
+let privateKey17 = '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709'
+
+// an address generated from a seed phrase
+let mnemonic23 = 'jelly better achieve collect unaware mountain thought cargo oxygen act hood bridge'
+// this is the first HD address generated
+let address23 = '0x9e2d04eef5b16CFfB4328Ddd027B55736407B275'
+
+export { address, address1, address99, privateKey, address17, privateKey17, mnemonic23, address23 }

@@ -11,28 +11,22 @@ var bitcore = require('bitcore-lib');
 
 function patchWallet(wallet) {
   function create(numberOfAccounts, mnemonic) {
-    if (Mnemonic.isValid(mnemonic)) {
-      this.mnemonic = mnemonic;
-      this.hdIndex = 0;
+    if (isValidMnemonic(mnemonic)) {
+      this._mnemonic = mnemonic;
+      this._hdIndex = 0;
       // this code is lifted from eth-lightwallet
-      var hdRoot = new Mnemonic(this.mnemonic).toHDPrivateKey().xprivkey;
+      var hdRoot = new Mnemonic(this._mnemonic).toHDPrivateKey().xprivkey;
 
       // var keys = []
       for (var i = 0; i < numberOfAccounts; ++i) {
-        var hdprivkey = new bitcore.HDPrivateKey(hdRoot).derive(this.hdIndex++);
+        var hdprivkey = new bitcore.HDPrivateKey(hdRoot).derive(this._hdIndex++);
         var privkeyBuf = hdprivkey.privateKey.toBuffer();
 
         var privkeyHex = privkeyBuf.toString('hex');
-        if (privkeyBuf.length < 16) {
+        if (privkeyBuf.length < 32) {
           // Way too small key, something must have gone wrong
           // Halt and catch fire
           throw new Error('Private key suspiciously small: < 16 bytes. Aborting!');
-        } else if (privkeyBuf.length < 32) {
-          // Pad private key if too short
-          // bitcore has a bug where it sometimes returns
-          // truncated keys
-          // TODO: uncomment next line (fund out where leeftPadString is defined)
-          // privkeyHex = leftPadString(privkeyBuf.toString('hex'), '0', 64)
         } else if (privkeyBuf.length > 32) {
           throw new Error('Private key larger than 32 bytes. Aborting!');
         }
@@ -45,6 +39,23 @@ function patchWallet(wallet) {
     }
     return this;
   }
+
+  function isValidMnemonic(mnemonic) {
+    return Mnemonic.isValid(mnemonic);
+  }
+
+  function newMnemonic() {
+    return new Mnemonic().toString();
+  }
+
+  function getMnemonic() {
+    return this._mnemonic;
+  }
+
+  wallet._mnemonic = undefined;
   wallet.create = create;
+  wallet.isValidMnemonic = isValidMnemonic;
+  wallet.newMnemonic = newMnemonic;
+  wallet.getMenomic = getMnemonic;
   return wallet;
 }
