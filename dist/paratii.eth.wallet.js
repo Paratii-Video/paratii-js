@@ -11,6 +11,12 @@ var bitcore = require('bitcore-lib');
 
 function patchWallet(wallet) {
   function create(numberOfAccounts, mnemonic) {
+    if (numberOfAccounts === undefined) {
+      numberOfAccounts = 1;
+    }
+    if (mnemonic === undefined) {
+      mnemonic = newMnemonic();
+    }
     if (isValidMnemonic(mnemonic)) {
       this._mnemonic = mnemonic;
       this._hdIndex = 0;
@@ -56,6 +62,6 @@ function patchWallet(wallet) {
   wallet.create = create;
   wallet.isValidMnemonic = isValidMnemonic;
   wallet.newMnemonic = newMnemonic;
-  wallet.getMenomic = getMnemonic;
+  wallet.getMnemonic = getMnemonic;
   return wallet;
 }

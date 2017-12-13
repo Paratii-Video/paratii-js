@@ -42,6 +42,19 @@ describe('paratii.eth.wallet: :', function () {
     assert.equal(wallet[0].address, addresses[0])
   })
 
+  it('wallet.create() does not create a new wallet object', async function () {
+    paratii = await new Paratii()
+    let wallet = paratii.eth.wallet.create(5, mnemonic)
+    assert.equal(wallet, paratii.eth.wallet)
+  })
+
+  it('wallet.create() creates a new mnenomic if not mnomic is given', async function () {
+    paratii = await new Paratii()
+    let wallet = paratii.eth.wallet
+    wallet.create()
+    wallet.isValidMnemonic(wallet.getMnemonic())
+  })
+
   it('wallet.encrypt() and decrypt() works', async function () {
     paratii = await new Paratii()
     let wallet = paratii.eth.wallet
@@ -71,7 +84,7 @@ describe('paratii.eth.wallet: :', function () {
       address: address,
       privateKey: privateKey
     })
-    await paratii.eth.transfer(address1, 2e18, 'ETH')
+    await paratii.eth.transfer(address1, 2e10, 'ETH')
   })
 
   it('send() should succeed if a  private key is passed to the constructor', async function () {
@@ -80,7 +93,7 @@ describe('paratii.eth.wallet: :', function () {
       address: address,
       privateKey: privateKey
     })
-    await paratii.eth.transfer(address1, 2e18, 'ETH')
+    await paratii.eth.transfer(address1, 2e10, 'ETH')
   })
 
   it('eth.wallet.isValidMnemonic() should work as expected', async function () {
@@ -97,6 +110,11 @@ describe('paratii.eth.wallet: :', function () {
     assert.isOk(paratii.eth.wallet.isValidMnemonic(m1))
   })
 
-  it.skip('eth.wallet.getMnemonic()', function () {
+  it('eth.wallet.getMnemonic() should work as expected', async function () {
+    paratii = await new Paratii()
+    assert.equal(paratii.eth.wallet.getMnemonic(), undefined)
+    let wallet = paratii.eth.wallet.create()
+    assert.notEqual(wallet.getMnemonic(), undefined)
+    assert.isOk(wallet.isValidMnemonic(wallet.getMnemonic()))
   })
 })
