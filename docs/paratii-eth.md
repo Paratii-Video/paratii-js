@@ -32,7 +32,7 @@ Functions having to do with wallet and storage. These implement (and are mostly 
 Create a wallet with a given number of accounts from a BIP32/BIP39 seedPhrase
 
     let mnemonic =  "jelly better achieve collect unaware mountain thought cargo oxygen act hood bridge",
-    let wallet = eth.wallet.create(1, mnemonic) // create a wallet with 2 accounts
+    let wallet = await eth.wallet.create(1, mnemonic) // create a wallet with 2 accounts
 
 ## `eth.wallet.encrypt([password])`
 
@@ -48,9 +48,12 @@ Saves both encrypted v3 objects as well as the seed phrase in local storage
 
 Load both encrypted v3 objects as well as the seed phrase from local storage
 
-## eth.wallet.newMnemonic()
+## `eth.wallet.newMnemonic()`
 
-Generate a random new mnemomic
+Generate a random new mnemomic.
+
+    let m = eth.wallet.newMnemonic()
+    let wallet = await eth.wallet.create(2, m)
 
 
 ### `eth.balanceOf(account, symbol)`
@@ -107,7 +110,7 @@ The `eth.vids` namespace contains functions to interact with the video registrat
 
 ## `eth.users`
 
-The `eth.user` namespace contains functions to interact with the video registration on the blockchain
+The `eth.user` namespace contains functions to interact with the video registration on the blockchain. Mostly TBD.
 
 ### `eth.users.create()`
 
@@ -120,12 +123,12 @@ The `eth.user` namespace contains functions to interact with the video registrat
 
 ## `eth.store`
 
-Functions for buying and selling
+Functions for buying and selling. TBD
 
 
 ## `eth.bank`
 
-Functions for lending money
+Functions for lending money. Completely TBD
 
 ## "Admin function"
 
