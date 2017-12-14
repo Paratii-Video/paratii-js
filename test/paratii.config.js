@@ -46,9 +46,9 @@ describe('Paratii configuration:', function () {
       privateKey: privateKey
     })
 
+    console.og
     await paratii.eth.deployContracts()
     assert.isOk(paratii.eth.config.registryAddress)
-    // assert.isOk(paratii.config.registryAddress)
 
     let paratii2 = new Paratii({
       address: address,
