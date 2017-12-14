@@ -48,7 +48,6 @@ describe('Paratii configuration:', function () {
 
     await paratii.eth.deployContracts()
     assert.isOk(paratii.eth.config.registryAddress)
-    // assert.isOk(paratii.config.registryAddress)
 
     let paratii2 = new Paratii({
       address: address,

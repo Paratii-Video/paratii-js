@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.utils = exports.Paratii = undefined;
+exports.ParatiiIPFS = exports.utils = exports.Paratii = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -35,6 +35,7 @@ var Paratii = function () {
       registryAddress: null,
       address: null, //  Ethereum address
       privateKey: null,
+      mnemonic: null,
       'repo': null
     };
     var options = dopts(opts, defaults);
@@ -53,17 +54,15 @@ var Paratii = function () {
 
     this.config.registryAddress = options.registryAddress;
 
-    if (!options.address && this.config.isTestNet) {
-      // this is the first account generated with testprc/ganache using the --deterministic flag
-      // we use it here as default, but probably should not..
-      this.config.account = {
-        address: '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1',
-        privateKey: '4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d'
-      };
-    } else {
+    if (options.address) {
       this.config.account = {
         address: options.address,
         privateKey: options.privateKey
+      };
+    } else {
+      this.config.account = {
+        address: null,
+        privateKey: null
       };
     }
 
@@ -188,3 +187,4 @@ var Paratii = function () {
 
 exports.Paratii = Paratii;
 exports.utils = utils;
+exports.ParatiiIPFS = _paratiiIpfs.ParatiiIPFS;

@@ -1,6 +1,5 @@
 import { Paratii } from '../lib/paratii.js'
 import { account, privateKey } from './utils.js'
-import { assert } from 'chai'
 
 describe('paratii.eth.users: :', function () {
   let paratii
@@ -13,12 +12,8 @@ describe('paratii.eth.users: :', function () {
     await paratii.eth.deployContracts()
   })
 
-  it.skip('users.registerUser() should work', async function () {
-    assert.isOk(true)
-  })
+  it.skip('users.create(),  .get(), .update() and .delete() should work', async function () {
+    // cf the tests in paratii.eth.vids.js
 
-  it.skip('users.unregisterUser() should work', async function () {
-  })
-  it.skip('users.updateUser() should work', async function () {
   })
 })
