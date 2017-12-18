@@ -6,8 +6,9 @@ Object.defineProperty(exports, "__esModule", {
 exports.ParatiiIPFS = exports.utils = exports.Paratii = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // global.Buffer = global.Buffer || require('buffer').Buffer
-// import { ParatiiEth } from './paratii.eth.js'
 
+
+var _paratiiEth = require('./paratii.eth.js');
 
 var _paratiiIpfs = require('./paratii.ipfs.js');
 
@@ -66,7 +67,7 @@ var Paratii = function () {
       };
     }
 
-    // this.eth = new ParatiiEth(this.config)
+    this.eth = new _paratiiEth.ParatiiEth(this.config);
     this.ipfs = new _paratiiIpfs.ParatiiIPFS(this.config);
     this.personal = new _paratiiPersonal.ParatiiPersonal(this.config);
   }
