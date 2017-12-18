@@ -18,10 +18,10 @@ var _require = require('events'),
 var dopts = require('default-options');
 var pull = require('pull-stream');
 var pullFilereader = require('pull-filereader');
-var toPull = require('stream-to-pull-stream');
-var ytdl = require('ytdl-core');
+// const toPull = require('stream-to-pull-stream')
+// const ytdl = require('ytdl-core')
+// const vidl = require('vimeo-downloader')
 // const readline = require('readline')
-var vidl = require('vimeo-downloader');
 
 var Uploader = function (_EventEmitter) {
   _inherits(Uploader, _EventEmitter);
@@ -221,87 +221,94 @@ var Uploader = function (_EventEmitter) {
         }
       });
     }
-  }, {
-    key: 'grabYt',
-    value: function grabYt(url, onResponse, callback) {
-      var starttime = void 0;
-      var fileSize = void 0;
-      var video = ytdl(url);
-      video.once('response', function () {
-        console.log('starting ' + url);
-        starttime = Date.now();
-        onResponse(null, starttime);
-      });
 
-      video.on('error', function (err) {
-        onResponse(err);
-      });
+    // grabYt (url, onResponse, callback) {
+    //   let starttime
+    //   let fileSize
+    //   let video = ytdl(url)
+    //   video.once('response', () => {
+    //     console.log(`starting ${url}`)
+    //     starttime = Date.now()
+    //     onResponse(null, starttime)
+    //   })
+    //
+    //   video.on('error', (err) => {
+    //     onResponse(err)
+    //   })
+    //
+    //   video.on('progress', (chunkLength, downloaded, total) => {
+    //     fileSize = total
+    //     // const floatDownloaded = downloaded / total
+    //     // const downloadedMinutes = (Date.now() - starttime) / 1000 / 60
+    //     // readline.cursorTo(process.stdout, 0)
+    //     // process.stdout.write(`${(floatDownloaded * 100).toFixed(2)}% downloaded`)
+    //     // process.stdout.write(`(${(downloaded / 1024 / 1024).toFixed(2)}MB of ${(total / 1024 / 1024).toFixed(2)}MB)\n`)
+    //     // process.stdout.write(`running for: ${downloadedMinutes.toFixed(2)}minutes`)
+    //     // process.stdout.write(`, estimated time left: ${(downloadedMinutes / floatDownloaded - downloadedMinutes).toFixed(2)}minutes `)
+    //     // readline.moveCursor(process.stdout, 0, -1)
+    //   })
+    //
+    //   video.on('end', () => {
+    //     process.stdout.write('\n\n')
+    //     // cb(null, output)
+    //   })
+    //
+    //   var total = 0
+    //   function updateProgress (chunkLength) {
+    //     total += chunkLength
+    //     console.log('Progress \t', total, ' / ', fileSize, ' = ', Math.floor((total / fileSize) * 100))
+    //   }
+    //
+    //   pull(
+    //     pull.values([{
+    //       path: url,
+    //       content: pull(
+    //         toPull(video),
+    //         pull.through((chunk) => updateProgress(chunk.length))
+    //       )
+    //     }]),
+    //     this._node.files.addPullStream({chunkerOptions: {maxChunkSize: this._chunkSize}}), // default size 262144
+    //     this._signalTranscoderPull(callback)
+    //   )
+    // }
+    //
+    // grabVimeo (url, onResponse, callback) {
+    //   let starttime
+    //   // let total = 0
+    //   let video = vidl(url, {quality: '720p'})
+    //
+    //   video.once('response', () => {
+    //     console.log(`starting ${url}`)
+    //     starttime = Date.now()
+    //     onResponse(null, starttime)
+    //   })
+    //
+    //   video.on('data', (chunk) => {
+    //     // total += chunk.length / 1024 / 1024
+    //   })
+    //
+    //   video.on('end', () => {
+    //     // process.stdout.write('\n\n')
+    //     // cb(null, output)
+    //   })
+    //
+    //   function updateProgress (chunkLength) {
+    //     // console.log('Progress \t', total, ' / ', fileSize, ' = ', Math.floor((total / fileSize) * 100))
+    //   }
+    //
+    //   pull(
+    //     pull.values([{
+    //       path: url,
+    //       content: pull(
+    //         toPull(video),
+    //         pull.through((chunk) => updateProgress(chunk.length))
+    //       )
+    //     }]),
+    //     this._node.files.addPullStream({chunkerOptions: {maxChunkSize: this._chunkSize}}), // default size 262144
+    //     this._signalTranscoderPull(callback)
+    //   )
+    // }
 
-      video.on('progress', function (chunkLength, downloaded, total) {
-        fileSize = total;
-        // const floatDownloaded = downloaded / total
-        // const downloadedMinutes = (Date.now() - starttime) / 1000 / 60
-        // readline.cursorTo(process.stdout, 0)
-        // process.stdout.write(`${(floatDownloaded * 100).toFixed(2)}% downloaded`)
-        // process.stdout.write(`(${(downloaded / 1024 / 1024).toFixed(2)}MB of ${(total / 1024 / 1024).toFixed(2)}MB)\n`)
-        // process.stdout.write(`running for: ${downloadedMinutes.toFixed(2)}minutes`)
-        // process.stdout.write(`, estimated time left: ${(downloadedMinutes / floatDownloaded - downloadedMinutes).toFixed(2)}minutes `)
-        // readline.moveCursor(process.stdout, 0, -1)
-      });
-
-      video.on('end', function () {
-        process.stdout.write('\n\n');
-        // cb(null, output)
-      });
-
-      var total = 0;
-      function updateProgress(chunkLength) {
-        total += chunkLength;
-        console.log('Progress \t', total, ' / ', fileSize, ' = ', Math.floor(total / fileSize * 100));
-      }
-
-      pull(pull.values([{
-        path: url,
-        content: pull(toPull(video), pull.through(function (chunk) {
-          return updateProgress(chunk.length);
-        }))
-      }]), this._node.files.addPullStream({ chunkerOptions: { maxChunkSize: this._chunkSize } }), // default size 262144
-      this._signalTranscoderPull(callback));
-    }
-  }, {
-    key: 'grabVimeo',
-    value: function grabVimeo(url, onResponse, callback) {
-      var starttime = void 0;
-      // let total = 0
-      var video = vidl(url, { quality: '720p' });
-
-      video.once('response', function () {
-        console.log('starting ' + url);
-        starttime = Date.now();
-        onResponse(null, starttime);
-      });
-
-      video.on('data', function (chunk) {
-        // total += chunk.length / 1024 / 1024
-      });
-
-      video.on('end', function () {
-        // process.stdout.write('\n\n')
-        // cb(null, output)
-      });
-
-      function updateProgress(chunkLength) {
-        // console.log('Progress \t', total, ' / ', fileSize, ' = ', Math.floor((total / fileSize) * 100))
-      }
-
-      pull(pull.values([{
-        path: url,
-        content: pull(toPull(video), pull.through(function (chunk) {
-          return updateProgress(chunk.length);
-        }))
-      }]), this._node.files.addPullStream({ chunkerOptions: { maxChunkSize: this._chunkSize } }), // default size 262144
-      this._signalTranscoderPull(callback));
-    }
   }, {
     key: '_signalTranscoderPull',
     value: function _signalTranscoderPull(callback) {
