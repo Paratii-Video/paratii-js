@@ -11,6 +11,8 @@ var _utils = require('./utils.js');
 
 var _paratiiEthVids = require('./paratii.eth.vids.js');
 
+var _paratiiEthUsers = require('./paratii.eth.users.js');
+
 var _paratiiEthWallet = require('./paratii.eth.wallet.js');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -44,14 +46,15 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
     this.contracts = {};
     this.contracts.ParatiiToken = this.requireContract('ParatiiToken');
-    this.contracts.ParatiiAvatar = this.requireContract('ParatiiAvatar');
-    this.contracts.ParatiiRegistry = this.requireContract('ParatiiRegistry');
+    this.contracts.Avatar = this.requireContract('Avatar');
+    this.contracts.Registry = this.requireContract('Registry');
     this.contracts.SendEther = this.requireContract('SendEther');
-    this.contracts.UserRegistry = this.requireContract('UserRegistry');
-    this.contracts.VideoRegistry = this.requireContract('VideoRegistry');
-    this.contracts.VideoStore = this.requireContract('VideoStore');
+    this.contracts.Users = this.requireContract('Users');
+    this.contracts.Videos = this.requireContract('Videos');
+    this.contracts.Store = this.requireContract('Store');
 
     this.vids = new _paratiiEthVids.ParatiiEthVids(this);
+    this.users = new _paratiiEthUsers.ParatiiEthUsers(this);
 
     this.wallet = (0, _paratiiEthWallet.patchWallet)(this.web3.eth.accounts.wallet);
 
@@ -110,13 +113,13 @@ var ParatiiEth = exports.ParatiiEth = function () {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.next = 2;
-              return regeneratorRuntime.awrap(this.deployContract('ParatiiRegistry'));
+              return regeneratorRuntime.awrap(this.deployContract('Registry'));
 
             case 2:
               paratiiRegistry = _context2.sent;
               paratiiRegistryAddress = paratiiRegistry.options.address;
               _context2.next = 6;
-              return regeneratorRuntime.awrap(this.deployContract('ParatiiAvatar', paratiiRegistryAddress));
+              return regeneratorRuntime.awrap(this.deployContract('Avatar', paratiiRegistryAddress));
 
             case 6:
               paratiiAvatar = _context2.sent;
@@ -131,22 +134,22 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 12:
               sendEther = _context2.sent;
               _context2.next = 15;
-              return regeneratorRuntime.awrap(this.deployContract('UserRegistry', paratiiRegistryAddress));
+              return regeneratorRuntime.awrap(this.deployContract('Users', paratiiRegistryAddress));
 
             case 15:
               userRegistry = _context2.sent;
               _context2.next = 18;
-              return regeneratorRuntime.awrap(this.deployContract('VideoRegistry', paratiiRegistryAddress));
+              return regeneratorRuntime.awrap(this.deployContract('Videos', paratiiRegistryAddress));
 
             case 18:
               videoRegistry = _context2.sent;
               _context2.next = 21;
-              return regeneratorRuntime.awrap(this.deployContract('VideoStore', paratiiRegistryAddress));
+              return regeneratorRuntime.awrap(this.deployContract('Store', paratiiRegistryAddress));
 
             case 21:
               videoStore = _context2.sent;
               _context2.next = 24;
-              return regeneratorRuntime.awrap(paratiiRegistry.methods.registerAddress('ParatiiAvatar', paratiiAvatar.options.address).send());
+              return regeneratorRuntime.awrap(paratiiRegistry.methods.registerAddress('Avatar', paratiiAvatar.options.address).send());
 
             case 24:
               _context2.next = 26;
@@ -158,15 +161,15 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
             case 28:
               _context2.next = 30;
-              return regeneratorRuntime.awrap(paratiiRegistry.methods.registerAddress('VideoRegistry', videoRegistry.options.address).send());
+              return regeneratorRuntime.awrap(paratiiRegistry.methods.registerAddress('Videos', videoRegistry.options.address).send());
 
             case 30:
               _context2.next = 32;
-              return regeneratorRuntime.awrap(paratiiRegistry.methods.registerAddress('VideoStore', videoStore.options.address).send());
+              return regeneratorRuntime.awrap(paratiiRegistry.methods.registerAddress('Store', videoStore.options.address).send());
 
             case 32:
               _context2.next = 34;
-              return regeneratorRuntime.awrap(paratiiRegistry.methods.registerAddress('UserRegistry', userRegistry.options.address).send());
+              return regeneratorRuntime.awrap(paratiiRegistry.methods.registerAddress('Users', userRegistry.options.address).send());
 
             case 34:
               _context2.next = 36;
@@ -179,13 +182,13 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 38:
 
               this.contracts = {
-                ParatiiAvatar: paratiiAvatar,
-                ParatiiRegistry: paratiiRegistry,
+                Avatar: paratiiAvatar,
+                Registry: paratiiRegistry,
                 ParatiiToken: paratiiToken,
                 SendEther: sendEther,
-                UserRegistry: userRegistry,
-                VideoRegistry: videoRegistry,
-                VideoStore: videoStore
+                Users: userRegistry,
+                Videos: videoRegistry,
+                Store: videoStore
               };
               this.config.registryAddress = paratiiRegistryAddress;
 
@@ -299,7 +302,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 0:
               registryAddress = this.getRegistryAddress();
 
-              if (!(name === 'ParatiiRegistry')) {
+              if (!(name === 'Registry')) {
                 _context5.next = 3;
                 break;
               }
@@ -317,7 +320,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 5:
               _context5.prev = 5;
               _context5.next = 8;
-              return regeneratorRuntime.awrap(this.getContract('ParatiiRegistry'));
+              return regeneratorRuntime.awrap(this.getContract('Registry'));
 
             case 8:
               registry = _context5.sent;

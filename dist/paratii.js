@@ -135,7 +135,7 @@ var Paratii = function () {
               }
               log('checking for addresses');
               _context.next = 21;
-              return regeneratorRuntime.awrap(this.eth.getContract('ParatiiRegistry'));
+              return regeneratorRuntime.awrap(this.eth.getContract('Registry'));
 
             case 21:
               registry = _context.sent;
@@ -149,7 +149,7 @@ var Paratii = function () {
 
               name = _context.t1.value;
 
-              if (!(name !== 'ParatiiRegistry')) {
+              if (!(name !== 'Registry')) {
                 _context.next = 30;
                 break;
               }

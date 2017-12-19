@@ -12,8 +12,8 @@ describe('Paratii API:', function () {
     })
 
     let contracts = await paratii.eth.deployContracts()
-    let paratiiRegistry = await paratii.eth.getContract('ParatiiRegistry')
-    assert.equal(contracts.ParatiiRegistry.options.address, paratiiRegistry.options.address)
+    let paratiiRegistry = await paratii.eth.getContract('Registry')
+    assert.equal(contracts.Registry.options.address, paratiiRegistry.options.address)
 
     let paratiiToken = await paratii.eth.getContract('ParatiiToken')
     assert.equal(contracts.ParatiiToken.options.address, paratiiToken.options.address)

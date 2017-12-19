@@ -42,17 +42,17 @@ Or, equivalently:
 
 shoud return a number starting with 21 and followed by many zeros.
 
-We can register a new user on the UserRegistry:
+We can register a new user on the Users:
 
-    await contracts.UserRegistry.registerUser('0x12455', 'Marvin Pontiac', 'john@lurie.com')
+    await contracts.Users.registerUser('0x12455', 'Marvin Pontiac', 'john@lurie.com')
 
 And check if the name is correctly registered.
 
-    (await contracts.UserRegistry.getUserInfo('0x12455')).name
+    (await contracts.Users.getUserInfo('0x12455')).name
 
 We can also register a video:
 
-    await contracts.VideoRegistry.registerVideo(
+    await contracts.Videos.registerVideo(
       '31415', // id of the video
       '0x123455', // address of the video owner
       27182, // price (in PTI "wei")
@@ -61,15 +61,15 @@ We can also register a video:
 
 And read the video information back from the blockchain:
 
-    await contracts.VideoRegistry.getVideoInfo('31415')
+    await contracts.Videos.getVideoInfo('31415')
 
 We are now ready to buy a video (if you have anough PTI)
 
-    await contracts.VideoStore.buyVideo('31415')
+    await contracts.Store.buyVideo('31415')
 
 The `buyVideo` call will check the preconditions (whether the sender has enough ETH and PTI to do the transaction, if the video exists and is for sale) and throw meaningful errors if the preconditions are not met. If indeed the preconditions are met, the function will then initiate a series of transactions on the blockchain to actually acquire the video. If the operation is successful, we can do
 
-    await contracts.VideoStore.isAcquired('31415')
+    await contracts.Store.isAcquired('31415')
 
 to check if we have acquired the video.
 

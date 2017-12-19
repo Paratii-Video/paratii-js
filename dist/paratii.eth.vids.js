@@ -28,7 +28,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              return _context.abrupt('return', this.eth.getContract('VideoRegistry'));
+              return _context.abrupt('return', this.eth.getContract('Videos'));
 
             case 1:
             case 'end':
