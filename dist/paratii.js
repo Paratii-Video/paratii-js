@@ -84,6 +84,11 @@ var Paratii = function () {
       }
     }
   }, {
+    key: 'setRegistryAddress',
+    value: function setRegistryAddress(address) {
+      return this.eth.setRegistryAddress(address);
+    }
+  }, {
     key: 'diagnose',
     value: function diagnose() {
       var msg, address, msgs, isOk, log, registry, name;

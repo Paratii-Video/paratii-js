@@ -40,6 +40,10 @@ TBD: see issue #6
     paratii.config // returns { 'provider': 'http:/...', ''}
 
 
-### `web3`
+### paratii.setAccount(address, [privateKey])  
 
-`paratii.web3` exposts the web3 library
+Set the ethereum address what will be used to sign all transactions
+
+### paratii.setRegistryAddress(address)
+
+Set the address of the ParatiiRegistry contract
