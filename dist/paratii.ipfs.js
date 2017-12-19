@@ -16,6 +16,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+global.Buffer = global.Buffer || require('buffer').Buffer;
+
 var Ipfs = require('ipfs');
 var dopts = require('default-options');
 var Uploader = require('./paratii.ipfs.uploader.js');
@@ -175,7 +177,11 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
         }
       }
       if (this.ipfs) {
-        return this.ipfs.stop(callback);
+        this.ipfs.stop(function () {
+          setImmediate(function () {
+            callback();
+          });
+        });
       }
     }
   }]);

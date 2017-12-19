@@ -15,22 +15,22 @@ describe('paratii.eth API: :', function () {
 
   it('getContracts() should return the contracts', async function () {
     let contracts = await paratii.eth.getContracts()
-    assert.isOk(contracts.ParatiiAvatar)
+    assert.isOk(contracts.Avatar)
   })
 
   it('contracts should have their address set', async function () {
     let contract, contracts, registryAddress
 
     // After .depoyContracts() was called
-    contract = await paratii.eth.getContract('ParatiiRegistry')
+    contract = await paratii.eth.getContract('Registry')
     assert.isOk(contract.options.address)
     registryAddress = contract.options.address
-    contract = await paratii.eth.getContract('ParatiiAvatar')
+    contract = await paratii.eth.getContract('Avatar')
     assert.isOk(contract.options.address)
 
     contracts = await paratii.eth.getContracts()
-    assert.isOk(contracts.ParatiiAvatar.options.address)
-    assert.isOk(contracts.ParatiiRegistry.options.address)
+    assert.isOk(contracts.Avatar.options.address)
+    assert.isOk(contracts.Registry.options.address)
 
     // If created with a registeryAddress
     paratii = await new Paratii({
@@ -38,37 +38,37 @@ describe('paratii.eth API: :', function () {
       registryAddress: registryAddress
     })
 
-    contract = await paratii.eth.getContract('ParatiiRegistry')
+    contract = await paratii.eth.getContract('Registry')
     assert.isOk(contract.options.address)
-    // contract = await paratii.eth.getContract('ParatiiAvatar')
+    // contract = await paratii.eth.getContract('Avatar')
     // assert.isOk(contract.options.address)
     contracts = await paratii.eth.getContracts()
-    assert.isOk(contracts.ParatiiAvatar.options.address)
-    assert.isOk(contracts.ParatiiRegistry.options.address)
+    assert.isOk(contracts.Avatar.options.address)
+    assert.isOk(contracts.Registry.options.address)
 
     // if the reigstryAddress was set at a later stage
     paratii = await new Paratii({
       provider: 'http://localhost:8545'
     })
 
-    contract = await paratii.eth.getContract('ParatiiRegistry')
+    contract = await paratii.eth.getContract('Registry')
     assert.isNotOk(contract.options.address)
 
     await paratii.eth.setRegistryAddress(registryAddress)
-    contract = await paratii.eth.getContract('ParatiiRegistry')
+    contract = await paratii.eth.getContract('Registry')
     assert.isOk(contract.options.address)
-    // contract = await paratii.eth.getContract('ParatiiAvatar')
+    // contract = await paratii.eth.getContract('Avatar')
     // assert.isOk(contract.options.address)
     contracts = await paratii.eth.getContracts()
-    assert.isOk(contracts.ParatiiAvatar.options.address)
-    assert.isOk(contracts.ParatiiRegistry.options.address)
+    assert.isOk(contracts.Avatar.options.address)
+    assert.isOk(contracts.Registry.options.address)
   })
 
   it('getContract() should return the correct contract', async function () {
     let contract
     contract = await paratii.eth.getContract('ParatiiToken')
     assert.isOk(contract)
-    contract = await paratii.eth.getContract('ParatiiRegistry')
+    contract = await paratii.eth.getContract('Registry')
     assert.isOk(contract)
   })
 

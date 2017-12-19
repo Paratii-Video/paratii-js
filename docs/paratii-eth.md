@@ -14,7 +14,7 @@ The web3 object used by this paratii instance.
 The `paratii.eth.getContract` attribute of gives access to the different contracts, and returns an array mapping contract names to addresses. For example
 
     paratii.eth.getContract('ParatiiToken')
-    paratii.eth.getContract('ParatiiRegistry')
+    paratii.eth.getContract('Registry')
 
 ### `eth.getContractAddress(contractName)`
 

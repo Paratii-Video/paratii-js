@@ -5,7 +5,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ParatiiIPFS = exports.utils = exports.Paratii = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // global.Buffer = global.Buffer || require('buffer').Buffer
+
 
 var _paratiiEth = require('./paratii.eth.js');
 
@@ -134,7 +135,7 @@ var Paratii = function () {
               }
               log('checking for addresses');
               _context.next = 21;
-              return regeneratorRuntime.awrap(this.eth.getContract('ParatiiRegistry'));
+              return regeneratorRuntime.awrap(this.eth.getContract('Registry'));
 
             case 21:
               registry = _context.sent;
@@ -148,7 +149,7 @@ var Paratii = function () {
 
               name = _context.t1.value;
 
-              if (!(name !== 'ParatiiRegistry')) {
+              if (!(name !== 'Registry')) {
                 _context.next = 30;
                 break;
               }
