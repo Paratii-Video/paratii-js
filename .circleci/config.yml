@@ -25,7 +25,7 @@ jobs:
       - run: yarn upgrade paratii-contracts
       # next line seems to be needed to get the latest version - ???
       # - run: npm install web3
-      - run: yarn add mocha
+      # - run: yarn add mocha
       - save_cache:
           paths:
             - node_modules
