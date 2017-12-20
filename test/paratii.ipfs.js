@@ -52,7 +52,7 @@ describe('ParatiiIPFS: :', function () {
   it('should allow for file upload', async function () {
     let file = fs.createReadStream('test/data/some-file.txt')
     console.log(file)
-    let files = []
+    let files = [file]
     await paratiiIPFS.uploader.add(files)
   })
 
