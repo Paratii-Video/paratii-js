@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Web3 = require('web3');
 var dopts = require('default-options');
 
 /**
