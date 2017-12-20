@@ -1,0 +1,6 @@
+# https://github.com/paritytech/parity/wiki/Configuring-Parity
+[parity]
+chain = "dev"
+
+[rpc]
+hosts = ["all"]

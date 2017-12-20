@@ -108,4 +108,8 @@ describe('paratii.eth API: :', function () {
     let balance1 = await paratii.eth.balanceOf(beneficiary, 'PTI')
     assert.equal(balance1 - balance0, amount)
   })
+
+  it('subscriptions should work', async function () {
+    paratii.eth.web3.subscribe('newBlockHeaders')
+  })
 })
