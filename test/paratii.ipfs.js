@@ -5,7 +5,7 @@
 import { ParatiiIPFS } from '../lib/paratii.ipfs.js'
 import { assert } from 'chai'
 // const FileApi = require('file-api')
-const fs = require('fs')
+// const fs = require('fs')
 
 describe('ParatiiIPFS: :', function () {
   let paratiiIPFS
@@ -50,7 +50,8 @@ describe('ParatiiIPFS: :', function () {
   })
 
   it('should allow for file upload', async function () {
-    let file = fs.createReadStream('test/data/some-file.txt')
+    // let file = fs.createReadStream('test/data/some-file.txt')
+    let file = 'test/data/some-file.txt'
     console.log(file)
     let files = [file]
     await paratiiIPFS.uploader.add(files)

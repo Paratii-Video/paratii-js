@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "description": "Paratii Smart Contracts",
   "main": "dist/paratii.js",
-  "browser": "dist/bundle.js",
+  "browser": {
+    "./lib/paratii.ipfs.uploader.js": "./lib/paratii.ipfs.uploader.browser.js"
+  },
   "directories": {
     "test": "test"
   },
