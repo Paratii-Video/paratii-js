@@ -12,8 +12,6 @@ var _paratiiEth = require('./paratii.eth.js');
 
 var _paratiiIpfs = require('./paratii.ipfs.js');
 
-var _paratiiPersonal = require('./paratii.personal.js');
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var dopts = require('default-options');
@@ -69,7 +67,6 @@ var Paratii = function () {
 
     this.eth = new _paratiiEth.ParatiiEth(this.config);
     this.ipfs = new _paratiiIpfs.ParatiiIPFS(this.config);
-    this.personal = new _paratiiPersonal.ParatiiPersonal(this.config);
   }
 
   _createClass(Paratii, [{

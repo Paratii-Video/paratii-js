@@ -3621,9 +3621,9 @@ ipfs-unixfs@~0.1.14:
   dependencies:
     protons "^1.0.0"
 
-"ipfs@github:ya7ya/js-ipfs#paratii/v0.27.1":
+"ipfs@github:Paratii-Video/js-ipfs#paratii/v0.27.1":
   version "0.27.1"
-  resolved "https://codeload.github.com/ya7ya/js-ipfs/tar.gz/26c937040a940fb36c15272fbc6499418e4e3a96"
+  resolved "https://codeload.github.com/Paratii-Video/js-ipfs/tar.gz/26c937040a940fb36c15272fbc6499418e4e3a96"
   dependencies:
     async "^2.6.0"
     binary-querystring "~0.1.2"
@@ -4379,7 +4379,7 @@ level-js@^2.1.3, level-js@^2.2.4:
     typedarray-to-buffer "~1.0.0"
     xtend "~2.1.2"
 
-"level-js@github:timkuijsten/level.js#idbunwrapper":
+level-js@timkuijsten/level.js#idbunwrapper:
   version "2.2.3"
   resolved "https://codeload.github.com/timkuijsten/level.js/tar.gz/18e03adab34c49523be7d3d58fafb0c632f61303"
   dependencies:
@@ -5374,7 +5374,7 @@ multihashing-async@~0.4.6, multihashing-async@~0.4.7:
     murmurhash3js "^3.0.1"
     nodeify "^1.0.1"
 
-"multiplex@github:dignifiedquire/multiplex":
+multiplex@dignifiedquire/multiplex:
   version "6.7.0"
   resolved "https://codeload.github.com/dignifiedquire/multiplex/tar.gz/b5d5edd30454e2c978ee8c52df86f5f4840d2eab"
   dependencies:
@@ -5800,13 +5800,14 @@ pako@~1.0.5:
   dependencies:
     babel-cli "^6.26.0"
     default-options "^1.0.0"
+    mocha "^4.0.1"
     promisify-node "^0.4.0"
     web3 "^1.0.0-beta.24"
     zeppelin-solidity "^1.3.0"
 
-"paratii-protocol@github:ya7ya/paratii-protocol#master":
+"paratii-protocol@github:Paratii-Video/paratii-protocol#master":
   version "0.0.1"
-  resolved "https://codeload.github.com/ya7ya/paratii-protocol/tar.gz/5541ea82bbf476573da6beffe6f155d3f353737d"
+  resolved "https://codeload.github.com/Paratii-Video/paratii-protocol/tar.gz/5541ea82bbf476573da6beffe6f155d3f353737d"
   dependencies:
     async "^2.5.0"
     cids "~0.5.1"
