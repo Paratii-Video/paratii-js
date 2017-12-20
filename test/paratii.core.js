@@ -11,15 +11,8 @@ describe('paratii.core API: :', function () {
 
   it('should be configured', async function () {
     assert.isOk(paratiiCore)
-  })
-
-  it.skip('core.videos.create() should work as expected', async function () {
-  })
-
-  it.skip('core.videos.get() should work as expected', async function () {
-  })
-
-  it.skip('db.videos.search() should work as expected', async function () {
+    assert.isOk(paratiiCore.users)
+    assert.isOk(paratiiCore.vids)
   })
 
   it.skip('core.users.create() should work as expected', async function () {

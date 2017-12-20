@@ -26,12 +26,12 @@ Here is an example with default options:
       address: '0x12345', // your address is used as an access token
     })
 
-## `db.videos.get(videoId)`
+## `db.vids.get(videoId)`
 
 
-## `db.videos.search(qry)`
+## `db.vids.search(qry)`
 
-    db.videos.search({
+    db.vids.search({
       title: 'foo'
     })
 
