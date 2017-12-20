@@ -5,7 +5,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ParatiiEth = exports.ParatiiDb = exports.ParatiiIPFS = exports.utils = exports.Paratii = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _paratiiCore = require('./paratii.core.js');
 
@@ -15,7 +25,7 @@ var _paratiiEth = require('./paratii.eth.js');
 
 var _paratiiIpfs = require('./paratii.ipfs.js');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var dopts = require('default-options');
 var utils = require('./utils.js');
@@ -29,8 +39,7 @@ var utils = require('./utils.js');
 var Paratii = function () {
   function Paratii() {
     var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-    _classCallCheck(this, Paratii);
+    (0, _classCallCheck3.default)(this, Paratii);
 
     var defaults = {
       provider: 'http://localhost:8545',
@@ -76,7 +85,7 @@ var Paratii = function () {
     this.ipfs = new _paratiiIpfs.ParatiiIPFS(this.config);
   }
 
-  _createClass(Paratii, [{
+  (0, _createClass3.default)(Paratii, [{
     key: 'setAccount',
     value: function setAccount(address, privateKey) {
       this.config.account = {
@@ -96,7 +105,7 @@ var Paratii = function () {
     key: 'diagnose',
     value: function diagnose() {
       var msg, address, msgs, isOk, log, registry, name;
-      return regeneratorRuntime.async(function diagnose$(_context) {
+      return _regenerator2.default.async(function diagnose$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
@@ -129,7 +138,7 @@ var Paratii = function () {
             case 13:
               log('checking deployed code of Registry...');
               _context.next = 16;
-              return regeneratorRuntime.awrap(this.eth.web3.eth.getCode(address));
+              return _regenerator2.default.awrap(this.eth.web3.eth.getCode(address));
 
             case 16:
               msg = _context.sent;
@@ -144,11 +153,11 @@ var Paratii = function () {
               }
               log('checking for addresses');
               _context.next = 21;
-              return regeneratorRuntime.awrap(this.eth.getContract('Registry'));
+              return _regenerator2.default.awrap(this.eth.getContract('Registry'));
 
             case 21:
               registry = _context.sent;
-              _context.t0 = regeneratorRuntime.keys(this.eth.contracts);
+              _context.t0 = _regenerator2.default.keys(this.eth.contracts);
 
             case 23:
               if ((_context.t1 = _context.t0()).done) {
@@ -164,7 +173,7 @@ var Paratii = function () {
               }
 
               _context.next = 28;
-              return regeneratorRuntime.awrap(registry.methods.getContract(name).call());
+              return _regenerator2.default.awrap(registry.methods.getContract(name).call());
 
             case 28:
               address = _context.sent;
@@ -191,7 +200,6 @@ var Paratii = function () {
       }, null, this);
     }
   }]);
-
   return Paratii;
 }();
 

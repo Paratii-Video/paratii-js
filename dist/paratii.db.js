@@ -3,8 +3,13 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.ParatiiDb = undefined;
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var dopts = require('default-options');
 
@@ -14,7 +19,7 @@ var dopts = require('default-options');
  */
 
 var ParatiiDb = exports.ParatiiDb = function ParatiiDb(config) {
-  _classCallCheck(this, ParatiiDb);
+  (0, _classCallCheck3.default)(this, ParatiiDb);
 
   var defaults = {
     'db.provider': null

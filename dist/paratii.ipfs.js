@@ -5,8 +5,29 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ParatiiIPFS = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // import { paratiiIPFS } from './ipfs/index.js'
+var _setImmediate2 = require('babel-runtime/core-js/set-immediate');
 
+var _setImmediate3 = _interopRequireDefault(_setImmediate2);
+
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
+var _promise = require('babel-runtime/core-js/promise');
+
+var _promise2 = _interopRequireDefault(_promise);
+
+var _assign = require('babel-runtime/core-js/object/assign');
+
+var _assign2 = _interopRequireDefault(_assign);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _paratiiProtocol = require('paratii-protocol');
 
@@ -14,9 +35,8 @@ var _paratiiProtocol2 = _interopRequireDefault(_paratiiProtocol);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+global.Buffer = global.Buffer || require('buffer').Buffer; // import { paratiiIPFS } from './ipfs/index.js'
 
-global.Buffer = global.Buffer || require('buffer').Buffer;
 
 var Ipfs = require('ipfs');
 var dopts = require('default-options');
@@ -26,7 +46,7 @@ var Uploader = require('./paratii.ipfs.uploader.js');
 
 var ParatiiIPFS = exports.ParatiiIPFS = function () {
   function ParatiiIPFS(config) {
-    _classCallCheck(this, ParatiiIPFS);
+    (0, _classCallCheck3.default)(this, ParatiiIPFS);
 
     this.config = config;
 
@@ -41,12 +61,12 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
       'verbose': false
     };
     var options = dopts(config, defaults, { allowUnknown: true });
-    Object.assign(this.config, options);
+    (0, _assign2.default)(this.config, options);
 
     this.uploader = new Uploader(this);
   }
 
-  _createClass(ParatiiIPFS, [{
+  (0, _createClass3.default)(ParatiiIPFS, [{
     key: 'log',
     value: function log(msg) {
       if (this.config.verbose) {
@@ -72,7 +92,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
     value: function getIPFSInstance() {
       var _this = this;
 
-      return new Promise(function (resolve, reject) {
+      return new _promise2.default(function (resolve, reject) {
         if (_this.ipfs) {
           resolve(_this.ipfs);
         } else {
@@ -99,7 +119,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
               _this.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length);
               _this.log('---------[IPFS] bitswap LedgerMap ---------------------');
               ipfs._bitswap.engine.ledgerMap.forEach(function (ledger, peerId, ledgerMap) {
-                _this.log(peerId + ' : ' + JSON.stringify(ledger.accounting) + '\n');
+                _this.log(peerId + ' : ' + (0, _stringify2.default)(ledger.accounting) + '\n');
               });
               _this.log('-------------------------------------------------------');
             });
@@ -178,13 +198,12 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
       }
       if (this.ipfs) {
         this.ipfs.stop(function () {
-          setImmediate(function () {
+          (0, _setImmediate3.default)(function () {
             callback();
           });
         });
       }
     }
   }]);
-
   return ParatiiIPFS;
 }();
