@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ParatiiIPFS = exports.utils = exports.Paratii = undefined;
+exports.ParatiiEth = exports.ParatiiDb = exports.ParatiiIPFS = exports.utils = exports.Paratii = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // global.Buffer = global.Buffer || require('buffer').Buffer
 
@@ -11,6 +11,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 var _paratiiEth = require('./paratii.eth.js');
 
 var _paratiiIpfs = require('./paratii.ipfs.js');
+
+var _paratiiDb = require('./paratii.db.js');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -67,6 +69,7 @@ var Paratii = function () {
 
     this.eth = new _paratiiEth.ParatiiEth(this.config);
     this.ipfs = new _paratiiIpfs.ParatiiIPFS(this.config);
+    this.db = new _paratiiDb.ParatiiDb(this.config);
   }
 
   _createClass(Paratii, [{
@@ -191,3 +194,5 @@ var Paratii = function () {
 exports.Paratii = Paratii;
 exports.utils = utils;
 exports.ParatiiIPFS = _paratiiIpfs.ParatiiIPFS;
+exports.ParatiiDb = _paratiiDb.ParatiiDb;
+exports.ParatiiEth = _paratiiEth.ParatiiEth;
