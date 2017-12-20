@@ -1,9 +1,12 @@
 # Paratii IPFS API
 
-## `paratii.ipfs`
+The `ParatiiDb` is used for reading data from the Paratii Blockchain Index.
 
-Contains functions to interact with the IPFS instance.
+The  `ParatiiDbServer` contains functionality for the database server.
 
+## `paratii.db`
+
+## `paratii.db.server`
 
     import { ParatiiIPFS } from 'ipfs-lib'
     paratiiIPFS = new ParatiiIPFS({})
@@ -15,6 +18,7 @@ It is also available as `ipfs` in `Paratii` instances:
     paratii = new Paratii()
     paratii.ipfs // is a ParatiiIPFS instance
 
+- TBD: https://github.com/Paratii-Video/paratii-lib/issues/18
 
 ## configuration
 
@@ -44,15 +48,19 @@ Starts the IPFS node
     ipfs.start()
 
 
+- TBD:  https://github.com/Paratii-Video/paratii-lib/issues/19
+
 ## `ipfs.stop()`
 
 Stops the IPFS node.
 
     ipfs.stop()
 
+- TBD:  https://github.com/Paratii-Video/paratii-lib/issues/19
 
 ## `ipfs.clearRepo()`
 
+TBD
 
 returns:  a Promise
 
@@ -60,6 +68,7 @@ returns:  a Promise
 
 ## `ipfs.isOnline()`
 
+TBD
 
 returns: a boolean
 
@@ -67,6 +76,9 @@ returns: a boolean
 ## `ipfs.get(ipfsHash, options)`
 
 Returns a promise that resolves into a file stream.
+
+- TBD: Define what the `options` are, here, if any (presumably, some callbacks)
+- TBD:  https://github.com/Paratii-Video/paratii-lib/issues/20
 
 
 # `ipfs.uploader`
@@ -91,6 +103,7 @@ It can also handle uploads of lists of files:
       onDone: Function // function(file)
     })
 
+TBD: promisify!
 
 ## `ipfs.uploader.transcode(fileHash, options)`
 
@@ -109,6 +122,7 @@ Send transcode signal:
         }
       })
 
+TBD: Promisify
 
 ##  `ipfs.uploader.addAndTrancode`
 
@@ -121,6 +135,7 @@ The function `addAndTranscode` is an abbreviation for the following pattern:
       }
     })
 
+TBD: decide if we want an `addAndTranscode(..)` helper funtion in our API - also
 
 #### `ipfs.uploader.grabYT(url, options)`
 
@@ -138,6 +153,7 @@ video. params are `onResponse(err, starttime)`
 
 `onDone` is the final callback, triggered when the original file is added to IPFS.
 
+- TBD: make it return a promise
 
 #### `ipfs.uploader.grabVimeo(url, options)`
 
@@ -150,6 +166,7 @@ video. params are `onResponse(err, starttime)`
 
 Grabs a Vimeo video and adds it to IPFS.
 
+- TBD: make it return a promise
 
 ## `ipfs.metrics`
 
@@ -174,3 +191,5 @@ The `metrics` object keeps in-memory statistics.
       },
       overallRate: 0
     }
+
+- TBD: still has to be implemented/migrated    

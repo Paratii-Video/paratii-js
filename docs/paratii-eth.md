@@ -138,6 +138,6 @@ Functions for lending money. Completely TBD
 
 This function will deploy are contracts and link them to the
 
-    contracts = await paratii.eth.deployAllContracts()
+    contracts = await paratii.eth.deployContracts()
 
-    contracts = await paratii.eth.deployAllContracts({owner: '0x1234435'})
+    contracts = await paratii.eth.deployContracts({owner: '0x1234435'})

@@ -35,7 +35,7 @@ Takes all configuration options of the Paratii object
 
     // register a video
     // this call will register the vid on the blockchain, add its metadata to ipfs, upload file to ipfs, and transcode it
-    core.vids.registerVideo({title: 'A very loooong title', file: myFileStream, foo: 'bar'})
+    core.vids.create({title: 'A very loooong title', file: myFileStream, foo: 'bar'})
 
     // search in videos
     // this call will send a request the db index, i.e. simply forward this request to paratii.db.vids.search()
