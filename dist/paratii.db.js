@@ -16,8 +16,9 @@ var dopts = require('default-options');
 var ParatiiDb = exports.ParatiiDb = function ParatiiDb(config) {
   _classCallCheck(this, ParatiiDb);
 
-  var defaults = {};
+  var defaults = {
+    'db.provider': null
+  };
   var options = dopts(config, defaults, { allowUnknown: true });
-  this.config = config;
-  console.log(options);
+  this.config = options;
 };
