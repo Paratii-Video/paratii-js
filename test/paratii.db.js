@@ -1,4 +1,4 @@
-import { ParatiiDb } from '../lib/paratii.js'
+import { Paratii, ParatiiDb } from '../lib/paratii.js'
 import { assert } from 'chai'
 
 describe('paratii.db API: :', function () {
@@ -21,5 +21,12 @@ describe('paratii.db API: :', function () {
   })
 
   it.skip('db.videos.search() should work as expected', async function () {
+  })
+
+  it('should be available as an attribute on Paratii instances', function () {
+    let paratii = new Paratii({
+      'db.provider': dbProvider
+    })
+    assert.isOk(paratii.db)
   })
 })

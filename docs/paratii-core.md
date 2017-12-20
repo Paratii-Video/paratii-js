@@ -6,16 +6,9 @@ TBD: implement this
 
 Contains functions that operate transversally over several backend systems.
 
-These will be used typically by  Dapp developers
+It is available as a `core` attribute in `Paratii` instances:
 
-
-    import { ParatiiCore } from 'ipfs-lib'
-    paratiiCore = new ParatiiCore({})
-
-
-It is also available as `ipfs` in `Paratii` instances:
-
-    import { Paratii } from 'ipfs-lib'
+    import { Paratii } from 'paratii-lib'
     paratii = new Paratii()
     paratii.core // is a ParatiiCore instance
 
@@ -29,9 +22,6 @@ Takes all configuration options of the Paratii object
 
 
 # Example
-
-    // unlock wallet
-    core.unlockWallet()
 
     // register a video
     // this call will register the vid on the blockchain, add its metadata to ipfs, upload file to ipfs, and transcode it
