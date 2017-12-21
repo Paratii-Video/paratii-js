@@ -5,26 +5,36 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ParatiiEthVids = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _utils = require('./utils.js');
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var dopts = require('default-options');
 
 var ParatiiEthVids = exports.ParatiiEthVids = function () {
   function ParatiiEthVids(context) {
-    _classCallCheck(this, ParatiiEthVids);
+    (0, _classCallCheck3.default)(this, ParatiiEthVids);
 
     // context is a ParatiiEth instance
     this.eth = context;
   }
 
-  _createClass(ParatiiEthVids, [{
+  (0, _createClass3.default)(ParatiiEthVids, [{
     key: 'getRegistry',
     value: function getRegistry() {
-      return regeneratorRuntime.async(function getRegistry$(_context) {
+      return _regenerator2.default.async(function getRegistry$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
@@ -41,7 +51,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
     key: 'create',
     value: function create(options) {
       var defaults, msg, contract, tx, videoId;
-      return regeneratorRuntime.async(function create$(_context2) {
+      return _regenerator2.default.async(function create$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
@@ -63,12 +73,12 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
             case 4:
               options = dopts(options, defaults);
               _context2.next = 7;
-              return regeneratorRuntime.awrap(this.getRegistry());
+              return _regenerator2.default.awrap(this.getRegistry());
 
             case 7:
               contract = _context2.sent;
               _context2.next = 10;
-              return regeneratorRuntime.awrap(contract.methods.registerVideo(options.id, options.owner, options.price, options.ipfsHash).send());
+              return _regenerator2.default.awrap(contract.methods.registerVideo(options.id, options.owner, options.price, options.ipfsHash).send());
 
             case 10:
               tx = _context2.sent;
@@ -86,17 +96,17 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
     key: 'get',
     value: function get(videoId) {
       var contract, videoInfo, result;
-      return regeneratorRuntime.async(function get$(_context3) {
+      return _regenerator2.default.async(function get$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
               _context3.next = 2;
-              return regeneratorRuntime.awrap(this.getRegistry());
+              return _regenerator2.default.awrap(this.getRegistry());
 
             case 2:
               contract = _context3.sent;
               _context3.next = 5;
-              return regeneratorRuntime.awrap(contract.methods.getVideoInfo(videoId).call());
+              return _regenerator2.default.awrap(contract.methods.getVideoInfo(videoId).call());
 
             case 5:
               videoInfo = _context3.sent;
@@ -119,13 +129,13 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
     key: 'update',
     value: function update(videoId, options) {
       var data, key;
-      return regeneratorRuntime.async(function update$(_context4) {
+      return _regenerator2.default.async(function update$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
               options.id = videoId;
               _context4.next = 3;
-              return regeneratorRuntime.awrap(this.get(videoId));
+              return _regenerator2.default.awrap(this.get(videoId));
 
             case 3:
               data = _context4.sent;
@@ -134,7 +144,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
                 data[key] = options[key];
               }
               _context4.next = 7;
-              return regeneratorRuntime.awrap(this.create(data));
+              return _regenerator2.default.awrap(this.create(data));
 
             case 7:
               return _context4.abrupt('return', data);
@@ -150,12 +160,12 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
     key: 'delete',
     value: function _delete(videoId) {
       var contract, tx;
-      return regeneratorRuntime.async(function _delete$(_context5) {
+      return _regenerator2.default.async(function _delete$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
             case 0:
               _context5.next = 2;
-              return regeneratorRuntime.awrap(this.getRegistry());
+              return _regenerator2.default.awrap(this.getRegistry());
 
             case 2:
               contract = _context5.sent;
@@ -170,6 +180,5 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
       }, null, this);
     }
   }]);
-
   return ParatiiEthVids;
 }();

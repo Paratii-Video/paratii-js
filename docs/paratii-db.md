@@ -22,16 +22,16 @@ It is also available as `db` in `Paratii` instances:
 Here is an example with default options:
 
     paratiiDb = new ParatiiDb({
-      provider: 'https://db.paratii.video',
+      'db.provider': 'https://db.paratii.video',
       address: '0x12345', // your address is used as an access token
     })
 
-## `db.videos.get(videoId)`
+## `db.vids.get(videoId)`
 
 
-## `db.videos.search(qry)`
+## `db.vids.search(qry)`
 
-    db.videos.search({
+    db.vids.search({
       title: 'foo'
     })
 

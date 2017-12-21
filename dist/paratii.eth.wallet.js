@@ -3,7 +3,15 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
 exports.patchWallet = patchWallet;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 // this code is lifted and adapted from ethereumjs-lightwallet
 
 var Mnemonic = require('bitcore-mnemonic');
@@ -12,7 +20,7 @@ var bitcore = require('bitcore-lib');
 function patchWallet(wallet) {
   function create(numberOfAccounts, mnemonic) {
     var hdRoot, i, hdprivkey, privkeyBuf, privkeyHex, x;
-    return regeneratorRuntime.async(function create$(_context) {
+    return _regenerator2.default.async(function create$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:

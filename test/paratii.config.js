@@ -1,10 +1,6 @@
 import { Paratii } from '../lib/paratii.js'
 import { address, privateKey } from './utils.js'
-var chai = require('chai')
-var chaiAsPromised = require('chai-as-promised')
-
-chai.use(chaiAsPromised)
-var assert = chai.assert
+import { assert } from 'chai'
 
 describe('Paratii configuration:', function () {
   let paratii
@@ -57,6 +53,9 @@ describe('Paratii configuration:', function () {
       repo: paratii.config.repo
     })
 
+    // the two config's are equal, except for the reference to the Paratii object itself
+    delete paratii.config.paratii
+    delete paratii2.config.paratii
     assert.deepEqual(paratii.config, paratii2.config)
   })
 
