@@ -108,4 +108,10 @@ describe('paratii.eth API: :', function () {
     let balance1 = await paratii.eth.balanceOf(beneficiary, 'PTI')
     assert.equal(balance1 - balance0, amount)
   })
+
+  it('deployContract should throw a sensible error if address is not set', async function () {
+    paratii = new Paratii()
+    await assert.isRejected(paratii.eth.deployContract('ParatiiToken'), Error, 'No Ethereum address was set')
+    await assert.isRejected(paratii.eth.deployContract('ParatiiToken'), Error, 'No Ethereum address was set')
+  })
 })

@@ -1,10 +1,6 @@
 import { Paratii } from '../lib/paratii.js'
 import { address, privateKey } from './utils.js'
-var chai = require('chai')
-var chaiAsPromised = require('chai-as-promised')
-
-chai.use(chaiAsPromised)
-var assert = chai.assert
+import { assert } from 'chai'
 
 describe('Paratii configuration:', function () {
   let paratii

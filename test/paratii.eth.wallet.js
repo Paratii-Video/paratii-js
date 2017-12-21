@@ -1,11 +1,7 @@
 import { Paratii } from '../lib/paratii.js'
 import { address, address1, privateKey, address17, mnemonic23, address23 } from './utils.js'
 import { add0x } from '../lib/utils.js'
-
-var chai = require('chai')
-var chaiAsPromised = require('chai-as-promised')
-chai.use(chaiAsPromised)
-const assert = chai.assert
+import { assert } from 'chai'
 
 describe('paratii.eth.wallet: :', function () {
   let paratii

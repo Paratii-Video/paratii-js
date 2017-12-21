@@ -94,20 +94,29 @@ var ParatiiEth = exports.ParatiiEth = function () {
         args[_key - 1] = arguments[_key];
       }
 
-      var contract, deployedContract;
+      var msg, contract, deployedContract;
       return _regenerator2.default.async(function deployContract$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              contract = this.contracts[name];
-              _context.next = 3;
-              return _regenerator2.default.awrap(contract.deploy({ arguments: args }).send());
+              if (this.config.account.address) {
+                _context.next = 3;
+                break;
+              }
+
+              msg = 'No Ethereum address was set - you can use .setAccount(address, [privateKey]) or specify it when creating the object';
+              throw Error(msg);
 
             case 3:
+              contract = this.contracts[name];
+              _context.next = 6;
+              return _regenerator2.default.awrap(contract.deploy({ arguments: args }).send());
+
+            case 6:
               deployedContract = _context.sent;
               return _context.abrupt('return', deployedContract);
 
-            case 5:
+            case 8:
             case 'end':
               return _context.stop();
           }

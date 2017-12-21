@@ -1,21 +1,25 @@
 import { Paratii } from '../lib/paratii.js'
 import { assert } from 'chai'
-import { address1 } from './utils.js'
+import { address, address1, privateKey } from './utils.js'
 
-describe('paratii.core API: :', function () {
+describe('paratii.core.vids:', function () {
   let paratii, paratiiCore
   let videoFile = 'test/data/some-file.txt'
   beforeEach(async function () {
-    paratii = new Paratii()
+    paratii = new Paratii({
+      address: address,
+      privateKey: privateKey
+    })
     await paratii.eth.deployContracts()
     paratiiCore = paratii.core
   })
 
-  it.skip('core.vids.create() should work as expected', async function () {
+  it('core.vids.create() and get() should work as expected', async function () {
     let videoId = await paratiiCore.vids.create({
       id: 'some-id',
       owner: address1,
       title: 'some Title',
+      price: 0,
       file: videoFile
     })
     assert.equal(videoId, 'some-id')

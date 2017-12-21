@@ -1,10 +1,13 @@
 import { Paratii } from '../lib/paratii.js'
+import { address, privateKey } from './utils.js'
 import { assert } from 'chai'
 
 describe('paratii.core API: :', function () {
   let paratii, paratiiCore
   beforeEach(function () {
     paratii = new Paratii({
+      address: address,
+      privateKey: privateKey
     })
     paratiiCore = paratii.core
   })

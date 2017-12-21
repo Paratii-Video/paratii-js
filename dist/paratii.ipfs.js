@@ -67,6 +67,11 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
   }
 
   (0, _createClass3.default)(ParatiiIPFS, [{
+    key: 'add',
+    value: function add(file) {
+      this.uploader.add([file]);
+    }
+  }, {
     key: 'log',
     value: function log(msg) {
       if (this.config.verbose) {

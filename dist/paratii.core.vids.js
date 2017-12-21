@@ -35,6 +35,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
     };
     var options = dopts(config, defaults, { allowUnknown: true });
     this.config = options;
+    this.paratii = this.config.paratii;
   }
 
   (0, _createClass3.default)(ParatiiCoreVids, [{
@@ -56,16 +57,23 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
 
               options = dopts(options, defaults);
               _context.next = 4;
-              return _regenerator2.default.awrap(this.config.paratii.eth.vids.create({
-                id: options.id,
-                owner: options.owner,
-                price: options.price
+              return _regenerator2.default.awrap(this.paratii.ipfs.add({
+                title: options.title
               }));
 
             case 4:
+              _context.next = 6;
+              return _regenerator2.default.awrap(this.paratii.eth.vids.create({
+                id: options.id,
+                owner: options.owner,
+                price: options.price,
+                ipfsHash: ''
+              }));
+
+            case 6:
               return _context.abrupt('return', options.id);
 
-            case 5:
+            case 7:
             case 'end':
               return _context.stop();
           }

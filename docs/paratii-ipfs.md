@@ -68,7 +68,9 @@ returns: a boolean
 
 Returns a promise that resolves into a file stream.
 
+## `ipfs.add(file)`
 
+Add the file. For more control over event handling and such, cf. `ipfs.uploader.add(file)`
 # `ipfs.uploader`
 
 ## `ipfs.uploader.add(file, options)`
