@@ -114,22 +114,14 @@ describe('ParatiiIPFS: :', function () {
     }).catch(done)
   })
 
-  it('put a JSON object and get it back', (done) => {
-    paratiiIPFS.getIPFSInstance().then((ipfs) => {
-      assert.isOk(paratiiIPFS)
-      assert.isOk(ipfs)
-      assert.isTrue(ipfs.isOnline())
-      paratiiIPFS.putJSON({test: 1}).then((multihash) => {
-        assert.isOk(multihash)
-        console.log('NODE RETURNED, Object: ', multihash)
+  it('put a JSON object and get it back', async function () {
+    await paratiiIPFS.getIPFSInstance()
+    let multihash = await paratiiIPFS.putJSON({test: 1})
+    assert.isOk(multihash)
 
-        paratiiIPFS.getJSON(multihash).then((data) => {
-          assert.isOk(data)
-          expect(JSON.stringify(data)).to.equal(JSON.stringify({test: 1}))
-          done()
-        }).catch(done)
-      }).catch(done)
-    }).catch(done)
+    let data = await paratiiIPFS.getJSON(multihash)
+    assert.isOk(data)
+    expect(JSON.stringify(data)).to.equal(JSON.stringify({test: 1}))
   })
 })
 
