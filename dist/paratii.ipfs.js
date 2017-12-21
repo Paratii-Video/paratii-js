@@ -17,6 +17,10 @@ var _promise = require('babel-runtime/core-js/promise');
 
 var _promise2 = _interopRequireDefault(_promise);
 
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
 var _assign = require('babel-runtime/core-js/object/assign');
 
 var _assign2 = _interopRequireDefault(_assign);
@@ -68,8 +72,47 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
 
   (0, _createClass3.default)(ParatiiIPFS, [{
     key: 'add',
-    value: function add(file) {
-      this.uploader.add([file]);
+    value: function add(fileStream) {
+      var ipfs;
+      return _regenerator2.default.async(function add$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return _regenerator2.default.awrap(this.getIPFSInstance());
+
+            case 2:
+              ipfs = _context.sent;
+              return _context.abrupt('return', ipfs.files.add(fileStream));
+
+            case 4:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, null, this);
+    }
+  }, {
+    key: 'get',
+    value: function get(hash) {
+      var ipfs;
+      return _regenerator2.default.async(function get$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.next = 2;
+              return _regenerator2.default.awrap(this.getIPFSInstance());
+
+            case 2:
+              ipfs = _context2.sent;
+              return _context2.abrupt('return', ipfs.files.get(hash));
+
+            case 4:
+            case 'end':
+              return _context2.stop();
+          }
+        }
+      }, null, this);
     }
   }, {
     key: 'log',
@@ -102,7 +145,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
           resolve(_this.ipfs);
         } else {
           var config = _this.config;
-          _this.ipfs = new Ipfs({
+          var ipfs = new Ipfs({
             bitswap: {
               maxMessageSize: config['bitswap.maxMessageSize']
             },
@@ -115,7 +158,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
             }
           });
 
-          var ipfs = _this.ipfs;
+          _this.ipfs = ipfs;
 
           ipfs.on('ready', function () {
             _this.log('[IPFS] node Ready.');
@@ -156,13 +199,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
               _this.ipfs = ipfs;
 
               resolve(ipfs);
-
-              // setImmediate(() => {
-              //
-              // })
-              // callback()
             });
-            // resolve(ipfs)
           });
 
           ipfs.on('error', function (err) {
@@ -174,6 +211,104 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
           });
         }
       });
+    }
+  }, {
+    key: 'putJSON',
+    value: function putJSON(data) {
+      var obj, node;
+      return _regenerator2.default.async(function putJSON$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              if (!(!this.ipfs || !this.ipfs.isOnline())) {
+                _context3.next = 2;
+                break;
+              }
+
+              throw new Error('IPFS node is not ready, please trigger getIPFSInstance first');
+
+            case 2:
+              obj = {
+                Data: Buffer.from((0, _stringify2.default)(data)),
+                Links: []
+              };
+              node = void 0;
+              _context3.prev = 4;
+              _context3.next = 7;
+              return _regenerator2.default.awrap(this.ipfs.object.put(obj));
+
+            case 7:
+              node = _context3.sent;
+              _context3.next = 14;
+              break;
+
+            case 10:
+              _context3.prev = 10;
+              _context3.t0 = _context3['catch'](4);
+
+              if (!_context3.t0) {
+                _context3.next = 14;
+                break;
+              }
+
+              throw _context3.t0;
+
+            case 14:
+              return _context3.abrupt('return', node.toJSON().multihash);
+
+            case 15:
+            case 'end':
+              return _context3.stop();
+          }
+        }
+      }, null, this, [[4, 10]]);
+    }
+  }, {
+    key: 'getJSON',
+    value: function getJSON(multihash) {
+      var node;
+      return _regenerator2.default.async(function getJSON$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              if (!(!this.ipfs || !this.ipfs.isOnline())) {
+                _context4.next = 2;
+                break;
+              }
+
+              throw new Error('IPFS node is not ready, please trigger getIPFSInstance first');
+
+            case 2:
+              node = void 0;
+              _context4.prev = 3;
+              _context4.next = 6;
+              return _regenerator2.default.awrap(this.ipfs.object.get(multihash));
+
+            case 6:
+              node = _context4.sent;
+              _context4.next = 13;
+              break;
+
+            case 9:
+              _context4.prev = 9;
+              _context4.t0 = _context4['catch'](3);
+
+              if (!_context4.t0) {
+                _context4.next = 13;
+                break;
+              }
+
+              throw _context4.t0;
+
+            case 13:
+              return _context4.abrupt('return', JSON.parse(node.toJSON().data));
+
+            case 14:
+            case 'end':
+              return _context4.stop();
+          }
+        }
+      }, null, this, [[3, 9]]);
     }
 
     // TODO: return a promise
