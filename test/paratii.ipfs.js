@@ -3,7 +3,7 @@
 // import { Paratii } from '../lib/paratii.js'
 // import { address, privateKey } from './utils.js'
 import { ParatiiIPFS } from '../lib/paratii.ipfs.js'
-import { assert } from 'chai'
+import { assert, expect } from 'chai'
 // const FileApi = require('file-api')
 // const fs = require('fs')
 
@@ -110,6 +110,26 @@ describe('ParatiiIPFS: :', function () {
         // assert.isOk(file)
         console.log(file)
         // done()
+      })
+    }).catch(done)
+  })
+
+  it('put a JSON object and get it back', (done) => {
+    paratiiIPFS.getIPFSInstance().then((ipfs) => {
+      assert.isOk(paratiiIPFS)
+      assert.isOk(ipfs)
+      assert.isTrue(ipfs.isOnline())
+      paratiiIPFS.putJSON({test: 1}, (err, multihash) => {
+        if (err) throw err
+        assert.isOk(multihash)
+        console.log('NODE RETURNED, Object: ', multihash)
+
+        paratiiIPFS.getJSON(multihash, (err, data) => {
+          if (err) throw err
+          assert.isOk(data)
+          expect(JSON.stringify(data)).to.equal(JSON.stringify({test: 1}))
+          done()
+        })
       })
     }).catch(done)
   })
