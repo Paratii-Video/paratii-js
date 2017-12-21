@@ -64,13 +64,19 @@ returns:  a Promise
 returns: a boolean
 
 
-## `ipfs.get(ipfsHash, options)`
+## `ipfs.get(ipfsHash)`
 
 Returns a promise that resolves into a file stream.
 
 ## `ipfs.add(file)`
 
 Add the file. For more control over event handling and such, cf. `ipfs.uploader.add(file)`
+
+    $ ipfs.add(fileStream)
+    // { path: 'QmS8yinWCD1vm7WJx34tg81FpjEXbdYXf3Y5XcCeh29C6K',
+    //   hash: 'QmS8yinWCD1vm7WJx34tg81FpjEXbdYXf3Y5XcCeh29C6K',
+    //   size: 26 } ]
+
 # `ipfs.uploader`
 
 ## `ipfs.uploader.add(file, options)`

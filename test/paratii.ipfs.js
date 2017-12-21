@@ -5,7 +5,7 @@
 import { ParatiiIPFS } from '../lib/paratii.ipfs.js'
 import { assert } from 'chai'
 // const FileApi = require('file-api')
-// const fs = require('fs')
+const fs = require('fs')
 
 describe('ParatiiIPFS: :', function () {
   let paratiiIPFS
@@ -39,9 +39,12 @@ describe('ParatiiIPFS: :', function () {
     }).catch(done)
   })
 
-  it('should allow for quick adding of files', async function () {
-    let file = 'test/data/some-file.txt'
-    let result = await paratiiIPFS.add(file)
-    console.log(result)
+  it('should allow for simple add() and get() of files', async function () {
+    let path = 'test/data/some-file.txt'
+    let fileStream = fs.createReadStream(path)
+    let result = await paratiiIPFS.add(fileStream)
+    let hash = result[0].hash
+    let fileContent = await paratiiIPFS.get(hash)
+    assert.equal(String(fileContent[0].content), 'with some content\n')
   })
 })
