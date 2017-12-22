@@ -3,19 +3,21 @@ import { assert } from 'chai'
 import { address, address1, privateKey } from './utils.js'
 
 describe('paratii.core.vids:', function () {
-  let paratii, paratiiCore
+  let paratii
   let videoFile = 'test/data/some-file.txt'
+
+  this.timeout(30000)
+
   beforeEach(async function () {
     paratii = new Paratii({
       address: address,
       privateKey: privateKey
     })
     await paratii.eth.deployContracts()
-    paratiiCore = paratii.core
   })
 
   it('core.vids.create() and get() should work as expected', async function () {
-    let videoId = await paratiiCore.vids.create({
+    let videoId = await paratii.core.vids.create({
       id: 'some-id',
       owner: address1,
       title: 'some Title',
@@ -23,6 +25,9 @@ describe('paratii.core.vids:', function () {
       file: videoFile
     })
     assert.equal(videoId, 'some-id')
+
+    // let video = await paratii.core.vids.get(videoId)
+    // console.log(video)
   })
 
   it.skip('core.vids.get() should work as expected', async function () {

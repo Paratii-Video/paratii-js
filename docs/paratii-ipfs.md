@@ -23,15 +23,14 @@ Here is an example with default options:
     paratiiIPFS = new ParatiiIPFS({
       protocol: null,
       onReadyHook: [],
-      'config.addresses.swarm': [
+      'ipfs.config.addresses.swarm': [
         '/dns4/star.paratii.video/wss/p2p-webrtc-star'
       ],
-      'config.Bootstrap': [
+      'ipfs.config.Bootstrap': [
         '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
       ],
-      'repo': 'path/to/repo', // this identifies the repository
-      'repo': '/tmp/paratii-alpha-' + String(Math.random()), // key where to save information
-      'bitswap.maxMessageSize': 32 * 1024,
+      'ipfs.repo': 'path/to/repo', // this identifies the repository
+      'ipfs.bitswap.maxMessageSize': 32 * 1024,
       'address': '0x12345',  // 'Ethereum acccounts'
       'verbose': false
     })

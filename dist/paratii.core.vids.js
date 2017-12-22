@@ -56,8 +56,17 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
 
 
               options = dopts(options, defaults);
+
+              // data to be put o the blockchain
+              // let blockData = {
+              //
+              // }
+
+              // data to be put in ipfs
+
+              //
               _context.next = 4;
-              return _regenerator2.default.awrap(this.paratii.ipfs.add({
+              return _regenerator2.default.awrap(this.paratii.ipfs.addJSON({
                 title: options.title
               }));
 
@@ -76,6 +85,22 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
             case 7:
             case 'end':
               return _context.stop();
+          }
+        }
+      }, null, this);
+    }
+  }, {
+    key: 'get',
+    value: function get(videoId) {
+      return _regenerator2.default.async(function get$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              this.paratii.db.vids.get(videoId);
+
+            case 1:
+            case 'end':
+              return _context2.stop();
           }
         }
       }, null, this);
