@@ -14,13 +14,13 @@ describe('paratii.db API: :', function () {
     assert.equal(paratiiDb.config['db.provider'], dbProvider)
   })
 
-  it.skip('db.videos.get() should work as expected', async function () {
+  it.skip('db.vids.get() should work as expected', async function () {
   })
 
   it.skip('db.users.get() should work as expected', async function () {
   })
 
-  it.skip('db.videos.search() should work as expected', async function () {
+  it.skip('db.vids.search() should work as expected', async function () {
   })
 
   it('should be available as an attribute on Paratii instances', function () {

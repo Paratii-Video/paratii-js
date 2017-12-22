@@ -17,22 +17,21 @@ describe('paratii.core.vids:', function () {
   })
 
   it('core.vids.create() and get() should work as expected', async function () {
-    let videoId = await paratii.core.vids.create({
+    let vidToAdd = {
       id: 'some-id',
       owner: address1,
       title: 'some Title',
-      price: 0,
+      price: '0',
       file: videoFile
-    })
-    assert.equal(videoId, 'some-id')
+    }
+    let videoInfo = await paratii.core.vids.create(vidToAdd)
+    assert.equal(videoInfo.id, 'some-id')
 
-    // let video = await paratii.core.vids.get(videoId)
-    // console.log(video)
+    delete videoInfo.file
+    let videoInfo2 = await paratii.core.vids.get(videoInfo.id)
+    assert.deepEqual(videoInfo2, videoInfo)
   })
 
-  it.skip('core.vids.get() should work as expected', async function () {
-  })
-
-  it.skip('db.vids.search() should work as expected', async function () {
+  it.skip('core.vids.search() should work as expected', async function () {
   })
 })

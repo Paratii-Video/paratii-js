@@ -7,7 +7,7 @@ chai.use(chaiAsPromised)
 let address = '0x90f8bf6a479f320ead074411a4b0e7944ea8c9c1'
 let privateKey = '4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d'
 
-let address1 = '0xffcf8fdee72ac11b5c542428b35eef5769c409f0'
+let address1 = '0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0'
 
 // an arbitrary but valid address
 let address99 = '0x0000000000000000000000000000000000000001'
