@@ -49,7 +49,6 @@ describe('ParatiiIPFS: :', function () {
   })
 
   it('put a JSON object and get it back', async function () {
-    await paratiiIPFS.getIPFSInstance()
     let multihash = await paratiiIPFS.putJSON({test: 1})
     assert.isOk(multihash)
 
