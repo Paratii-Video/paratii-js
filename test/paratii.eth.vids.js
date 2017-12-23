@@ -2,7 +2,7 @@ import { Paratii } from '../lib/paratii.js'
 import { address, address1, privateKey } from './utils.js'
 import { assert } from 'chai'
 
-describe('paratii.eth.vids: :', function () {
+describe('paratii.eth.vids:', function () {
   let paratii
 
   beforeEach(async function () {
@@ -41,5 +41,10 @@ describe('paratii.eth.vids: :', function () {
     vid = await paratii.eth.vids.get(videoId)
     assert.equal(vid.ipfsHash, '') // or should we raise an error?
     assert.equal(vid.price, 0) // or should we raise an error?
+  })
+
+  it.skip('vids.create() should throw meaningful errors', async function () {
+    let vids = paratii.eth.vids
+    await assert.isRejected(vids.create({}), Error, 'No id was given')
   })
 })

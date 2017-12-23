@@ -1,1 +1,0 @@
-# Paratii Library documentation

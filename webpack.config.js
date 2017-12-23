@@ -28,6 +28,7 @@ var config = {
     net: 'empty',
     tls: 'empty'
   },
+  target: 'web',
   module: {
     loaders: [{
       test: /\.js$/,

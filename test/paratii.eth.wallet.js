@@ -1,11 +1,7 @@
 import { Paratii } from '../lib/paratii.js'
 import { address, address1, privateKey, address17, mnemonic23, address23 } from './utils.js'
 import { add0x } from '../lib/utils.js'
-
-var chai = require('chai')
-var chaiAsPromised = require('chai-as-promised')
-chai.use(chaiAsPromised)
-const assert = chai.assert
+import { assert } from 'chai'
 
 describe('paratii.eth.wallet: :', function () {
   let paratii
@@ -38,7 +34,7 @@ describe('paratii.eth.wallet: :', function () {
     assert.equal(wallet.length, 5)
     assert.isTrue(paratii.eth.web3.utils.isAddress(wallet[1].address))
     assert.isTrue(paratii.eth.web3.utils.isAddress(wallet[2].address))
-    //
+    console.log(wallet)
     assert.equal(wallet[0].address, addresses[0])
   })
 

@@ -34,42 +34,45 @@ At this point, all Paratii contracts will be available in `contracts`, under the
 
 Or, equivalently:
 
-    paratii.getContract('ParatiiToken')
+    paratii.eth.getContract('ParatiiToken')
 
- A fresh  `ParatiiToken` contract will hav been deployed. Because you deployed it, you will have all the tokens:
+ A fresh  `ParatiiToken` contract will have been deployed. Because you deployed it, you will have all the tokens:
 
-    await contracts.ParatiiToken.balanceOf(web3.eth.accounts[0])
+    await contracts.ParatiiToken.balanceOf(yourAddress)
 
-shoud return a number starting with 21 and followed by many zeros.
+should return a number starting with 21 and followed by many zeros.
 
 We can register a new user on the Users:
 
-    await contracts.Users.registerUser('0x12455', 'Marvin Pontiac', 'john@lurie.com')
+    await paratii.core.users.create({
+      id: '0x12455', // must be a valid Ethereum address
+      name: 'Marvin Pontiac',
+      email: 'john@lurie.com'
+    })
 
 And check if the name is correctly registered.
 
-    (await contracts.Users.getUserInfo('0x12455')).name
+    (await paratii.core.users.get('0x12455')).name
 
 We can also register a video:
 
-    await contracts.Videos.registerVideo(
-      '31415', // id of the video
-      '0x123455', // address of the video owner
-      27182, // price (in PTI "wei")
-      'ladsfkjasdfkljfl', // hash of the video on IPFS
-    )
+    await paratii.core.videos.create({
+      id: '31415', // id of the video
+      owner: '0x123455', // address of the video owner
+      price: 27182, // price (in PTI "wei")
+    })
 
 And read the video information back from the blockchain:
 
-    await contracts.Videos.getVideoInfo('31415')
+    await paratii.core.videos.get('31415')
 
 We are now ready to buy a video (if you have anough PTI)
 
-    await contracts.Store.buyVideo('31415')
+    await paratii.core.store.buyVideo('31415')
 
 The `buyVideo` call will check the preconditions (whether the sender has enough ETH and PTI to do the transaction, if the video exists and is for sale) and throw meaningful errors if the preconditions are not met. If indeed the preconditions are met, the function will then initiate a series of transactions on the blockchain to actually acquire the video. If the operation is successful, we can do
 
-    await contracts.Store.isAcquired('31415')
+    await paratii.core.isAcquired('31415')
 
 to check if we have acquired the video.
 
