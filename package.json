@@ -12,7 +12,7 @@
   "scripts": {
     "build": "babel ./lib -d ./dist",
     "pack": "webpack --progress --colors",
-    "test": "mocha --require babel.js test/*.js --exit",
+    "test": "mocha --timeout 15000 --require babel.js test/*.js --exit",
     "testrpc": "testrpc --deterministic",
     "parity": "parity --config parity-config.toml",
     "lint": "standard",
