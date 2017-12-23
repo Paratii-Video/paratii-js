@@ -14,6 +14,7 @@
     "pack": "webpack --progress --colors",
     "test": "mocha --require babel.js test/*.js --exit",
     "testrpc": "testrpc --deterministic",
+    "parity": "parity --config parity-config.toml",
     "lint": "standard",
     "lint-fix": "standard --fix",
     "node": "node"
