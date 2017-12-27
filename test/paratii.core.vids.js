@@ -23,7 +23,7 @@ describe('paratii.core.vids:', function () {
       file: videoFile
     })
     assert.equal(videoId, 'some-id')
-  })
+  }).timeout(4000)
 
   it.skip('core.vids.get() should work as expected', async function () {
   })
