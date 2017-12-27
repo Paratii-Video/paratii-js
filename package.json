@@ -17,7 +17,8 @@
     "parity": "parity --config parity-config.toml",
     "lint": "standard",
     "lint-fix": "standard --fix",
-    "node": "node"
+    "node": "node",
+    "prepare": "patch-package"
   },
   "dependencies": {
     "babel-plugin-transform-runtime": "^6.23.0",
