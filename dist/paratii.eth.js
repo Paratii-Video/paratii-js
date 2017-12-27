@@ -166,6 +166,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
               rawTransaction = _context3.sent;
 
               rawTransaction._ethAccounts = this.web3.eth.accounts;
+              // wait for receipt let nonce increment
               _context3.next = 6;
               return _regenerator2.default.awrap(rawTransaction.send());
 
@@ -229,95 +230,92 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
             case 26:
               paratiiRegistry = _context4.sent;
-              _context4.next = 29;
-              return _regenerator2.default.awrap(this.getContract('Avatar'));
-
-            case 29:
-              paratiiAvatar = _context4.sent;
 
               paratiiRegistry.setProvider(this.web3.currentProvider);
               paratiiAvatar.setProvider(this.web3.currentProvider);
 
+              console.log('paratiiAvatar.options.address' + paratiiAvatar.options.address);
+
               _context4.t0 = _regenerator2.default;
               _context4.t1 = this;
-              _context4.next = 36;
+              _context4.next = 34;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Avatar', paratiiAvatar.options.address));
 
-            case 36:
+            case 34:
               _context4.t2 = _context4.sent;
               _context4.t3 = _context4.t1.fixMethodAndSend.call(_context4.t1, _context4.t2);
-              _context4.next = 40;
+              _context4.next = 38;
               return _context4.t0.awrap.call(_context4.t0, _context4.t3);
 
-            case 40:
+            case 38:
               _context4.t4 = _regenerator2.default;
               _context4.t5 = this;
-              _context4.next = 44;
+              _context4.next = 42;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('ParatiiToken', paratiiToken.options.address));
 
-            case 44:
+            case 42:
               _context4.t6 = _context4.sent;
               _context4.t7 = _context4.t5.fixMethodAndSend.call(_context4.t5, _context4.t6);
-              _context4.next = 48;
+              _context4.next = 46;
               return _context4.t4.awrap.call(_context4.t4, _context4.t7);
 
-            case 48:
+            case 46:
               _context4.t8 = _regenerator2.default;
               _context4.t9 = this;
-              _context4.next = 52;
+              _context4.next = 50;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('SendEther', sendEther.options.address));
 
-            case 52:
+            case 50:
               _context4.t10 = _context4.sent;
               _context4.t11 = _context4.t9.fixMethodAndSend.call(_context4.t9, _context4.t10);
-              _context4.next = 56;
+              _context4.next = 54;
               return _context4.t8.awrap.call(_context4.t8, _context4.t11);
 
-            case 56:
+            case 54:
               _context4.t12 = _regenerator2.default;
               _context4.t13 = this;
-              _context4.next = 60;
+              _context4.next = 58;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Videos', videoRegistry.options.address));
 
-            case 60:
+            case 58:
               _context4.t14 = _context4.sent;
               _context4.t15 = _context4.t13.fixMethodAndSend.call(_context4.t13, _context4.t14);
-              _context4.next = 64;
+              _context4.next = 62;
               return _context4.t12.awrap.call(_context4.t12, _context4.t15);
 
-            case 64:
+            case 62:
               _context4.t16 = _regenerator2.default;
               _context4.t17 = this;
-              _context4.next = 68;
+              _context4.next = 66;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Store', videoStore.options.address));
 
-            case 68:
+            case 66:
               _context4.t18 = _context4.sent;
               _context4.t19 = _context4.t17.fixMethodAndSend.call(_context4.t17, _context4.t18);
-              _context4.next = 72;
+              _context4.next = 70;
               return _context4.t16.awrap.call(_context4.t16, _context4.t19);
 
-            case 72:
+            case 70:
               _context4.t20 = _regenerator2.default;
               _context4.t21 = this;
-              _context4.next = 76;
+              _context4.next = 74;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Users', userRegistry.options.address));
 
-            case 76:
+            case 74:
               _context4.t22 = _context4.sent;
               _context4.t23 = _context4.t21.fixMethodAndSend.call(_context4.t21, _context4.t22);
-              _context4.next = 80;
+              _context4.next = 78;
               return _context4.t20.awrap.call(_context4.t20, _context4.t23);
+
+            case 78:
+              _context4.next = 80;
+              return _regenerator2.default.awrap(this.fixMethodAndSend(paratiiRegistry.methods.registerUint('VideoRedistributionPoolShare', this.web3.utils.toWei('0.3'))));
 
             case 80:
               _context4.next = 82;
-              return _regenerator2.default.awrap(this.fixMethodAndSend(paratiiRegistry.methods.registerUint('VideoRedistributionPoolShare', this.web3.utils.toWei('0.3'))));
-
-            case 82:
-              _context4.next = 84;
               return _regenerator2.default.awrap(this.fixMethodAndSend(paratiiAvatar.methods.addToWhitelist(videoStore.address)));
 
-            case 84:
+            case 82:
 
               this.contracts = {
                 Avatar: paratiiAvatar,
@@ -332,7 +330,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
               return _context4.abrupt('return', this.contracts);
 
-            case 87:
+            case 85:
             case 'end':
               return _context4.stop();
           }
