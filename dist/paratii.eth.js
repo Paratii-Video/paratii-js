@@ -515,7 +515,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
             case 4:
               if (!(!symbol || symbol === 'ETH')) {
-                _context8.next = 10;
+                _context8.next = 9;
                 break;
               }
 
@@ -525,40 +525,39 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 7:
               balance = _context8.sent;
 
-              console.log('balance!!!! ' + balance);
               balances.ETH = balance;
 
-            case 10:
+            case 9:
               if (!(!symbol || symbol === 'PTI')) {
-                _context8.next = 18;
+                _context8.next = 17;
                 break;
               }
 
-              _context8.next = 13;
+              _context8.next = 12;
               return _regenerator2.default.awrap(this.getContract('ParatiiToken'));
 
-            case 13:
+            case 12:
               contract = _context8.sent;
-              _context8.next = 16;
+              _context8.next = 15;
               return _regenerator2.default.awrap(contract.methods.balanceOf(address).call());
 
-            case 16:
+            case 15:
               balance = _context8.sent;
 
               balances.PTI = balance;
 
-            case 18:
+            case 17:
               if (!symbol) {
-                _context8.next = 22;
+                _context8.next = 21;
                 break;
               }
 
               return _context8.abrupt('return', balance);
 
-            case 22:
+            case 21:
               return _context8.abrupt('return', balances);
 
-            case 23:
+            case 22:
             case 'end':
               return _context8.stop();
           }
