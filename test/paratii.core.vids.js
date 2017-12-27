@@ -15,14 +15,14 @@ describe('paratii.core.vids:', function () {
   })
 
   it('core.vids.create() and get() should work as expected', async function () {
-    let videoId = await paratiiCore.vids.create({
+    let video = await paratiiCore.vids.create({
       id: 'some-id',
       owner: address1,
       title: 'some Title',
       price: 0,
       file: videoFile
     })
-    assert.equal(videoId, 'some-id')
+    assert.equal(video.id, 'some-id')
   }).timeout(10000)
 
   it.skip('core.vids.get() should work as expected', async function () {
