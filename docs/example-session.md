@@ -4,6 +4,10 @@
 Work in progress.  
 
 
+## Using paratii-lib in the browser (for frontend devs)
+
+_say something about require'ing the built files_
+
 ## Installation
 
 You will need `yarn` (or `npm`) installed. First get the latest version of the code and install it

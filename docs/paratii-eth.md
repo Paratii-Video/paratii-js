@@ -1,5 +1,6 @@
 # Paratii Library documentation
 
+
 ## `paratii.eth`
 
 The `eth` namespace contains functions to interact with the Ethereum blockchain and the Paratii contracts deployed there.
