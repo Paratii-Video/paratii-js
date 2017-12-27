@@ -1,6 +1,5 @@
 import { Paratii } from '../lib/paratii.js'
-import { address, privateKey, address1, address99, address17, privateKey17 } from './utils.js'
-import { assert } from 'chai'
+import { address, address17, privateKey17 } from './utils.js'
 
 describe('paratii.eth API: :', function () {
   let paratii
