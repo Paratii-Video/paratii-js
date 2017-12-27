@@ -49,6 +49,8 @@
     "ethereumjs-testrpc": "^6.0.1",
     "file-api": "^0.10.4",
     "mocha": "^4.0.1",
+    "patch-package": "^5.0.0",
+    "postinstall-prepare": "^1.0.1",
     "pre-commit": "^1.2.2",
     "standard": "^10.0.3",
     "webpack": "^3.10.0",

@@ -80,18 +80,19 @@ describe('paratii.eth API: :', function () {
     console.log(balance)
     console.log('2')
     balance = await paratii.eth.balanceOf(address99, 'ETH')
+    console.log(balance)
     assert.equal(Number(balance), 0)
     console.log('3')
     // test PTI balance
-    // balance = await paratii.eth.balanceOf(address, 'PTI')
-    // assert.equal(Number(balance), 21e24)
-    // balance = await paratii.eth.balanceOf(address99, 'PTI')
-    // assert.equal(Number(balance), 0)
-    //
-    // // test without second arg - should return an array with info
-    // balance = await paratii.eth.balanceOf(address)
-    // assert.isOk(Number(balance.ETH) > 0)
-    // assert.equal(Number(balance.PTI), 21e24)
+    balance = await paratii.eth.balanceOf(address, 'PTI')
+    assert.equal(Number(balance), 21e24)
+    balance = await paratii.eth.balanceOf(address99, 'PTI')
+    assert.equal(Number(balance), 0)
+
+    // test without second arg - should return an array with info
+    balance = await paratii.eth.balanceOf(address)
+    assert.isOk(Number(balance.ETH) > 0)
+    assert.equal(Number(balance.PTI), 21e24)
   })
 
   it('transfer ETH should work as expected', async function () {
