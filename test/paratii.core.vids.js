@@ -3,35 +3,31 @@ import { assert } from 'chai'
 import { address, address1, privateKey } from './utils.js'
 
 describe('paratii.core.vids:', function () {
-  let paratii
+  let paratii, paratiiCore
   let videoFile = 'test/data/some-file.txt'
-
-  this.timeout(30000)
-
   beforeEach(async function () {
     paratii = new Paratii({
       address: address,
       privateKey: privateKey
     })
     await paratii.eth.deployContracts()
+    paratiiCore = paratii.core
   })
 
   it('core.vids.create() and get() should work as expected', async function () {
-    let vidToAdd = {
+    let videoId = await paratiiCore.vids.create({
       id: 'some-id',
       owner: address1,
       title: 'some Title',
-      price: '0',
+      price: 0,
       file: videoFile
-    }
-    let videoInfo = await paratii.core.vids.create(vidToAdd)
-    assert.equal(videoInfo.id, 'some-id')
+    })
+    assert.equal(videoId, 'some-id')
+  }).timeout(4000)
 
-    delete videoInfo.file
-    let videoInfo2 = await paratii.core.vids.get(videoInfo.id)
-    assert.deepEqual(videoInfo2, videoInfo)
+  it.skip('core.vids.get() should work as expected', async function () {
   })
 
-  it.skip('core.vids.search() should work as expected', async function () {
+  it.skip('db.vids.search() should work as expected', async function () {
   })
 })

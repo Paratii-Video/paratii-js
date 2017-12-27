@@ -43,6 +43,7 @@ describe('ParatiiIPFS: :', function () {
     let path = 'test/data/some-file.txt'
     let fileStream = fs.createReadStream(path)
     let result = await paratiiIPFS.add(fileStream)
+    assert.isOk(result)
     let hash = result[0].hash
     let fileContent = await paratiiIPFS.get(hash)
     assert.equal(String(fileContent[0].content), 'with some content\n')
