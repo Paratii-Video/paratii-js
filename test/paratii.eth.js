@@ -111,22 +111,16 @@ describe('paratii.eth API: :', function () {
   })
 
   it('subscription to Tranfer PTI events should work as expected', async function () {
-    // let beneficiary = address1
-    // let amount = paratii.eth.web3.utils.toWei('3', 'ether')
-    // let balance0 = await paratii.eth.balanceOf(beneficiary, 'PTI')
-    // await paratii.eth.transfer(beneficiary, amount, 'PTI')
-    // let balance1 = await paratii.eth.balanceOf(beneficiary, 'PTI')
-    // assert.equal(balance1 - balance0, amount)
     paratii.eth.web3.setProvider('ws://localhost:8546')
     await paratii.eth.subscribe('newBlockHeaders', {})
     let beneficiary = address1
     let amount = paratii.eth.web3.utils.toWei('3', 'ether')
     await paratii.eth.transfer(beneficiary, amount, 'ETH')
   })
-  //
-  // it('deployContract should throw a sensible error if address is not set', async function () {
-  //   paratii = new Paratii()
-  //   await assert.isRejected(paratii.eth.deployContract('ParatiiToken'), Error, 'No Ethereum address was set')
-  //   await assert.isRejected(paratii.eth.deployContract('ParatiiToken'), Error, 'No Ethereum address was set')
-  // })
+
+  it('deployContract should throw a sensible error if address is not set', async function () {
+    paratii = new Paratii()
+    await assert.isRejected(paratii.eth.deployContract('ParatiiToken'), Error, 'No Ethereum address was set')
+    await assert.isRejected(paratii.eth.deployContract('ParatiiToken'), Error, 'No Ethereum address was set')
+  })
 })
