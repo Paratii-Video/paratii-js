@@ -72,7 +72,7 @@ When called without an argument, returns information about all relevant balances
     // }
 
 
- ### `eth.transfer(beneficiary, amount, symbol)`
+### `eth.transfer(beneficiary, amount, symbol)`
 
 Use this to send ETH or PTI from `paratii.config.address`:
 

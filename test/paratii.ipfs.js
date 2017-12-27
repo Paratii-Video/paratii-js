@@ -1,7 +1,7 @@
 // const whyIsNodeRunning = require('why-is-node-running')
 
-// import { Paratii } from '../lib/paratii.js'
 // import { address, privateKey } from './utils.js'
+import { Paratii } from '../lib/paratii.js'
 import { ParatiiIPFS } from '../lib/paratii.ipfs.js'
 import { assert, expect } from 'chai'
 // const FileApi = require('file-api')
@@ -50,12 +50,17 @@ describe('ParatiiIPFS: :', function () {
   })
 
   it('put a JSON object and get it back', async function () {
-    await paratiiIPFS.getIPFSInstance()
-    let multihash = await paratiiIPFS.putJSON({test: 1})
+    let multihash = await paratiiIPFS.addJSON({test: 1})
     assert.isOk(multihash)
 
     let data = await paratiiIPFS.getJSON(multihash)
     assert.isOk(data)
     expect(JSON.stringify(data)).to.equal(JSON.stringify({test: 1}))
+  })
+
+  it('should exist and work as an attribute on the Paratii object', async function () {
+    let paratii = new Paratii()
+    assert.isOk(paratii.ipfs)
+    assert.isOk(await paratii.ipfs.getIPFSInstance())
   })
 })

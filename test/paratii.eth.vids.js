@@ -47,4 +47,8 @@ describe('paratii.eth.vids:', function () {
     let vids = paratii.eth.vids
     await assert.isRejected(vids.create({}), Error, 'No id was given')
   })
+
+  it.skip('vids.create() should create a fresh id if no id wat provided', async function () {
+
+  })
 })

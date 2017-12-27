@@ -41,7 +41,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   (0, _createClass3.default)(ParatiiCoreVids, [{
     key: 'create',
     value: function create(options) {
-      var defaults;
+      var defaults, hash;
       return _regenerator2.default.async(function create$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -56,26 +56,46 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
 
 
               options = dopts(options, defaults);
+
               _context.next = 4;
-              return _regenerator2.default.awrap(this.paratii.ipfs.add({
+              return _regenerator2.default.awrap(this.paratii.ipfs.addJSON({
                 title: options.title
               }));
 
             case 4:
-              _context.next = 6;
+              hash = _context.sent;
+              _context.next = 7;
               return _regenerator2.default.awrap(this.paratii.eth.vids.create({
                 id: options.id,
                 owner: options.owner,
                 price: options.price,
-                ipfsHash: ''
+                ipfsHash: hash
               }));
 
-            case 6:
-              return _context.abrupt('return', options.id);
-
             case 7:
+
+              options.ipfsHash = hash;
+              return _context.abrupt('return', options);
+
+            case 9:
             case 'end':
               return _context.stop();
+          }
+        }
+      }, null, this);
+    }
+  }, {
+    key: 'get',
+    value: function get(videoId) {
+      return _regenerator2.default.async(function get$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              return _context2.abrupt('return', this.paratii.db.vids.get(videoId));
+
+            case 1:
+            case 'end':
+              return _context2.stop();
           }
         }
       }, null, this);
