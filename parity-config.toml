@@ -1,15 +1,5 @@
 # https://github.com/paritytech/parity/wiki/Configuring-Parity
 [parity]
-chain = "dev"
-[rpc]
-hosts = ["all"]
-[websockets]
-interface = "all"
-hosts = ["all"]
-origins = ["all"]
-[misc]
-logging = "own_tx=trace"
-log_file = "parity.log"
-color = true
+chain = "chain.json"
 [mining]
 reseal_min_period = 0
