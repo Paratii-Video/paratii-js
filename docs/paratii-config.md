@@ -31,15 +31,24 @@ Here are some settings:
 
 ##   `paratii.config.address`
 
-This is the address of the account from which all transactions are sent to the blockchain. This address must be set before any functions that change the state of the blockchain are called. It can be set in initialization, or by called the function `paratii.setAccount(address)`
+This is the address of the account from which all transactions are sent to the blockchain. This address must be set before any functions that change the state of the blockchain are called.
+
+It can be set in initialization, or by called the function `paratii.setAccount(address)`
 
 ##   `paratii.config.privateKey`
 
-The private key corresponding to the `address`. For signing transactions, either this value must be set, or there must be a corresponding wallet in `paratii.eth.web3.eth.accounts`. It can be set either on initialization, or by calling  `paratii.setAccount(address, privateKey)`
+The private key corresponding to the `address`. For signing transactions, either this value must be set, or there must be a corresponding wallet in `paratii.eth.web3.eth.accounts`.
 
-##   `paratii.config.regisry`
+It can be set either on initialization, or by calling  `paratii.setAccount(address, privateKey)`
 
-The address of a Paratii `Registry` contract on the blockchain. This contract knows where all other Paratii contracts are deployed, and stores general settings. Most interactions with the blockchain assume this setting is set. It can be set either on initialization, by calling the function `paratii.setRegistryAddress`. The function `paratii.eth.deployContracts` will also set this address as a side effect
+##   `paratii.config.registry`
+
+The address of a Paratii `Registry` contract on the blockchain. This contract knows where all other Paratii contracts are deployed, and stores general settings. Most interactions with the blockchain assume this setting is set.
+
+It can be set either on initialization of the `Paratii` object, by calling the function `paratii.setRegistryAddress`.
+
+
+The function `paratii.eth.deployContracts()` will also set this address as a side effect
 
 ### `config`
 
