@@ -40,6 +40,12 @@ The default value of `numberOfAccounts` is `1`. If the `mnemonic` argument is no
     let wallet = await eth.wallet.create()
     console.log(wallet.getMnemonic()) // log the generated mnemonic phrase
 
+The call to `wallet.create` will fail if the wallet already contains an account. In that case, you should clear the wallet explicitly using `wallet.clear()`
+
+## `eth.wallet.clear`
+
+http://web3js.readthedocs.io/en/1.0/web3-eth-accounts.html#wallet-clear
+
 ## `eth.wallet.encrypt([password])`
 
 Encrypts all wallet accounts to and array of encrypted keystore v3 objects. *This does not include the seedPhrase*
