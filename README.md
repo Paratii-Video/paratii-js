@@ -14,6 +14,8 @@ More information about the Paratii Project can be found on [paratii.video](http:
 
 ## Installation
 
+    git clone https://github.com/Paratii-Video/paratii-lib
+    cd paratii-lib
     yarn install
 
 ## Running tests
