@@ -2,7 +2,7 @@
   "name": "paratii-lib",
   "version": "0.0.1",
   "description": "Paratii Smart Contracts",
-  "main": "dist/paratii.js",
+  "main": "dist/bundle.js",
   "browser": {
     "./lib/paratii.ipfs.uploader.js": "./lib/paratii.ipfs.uploader.browser.js"
   },
@@ -11,7 +11,7 @@
   },
   "scripts": {
     "build": "babel ./lib -d ./dist",
-    "pack": "webpack --progress --colors",
+    "build-browser": "webpack --progress --colors",
     "test": "mocha --require babel.js test/*.js --exit",
     "testrpc": "testrpc --deterministic",
     "lint": "standard",
