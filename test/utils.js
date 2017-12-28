@@ -19,6 +19,6 @@ let privateKey17 = '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960
 // an address generated from a seed phrase
 let mnemonic23 = 'jelly better achieve collect unaware mountain thought cargo oxygen act hood bridge'
 // this is the first HD address generated
-let address23 = '0xa99dbd162ad5e1601e8d8b20703e5a3ba5c00be7'
+let address23 = '0x9e2d04eef5b16CFfB4328Ddd027B55736407B275'
 
 export { address, address1, address99, privateKey, address17, privateKey17, mnemonic23, address23 }

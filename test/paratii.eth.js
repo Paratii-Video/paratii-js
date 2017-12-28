@@ -1,5 +1,5 @@
 import { Paratii } from '../lib/paratii.js'
-import { address, privateKey, address1, address99 } from './utils.js'
+import { address, privateKey, address1 } from './utils.js'
 import { assert } from 'chai'
 
 describe('paratii.eth API: :', function () {
@@ -73,17 +73,20 @@ describe('paratii.eth API: :', function () {
   it('balanceOf() should return the right balances', async function () {
     let balance
 
+    paratii.eth.web3.eth.accounts.wallet.clear()
+    let accounts = await paratii.eth.wallet.create(5)
+    let beneficiary = accounts[0].address
     // test ETH balance
     balance = await paratii.eth.balanceOf(address, 'ETH')
     assert.isOk(Number(balance) > 0)
     console.log(balance)
-    balance = await paratii.eth.balanceOf(address99, 'ETH')
+    balance = await paratii.eth.balanceOf(beneficiary, 'ETH')
     console.log(balance)
     assert.equal(Number(balance), 0)
     // test PTI balance
     balance = await paratii.eth.balanceOf(address, 'PTI')
     assert.equal(Number(balance), 21e24)
-    balance = await paratii.eth.balanceOf(address99, 'PTI')
+    balance = await paratii.eth.balanceOf(beneficiary, 'PTI')
     assert.equal(Number(balance), 0)
 
     // test without second arg - should return an array with info

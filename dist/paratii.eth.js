@@ -733,12 +733,10 @@ var ParatiiEth = exports.ParatiiEth = function () {
         while (1) {
           switch (_context13.prev = _context13.next) {
             case 0:
-              this.web3.eth.subscribe(type, function (error, result) {
-                if (!error) {
-                  console.log(result);
-                } else {
-                  console.log(error);
-                }
+              this.web3.eth.subscribe(type, function () {
+                // if (!error) { console.log(result) } else {
+                //   console.log(error)
+                // }
               });
 
             case 1:
