@@ -109,7 +109,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
                 break;
               }
 
-              msg = 'No Ethereum address was set - you can use .setAccount(address, [privateKey]) or specify it when creating the object';
+              msg = 'You need an Ethereum account to write information to the blockchain - you can use .setAccount(address, [privateKey]) or specify it when creating the object';
               throw Error(msg);
 
             case 3:

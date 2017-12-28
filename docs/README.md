@@ -1,14 +1,17 @@
 # The Paratii Library
 
 
-* [Quick Introduction and example](example-session.md)
 
-## library
 
 The Paratii javascript library is the preferred way for clients to interact with the deployed contracts on the blockchain.  It offers access to the contracts, and convenience functions that provide more useful error handling that making direct calls to the blockchain can offer. It also offers wallet functionality.
 
 It is still very much under development, and most of the things in this documentation are not implemented yet
 
+## Usage
+
+* [Quick Introduction and example](example-session.md)
+
+## Organization
 
 The paratii library is divided into the following modules:
 

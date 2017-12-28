@@ -13,19 +13,29 @@ It is available as a `core` attribute in `Paratii` instances:
     paratii.core // is a ParatiiCore instance
 
 
-## configuration
-
-Takes all configuration options of the Paratii object
-
-
 # API
 
+## core.vids.add(videoInfo)
 
-# Example
+This call will register the video on the blockchain, add its metadata to IPFS, upload file to IPFS, and transcode it
 
-    // register a video
-    // this call will register the vid on the blockchain, add its metadata to ipfs, upload file to ipfs, and transcode it
-    core.vids.create({title: 'A very loooong title', file: myFileStream, foo: 'bar'})
+    core.vids.add({title: 'A very loooong title', file: 'path/to/file'})
+
+It returns a structure like the following:
+
+    { id: 'some-id',
+    owner: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
+    price: 0,
+    title: 'A very loooong title',
+    ipfsHash: 'Qmck5q3uDvp4tD1j18E5g5VqXCcd9zpKT3cQpp1idAvDUR' }
+
+
+## core.vids.get(videoId)
+
+
+## core.vids.search(qry)
+
+_not implemented yet_
 
     // search in videos
     // this call will send a request the db index, i.e. simply forward this request to paratii.db.vids.search()

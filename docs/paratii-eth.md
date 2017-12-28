@@ -1,5 +1,6 @@
 # Paratii Library documentation
 
+
 ## `paratii.eth`
 
 The `eth` namespace contains functions to interact with the Ethereum blockchain and the Paratii contracts deployed there.
@@ -27,12 +28,23 @@ Returns all contracts
 
 Functions having to do with wallet and storage. These implement (and are mostly identical) to the `web3.eth.accounts.wallet` functions that are described here: http://web3js.readthedocs.io/en/1.0/web3-eth-accounts.html#wallet, except that we added support for BIP32/39 mnemonic seed phrases
 
-## `eth.wallet.create(numberOfAccounts, mnemonic)`
+## `eth.wallet.create([numberOfAccounts, mnemonic])`
 
 Create a wallet with a given number of accounts from a BIP32/BIP39 seedPhrase
 
     let mnemonic =  "jelly better achieve collect unaware mountain thought cargo oxygen act hood bridge",
-    let wallet = await eth.wallet.create(1, mnemonic) // create a wallet with 2 accounts
+    let wallet = await eth.wallet.create(2, mnemonic) // create a wallet with 2 accounts
+
+The default value of `numberOfAccounts` is `1`. If the `mnemonic` argument is not given, a new mnemonic will be generated:
+
+    let wallet = await eth.wallet.create()
+    console.log(wallet.getMnemonic()) // log the generated mnemonic phrase
+
+The call to `wallet.create` will fail if the wallet already contains an account. In that case, you should clear the wallet explicitly using `wallet.clear()`
+
+## `eth.wallet.clear`
+
+http://web3js.readthedocs.io/en/1.0/web3-eth-accounts.html#wallet-clear
 
 ## `eth.wallet.encrypt([password])`
 
@@ -55,6 +67,9 @@ Generate a random new mnemomic.
     let m = eth.wallet.newMnemonic()
     let wallet = await eth.wallet.create(2, m)
 
+## `eth.wallet.getMnemonic()`
+
+Return the mnemonic that was used to generated this wallet (or `undefined` if no such value exists).
 
 ### `eth.balanceOf(account, symbol)`
 
@@ -72,7 +87,7 @@ When called without an argument, returns information about all relevant balances
     // }
 
 
- ### `eth.transfer(beneficiary, amount, symbol)`
+### `eth.transfer(beneficiary, amount, symbol)`
 
 Use this to send ETH or PTI from `paratii.config.address`:
 
@@ -82,7 +97,8 @@ Transfer the given amount of ETH to the benificiary. Uses the `SendEther` contra
 
 ## `eth.vids`
 
-The `eth.vids` namespace contains functions to interact with the video registration on the blockchain
+The `eth.vids` namespace contains functions to interact with the video registration on the blockchain.
+**Typically, if you are a developer that is not interested in the inner workings of Paratii, you would use the functions in [[paratii-core.md]]**
 
 ### `eth.vids.create()`
 

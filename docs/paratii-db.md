@@ -28,7 +28,7 @@ Here is an example with default options:
 
 ## `db.vids.get(videoId)`
 
-
+Get information aboutthis video from the db
 ## `db.vids.search(qry)`
 
     db.vids.search({

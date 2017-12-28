@@ -9,10 +9,6 @@ var _setImmediate2 = require('babel-runtime/core-js/set-immediate');
 
 var _setImmediate3 = _interopRequireDefault(_setImmediate2);
 
-var _regenerator = require('babel-runtime/regenerator');
-
-var _regenerator2 = _interopRequireDefault(_regenerator);
-
 var _stringify = require('babel-runtime/core-js/json/stringify');
 
 var _stringify2 = _interopRequireDefault(_stringify);
@@ -20,6 +16,10 @@ var _stringify2 = _interopRequireDefault(_stringify);
 var _promise = require('babel-runtime/core-js/promise');
 
 var _promise2 = _interopRequireDefault(_promise);
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
 
 var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
 
@@ -51,7 +51,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
     var defaults = {
       protocol: null,
       onReadyHook: [],
-      'ipfs.config.addresses.swarm': ['/dns4/star.paratii.video/wss/p2p-webrtc-star'],
+      'config.addresses.swarm': ['/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star'],
       'ipfs.config.Bootstrap': ['/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'],
       'ipfs.repo': '/tmp/paratii-alpha-' + String(Math.random()), // key where to save information
       'ipfs.bitswap.maxMessageSize': 32 * 1024,
@@ -64,6 +64,50 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
   }
 
   (0, _createClass3.default)(ParatiiIPFS, [{
+    key: 'add',
+    value: function add(fileStream) {
+      var ipfs;
+      return _regenerator2.default.async(function add$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return _regenerator2.default.awrap(this.getIPFSInstance());
+
+            case 2:
+              ipfs = _context.sent;
+              return _context.abrupt('return', ipfs.files.add(fileStream));
+
+            case 4:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, null, this);
+    }
+  }, {
+    key: 'get',
+    value: function get(hash) {
+      var ipfs;
+      return _regenerator2.default.async(function get$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.next = 2;
+              return _regenerator2.default.awrap(this.getIPFSInstance());
+
+            case 2:
+              ipfs = _context2.sent;
+              return _context2.abrupt('return', ipfs.files.get(hash));
+
+            case 4:
+            case 'end':
+              return _context2.stop();
+          }
+        }
+      }, null, this);
+    }
+  }, {
     key: 'log',
     value: function log(msg) {
       if (this.config.verbose) {
@@ -98,7 +142,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
             bitswap: {
               maxMessageSize: config['ipfs.bitswap.maxMessageSize']
             },
-            repo: config['ipfs.repo'],
+            repo: config['repo'] || '/tmp/test-repo-' + String(Math.random()),
             config: {
               Addresses: {
                 Swarm: config['ipfs.config.addresses.swarm']
@@ -160,50 +204,6 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
           });
         }
       });
-    }
-  }, {
-    key: 'add',
-    value: function add(fileStream) {
-      var ipfs;
-      return _regenerator2.default.async(function add$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              _context.next = 2;
-              return _regenerator2.default.awrap(this.getIPFSInstance());
-
-            case 2:
-              ipfs = _context.sent;
-              return _context.abrupt('return', ipfs.files.add(fileStream));
-
-            case 4:
-            case 'end':
-              return _context.stop();
-          }
-        }
-      }, null, this);
-    }
-  }, {
-    key: 'get',
-    value: function get(hash) {
-      var ipfs;
-      return _regenerator2.default.async(function get$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.next = 2;
-              return _regenerator2.default.awrap(this.getIPFSInstance());
-
-            case 2:
-              ipfs = _context2.sent;
-              return _context2.abrupt('return', ipfs.files.get(hash));
-
-            case 4:
-            case 'end':
-              return _context2.stop();
-          }
-        }
-      }, null, this);
     }
   }, {
     key: 'addJSON',

@@ -4,13 +4,12 @@
 Work in progress.  
 
 
+
 ## Installation
 
-You will need `yarn` (or `npm`) installed. First get the latest version of the code and install it
+In your nodejs project, you can add the library using
 
-    git clone https://github.com/Paratii-Video/paratii-contracts
-    cd paratii-contracts
-    yarn install
+    yarn add github:Paratii-Video/paratii-lib
 
 
 ## Example Session
@@ -18,9 +17,12 @@ You will need `yarn` (or `npm`) installed. First get the latest version of the c
 [next examples are not all working yet - they are being developed in
 [test/lib/example-session.js](../../mocha-test/lib/example-session.js)
 ]
-    import { Paratii } from 'paratii-contracts';
 
-Create an instance of 'Paratii' using default settings:
+The following examples are meant to be run on the test net:
+
+    import { Paratii } from 'paratii-lib';
+
+Create an instance of 'Paratii'
 
     paratii = new Paratii()
 
