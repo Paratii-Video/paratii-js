@@ -128,6 +128,8 @@ var ParatiiEth = exports.ParatiiEth = function () {
         }
       }, null, this);
     }
+    // TODO: this is for testing - remove this
+
   }, {
     key: 'sleep',
     value: function sleep(ms) {

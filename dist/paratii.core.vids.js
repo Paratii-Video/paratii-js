@@ -64,17 +64,18 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
 
             case 4:
               hash = _context.sent;
-              _context.next = 7;
+
+              options.ipfsData = hash;
+              _context.next = 8;
               return _regenerator2.default.awrap(this.paratii.eth.vids.create({
                 id: options.id,
                 owner: options.owner,
                 price: options.price,
-                ipfsHash: hash
+                ipfsHash: '',
+                ipfsData: options.ipfsData
               }));
 
-            case 7:
-
-              options.ipfsHash = hash;
+            case 8:
               return _context.abrupt('return', options);
 
             case 9:

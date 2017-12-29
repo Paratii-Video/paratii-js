@@ -29,7 +29,7 @@ describe('paratii.eth API: :', function () {
     assert.isOk(contract.options.address)
 
     contracts = await paratii.eth.getContracts()
-    assert.isOk(contracts.Avatar.options.address)
+    // assert.isOk(contracts.Avatar.options.address)
     assert.isOk(contracts.Registry.options.address)
 
     // If Paratii was created with a registeryAddress, addresses of other contracts should be known

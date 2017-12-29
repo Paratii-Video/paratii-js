@@ -119,7 +119,8 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
                 id: String,
                 owner: String,
                 price: Number,
-                ipfsHash: String
+                ipfsHash: String,
+                ipfsData: String
               };
 
               if (this.eth.web3.utils.isAddress(options.owner)) {
@@ -140,7 +141,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
 
               contract.setProvider(this.eth.config.provider);
               _context4.next = 11;
-              return _regenerator2.default.awrap(this.fixMethodAndSend(contract.methods.registerVideo(options.id, options.owner, options.price, options.ipfsHash)));
+              return _regenerator2.default.awrap(this.fixMethodAndSend(contract.methods.registerVideo(options.id, options.owner, options.price, options.ipfsHash, options.ipfsData)));
 
             case 11:
               tx = _context4.sent;
@@ -178,7 +179,8 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
                 id: videoId,
                 owner: videoInfo[0],
                 price: videoInfo[1],
-                ipfsHash: videoInfo[2]
+                ipfsHash: videoInfo[2],
+                ipfsData: videoInfo[3]
               };
               return _context5.abrupt('return', result);
 

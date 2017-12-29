@@ -17,6 +17,7 @@ describe('paratii.eth.vids:', function () {
   it('vids.create(),  .get(), .update() and .delete() should work', async function () {
     let price = 3 * 10 ** 18
     let ipfsHash = 'xyz'
+    let ipfsData = 'zzz'
     let videoId = 'some-id'
     let vid
 
@@ -24,7 +25,8 @@ describe('paratii.eth.vids:', function () {
       id: videoId,
       price: price,
       owner: address1,
-      ipfsHash: ipfsHash
+      ipfsHash: ipfsHash,
+      ipfsData: ipfsData
     })
     assert.equal(videoId, result)
 
