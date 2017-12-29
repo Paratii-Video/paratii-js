@@ -52,7 +52,7 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
             case 3:
               videoFromBC = _context.sent;
               _context.next = 6;
-              return _regenerator2.default.awrap(paratii.ipfs.getJSON(videoFromBC.ipfsHash));
+              return _regenerator2.default.awrap(paratii.ipfs.getJSON(videoFromBC.ipfsData));
 
             case 6:
               videoFromIPFS = _context.sent;
