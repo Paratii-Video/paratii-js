@@ -14,9 +14,13 @@ Or, if ES6 is not available:
 
 ## initialization
 
-The Paratii object serves as the general entry point for interacting with the family of Paratii contracts that are deployed on the blockchain. It can be initialized in several ways. Here is an example:
+The Paratii object serves as the general entry point for interacting with the family of Paratii contracts that are deployed on the blockchain, utilities to run and interact with a local IPFS node, and utilities to interact with the Paratii index.
 
-    paratii =  new Paratii() // connect to the default node (http://localhost:8754)
+The object needs to be configured with the information needed to connect to the blockchain, IPFS signaling servers, etc.
+
+It can be initialized in several ways. Here is an example:
+
+    paratii =  new Paratii() // connect to the default node (http://localhost:8754) with default settings
 
   Or with particular options, such as the following:
 
@@ -24,7 +28,8 @@ The Paratii object serves as the general entry point for interacting with the fa
       provider: 'http://chain.paratii.video', // optional - the address of an ethereum node (defaults to localhost:8754)
       registry: '0x23445abcdefg', // optional - the address where the Paratii Contract registry can be found
       address: '0x12455', // address of the operator/user
-      privatekey: '...', // optional - private key of the user
+      privatekey: '...', // optional - private key of the user,
+      ... // other options to be documented
     })
 
 Here are some settings:
