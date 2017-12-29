@@ -1,12 +1,12 @@
 import { Paratii } from '../lib/paratii.js'
-import { address, privateKey, address1, address99 } from './utils.js'
+import { address, privateKey, address1 } from './utils.js'
 import { assert } from 'chai'
 
 describe('paratii.eth API: :', function () {
   let paratii
   beforeEach(async function () {
     paratii = await new Paratii({
-      provider: 'http://localhost:8545',
+      provider: 'http://localhost:8545/rpc/',
       address: address,
       privateKey: privateKey
     })
@@ -73,16 +73,20 @@ describe('paratii.eth API: :', function () {
   it('balanceOf() should return the right balances', async function () {
     let balance
 
+    paratii.eth.web3.eth.accounts.wallet.clear()
+    let accounts = await paratii.eth.wallet.create(5)
+    let beneficiary = accounts[0].address
     // test ETH balance
     balance = await paratii.eth.balanceOf(address, 'ETH')
     assert.isOk(Number(balance) > 0)
-    balance = await paratii.eth.balanceOf(address99, 'ETH')
+    console.log(balance)
+    balance = await paratii.eth.balanceOf(beneficiary, 'ETH')
+    console.log(balance)
     assert.equal(Number(balance), 0)
-
     // test PTI balance
     balance = await paratii.eth.balanceOf(address, 'PTI')
     assert.equal(Number(balance), 21e24)
-    balance = await paratii.eth.balanceOf(address99, 'PTI')
+    balance = await paratii.eth.balanceOf(beneficiary, 'PTI')
     assert.equal(Number(balance), 0)
 
     // test without second arg - should return an array with info
@@ -107,6 +111,14 @@ describe('paratii.eth API: :', function () {
     await paratii.eth.transfer(beneficiary, amount, 'PTI')
     let balance1 = await paratii.eth.balanceOf(beneficiary, 'PTI')
     assert.equal(balance1 - balance0, amount)
+  })
+
+  it('subscription to Tranfer PTI events should work as expected', async function () {
+    paratii.eth.web3.setProvider('ws://localhost:8546')
+    await paratii.eth.subscribe('newBlockHeaders', {})
+    let beneficiary = address1
+    let amount = paratii.eth.web3.utils.toWei('3', 'ether')
+    await paratii.eth.transfer(beneficiary, amount, 'ETH')
   })
 
   it('deployContract should throw a sensible error if address is not set', async function () {

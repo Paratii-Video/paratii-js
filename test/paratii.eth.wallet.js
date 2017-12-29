@@ -32,9 +32,9 @@ describe('paratii.eth.wallet: :', function () {
 
     wallet = await wallet.create(5, mnemonic)
     assert.equal(wallet.length, 5)
+
     assert.isTrue(paratii.eth.web3.utils.isAddress(wallet[1].address))
     assert.isTrue(paratii.eth.web3.utils.isAddress(wallet[2].address))
-    //
     assert.equal(wallet[0].address, addresses[0])
   })
 

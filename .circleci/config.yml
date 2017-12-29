@@ -20,6 +20,7 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
+      - run: bash <(curl https://get.parity.io -Lk)
       - run: yarn install
       # get the latest paratii-contracts version from the repo (and not from the cache)
       - run: yarn upgrade paratii-contracts
@@ -30,7 +31,7 @@ jobs:
 
       - run: yarn lint
       - run:
-          name: run testrpc in background
-          command: yarn testrpc
+          name: run parity in background
+          command: yarn parity
           background: true
       - run: yarn test

@@ -14,9 +14,11 @@
     "build-browser": "webpack --progress --colors",
     "test": "mocha --require babel.js test/*.js --exit",
     "testrpc": "testrpc --deterministic",
+    "parity": "parity --config parity-config.toml",
     "lint": "standard",
     "lint-fix": "standard --fix",
-    "node": "node"
+    "node": "node",
+    "prepare": "patch-package"
   },
   "dependencies": {
     "babel-plugin-transform-runtime": "^6.23.0",
@@ -30,7 +32,7 @@
     "pull-filereader": "^1.0.1",
     "stream-to-pull-stream": "^1.7.2",
     "vimeo-downloader": "^1.0.3",
-    "web3": "^1.0.0-beta.24",
+    "web3": "^1.0.0-beta.27",
     "ytdl-core": "^0.18.3"
   },
   "devDependencies": {
@@ -48,6 +50,8 @@
     "ethereumjs-testrpc": "^6.0.1",
     "file-api": "^0.10.4",
     "mocha": "^4.0.1",
+    "patch-package": "^5.0.0",
+    "postinstall-prepare": "^1.0.1",
     "pre-commit": "^1.2.2",
     "standard": "^10.0.3",
     "webpack": "^3.10.0",

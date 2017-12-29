@@ -1,21 +1,26 @@
 import { Paratii } from '../lib/paratii.js'
-import { address } from './utils.js'
+import { address, privateKey } from './utils.js'
 import { assert } from 'chai'
 
 describe('Paratii API:', function () {
   it('example session from ../docs/example-session.md should work', async function () {
     let paratii = new Paratii({
       // this address and key are the first accounts on testrpc when started with the --deterministic flag
-      address: address,
-      privateKey: '4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d'
+      provider: 'http://127.0.0.1:8545/rpc/',
+      address,
+      privateKey
     })
 
     let contracts = await paratii.eth.deployContracts()
     let paratiiToken = await paratii.eth.getContract('ParatiiToken')
     assert.equal(contracts.ParatiiToken.options.address, paratiiToken.options.address)
-
     // check for balance
-    const balance = await paratiiToken.methods.balanceOf(address).call()
+    paratiiToken.setProvider(paratii.eth.web3.currentProvider)
+    let rawTransaction = await paratiiToken.methods.balanceOf(address)
+    rawTransaction._ethAccounts = paratii.eth.web3.eth.accounts
+    const balance = await rawTransaction.call()
+
+    console.log('4')
     assert.equal(balance, '21000000000000000000000000')
     //
     // // USER
