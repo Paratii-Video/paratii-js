@@ -3,7 +3,40 @@
 
 Work in progress.  
 
+The Paratii library is used for interacting with the PAratii ecosystem: it is used to read and write data to the Ethereum blockchain, starting and stopping a local IPFS node and interacting with other IPFS peers, query-ing the Paratii index, etc.
 
+The `paratii-lib` is meant to be usable both for developing browser clients (such as the `paratii-portal`) (we wil provide a webpacked'ed version for this purpose) as well is in nodejs-based applications (such as `paratii-db`)
+
+
+## Connecting to the Ethereum blockchain
+
+Typically, the Paratii library will be used for interacting with contracts that are already deployed on the blockchain.
+
+For this purpose, the paratii library must be initialized with the URL of an Ethereum node (the `provider`) and the address of the `ParatiiRegistry` contract (the `registry` parameter). The registry contract identifies addresses of all the other contracts on the Paratii blockchain (and sets some other parameters).
+
+    Paratii({
+      provider: 'http://chain.paratii.video/rpc',
+      registry: '0x123455',
+    })
+
+This is enough info to _read_ information from the blockchain.
+To also write information (for example, to register views), the library needs to know which ethereum address will be used to send the transactions, and how to cryptographically sign those transactions. The library can either sign transactions directly with an optionally provided `privateKey`, or it can use a wallet file to sign those transactions:
+
+    Paratii({
+      address: '0x12yourEthereumAddress',
+      privateKey: 'privateKeyAssociatedwiththisADdress'
+    })
+
+Providing the private Key is optional - for example, typically, when used in a browser, the library will use a wallet file from `localStorage` to sign the transactions.
+
+The `address` plays a crucial role for the paratii library. It is used for authentication on the blockchain, but also for identifying the node in the IPFS network, and for authentication with the `paratii-db` service.
+
+
+[.. you now have an eth account but no money... ]
+
+## Interacting with your local ipfs instance
+
+[... describe config ]
 
 ## Installation
 
@@ -26,9 +59,11 @@ Create an instance of 'Paratii'
 
     paratii = new Paratii()
 
-We can now deploy the paratii contracts:
+Normally, you would interact with the Paratii contracts that are already deployed on the blockchain.
+But given that we are on a local test-node, we first need to deploy the contracts ourselves:
 
-    contracts = await paratii.eth.deployAllContracts()
+
+    contracts = await paratii.eth.deployContracts()
 
 At this point, all Paratii contracts will be available in `contracts`, under their class names.
 
