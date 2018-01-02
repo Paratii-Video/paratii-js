@@ -65,20 +65,22 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
             case 4:
               hash = _context.sent;
 
+
               options.ipfsData = hash;
-              _context.next = 8;
+              options.ipfsHash = '';
+              _context.next = 9;
               return _regenerator2.default.awrap(this.paratii.eth.vids.create({
                 id: options.id,
                 owner: options.owner,
                 price: options.price,
-                ipfsHash: '',
+                ipfsHash: options.ipfsHash,
                 ipfsData: options.ipfsData
               }));
 
-            case 8:
+            case 9:
               return _context.abrupt('return', options);
 
-            case 9:
+            case 10:
             case 'end':
               return _context.stop();
           }
