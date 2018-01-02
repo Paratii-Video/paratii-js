@@ -1,7 +1,7 @@
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 exports.ParatiiDbVids = undefined;
 
@@ -28,43 +28,43 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *
  */
 var ParatiiDbVids = exports.ParatiiDbVids = function () {
-  function ParatiiDbVids(config) {
-    (0, _classCallCheck3.default)(this, ParatiiDbVids);
+    function ParatiiDbVids(config) {
+        (0, _classCallCheck3.default)(this, ParatiiDbVids);
 
-    this.config = config;
-  }
-
-  (0, _createClass3.default)(ParatiiDbVids, [{
-    key: "get",
-    value: function get(videoId) {
-      var paratii, videoFromBC, videoFromIPFS;
-      return _regenerator2.default.async(function get$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              // This should be a request on the web API (that is not there yet)
-              paratii = this.config.paratii;
-              // TODO: optimize and do these requests in parallel
-
-              _context.next = 3;
-              return _regenerator2.default.awrap(paratii.eth.vids.get(videoId));
-
-            case 3:
-              videoFromBC = _context.sent;
-              _context.next = 6;
-              return _regenerator2.default.awrap(paratii.ipfs.getJSON(videoFromBC.ipfsData));
-
-            case 6:
-              videoFromIPFS = _context.sent;
-              return _context.abrupt("return", (0, _assign2.default)({}, videoFromIPFS, videoFromBC));
-
-            case 8:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, null, this);
+        this.config = config;
     }
-  }]);
-  return ParatiiDbVids;
+
+    (0, _createClass3.default)(ParatiiDbVids, [{
+        key: "get",
+        value: function get(videoId) {
+            var paratii, videoFromBC, videoFromIPFS;
+            return _regenerator2.default.async(function get$(_context) {
+                while (1) {
+                    switch (_context.prev = _context.next) {
+                        case 0:
+                            // This should be a request on the web API (that is not there yet)
+                            paratii = this.config.paratii;
+                            // TODO: optimize and do these requests in parallel
+
+                            _context.next = 3;
+                            return _regenerator2.default.awrap(paratii.eth.vids.get(videoId));
+
+                        case 3:
+                            videoFromBC = _context.sent;
+                            _context.next = 6;
+                            return _regenerator2.default.awrap(paratii.ipfs.getJSON(videoFromBC.ipfsData));
+
+                        case 6:
+                            videoFromIPFS = _context.sent;
+                            return _context.abrupt("return", (0, _assign2.default)({}, videoFromIPFS, videoFromBC));
+
+                        case 8:
+                        case "end":
+                            return _context.stop();
+                    }
+                }
+            }, null, this);
+        }
+    }]);
+    return ParatiiDbVids;
 }();
