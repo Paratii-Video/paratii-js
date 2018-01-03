@@ -1,6 +1,5 @@
 # Paratii Library documentation
 
-
 ## `paratii.eth`
 
 The `eth` namespace contains functions to interact with the Ethereum blockchain and the Paratii contracts deployed there.
@@ -8,7 +7,7 @@ The `eth` namespace contains functions to interact with the Ethereum blockchain 
 
 ## `paratii.eth.web3`
 
-The web3 object used by this paratii instance.
+The web3 object used.
 
 ### `eth.getContract(contractName)`
 
