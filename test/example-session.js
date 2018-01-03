@@ -26,7 +26,7 @@ describe('Paratii API:', function () {
     // // USER
     // await contracts.Users.registerUser('0x123455', 'Marvin Pontiac', 'john@lurie.com', '/img/avatar_img.svg')
     //
-      // const userInfo = await contracts.Users.getUserInfo('0x123455')
+      // const userInfo = await contracts.Users.get('0x123455')
     // let user = {
     //   name: userInfo[0],
     //   email: userInfo[1],

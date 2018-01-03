@@ -29,9 +29,18 @@ describe('paratii.core.vids:', function () {
     assert.deepEqual(videoInfo2, videoInfo)
   })
 
-  it.skip('core.vids.get() should work as expected', async function () {
+  it.skip('core.vids.like() should work as expected', async function () {
   })
 
-  it.skip('db.vids.search() should work as expected', async function () {
+  it.skip('core.vids.dislike() should work as expected', async function () {
+  })
+
+  it.skip('core.vids.view() should work as expected', async function () {
+  })
+
+  it.skip('core.vids.buy() should work as expected', async function () {
+  })
+
+  it.skip('core.vids.search() should work as expected', async function () {
   })
 })
