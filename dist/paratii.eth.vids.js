@@ -141,11 +141,11 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
 
               contract.setProvider(this.eth.config.provider);
               _context4.next = 11;
-              return _regenerator2.default.awrap(this.fixMethodAndSend(contract.methods.registerVideo(options.id, options.owner, options.price, options.ipfsHash, options.ipfsData)));
+              return _regenerator2.default.awrap(this.fixMethodAndSend(contract.methods.create(options.id, options.owner, options.price, options.ipfsHash, options.ipfsData)));
 
             case 11:
               tx = _context4.sent;
-              videoId = (0, _utils.getInfoFromLogs)(tx, 'LogRegisterVideo', 'videoId');
+              videoId = (0, _utils.getInfoFromLogs)(tx, 'LogCreateVideo', 'videoId');
               return _context4.abrupt('return', videoId);
 
             case 14:
@@ -171,7 +171,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
 
               contract.setProvider(this.eth.config.provider);
               _context5.next = 6;
-              return _regenerator2.default.awrap(this.fixMethodAndCall(contract.methods.getVideoInfo(videoId)));
+              return _regenerator2.default.awrap(this.fixMethodAndCall(contract.methods.get(videoId)));
 
             case 6:
               videoInfo = _context5.sent;
@@ -238,7 +238,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
 
               contract.setProvider(this.eth.config.provider);
               _context7.next = 6;
-              return _regenerator2.default.awrap(this.fixMethodAndSend(contract.methods.unregisterVideo(videoId)));
+              return _regenerator2.default.awrap(this.fixMethodAndSend(contract.methods.remove(videoId)));
 
             case 6:
               tx = _context7.sent;

@@ -138,7 +138,7 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
 
               contract.setProvider(this.eth.config.provider);
               _context4.next = 11;
-              return _regenerator2.default.awrap(this.fixMethodAndSend(contract.methods.registerUser(options.id, options.name, options.email, options.ipfsHash)));
+              return _regenerator2.default.awrap(this.fixMethodAndSend(contract.methods.create(options.id, options.name, options.email, options.ipfsHash)));
 
             case 11:
               return _context4.abrupt('return', options.id);
@@ -166,7 +166,7 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
 
               contract.setProvider(this.eth.config.provider);
               _context5.next = 6;
-              return _regenerator2.default.awrap(this.fixMethodAndCall(contract.methods.getUserInfo(userId)));
+              return _regenerator2.default.awrap(this.fixMethodAndCall(contract.methods.get(userId)));
 
             case 6:
               userInfo = _context5.sent;
@@ -229,7 +229,7 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
 
             case 2:
               contract = _context7.sent;
-              tx = this.fixMethodAndSend(contract.methods.unregisterUser(userId));
+              tx = this.fixMethodAndSend(contract.methods.remove(userId));
               return _context7.abrupt('return', tx);
 
             case 5:

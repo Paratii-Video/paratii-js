@@ -43,7 +43,5 @@ function getInfoFromLogs(tx, eventName, arg) {
     throw Error(msg);
   }
   assert(log.logIndex === index);
-  // console.log(log.returnValues)
-  // console.log(log.returnValues[arg])
   return log.returnValues[arg];
 }
