@@ -5,6 +5,9 @@ import { address, address1, privateKey } from './utils.js'
 describe('paratii.core.vids:', function () {
   let paratii
   let videoFile = 'test/data/some-file.txt'
+  let videoId = 'some-id'
+  let ipfsHash = 'some-hash'
+  let videoTitle = 'some title'
   beforeEach(async function () {
     paratii = new Paratii({
       address: address,
@@ -29,6 +32,16 @@ describe('paratii.core.vids:', function () {
     assert.deepEqual(videoInfo2, videoInfo)
   })
 
+  it('core.vids.create() should accept ipfsHash as argument', async function () {
+    await paratii.core.vids.create({
+      id: videoId,
+      owner: address1,
+      title: videoTitle,
+      ipfsHash: ipfsHash
+    })
+  })
+  it.skip('core.vids.update() should work as expected', async function () {
+  })
   it.skip('core.vids.like() should work as expected', async function () {
   })
 
