@@ -33,15 +33,41 @@ describe('paratii.core.vids:', function () {
   })
 
   it('core.vids.create() should accept ipfsHash as argument', async function () {
-    await paratii.core.vids.create({
+    let data
+
+    data = await paratii.core.vids.get(videoId)
+    assert.equal(data.ipfsHash, '')
+
+    data = await paratii.core.vids.create({
       id: videoId,
       owner: address1,
       title: videoTitle,
       ipfsHash: ipfsHash
     })
+
+    assert.equal(data.ipfsHash, ipfsHash)
+
+    data = await paratii.core.vids.get(videoId)
+    assert.equal(data.ipfsHash, ipfsHash)
   })
-  it.skip('core.vids.update() should work as expected', async function () {
+
+  it('core.vids.update() should work as expected', async function () {
+    await paratii.core.vids.create({
+      id: videoId,
+      owner: address1,
+      title: videoTitle
+    })
+    let data
+    data = await paratii.core.vids.get(videoId)
+    assert.equal(data.title, videoTitle)
+
+    data = await paratii.core.vids.update(videoId, {title: 'another-title'})
+    assert.equal(data.title, 'another-title')
+
+    data = await paratii.core.vids.get(videoId)
+    assert.equal(data.title, 'another-title')
   })
+
   it.skip('core.vids.like() should work as expected', async function () {
   })
 
