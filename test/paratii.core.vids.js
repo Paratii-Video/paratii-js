@@ -63,9 +63,14 @@ describe('paratii.core.vids:', function () {
 
     data = await paratii.core.vids.update(videoId, {title: 'another-title'})
     assert.equal(data.title, 'another-title')
+    assert.equal(data.owner, address1)
 
     data = await paratii.core.vids.get(videoId)
     assert.equal(data.title, 'another-title')
+    assert.equal(data.owner, address1)
+  })
+
+  it.skip('core.vids.delete() should work as expected', async function () {
   })
 
   it.skip('core.vids.like() should work as expected', async function () {
