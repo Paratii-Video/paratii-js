@@ -1,7 +1,5 @@
 # Paratii  CORE
 
-TBD: implement this
-
 ## `paratii.core`
 
 Contains functions that operate transversally over several backend systems.
@@ -27,16 +25,31 @@ This call will register the video on the blockchain, add its metadata to IPFS, u
 
 It returns a structure like the following:
 
-    { id: 'some-id',
-    owner: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
-    price: 0,
-    title: 'A very loooong title',
-    ipfsHash: 'Qmck5q3uDvp4tD1j18E5g5VqXCcd9zpKT3cQpp1idAvDUR' }
+    {
+      id: 'some-id',
+      owner: '0xffcf8fdee72ac11b5c542428b35eef5769c409f0',
+      price: 0,
+      title: 'A very loooong title',
+      ipfsHash: 'Qmck5q3uDvp4tD1j18E5g5VqXCcd9zpKT3cQpp1idAvDUR'
+    }
 
 
 ## core.vids.update(videoId, params)
 
 ## core.vids.get(videoId)
+
+## core.vids.like(videoId, [proof])
+
+
+## core.vids.dislike(videoId, [proof])
+
+## core.vids.view(videoId, [proof])
+
+Register a view on the blockchain
+
+## core.vids.buy(videoId)
+
+Buy a video
 
 
 ## core.vids.search(qry)

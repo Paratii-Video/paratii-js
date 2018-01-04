@@ -60,3 +60,4 @@ typings/
 secrets/
 .eslintrc.js
 .eslintrc.js
+test/play.js
