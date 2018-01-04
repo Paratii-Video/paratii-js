@@ -23,6 +23,15 @@ This call will register the video on the blockchain, add its metadata to IPFS, u
       file: 'path/to/file',
     })
 
+It takes the following arguments:
+
+    id // must be a string
+    owner // must be a string
+    price // must be a number, optional, default is 0
+    title // must be a string
+    file // must be string, optional
+    ipfsHash // must be a string, optional, default is ''
+
 It returns a structure like the following:
 
     {
@@ -36,7 +45,10 @@ It returns a structure like the following:
 
 ## core.vids.update(videoId, params)
 
+
 ## core.vids.get(videoId)
+
+Get the data of the video identified by `videoId`
 
 ## core.vids.like(videoId, [proof])
 
