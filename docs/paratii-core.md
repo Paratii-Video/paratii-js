@@ -13,15 +13,31 @@ It is available as a `core` attribute in `Paratii` instances:
 
 # API
 
-## core.vids.create(params)
+## `core.vids`
+
+Utilities to create and manipulate information on the blockchain.
+
+##  `core.vids.create(params)`
 
 This call will register the video on the blockchain, add its metadata to IPFS, upload file to IPFS, and transcode it
+
 
     core.vids.create({
       id: 'some-id',
       title: 'A very loooong title',
       file: 'path/to/file',
     })
+
+
+It takes the following arguments:
+
+    id // must be a string
+    owner // must be a string
+    price // must be a number, optional, default is 0
+    title // must be a string
+    file // must be string, optional
+    ipfsHash // must be a string, optional, default is ''
+
 
 It returns a structure like the following:
 
@@ -34,9 +50,24 @@ It returns a structure like the following:
     }
 
 
+Anyone can register a new video.
+
+
 ## core.vids.update(videoId, params)
 
+Update the information on the video.
+
+Only the account that has registered the video, or the owner of the contract, can update the information.
+
 ## core.vids.get(videoId)
+
+Get the data of the video identified by `videoId`.
+
+
+## core.vids.delete(videoId)
+
+Remove the data of this video from the register. This method can only be called by the owner of the contract, or by the original registrar of the video.
+
 
 ## core.vids.like(videoId, [proof])
 
