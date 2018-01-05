@@ -47,11 +47,12 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
           switch (_context.prev = _context.next) {
             case 0:
               defaults = {
-                id: String,
-                owner: String,
-                price: Number,
-                title: String,
-                file: String
+                id: undefined, // must be a string
+                owner: undefined, // must be a string
+                price: 0, // must be a number
+                title: undefined, // must be a string
+                file: null, // must be string, optional
+                ipfsHash: null // must be a string, optional
               };
 
 
