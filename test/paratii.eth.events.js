@@ -1,5 +1,6 @@
 import { Paratii } from '../lib/paratii.js'
 import { address, privateKey, address1 } from './utils.js'
+import { assert } from 'chai'
 
 describe('paratii.eth API: :', function () {
   let paratii
@@ -13,14 +14,17 @@ describe('paratii.eth API: :', function () {
   })
 
   it('subscription to Tranfer PTI events should work as expected', async function () {
-    paratii.eth.web3.setProvider('ws://localhost:8546')
+    paratii.eth.web3.setProvider('ws://localhost:8546/rpc/')
 
-    paratii.eth.events.addListener('newBlockHeaders', function () {
-      console.log('ciao')
-    })
+    let ptiTransfer = paratii.eth.events.addListener('transfer')
 
     let beneficiary = address1
-    let amount = paratii.eth.web3.utils.toWei('3', 'ether')
-    await paratii.eth.transfer(beneficiary, amount, 'ETH')
+    let amount = paratii.eth.web3.utils.toWei('4', 'ether')
+    await paratii.eth.transfer(beneficiary, amount, 'PTI')
+
+    ptiTransfer.on('data', function (log) {
+      const received = paratii.eth.web3.utils.hexToNumberString(log.data)
+      assert.equal(received, amount)
+    })
   })
 })

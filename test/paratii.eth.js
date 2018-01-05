@@ -21,7 +21,6 @@ describe('paratii.eth API: :', function () {
   it('contracts should have their address set', async function () {
     let contract, contracts, registryAddress
 
-    // After .deployContracts() was called, all addresses should be known
     contract = await paratii.eth.getContract('Registry')
     assert.isOk(contract.options.address)
     registryAddress = contract.options.address

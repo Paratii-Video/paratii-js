@@ -60,47 +60,17 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
       }, null, this);
     }
   }, {
-    key: 'fixMethodAndCall',
-    value: function fixMethodAndCall(method) {
-      var rawTransaction, result;
-      return _regenerator2.default.async(function fixMethodAndCall$(_context2) {
+    key: 'getRegistry',
+    value: function getRegistry() {
+      return _regenerator2.default.async(function getRegistry$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              _context2.next = 2;
-              return _regenerator2.default.awrap(method);
-
-            case 2:
-              rawTransaction = _context2.sent;
-
-              rawTransaction._ethAccounts = this.eth.web3.eth.accounts;
-              // wait for receipt let nonce increment
-              _context2.next = 6;
-              return _regenerator2.default.awrap(rawTransaction.call());
-
-            case 6:
-              result = _context2.sent;
-              return _context2.abrupt('return', result);
-
-            case 8:
-            case 'end':
-              return _context2.stop();
-          }
-        }
-      }, null, this);
-    }
-  }, {
-    key: 'getRegistry',
-    value: function getRegistry() {
-      return _regenerator2.default.async(function getRegistry$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              return _context3.abrupt('return', this.eth.getContract('Users'));
+              return _context2.abrupt('return', this.eth.getContract('Users'));
 
             case 1:
             case 'end':
-              return _context3.stop();
+              return _context2.stop();
           }
         }
       }, null, this);
@@ -109,9 +79,9 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
     key: 'create',
     value: function create(options) {
       var defaults, msg, contract;
-      return _regenerator2.default.async(function create$(_context4) {
+      return _regenerator2.default.async(function create$(_context3) {
         while (1) {
-          switch (_context4.prev = _context4.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
               defaults = {
                 id: String,
@@ -121,7 +91,7 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
               };
 
               if (this.eth.web3.utils.isAddress(options.id)) {
-                _context4.next = 4;
+                _context3.next = 4;
                 break;
               }
 
@@ -130,22 +100,22 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
 
             case 4:
               options = dopts(options, defaults);
-              _context4.next = 7;
+              _context3.next = 7;
               return _regenerator2.default.awrap(this.getRegistry());
 
             case 7:
-              contract = _context4.sent;
+              contract = _context3.sent;
 
               contract.setProvider(this.eth.config.provider);
-              _context4.next = 11;
-              return _regenerator2.default.awrap(this.fixMethodAndSend(contract.methods.registerUser(options.id, options.name, options.email, options.ipfsHash)));
+              _context3.next = 11;
+              return _regenerator2.default.awrap(this.fixMethodAndSend(contract.methods.create(options.id, options.name, options.email, options.ipfsHash)));
 
             case 11:
-              return _context4.abrupt('return', options.id);
+              return _context3.abrupt('return', options.id);
 
             case 12:
             case 'end':
-              return _context4.stop();
+              return _context3.stop();
           }
         }
       }, null, this);
@@ -154,33 +124,31 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
     key: 'get',
     value: function get(userId) {
       var contract, userInfo, result;
-      return _regenerator2.default.async(function get$(_context5) {
+      return _regenerator2.default.async(function get$(_context4) {
         while (1) {
-          switch (_context5.prev = _context5.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
-              _context5.next = 2;
+              _context4.next = 2;
               return _regenerator2.default.awrap(this.getRegistry());
 
             case 2:
-              contract = _context5.sent;
+              contract = _context4.sent;
+              _context4.next = 5;
+              return _regenerator2.default.awrap(contract.methods.get(userId).call());
 
-              contract.setProvider(this.eth.config.provider);
-              _context5.next = 6;
-              return _regenerator2.default.awrap(this.fixMethodAndCall(contract.methods.getUserInfo(userId)));
-
-            case 6:
-              userInfo = _context5.sent;
+            case 5:
+              userInfo = _context4.sent;
               result = {
                 id: userId,
                 name: userInfo[0],
                 email: userInfo[1],
                 ipfsHash: userInfo[2]
               };
-              return _context5.abrupt('return', result);
+              return _context4.abrupt('return', result);
 
-            case 9:
+            case 8:
             case 'end':
-              return _context5.stop();
+              return _context4.stop();
           }
         }
       }, null, this);
@@ -189,29 +157,29 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
     key: 'update',
     value: function update(userId, options) {
       var data, key;
-      return _regenerator2.default.async(function update$(_context6) {
+      return _regenerator2.default.async(function update$(_context5) {
         while (1) {
-          switch (_context6.prev = _context6.next) {
+          switch (_context5.prev = _context5.next) {
             case 0:
               options.id = userId;
-              _context6.next = 3;
+              _context5.next = 3;
               return _regenerator2.default.awrap(this.get(userId));
 
             case 3:
-              data = _context6.sent;
+              data = _context5.sent;
 
               for (key in options) {
                 data[key] = options[key];
               }
-              _context6.next = 7;
+              _context5.next = 7;
               return _regenerator2.default.awrap(this.create(data));
 
             case 7:
-              return _context6.abrupt('return', data);
+              return _context5.abrupt('return', data);
 
             case 8:
             case 'end':
-              return _context6.stop();
+              return _context5.stop();
           }
         }
       }, null, this);
@@ -220,21 +188,21 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
     key: 'delete',
     value: function _delete(userId) {
       var contract, tx;
-      return _regenerator2.default.async(function _delete$(_context7) {
+      return _regenerator2.default.async(function _delete$(_context6) {
         while (1) {
-          switch (_context7.prev = _context7.next) {
+          switch (_context6.prev = _context6.next) {
             case 0:
-              _context7.next = 2;
+              _context6.next = 2;
               return _regenerator2.default.awrap(this.getRegistry());
 
             case 2:
-              contract = _context7.sent;
-              tx = this.fixMethodAndSend(contract.methods.unregisterUser(userId));
-              return _context7.abrupt('return', tx);
+              contract = _context6.sent;
+              tx = this.fixMethodAndSend(contract.methods.remove(userId));
+              return _context6.abrupt('return', tx);
 
             case 5:
             case 'end':
-              return _context7.stop();
+              return _context6.stop();
           }
         }
       }, null, this);
