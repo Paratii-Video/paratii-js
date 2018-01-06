@@ -15,18 +15,18 @@ describe('paratii.eth.events API: :', function () {
     paratii.eth.web3.setProvider('ws://localhost:8546/rpc/')
   })
 
-  it('subscription to Tranfer PTI events should work as expected', async function () {
+  it('subscription to Tranfer PTI events should work as expected', function (done) {
     let beneficiary = '0xDbC8232Bd8DEfCbc034a0303dd3f0Cf41d1a55Cf'
     let ptiTransfer = paratii.eth.events.addListener('Transfer')
 
     let amount = paratii.eth.web3.utils.toWei('4', 'ether')
-    await paratii.eth.transfer(beneficiary, amount, 'PTI')
 
     ptiTransfer.on('data', function (log) {
       const received = paratii.eth.web3.utils.hexToNumberString(log.data)
       assert.equal(received, amount)
+      done()
+      ptiTransfer.unsubscribe()
     })
-
-    ptiTransfer.unsubscribe()
+    paratii.eth.transfer(beneficiary, amount, 'PTI')
   })
 })
