@@ -29,4 +29,28 @@ describe('paratii.eth.events API: :', function () {
     })
     paratii.eth.transfer(beneficiary, amount, 'PTI')
   })
+
+  it.skip('subscription to Create Video events should work as expected', async function () {
+    // let videoCreate = paratii.eth.events.addListener('logs')
+    let creator = '0xDbC8232Bd8DEfCbc034a0303dd3f0Cf41d1a55Cf'
+    let price = 3 * 10 ** 18
+    let ipfsHash = 'xyz'
+    let ipfsData = 'zzz'
+    let videoId = 'some-id'
+
+    // videoCreate.on('data', function (log) {
+    //   const createVideoId = paratii.eth.web3.utils.hexToAscii(log.data)
+    //   assert.equal(createVideoId, videoId)
+    //   videoCreate.unsubscribe()
+    //   done()
+    // })
+
+    paratii.eth.vids.create({
+      id: videoId,
+      price: price,
+      owner: creator,
+      ipfsHash: ipfsHash,
+      ipfsData: ipfsData
+    })
+  })
 })
