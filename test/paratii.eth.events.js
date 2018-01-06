@@ -17,7 +17,7 @@ describe('paratii.eth.events API: :', function () {
 
   it('subscription to Tranfer PTI events should work as expected', async function () {
     let beneficiary = '0xDbC8232Bd8DEfCbc034a0303dd3f0Cf41d1a55Cf'
-    let ptiTransfer = paratii.eth.events.addListener('transfer')
+    let ptiTransfer = paratii.eth.events.addListener('Transfer')
 
     let amount = paratii.eth.web3.utils.toWei('4', 'ether')
     await paratii.eth.transfer(beneficiary, amount, 'PTI')
