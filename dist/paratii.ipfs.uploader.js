@@ -41,11 +41,17 @@ var dopts = require('default-options');
 var pull = require('pull-stream');
 // const pullFilereader = require('pull-filereader')
 var fs = require('fs');
-
 var toPull = require('stream-to-pull-stream');
 // const ytdl = require('ytdl-core')
 // const vidl = require('vimeo-downloader')
 // const readline = require('readline')
+var path = require('path');
+
+var _require2 = require('async'),
+    eachSeries = _require2.eachSeries,
+    nextTick = _require2.nextTick;
+
+var once = require('once');
 
 var Uploader = function (_EventEmitter) {
   (0, _inherits3.default)(Uploader, _EventEmitter);
@@ -158,6 +164,73 @@ var Uploader = function (_EventEmitter) {
           console.log('uploader Finished', files);
           return opts.onDone(files);
         }));
+      });
+    }
+
+    /**
+     * upload an entire directory to IPFS
+     * @param  {String}   dirPath path to directory
+     * @param  {Function} cb      (err, hash)
+     * @return {String}           returns the hash for the uploaded folder.
+     */
+
+  }, {
+    key: 'uploadDir',
+    value: function uploadDir(dirPath, cb) {
+      cb = once(cb);
+      var resp = null;
+      console.log('adding ', dirPath, ' to IPFS');
+      var addStream = this._node.files.addReadableStream();
+      addStream.on('data', function (file) {
+        console.log('dirPath ', dirPath);
+        console.log('file Added ', file);
+        if ('/' + file.path === dirPath) {
+          console.log('this is the hash to return ');
+          resp = file;
+          nextTick(function () {
+            return cb(null, resp);
+          });
+        }
+      });
+
+      addStream.on('end', function () {
+        console.log('addStream ended');
+        // nextTick(() => cb(null, resp))
+      });
+
+      fs.readdir(dirPath, function (err, files) {
+        if (err) return cb(err);
+        eachSeries(files, function (file, next) {
+          next = once(next);
+          try {
+            console.log('reading file ', file);
+            var rStream = fs.createReadStream(path.join(dirPath, file));
+            rStream.on('error', function (err) {
+              if (err) {
+                console.log('rStream Error ', err);
+                return next();
+              }
+            });
+            if (rStream) {
+              addStream.write({
+                path: path.join(dirPath, file),
+                content: rStream
+              });
+            }
+          } catch (e) {
+            if (e) {
+              console.log('gotcha ', e);
+            }
+          } finally {}
+          // next()
+          nextTick(function () {
+            return next();
+          });
+        }, function (err) {
+          if (err) return cb(err);
+          // addStream.destroy()
+          addStream.end();
+        });
       });
     }
 
