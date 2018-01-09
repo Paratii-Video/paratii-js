@@ -2,7 +2,7 @@
   "name": "paratii-lib",
   "version": "0.0.1",
   "description": "Paratii Smart Contracts",
-  "main": "lib/paratii.js",
+  "main": "dist/paratii.js",
   "browser": {
     "./lib/paratii.ipfs.uploader.js": "./lib/paratii.ipfs.uploader.browser.js"
   },
@@ -88,6 +88,7 @@
     ]
   },
   "pre-commit": [
-    "lint"
+    "lint",
+    "build"
   ]
 }
