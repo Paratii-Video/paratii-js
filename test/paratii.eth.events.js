@@ -27,6 +27,18 @@ describe('paratii.eth.events API: :', function () {
       done()
       ptiTransfer.unsubscribe()
     })
+    ptiTransfer.on('changed', function (log) {
+      const received = paratii.eth.web3.utils.hexToNumberString(log.data)
+      assert.equal(received, amount)
+      done()
+      ptiTransfer.unsubscribe()
+    })
+    ptiTransfer.on('error', function (log) {
+      const received = paratii.eth.web3.utils.hexToNumberString(log.data)
+      assert.equal(received, amount)
+      done()
+      ptiTransfer.unsubscribe()
+    })
     paratii.eth.transfer(beneficiary, amount, 'PTI')
   })
 
