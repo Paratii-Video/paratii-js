@@ -7,42 +7,31 @@ describe('paratii.eth.events API: :', function () {
 
   beforeEach(async function () {
     paratii = await new Paratii({
-      provider: 'http://localhost:8545/rpc/',
+      provider: 'http://localhost:8545',
       address: address,
       privateKey: privateKey
     })
     await paratii.eth.deployContracts()
-    paratii.eth.web3.setProvider('ws://localhost:8546/rpc/')
   })
 
   it('subscription to Tranfer PTI events should work as expected', function (done) {
+    paratii.eth.web3.setProvider('ws://localhost:8546/rpc/')
     let beneficiary = '0xDbC8232Bd8DEfCbc034a0303dd3f0Cf41d1a55Cf'
-    let ptiTransfer = paratii.eth.events.addListener('Transfer')
-
     let amount = paratii.eth.web3.utils.toWei('4', 'ether')
 
-    ptiTransfer.on('data', function (log) {
-      const received = paratii.eth.web3.utils.hexToNumberString(log.data)
+    let ptiTransferData = paratii.eth.events.addListener('TransferPTI', function (log) {
+      const received = paratii.eth.web3.utils.hexToNumberString(log.returnValues.value)
       assert.equal(received, amount)
       done()
-      ptiTransfer.unsubscribe()
+      ptiTransferData.unsubscribe()
     })
-    ptiTransfer.on('changed', function (log) {
-      const received = paratii.eth.web3.utils.hexToNumberString(log.data)
-      assert.equal(received, amount)
-      done()
-      ptiTransfer.unsubscribe()
-    })
-    ptiTransfer.on('error', function (log) {
-      const received = paratii.eth.web3.utils.hexToNumberString(log.data)
-      assert.equal(received, amount)
-      done()
-      ptiTransfer.unsubscribe()
-    })
+
+    // console.log(ptiTransferData)
+
     paratii.eth.transfer(beneficiary, amount, 'PTI')
   })
 
-  it.skip('subscription to Create Video events should work as expected', async function () {
+  it.skip('subscription to Create Video events should work as expected', function () {
     // let videoCreate = paratii.eth.events.addListener('logs')
     let creator = '0xDbC8232Bd8DEfCbc034a0303dd3f0Cf41d1a55Cf'
     let price = 3 * 10 ** 18
@@ -50,10 +39,8 @@ describe('paratii.eth.events API: :', function () {
     let ipfsData = 'zzz'
     let videoId = 'some-id'
 
-    // videoCreate.on('data', function (log) {
-    //   const createVideoId = paratii.eth.web3.utils.hexToAscii(log.data)
-    //   assert.equal(createVideoId, videoId)
-    //   videoCreate.unsubscribe()
+    // let logCreateVideoData = paratii.eth.events.addListener('LogCreateVideo', function (log) {
+    //   console.log(log)
     //   done()
     // })
 
