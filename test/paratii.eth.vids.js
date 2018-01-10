@@ -31,6 +31,7 @@ describe('paratii.eth.vids:', function () {
     assert.equal(videoId, result)
 
     vid = await paratii.eth.vids.get(videoId)
+
     assert.equal(vid.price, price)
     assert.equal(vid.ipfsHash, ipfsHash)
 

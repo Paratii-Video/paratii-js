@@ -110,14 +110,6 @@ describe('paratii.eth API: :', function () {
     assert.equal(balance1 - balance0, amount)
   })
 
-  it('subscription to Tranfer PTI events should work as expected', async function () {
-    paratii.eth.web3.setProvider('ws://localhost:8546')
-    await paratii.eth.subscribe('newBlockHeaders', {})
-    let beneficiary = address1
-    let amount = paratii.eth.web3.utils.toWei('3', 'ether')
-    await paratii.eth.transfer(beneficiary, amount, 'ETH')
-  })
-
   it('deployContract should throw a sensible error if address is not set', async function () {
     paratii = new Paratii()
     await assert.isRejected(paratii.eth.deployContract('ParatiiToken'), Error, 'You need an Ethereum account')
