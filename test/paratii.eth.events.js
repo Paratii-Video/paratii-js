@@ -23,9 +23,11 @@ describe('paratii.eth.events API: :', function () {
       const received = log.returnValues.value
       assert.equal(received, amount)
       done()
-      ptiTransferData.unsubscribe()
     })
 
+    ptiTransferData.then(function (data) {
+      console.log(data)
+    })
     paratii.eth.transfer(beneficiary, amount, 'PTI')
   })
 
