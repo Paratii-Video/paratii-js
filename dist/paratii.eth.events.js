@@ -67,35 +67,50 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
   }, {
     key: 'addListener',
     value: function addListener(eventType, options, listener) {
-      if (this._isFunction(options)) {
-        this._addListener(eventType, options);
-      } else {
-        this._addListener(eventType, listener, options);
-      }
+      return _regenerator2.default.async(function addListener$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              if (!this._isFunction(options)) {
+                _context.next = 4;
+                break;
+              }
+
+              return _context.abrupt('return', this._addListener(eventType, options));
+
+            case 4:
+              return _context.abrupt('return', this._addListener(eventType, listener, options));
+
+            case 5:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, null, this);
     }
   }, {
     key: '_addListener',
     value: function _addListener(eventType, listener, options) {
       var structuredEvent, subscription, contract;
-      return _regenerator2.default.async(function _addListener$(_context) {
+      return _regenerator2.default.async(function _addListener$(_context2) {
         while (1) {
-          switch (_context.prev = _context.next) {
+          switch (_context2.prev = _context2.next) {
             case 0:
               structuredEvent = this._getStructuredEvent(eventType);
               subscription = null;
-              _context.t0 = structuredEvent.event;
-              _context.next = _context.t0 === 'newBlockHeaders' ? 5 : _context.t0 === 'syncing' ? 5 : _context.t0 === 'pendingTransactions' ? 5 : _context.t0 === 'logs' ? 10 : 14;
+              _context2.t0 = structuredEvent.event;
+              _context2.next = _context2.t0 === 'newBlockHeaders' ? 5 : _context2.t0 === 'syncing' ? 5 : _context2.t0 === 'pendingTransactions' ? 5 : _context2.t0 === 'logs' ? 10 : 14;
               break;
 
             case 5:
-              _context.next = 7;
+              _context2.next = 7;
               return _regenerator2.default.awrap(this.subscribe(eventType));
 
             case 7:
-              subscription = _context.sent;
+              subscription = _context2.sent;
 
               subscription.on(structuredEvent.emit, listener);
-              return _context.abrupt('break', 21);
+              return _context2.abrupt('break', 21);
 
             case 10:
               if (options === undefined) {
@@ -106,28 +121,28 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
               }
               subscription = this.subscribe('logs', options);
               subscription.on(structuredEvent.emit, listener);
-              return _context.abrupt('break', 21);
+              return _context2.abrupt('break', 21);
 
             case 14:
-              _context.next = 16;
+              _context2.next = 16;
               return _regenerator2.default.awrap(this.config.getContract(this._customEvents[structuredEvent.event].contract));
 
             case 16:
-              contract = _context.sent;
-              _context.next = 19;
+              contract = _context2.sent;
+              _context2.next = 19;
               return _regenerator2.default.awrap(contract.events[this._customEvents[structuredEvent.event].event](options));
 
             case 19:
-              subscription = _context.sent;
+              subscription = _context2.sent;
 
               subscription.on(structuredEvent.emit, listener);
 
             case 21:
-              return _context.abrupt('return', this.addSubscription(eventType, subscription));
+              return _context2.abrupt('return', this.addSubscription(eventType, subscription));
 
             case 22:
             case 'end':
-              return _context.stop();
+              return _context2.stop();
           }
         }
       }, null, this);
@@ -150,6 +165,7 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
       this._subscriptions[eventType].push(subscription);
       subscription.eventType = eventType;
       subscription.id = key;
+
       return subscription;
     }
   }, {
