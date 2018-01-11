@@ -87,8 +87,8 @@ describe('paratii.eth.events API: :', function () {
         owner: creator,
         ipfsHash: ipfsHash,
         ipfsData: ipfsData
-      }).then(function (res) {
-        console.log(res)
+      }).then(function () {
+
       })
     })
 
