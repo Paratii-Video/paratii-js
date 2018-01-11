@@ -504,52 +504,74 @@ var ParatiiEth = exports.ParatiiEth = function () {
         }
       }, null, this);
     }
+    // async _transferETH (beneficiary, amount) {
+    //   // @args amount is in Wei
+    //   // TODO: use the SendEther contract
+    //   // TODO: this will only work on testrpc with unlocked accounts..
+    //   let from = this.config.account.address
+    //   if (!from) {
+    //     throw Error('No account set! Cannot send transactions')
+    //   }
+    //   if (!beneficiary) {
+    //     throw Error('No beneficiary given.')
+    //   }
+    //   from = add0x(from)
+    //   beneficiary = add0x(beneficiary)
+    //
+    //   let result = await this.web3.eth.sendTransaction({
+    //     from: from,
+    //     to: beneficiary,
+    //     value: amount,
+    //     gasPrice: 20000000000,
+    //     gas: 21000
+    //   })
+    //   return result
+    // }
+
   }, {
     key: '_transferETH',
-    value: function _transferETH(beneficiary, amount) {
-      var from, result;
+    value: function _transferETH(beneficiary, amount, description) {
+      var contract, from, result;
       return _regenerator2.default.async(function _transferETH$(_context8) {
         while (1) {
           switch (_context8.prev = _context8.next) {
             case 0:
-              // @args amount is in Wei
-              // TODO: use the SendEther contract
-              // TODO: this will only work on testrpc with unlocked accounts..
+              _context8.next = 2;
+              return _regenerator2.default.awrap(this.getContract('SendEther'));
+
+            case 2:
+              contract = _context8.sent;
+
+              if (!(!contract.options || !contract.options.address)) {
+                _context8.next = 5;
+                break;
+              }
+
+              throw Error('No SendEther contract known - please run paratii.diagnose()');
+
+            case 5:
               from = this.config.account.address;
 
               if (from) {
-                _context8.next = 3;
+                _context8.next = 8;
                 break;
               }
 
               throw Error('No account set! Cannot send transactions');
 
-            case 3:
-              if (beneficiary) {
-                _context8.next = 5;
-                break;
-              }
+            case 8:
 
-              throw Error('No beneficiary given.');
-
-            case 5:
               from = (0, _utils.add0x)(from);
               beneficiary = (0, _utils.add0x)(beneficiary);
 
-              _context8.next = 9;
-              return _regenerator2.default.awrap(this.web3.eth.sendTransaction({
-                from: from,
-                to: beneficiary,
-                value: amount,
-                gasPrice: 20000000000,
-                gas: 21000
-              }));
+              _context8.next = 12;
+              return _regenerator2.default.awrap(contract.methods.transfer(beneficiary, description).send({ value: amount }));
 
-            case 9:
+            case 12:
               result = _context8.sent;
               return _context8.abrupt('return', result);
 
-            case 11:
+            case 14:
             case 'end':
               return _context8.stop();
           }
@@ -607,7 +629,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
     }
   }, {
     key: 'transfer',
-    value: function transfer(beneficiary, amount, symbol) {
+    value: function transfer(beneficiary, amount, symbol, description) {
       return _regenerator2.default.async(function transfer$(_context10) {
         while (1) {
           switch (_context10.prev = _context10.next) {
@@ -617,7 +639,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
                 break;
               }
 
-              return _context10.abrupt('return', this._transferETH(beneficiary, amount));
+              return _context10.abrupt('return', this._transferETH(beneficiary, amount, description));
 
             case 4:
               if (!(symbol === 'PTI')) {

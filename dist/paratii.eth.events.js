@@ -32,13 +32,29 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
         contract: 'ParatiiToken',
         event: 'Transfer'
       },
-      LogCreateVideo: {
+      TransferETH: {
+        contract: 'SendEther',
+        event: 'LogSendEther'
+      },
+      CreateVideo: {
         contract: 'Videos',
         event: 'LogCreateVideo'
       },
-      TransferETH: {
-        contract: 'SendEther',
-        event: 'Transfer'
+      RemoveVideo: {
+        contract: 'Videos',
+        event: 'LogRemoveVideo'
+      },
+      BuyVideo: {
+        contract: 'Store',
+        event: 'LogBuyVideo'
+      },
+      CreateUser: {
+        contract: 'Users',
+        event: 'LogCreateUser'
+      },
+      RemoveUser: {
+        contract: 'Users',
+        event: 'LogRemoveUser'
       }
     };
   }
@@ -47,6 +63,7 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
     key: '_getStructuredEvent',
     value: function _getStructuredEvent(eventType) {
       var structuredEvent = {};
+
       if (eventType.substr(eventType.length - 5).toLowerCase().indexOf('error') !== -1) {
         // error event
         structuredEvent.event = eventType.substr(0, eventType.length - 5);
@@ -57,11 +74,9 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
         structuredEvent.emit = 'changed';
       } else {
         // data event
-
         structuredEvent.event = eventType;
         structuredEvent.emit = 'data';
       }
-
       return structuredEvent;
     }
   }, {
@@ -134,6 +149,7 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
 
             case 19:
               subscription = _context2.sent;
+
 
               subscription.on(structuredEvent.emit, listener);
 

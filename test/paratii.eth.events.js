@@ -67,4 +67,16 @@ describe('paratii.eth.events API: :', function () {
       ipfsData: ipfsData
     })
   })
+
+  it('subscription to Remove Video events should work as expected', function (done) {
+    let videoId = 'some-id'
+
+    paratii.eth.events.addListener('RemoveVideo', function (log) {
+      const receivedVideoId = log.returnValues.videoId
+      assert.equal(videoId, receivedVideoId)
+      done()
+    })
+
+    paratii.eth.vids.delete(videoId)
+  })
 })
