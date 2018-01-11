@@ -19,16 +19,31 @@ describe('paratii.eth.events API: :', function () {
     let beneficiary = '0xDbC8232Bd8DEfCbc034a0303dd3f0Cf41d1a55Cf'
     let amount = paratii.eth.web3.utils.toWei('4', 'ether')
 
-    let ptiTransferData = paratii.eth.events.addListener('TransferPTI', function (log) {
+    paratii.eth.events.addListener('TransferPTI', function (log) {
       const received = log.returnValues.value
       assert.equal(received, amount)
       done()
     })
 
-    ptiTransferData.then(function (data) {
-      console.log(data)
-    })
     paratii.eth.transfer(beneficiary, amount, 'PTI')
+  })
+
+  it('subscription to Tranfer ETH events should work as expected', function (done) {
+    let beneficiary = '0xDbC8232Bd8DEfCbc034a0303dd3f0Cf41d1a55Cf'
+    let amount = paratii.eth.web3.utils.toWei('4', 'ether')
+    let description = 'thanks for all the fish'
+
+    paratii.eth.events.addListener('TransferETH', function (log) {
+      let to = log.returnValues.to
+      let value = log.returnValues.value
+      let desc = log.returnValues.description
+      assert.equal(to, beneficiary)
+      assert.equal(value, amount)
+      assert.equal(desc, description)
+      done()
+    })
+
+    paratii.eth.transfer(beneficiary, amount, 'ETH', description)
   })
 
   it('subscription to Create Video events should work as expected', function (done) {
@@ -38,11 +53,10 @@ describe('paratii.eth.events API: :', function () {
     let ipfsData = 'zzz'
     let videoId = 'some-id'
 
-    let logCreateVideoData = paratii.eth.events.addListener('LogCreateVideo', function (log) {
+    paratii.eth.events.addListener('CreateVideo', function (log) {
       const receivedVideoId = log.returnValues.videoId
       assert.equal(videoId, receivedVideoId)
       done()
-      logCreateVideoData.unsubscribe()
     })
 
     paratii.eth.vids.create({
