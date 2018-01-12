@@ -93,10 +93,15 @@ _not implemented yet_
 
 # core.users
 
+
+Remarks:
+
+  * The `id` of a user is his/her public Ethereum address
+  
 ## `core.users.create`
 
     core.users.create({
-      id: 'some-id',
+      id: 0x1234,
       name: 'A user name',
       email: 'some@email.com',
       ... (other fields to be defined)
@@ -104,11 +109,11 @@ _not implemented yet_
 
 ## `core.users.get`
 
-    core.users.get('some-id')
+    core.users.get(0x1234)
 
 returns
     {
-      id: 'some-id',
+      id: 0x1234,
       name: 'A user name',
       email: 'some@email.com',
       ... (other fields to be defined)
@@ -117,6 +122,6 @@ returns
 ## `core.users.update`
 
 
-    core.users.ipdate('some-id', {
+    core.users.ipdate(0x1244, {
       name: 'A user name',
     })
