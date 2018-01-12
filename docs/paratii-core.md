@@ -90,3 +90,33 @@ _not implemented yet_
     // search in videos
     // this call will send a request the db index, i.e. simply forward this request to paratii.db.vids.search()
     core.vids.search({'title': 'xyz'})
+
+# core.users
+
+## `core.users.create`
+
+    core.users.create({
+      id: 'some-id',
+      name: 'A user name',
+      email: 'some@email.com',
+      ... (other fields to be defined)
+    })
+
+## `core.users.get`
+
+    core.users.get('some-id')
+
+returns
+    {
+      id: 'some-id',
+      name: 'A user name',
+      email: 'some@email.com',
+      ... (other fields to be defined)
+    }
+
+## `core.users.update`
+
+
+    core.users.ipdate('some-id', {
+      name: 'A user name',
+    })
