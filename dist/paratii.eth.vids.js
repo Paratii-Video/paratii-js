@@ -73,6 +73,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
 
             case 4:
               options = dopts(options, defaults);
+
               _context2.next = 7;
               return _regenerator2.default.awrap(this.getRegistry());
 
@@ -144,6 +145,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
             case 3:
               data = _context4.sent;
 
+
               for (key in options) {
                 data[key] = options[key];
               }
@@ -173,16 +175,14 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
 
             case 2:
               contract = _context5.sent;
-
-              contract.setProvider(this.eth.config.provider);
-              _context5.next = 6;
+              _context5.next = 5;
               return _regenerator2.default.awrap(contract.methods.remove(videoId).send());
 
-            case 6:
+            case 5:
               tx = _context5.sent;
               return _context5.abrupt('return', tx);
 
-            case 8:
+            case 7:
             case 'end':
               return _context5.stop();
           }

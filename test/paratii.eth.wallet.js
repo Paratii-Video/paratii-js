@@ -80,16 +80,8 @@ describe('paratii.eth.wallet: :', function () {
       address: address,
       privateKey: privateKey
     })
-    await paratii.eth.transfer(address1, 2e10, 'ETH')
-  })
-
-  it('send() should succeed if a  private key is passed to the constructor', async function () {
-    paratii = await new Paratii({
-      provider: 'http://localhost:8545',
-      address: address,
-      privateKey: privateKey
-    })
-    await paratii.eth.transfer(address1, 2e10, 'ETH')
+    await paratii.eth.deployContracts()
+    await paratii.eth.transfer(address1, 2e10, 'ETH', 'thanks for all the fish')
   })
 
   it('eth.wallet.isValidMnemonic() should work as expected', async function () {

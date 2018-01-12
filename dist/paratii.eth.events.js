@@ -40,6 +40,10 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
         contract: 'Videos',
         event: 'LogCreateVideo'
       },
+      UpdateVideo: {
+        contract: 'Videos',
+        event: 'LogCreateVideo'
+      },
       RemoveVideo: {
         contract: 'Videos',
         event: 'LogRemoveVideo'
@@ -77,6 +81,7 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
         structuredEvent.event = eventType;
         structuredEvent.emit = 'data';
       }
+
       return structuredEvent;
     }
   }, {
@@ -177,38 +182,35 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
       }
 
       var key = this._subscriptions[eventType].length;
-
-      this._subscriptions[eventType].push(subscription);
       subscription.eventType = eventType;
       subscription.id = key;
+      this._subscriptions[eventType].push(subscription);
 
       return subscription;
     }
-  }, {
-    key: 'removeAllSubscriptions',
-    value: function removeAllSubscriptions(eventType) {
-      if (eventType === undefined) {
-        this._subscriptions = {};
-      } else {
-        delete this._subscriptions[eventType];
-      }
-    }
-  }, {
-    key: 'getSubscriptionsForType',
-    value: function getSubscriptionsForType(eventType) {
-      return this._subscriptions[eventType];
-    }
-  }, {
-    key: 'removeSubscription',
-    value: function removeSubscription(subscription) {
-      var eventType = subscription.eventType;
-      var key = subscription.key;
 
-      var subscriptionsForType = this._subscriptions[eventType];
-      if (subscriptionsForType) {
-        delete subscriptionsForType[key];
-      }
-    }
+    // removeAllSubscriptions (eventType) {
+    //   if (eventType === undefined) {
+    //     this._subscriptions = {}
+    //   } else {
+    //     delete this._subscriptions[eventType]
+    //   }
+    // }
+    //
+    // getSubscriptionsForType (eventType) {
+    //   return this._subscriptions[eventType]
+    // }
+    //
+    // removeSubscription (subscription) {
+    //   const eventType = subscription.eventType
+    //   const key = subscription.key
+    //
+    //   const subscriptionsForType = this._subscriptions[eventType]
+    //   if (subscriptionsForType) {
+    //     delete subscriptionsForType[key]
+    //   }
+    // }
+
   }]);
   return ParatiiEthEvents;
 }();
