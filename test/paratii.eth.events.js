@@ -4,7 +4,7 @@ import { assert } from 'chai'
 
 describe('paratii.eth.events API: :', function () {
   let paratii
-  beforeEach(async function () {
+  before(async function () {
     paratii = await new Paratii({
       provider: 'http://localhost:8545',
       address: address,
@@ -45,31 +45,7 @@ describe('paratii.eth.events API: :', function () {
   //   paratii.eth.transfer(beneficiary, amount, 'ETH', description)
   // })
 
-  // it('subscription to Create Video events should work as expected', function (done) {
-  //   let creator = address1
-  //   let price = 3 * 10 ** 18
-  //   let ipfsHash = 'xyz'
-  //   let ipfsData = 'zzz'
-  //   let videoId = 'some-id'
-  //
-  //   paratii.eth.events.addListener('CreateVideo', function (log) {
-  //     const receivedVideoId = log.returnValues.videoId
-  //     assert.equal(videoId, receivedVideoId)
-  //     done()
-  //   }).then(function(){
-  //     paratii.eth.vids.create({
-  //       id: videoId,
-  //       price: price,
-  //       owner: creator,
-  //       ipfsHash: ipfsHash,
-  //       ipfsData: ipfsData
-  //     })
-  //   })
-  //
-  //
-  // })
-
-  it('subscription to Update Video events should work as expected', function (done) {
+  it('subscription to Create Video events should work as expected', function (done) {
     let creator = address1
     let price = 3 * 10 ** 18
     let ipfsHash = 'xyz'
@@ -80,26 +56,39 @@ describe('paratii.eth.events API: :', function () {
       const receivedVideoId = log.returnValues.videoId
       assert.equal(videoId, receivedVideoId)
       done()
-    }).then(function () {
-      paratii.eth.vids.update(videoId, {
-        id: videoId,
-        price: price,
-        owner: creator,
-        ipfsHash: ipfsHash,
-        ipfsData: ipfsData
-      }).then(function () {
-
-      })
     })
 
-    //   paratii.eth.vids.create({
-    //     id: videoId,
-    //     price: price,
-    //     owner: creator,
-    //     ipfsHash: ipfsHash,
-    //     ipfsData: ipfsData
-    //   })
+    paratii.eth.vids.create({
+      id: videoId,
+      price: price,
+      owner: creator,
+      ipfsHash: ipfsHash,
+      ipfsData: ipfsData
+    })
   })
+
+  // it('subscription to Update Video events should work as expected', function (done) {
+  //   let creator = address1
+  //   let price = 3 * 10 ** 18
+  //   let ipfsHash = 'xyz'
+  //   let ipfsData = 'zzz'
+  //   let videoId = 'some-id'
+  //
+  //   paratii.eth.events.addListener('UpdateVideo', function (log) {
+  //     const receivedVideoId = log.returnValues.videoId
+  //     assert.equal(videoId, receivedVideoId)
+  //     done()
+  //   })
+  //
+  //   paratii.eth.vids.update(videoId, {
+  //     id: videoId,
+  //     price: price,
+  //     owner: creator,
+  //     ipfsHash: ipfsHash,
+  //     ipfsData: ipfsData
+  //   })
+  //
+  // })
 
   // it('subscription to Remove Video events should work as expected', function (done) {
   //   let videoId = 'some-id'
