@@ -42,6 +42,16 @@ describe('ParatiiIPFS: :', function () {
     await paratiiIPFS.uploader.add(files)
   })
 
+  it('should add a directory to IPFS', async function () {
+    let testDir = 'test/data'
+    await paratiiIPFS.getIPFSInstance()
+    let response = await paratiiIPFS.uploader.addDirectory(testDir)
+    assert.isOk(response)
+    assert.isOk(response.hash)
+    // NOTE THIS WILL Trigger an error if the director test/data content changes.
+    assert.equal(response.hash, 'QmeXV3v98a2Y7C6FVMbPnaSQNX59kv4dKDeVqCxNu2jpMB')
+  })
+
   it('addAndTranscode() should work as expected', async function () {
     let files = []
     await paratiiIPFS.getIPFSInstance()

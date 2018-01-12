@@ -5,6 +5,9 @@ import { address, address1, privateKey } from './utils.js'
 describe('paratii.core.vids:', function () {
   let paratii
   let videoFile = 'test/data/some-file.txt'
+  let videoId = 'some-id'
+  let ipfsHash = 'some-hash'
+  let videoTitle = 'some title'
   beforeEach(async function () {
     paratii = new Paratii({
       address: address,
@@ -29,9 +32,59 @@ describe('paratii.core.vids:', function () {
     assert.deepEqual(videoInfo2, videoInfo)
   })
 
-  it.skip('core.vids.get() should work as expected', async function () {
+  it('core.vids.create() should accept ipfsHash as argument', async function () {
+    let data
+
+    data = await paratii.core.vids.get(videoId)
+    assert.equal(data.ipfsHash, '')
+
+    data = await paratii.core.vids.create({
+      id: videoId,
+      owner: address1,
+      title: videoTitle,
+      ipfsHash: ipfsHash
+    })
+
+    assert.equal(data.ipfsHash, ipfsHash)
+
+    data = await paratii.core.vids.get(videoId)
+    assert.equal(data.ipfsHash, ipfsHash)
   })
 
-  it.skip('db.vids.search() should work as expected', async function () {
+  it('core.vids.update() should work as expected', async function () {
+    await paratii.core.vids.create({
+      id: videoId,
+      owner: address1,
+      title: videoTitle
+    })
+    let data
+    data = await paratii.core.vids.get(videoId)
+    assert.equal(data.title, videoTitle)
+
+    data = await paratii.core.vids.update(videoId, {title: 'another-title'})
+    assert.equal(data.title, 'another-title')
+    assert.equal(data.owner, address1)
+
+    data = await paratii.core.vids.get(videoId)
+    assert.equal(data.title, 'another-title')
+    assert.equal(data.owner, address1)
+  })
+
+  it.skip('core.vids.delete() should work as expected', async function () {
+  })
+
+  it.skip('core.vids.like() should work as expected', async function () {
+  })
+
+  it.skip('core.vids.dislike() should work as expected', async function () {
+  })
+
+  it.skip('core.vids.view() should work as expected', async function () {
+  })
+
+  it.skip('core.vids.buy() should work as expected', async function () {
+  })
+
+  it.skip('core.vids.search() should work as expected', async function () {
   })
 })

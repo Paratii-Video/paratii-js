@@ -21,7 +21,6 @@ describe('paratii.eth API: :', function () {
   it('contracts should have their address set', async function () {
     let contract, contracts, registryAddress
 
-    // After .deployContracts() was called, all addresses should be known
     contract = await paratii.eth.getContract('Registry')
     assert.isOk(contract.options.address)
     registryAddress = contract.options.address
@@ -79,9 +78,7 @@ describe('paratii.eth API: :', function () {
     // test ETH balance
     balance = await paratii.eth.balanceOf(address, 'ETH')
     assert.isOk(Number(balance) > 0)
-    console.log(balance)
     balance = await paratii.eth.balanceOf(beneficiary, 'ETH')
-    console.log(balance)
     assert.equal(Number(balance), 0)
     // test PTI balance
     balance = await paratii.eth.balanceOf(address, 'PTI')
@@ -111,14 +108,6 @@ describe('paratii.eth API: :', function () {
     await paratii.eth.transfer(beneficiary, amount, 'PTI')
     let balance1 = await paratii.eth.balanceOf(beneficiary, 'PTI')
     assert.equal(balance1 - balance0, amount)
-  })
-
-  it('subscription to Tranfer PTI events should work as expected', async function () {
-    paratii.eth.web3.setProvider('ws://localhost:8546')
-    await paratii.eth.subscribe('newBlockHeaders', {})
-    let beneficiary = address1
-    let amount = paratii.eth.web3.utils.toWei('3', 'ether')
-    await paratii.eth.transfer(beneficiary, amount, 'ETH')
   })
 
   it('deployContract should throw a sensible error if address is not set', async function () {

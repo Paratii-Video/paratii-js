@@ -1,6 +1,5 @@
 # Paratii Library documentation
 
-
 ## `paratii.eth`
 
 The `eth` namespace contains functions to interact with the Ethereum blockchain and the Paratii contracts deployed there.
@@ -8,7 +7,7 @@ The `eth` namespace contains functions to interact with the Ethereum blockchain 
 
 ## `paratii.eth.web3`
 
-The web3 object used by this paratii instance.
+The web3 object used.
 
 ### `eth.getContract(contractName)`
 
@@ -157,3 +156,30 @@ This function will deploy are contracts and link them to the
     contracts = await paratii.eth.deployContracts()
 
     contracts = await paratii.eth.deployContracts({owner: '0x1234435'})
+
+## `eth.events`
+
+`eth.events` implements a part of the API of the EventEmitter, that can be used to manage subscriptions to Ethereum events.
+
+
+
+    eth.events.on('LogAddVideo', listener)
+    eth.events.on('LogAddVideoChanged', listener)
+    eth.events.on('LogAddVideoError', listener)
+    eth.events.on('TransferPTI', listener)
+    eth.events.on('TransferETH', listener)
+
+
+    eth.events.once('LogAddVideo', listener)
+
+    eth.events.removeListener('LogAddVideo', listener)
+
+The web3js  subscriptions are available as well:
+
+    eth.events.on('newBlockHeaders', listener)
+    eth.events.on('newBlockHeadersError', listener)
+    eth.events.on('pendingTransactions', listener)
+    eth.events.on('pendingTransactionsError', listener)
+    eth.events.on('syncing', listener)
+    eth.events.on('syncingError', listener)
+    eth.events.on('syncingChanged', listener)

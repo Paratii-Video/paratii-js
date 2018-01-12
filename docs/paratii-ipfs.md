@@ -76,6 +76,13 @@ Add the file. For more control over event handling and such, cf. `ipfs.uploader.
     //   hash: 'QmS8yinWCD1vm7WJx34tg81FpjEXbdYXf3Y5XcCeh29C6K',
     //   size: 26 } ]
 
+## `ipfs.getIPFSInstance()` instance
+
+Instantiate an IPFS istance of `jsipfs`. This API is documented here:
+
+https://github.com/ipfs/js-ipfs-api#api
+
+
 # `ipfs.uploader`
 
 ## `ipfs.uploader.add(file, options)`

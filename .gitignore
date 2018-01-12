@@ -59,4 +59,5 @@ typings/
 
 secrets/
 .eslintrc.js
-.eslintrc.js
+.eslintrc.json
+test/play.js
