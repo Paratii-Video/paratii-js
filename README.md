@@ -24,14 +24,19 @@ We intend to provide the package on `npmjs.org` for easy download once it is in 
 
     yarn add github:Paratii-Video/paratii-lib#b3d16a59029c1c9b2a51e6879ba5a4b33c5d4acd",
 
-## Development
+## Contributing to `paratii-lib`
 
+
+Contributions are most welcome.
+ - Check out a [new issue](https://github.com/Paratii-Video/paratii-lib/issues)
+ - You are most welkcome to chat on our gitter channel https://gitter.im/Paratii-Video/dev
+ - [Here](https://github.com/Paratii-Video/wiki/blob/master/CONTRIBUTING.md) you can find some guidelines and the kind of help we would be interested in.
+ 
 If you want to contribute to development, you'll need to install `paratii-lib` locally and run the tests:
 
 ### Prerequisties:
 
 
-## Prerequisites
 
 * nodejs >= 8.9.0
 * yarn
@@ -43,13 +48,13 @@ If you are on a Mac, you may need to set the path to parity:
     * add the following to your `.bash_profile`: `export PATH=/Applications/Parity\ Ethereum.app/Contents/MacOS:$PATH`
     * ``` $ source path/to/.bash_profile```
 
-## Installation
+### Installation
 
     $ git clone https://github.com/Paratii-Video/paratii-lib
     $ cd paratii-lib
     $ yarn install
 
-## Running tests
+### Running tests
 
 In one console, start parity:
 
@@ -58,11 +63,3 @@ In one console, start parity:
 and in another you can now try to run the tests:  
 
     yarn test
-
-
-## Contributing
-
-Contributions are most welcome.
- - Check out a [new issue](https://github.com/Paratii-Video/paratii-lib/issues)
- - You are most welkcome to chat on our gitter channel https://gitter.im/Paratii-Video/dev
- - [Here](https://github.com/Paratii-Video/wiki/blob/master/CONTRIBUTING.md) you can find some guidelines and the kind of help we would be interested in.
