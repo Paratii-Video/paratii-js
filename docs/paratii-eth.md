@@ -41,6 +41,7 @@ The default value of `numberOfAccounts` is `1`. If the `mnemonic` argument is no
 
 The call to `wallet.create` will fail if the wallet already contains an account. In that case, you should clear the wallet explicitly using `wallet.clear()`
 
+
 ## `eth.wallet.clear`
 
 http://web3js.readthedocs.io/en/1.0/web3-eth-accounts.html#wallet-clear
@@ -49,13 +50,18 @@ http://web3js.readthedocs.io/en/1.0/web3-eth-accounts.html#wallet-clear
 
 Encrypts all wallet accounts to and array of encrypted keystore v3 objects. *This does not include the seedPhrase*
 
+
 ## `eth.wallet.decrypt([password])`
 
 ## `eth.wallet.save(password, [keyname])`
 
+_not implemented
+
 Saves both encrypted v3 objects as well as the seed phrase in local storage
 
 ## `eth.wallet.load(password, [keyname])`
+
+_not implemented_
 
 Load both encrypted v3 objects as well as the seed phrase from local storage
 
@@ -69,6 +75,7 @@ Generate a random new mnemomic.
 ## `eth.wallet.getMnemonic()`
 
 Return the mnemonic that was used to generated this wallet (or `undefined` if no such value exists).
+
 
 ### `eth.balanceOf(account, symbol)`
 
