@@ -96,7 +96,7 @@ describe('paratii.eth API: :', function () {
     let beneficiary = address1
     let balance0 = await paratii.eth.balanceOf(beneficiary, 'ETH')
     let amount = paratii.eth.web3.utils.toWei('3', 'ether')
-    await paratii.eth.transfer(beneficiary, amount, 'ETH')
+    await paratii.eth.transfer(beneficiary, amount, 'ETH', 'thanks for all the fish')
     let balance1 = await paratii.eth.balanceOf(beneficiary, 'ETH')
     assert.equal(balance1 - balance0, amount)
   })
