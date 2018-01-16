@@ -13,7 +13,6 @@
     "build": "babel ./lib -d ./dist",
     "build-browser": "webpack --progress --colors",
     "test": "mocha --require babel.js --exit --timeout 10000 test/*.js",
-    "testrpc": "testrpc --deterministic",
     "parity": "parity --config parity-config.toml",
     "lint": "standard",
     "lint-fix": "standard --fix",

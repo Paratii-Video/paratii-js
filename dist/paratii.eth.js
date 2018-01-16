@@ -60,12 +60,9 @@ var ParatiiEth = exports.ParatiiEth = function () {
       this.web3 = new Web3();
       this.web3.setProvider(new this.web3.providers.HttpProvider(options.provider));
     }
-    this.wallet = (0, _paratiiEthWallet.patchWallet)(this.web3.eth.accounts.wallet);
 
-    if (this.config.account.privateKey) {
-      this.web3.eth.defaultAccount = this.config.account.address;
-      this.web3.eth.accounts.wallet.add(this.config.account.privateKey);
-    }
+    this.wallet = (0, _paratiiEthWallet.patchWallet)(this.web3.eth.accounts.wallet);
+    this.setAccount(this.config.account.address, this.config.account.privateKey);
 
     this.contracts = {};
     this.contracts.ParatiiToken = this.requireContract('ParatiiToken');
@@ -79,16 +76,22 @@ var ParatiiEth = exports.ParatiiEth = function () {
     this.vids = new _paratiiEthVids.ParatiiEthVids(this);
     this.users = new _paratiiEthUsers.ParatiiEthUsers(this);
     this.events = new _paratiiEthEvents.ParatiiEthEvents(this);
-
-    this.wallet = (0, _paratiiEthWallet.patchWallet)(this.web3.eth.accounts.wallet);
-
-    if (this.config.account.privateKey) {
-      this.web3.eth.defaultAccount = this.config.account.address;
-      this.web3.eth.accounts.wallet.add(this.config.account.privateKey);
-    }
   }
 
   (0, _createClass3.default)(ParatiiEth, [{
+    key: 'setAccount',
+    value: function setAccount(address, privateKey) {
+      this.config.account.address = address;
+      this.config.account.privateKey = privateKey;
+      this.web3.eth.defaultAccount = address;
+      if (privateKey) {
+        var account = this.web3.eth.accounts.wallet.add(privateKey);
+        if (account.address !== address) {
+          throw Error('Private Key and Account are not compatible!');
+        }
+      }
+    }
+  }, {
     key: 'requireContract',
     value: function requireContract(contractName) {
       var artifact = require('paratii-contracts/build/contracts/' + contractName + '.json');
@@ -123,15 +126,19 @@ var ParatiiEth = exports.ParatiiEth = function () {
               throw Error(msg);
 
             case 3:
-              contract = this.contracts[name];
-              _context.next = 6;
+              _context.next = 5;
+              return _regenerator2.default.awrap(this.getContract(name));
+
+            case 5:
+              contract = _context.sent;
+              _context.next = 8;
               return _regenerator2.default.awrap(contract.deploy({ arguments: args }).send());
 
-            case 6:
+            case 8:
               deployedContract = _context.sent;
               return _context.abrupt('return', deployedContract);
 
-            case 8:
+            case 10:
             case 'end':
               return _context.stop();
           }
@@ -216,27 +223,27 @@ var ParatiiEth = exports.ParatiiEth = function () {
               paratiiAvatar.setProvider(this.web3.currentProvider);
 
               _context3.next = 31;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Avatar', paratiiAvatar.options.address));
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Avatar', paratiiAvatar.options.address).send());
 
             case 31:
               _context3.next = 33;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('ParatiiToken', paratiiToken.options.address));
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('ParatiiToken', paratiiToken.options.address).send());
 
             case 33:
               _context3.next = 35;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('SendEther', sendEther.options.address));
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('SendEther', sendEther.options.address).send());
 
             case 35:
               _context3.next = 37;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Videos', videoRegistry.options.address));
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Videos', videoRegistry.options.address).send());
 
             case 37:
               _context3.next = 39;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Store', videoStore.options.address));
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Store', videoStore.options.address).send());
 
             case 39:
               _context3.next = 41;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Users', userRegistry.options.address));
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Users', userRegistry.options.address).send());
 
             case 41:
               _context3.next = 43;
