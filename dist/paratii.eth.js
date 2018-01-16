@@ -42,7 +42,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
     var defaults = {
       provider: 'http://localhost:8545/rpc/',
-      wsprovider: 'ws://localhost:8546/rpc/',
+      wsprovider: 'ws://localhost:8546',
       registryAddress: null,
       account: {
         address: null,

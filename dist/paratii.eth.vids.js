@@ -49,7 +49,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
     }
   }, {
     key: 'create',
-    value: function create(options) {
+    value: function create(options, type) {
       var defaults, msg, contract, tx, videoId;
       return _regenerator2.default.async(function create$(_context2) {
         while (1) {
@@ -73,7 +73,6 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
 
             case 4:
               options = dopts(options, defaults);
-
               _context2.next = 7;
               return _regenerator2.default.awrap(this.getRegistry());
 
@@ -107,12 +106,10 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
 
             case 2:
               contract = _context3.sent;
-
-              contract.setProvider(this.eth.config.provider);
-              _context3.next = 6;
+              _context3.next = 5;
               return _regenerator2.default.awrap(contract.methods.get(videoId).call());
 
-            case 6:
+            case 5:
               videoInfo = _context3.sent;
               result = {
                 id: videoId,
@@ -123,7 +120,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
               };
               return _context3.abrupt('return', result);
 
-            case 9:
+            case 8:
             case 'end':
               return _context3.stop();
           }
@@ -145,17 +142,17 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
             case 3:
               data = _context4.sent;
 
-
+              console.log('from the update', data);
               for (key in options) {
                 data[key] = options[key];
               }
-              _context4.next = 7;
-              return _regenerator2.default.awrap(this.create(data));
-
-            case 7:
-              return _context4.abrupt('return', data);
+              _context4.next = 8;
+              return _regenerator2.default.awrap(this.create(data, 'updating'));
 
             case 8:
+              return _context4.abrupt('return', data);
+
+            case 9:
             case 'end':
               return _context4.stop();
           }
