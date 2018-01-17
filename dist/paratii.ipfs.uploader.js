@@ -170,8 +170,9 @@ var Uploader = function (_EventEmitter) {
     /**
      * upload an entire directory to IPFS
      * @param  {String}   dirPath path to directory
-     * @return {Promise}           returns the {hash, path, size} for the uploaded folder.
+     * @return {Promise}   resolves to the {hash, path, size} for the uploaded folder.
      */
+    // AS this function is only used in the tests, we may omit it fro the docs and perhaps "hide" it
 
   }, {
     key: 'addDirectory',
@@ -188,7 +189,7 @@ var Uploader = function (_EventEmitter) {
           // console.log('dirPath ', dirPath)
           // console.log('file Added ', file)
           if (file.path === dirPath) {
-            console.log('this is the hash to return ');
+            // console.log('this is the hash to return ')
             resp = file;
             nextTick(function () {
               return resolve(resp);
@@ -206,10 +207,11 @@ var Uploader = function (_EventEmitter) {
           eachSeries(files, function (file, next) {
             next = once(next);
             try {
-              console.log('reading file ', file);
+              // console.log('reading file ', file)
               var rStream = fs.createReadStream(path.join(dirPath, file));
               rStream.on('error', function (err) {
                 if (err) {
+                  // TODO: need some error handling here
                   console.log('rStream Error ', err);
                   return next();
                 }
@@ -222,6 +224,7 @@ var Uploader = function (_EventEmitter) {
               }
             } catch (e) {
               if (e) {
+                // TODO: need some error handling here
                 console.log('createReadStream Error: ', e);
               }
             } finally {}

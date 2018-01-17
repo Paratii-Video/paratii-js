@@ -142,17 +142,16 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
             case 3:
               data = _context4.sent;
 
-              console.log('from the update', data);
               for (key in options) {
                 data[key] = options[key];
               }
-              _context4.next = 8;
+              _context4.next = 7;
               return _regenerator2.default.awrap(this.create(data, 'updating'));
 
-            case 8:
+            case 7:
               return _context4.abrupt('return', data);
 
-            case 9:
+            case 8:
             case 'end':
               return _context4.stop();
           }

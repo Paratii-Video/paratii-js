@@ -106,6 +106,10 @@ It can also handle uploads of lists of files:
     })
 
 
+## `ipfs.uploader.addDirectory(pathToFile)`
+
+Upload the directory from the (local) path on the filesystem
+
 ## `ipfs.uploader.transcode(fileHash, options)`
 
 
