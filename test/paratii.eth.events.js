@@ -67,7 +67,7 @@ describe('paratii.eth.events API: :', function () {
     })
   })
 
-  it('subscription to Update Video events should work as expected', function (done) {
+  it.skip('TOFIX: subscription to Update Video events should work as expected', function (done) {
     let creator = address1
     let price = 3 * 10 ** 18
     let ipfsHash = 'xyz'
