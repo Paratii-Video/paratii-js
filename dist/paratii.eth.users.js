@@ -75,15 +75,13 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
 
             case 7:
               contract = _context2.sent;
-
-              contract.setProvider(this.eth.config.provider);
-              _context2.next = 11;
+              _context2.next = 10;
               return _regenerator2.default.awrap(contract.methods.create(options.id, options.name, options.email, options.ipfsHash).send());
 
-            case 11:
+            case 10:
               return _context2.abrupt('return', options.id);
 
-            case 12:
+            case 11:
             case 'end':
               return _context2.stop();
           }
