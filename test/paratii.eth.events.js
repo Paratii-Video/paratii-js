@@ -100,4 +100,21 @@ describe('paratii.eth.events API: :', function () {
 
     paratii.eth.vids.delete(videoId)
   })
+  it('subscription to Create User events should work as expected', function (done) {
+    let userId = address
+    let userData = {
+      id: userId,
+      name: 'Humbert Humbert',
+      email: 'humbert@humbert.ru',
+      ipfsHash: 'some-hash'
+    }
+
+    paratii.eth.events.addListener('CreateUser', function (log) {
+      const receivedVideoId = log.returnValues._address
+      assert.equal(userData.id, receivedVideoId)
+      done()
+    })
+
+    paratii.eth.users.create(userData)
+  })
 })
