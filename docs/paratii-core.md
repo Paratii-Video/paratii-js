@@ -90,3 +90,38 @@ _not implemented yet_
     // search in videos
     // this call will send a request the db index, i.e. simply forward this request to paratii.db.vids.search()
     core.vids.search({'title': 'xyz'})
+
+# core.users
+
+
+Remarks:
+
+  * The `id` of a user is his/her public Ethereum address
+  
+## `core.users.create`
+
+    core.users.create({
+      id: 0x1234,
+      name: 'A user name',
+      email: 'some@email.com',
+      ... (other fields to be defined)
+    })
+
+## `core.users.get`
+
+    core.users.get(0x1234)
+
+returns
+    {
+      id: 0x1234,
+      name: 'A user name',
+      email: 'some@email.com',
+      ... (other fields to be defined)
+    }
+
+## `core.users.update`
+
+
+    core.users.ipdate(0x1244, {
+      name: 'A user name',
+    })

@@ -96,7 +96,7 @@ describe('paratii.eth API: :', function () {
     let beneficiary = address1
     let balance0 = await paratii.eth.balanceOf(beneficiary, 'ETH')
     let amount = paratii.eth.web3.utils.toWei('3', 'ether')
-    await paratii.eth.transfer(beneficiary, amount, 'ETH')
+    await paratii.eth.transfer(beneficiary, amount, 'ETH', 'thanks for all the fish')
     let balance1 = await paratii.eth.balanceOf(beneficiary, 'ETH')
     assert.equal(balance1 - balance0, amount)
   })
@@ -110,14 +110,14 @@ describe('paratii.eth API: :', function () {
     assert.equal(balance1 - balance0, amount)
   })
 
-  it('subscription to Tranfer PTI events should work as expected', async function () {
-    paratii.eth.web3.setProvider('ws://localhost:8546')
-    await paratii.eth.subscribe('newBlockHeaders', {})
-    let beneficiary = address1
-    let amount = paratii.eth.web3.utils.toWei('3', 'ether')
-    await paratii.eth.transfer(beneficiary, amount, 'ETH')
+  it('deployContracts should update the contract information', async function () {
+    let contracts = await paratii.eth.deployContracts()
+    assert.equal(contracts.Registry.options.address, (await paratii.eth.getContract('Registry')).options.address)
+    let registry = contracts.Registry
+    let videosAddress = await registry.methods.getContract('Videos').call()
+    assert.equal(contracts.Videos.options.address, videosAddress)
+    // assert.equal(contracts.Videos.options.address, (await paratii.eth.getContract('Registry')).options.address)
   })
-
   it('deployContract should throw a sensible error if address is not set', async function () {
     paratii = new Paratii()
     await assert.isRejected(paratii.eth.deployContract('ParatiiToken'), Error, 'You need an Ethereum account')

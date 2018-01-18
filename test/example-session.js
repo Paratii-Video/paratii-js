@@ -20,7 +20,6 @@ describe('Paratii API:', function () {
     rawTransaction._ethAccounts = paratii.eth.web3.eth.accounts
     const balance = await rawTransaction.call()
 
-    console.log('4')
     assert.equal(balance, '21000000000000000000000000')
     //
     // // USER
