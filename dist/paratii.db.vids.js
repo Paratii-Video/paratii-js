@@ -42,8 +42,7 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              // This is a temporary placeholder for be a request on the web API (that is not there yet)
-              // request('http://index.paratii.video/videos?id=videoId')
+              // This should be a request on the web API (that is not there yet)
               paratii = this.config.paratii;
               // TODO: optimize and do these requests in parallel
 
