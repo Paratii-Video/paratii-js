@@ -49,7 +49,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
     }
   }, {
     key: 'create',
-    value: function create(options) {
+    value: function create(options, type) {
       var defaults, msg, contract, tx, videoId;
       return _regenerator2.default.async(function create$(_context2) {
         while (1) {
@@ -78,17 +78,15 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
 
             case 7:
               contract = _context2.sent;
-
-              contract.setProvider(this.eth.config.provider);
-              _context2.next = 11;
+              _context2.next = 10;
               return _regenerator2.default.awrap(contract.methods.create(options.id, options.owner, options.price, options.ipfsHash, options.ipfsData).send());
 
-            case 11:
+            case 10:
               tx = _context2.sent;
               videoId = (0, _utils.getInfoFromLogs)(tx, 'LogCreateVideo', 'videoId');
               return _context2.abrupt('return', videoId);
 
-            case 14:
+            case 13:
             case 'end':
               return _context2.stop();
           }
@@ -108,12 +106,10 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
 
             case 2:
               contract = _context3.sent;
+              _context3.next = 5;
+              return _regenerator2.default.awrap(contract.methods.getVideoInfo(videoId).call());
 
-              contract.setProvider(this.eth.config.provider);
-              _context3.next = 6;
-              return _regenerator2.default.awrap(contract.methods.get(videoId).call());
-
-            case 6:
+            case 5:
               videoInfo = _context3.sent;
               result = {
                 id: videoId,
@@ -124,7 +120,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
               };
               return _context3.abrupt('return', result);
 
-            case 9:
+            case 8:
             case 'end':
               return _context3.stop();
           }
@@ -150,7 +146,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
                 data[key] = options[key];
               }
               _context4.next = 7;
-              return _regenerator2.default.awrap(this.create(data));
+              return _regenerator2.default.awrap(this.create(data, 'updating'));
 
             case 7:
               return _context4.abrupt('return', data);
@@ -175,16 +171,14 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
 
             case 2:
               contract = _context5.sent;
-
-              contract.setProvider(this.eth.config.provider);
-              _context5.next = 6;
+              _context5.next = 5;
               return _regenerator2.default.awrap(contract.methods.remove(videoId).send());
 
-            case 6:
+            case 5:
               tx = _context5.sent;
               return _context5.abrupt('return', tx);
 
-            case 8:
+            case 7:
             case 'end':
               return _context5.stop();
           }
