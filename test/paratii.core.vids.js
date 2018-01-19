@@ -42,7 +42,8 @@ describe('paratii.core.vids:', function () {
       id: videoId,
       owner: address1,
       title: videoTitle,
-      ipfsHash: ipfsHash
+      ipfsHash: ipfsHash,
+      price: 1
     })
 
     assert.equal(data.ipfsHash, ipfsHash)

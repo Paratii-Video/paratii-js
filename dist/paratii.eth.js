@@ -61,7 +61,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
       this.web3.setProvider(new this.web3.providers.HttpProvider(options.provider));
     }
 
-    this.wallet = (0, _paratiiEthWallet.patchWallet)(this.web3.eth.accounts.wallet);
+    this.wallet = (0, _paratiiEthWallet.patchWallet)(this.web3.eth.accounts.wallet, this.config);
     this.setAccount(this.config.account.address, this.config.account.privateKey);
 
     this.contracts = {};

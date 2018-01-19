@@ -36,6 +36,9 @@ describe('paratii.eth.wallet: :', function () {
     assert.isTrue(paratii.eth.web3.utils.isAddress(wallet[1].address))
     assert.isTrue(paratii.eth.web3.utils.isAddress(wallet[2].address))
     assert.equal(wallet[0].address, addresses[0])
+
+    // also the config object should be updated
+    assert.equal(paratii.config.account.address, addresses[0])
   })
 
   it('wallet.create() does not create a new wallet object', async function () {
@@ -44,7 +47,7 @@ describe('paratii.eth.wallet: :', function () {
     assert.equal(wallet, paratii.eth.wallet)
   })
 
-  it('wallet.create() creates a new mnenomic if not mnomic is given', async function () {
+  it('wallet.create() creates a new mnenomic if not mnemonic is given', async function () {
     paratii = await new Paratii()
     let wallet = paratii.eth.wallet
     await wallet.create()

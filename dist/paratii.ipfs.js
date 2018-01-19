@@ -56,7 +56,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
       'ipfs.repo': '/tmp/paratii-alpha-' + String(Math.random()), // key where to save information
       'ipfs.bitswap.maxMessageSize': 32 * 1024,
       'address': null, // 'Ethereum address'
-      'verbose': false
+      'verbose': true
     };
     this.config = dopts(config, defaults, { allowUnknown: true });
 
@@ -109,23 +109,29 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
     }
   }, {
     key: 'log',
-    value: function log(msg) {
+    value: function log() {
       if (this.config.verbose) {
-        console.log(msg);
+        var _console;
+
+        (_console = console).log.apply(_console, arguments);
       }
     }
   }, {
     key: 'warn',
-    value: function warn(msg) {
+    value: function warn() {
       if (this.config.verbose) {
-        console.warn(msg);
+        var _console2;
+
+        (_console2 = console).warn.apply(_console2, arguments);
       }
     }
   }, {
     key: 'error',
-    value: function error(msg) {
+    value: function error() {
       if (this.config.verbose) {
-        console.error(msg);
+        var _console3;
+
+        (_console3 = console).error.apply(_console3, arguments);
       }
     }
   }, {
@@ -168,7 +174,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
             ipfs.id().then(function (id) {
               var peerInfo = id;
               _this.id = id;
-              _this.log('[IPFS] id: ', peerInfo);
+              _this.log('[IPFS] id:  ' + peerInfo);
               var ptiAddress = _this.config.address || 'no_address';
               _this.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
               // add ETH Address here.
