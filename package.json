@@ -4,7 +4,8 @@
   "description": "Paratii Library",
   "main": "dist/paratii.js",
   "browser": {
-    "./lib/paratii.ipfs.uploader.js": "./lib/paratii.ipfs.uploader.browser.js"
+    "./lib/paratii.ipfs.uploader.js": "./lib/paratii.ipfs.uploader.browser.js",
+    "./dist/paratii.ipfs.uploader.js": "./dist/paratii.ipfs.uploader.browser.js"
   },
   "directories": {
     "test": "test"
