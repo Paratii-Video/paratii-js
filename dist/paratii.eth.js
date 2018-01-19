@@ -27,6 +27,8 @@ var _paratiiEthVids = require('./paratii.eth.vids.js');
 
 var _paratiiEthUsers = require('./paratii.eth.users.js');
 
+var _paratiiEthEvents = require('./paratii.eth.events.js');
+
 var _paratiiEthWallet = require('./paratii.eth.wallet.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -40,6 +42,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
     var defaults = {
       provider: 'http://localhost:8545/rpc/',
+      wsprovider: 'ws://localhost:8546',
       registryAddress: null,
       account: {
         address: null,
@@ -57,12 +60,9 @@ var ParatiiEth = exports.ParatiiEth = function () {
       this.web3 = new Web3();
       this.web3.setProvider(new this.web3.providers.HttpProvider(options.provider));
     }
-    this.wallet = (0, _paratiiEthWallet.patchWallet)(this.web3.eth.accounts.wallet);
 
-    if (this.config.account.privateKey) {
-      this.web3.eth.defaultAccount = this.config.account.address;
-      this.web3.eth.accounts.wallet.add(this.config.account.privateKey);
-    }
+    this.wallet = (0, _paratiiEthWallet.patchWallet)(this.web3.eth.accounts.wallet);
+    this.setAccount(this.config.account.address, this.config.account.privateKey);
 
     this.contracts = {};
     this.contracts.ParatiiToken = this.requireContract('ParatiiToken');
@@ -75,9 +75,23 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
     this.vids = new _paratiiEthVids.ParatiiEthVids(this);
     this.users = new _paratiiEthUsers.ParatiiEthUsers(this);
+    this.events = new _paratiiEthEvents.ParatiiEthEvents(this);
   }
 
   (0, _createClass3.default)(ParatiiEth, [{
+    key: 'setAccount',
+    value: function setAccount(address, privateKey) {
+      this.config.account.address = address;
+      this.config.account.privateKey = privateKey;
+      this.web3.eth.defaultAccount = address;
+      if (privateKey) {
+        var account = this.web3.eth.accounts.wallet.add(privateKey);
+        if (account.address !== address) {
+          throw Error('Private Key and Account are not compatible!');
+        }
+      }
+    }
+  }, {
     key: 'requireContract',
     value: function requireContract(contractName) {
       var artifact = require('paratii-contracts/build/contracts/' + contractName + '.json');
@@ -112,15 +126,19 @@ var ParatiiEth = exports.ParatiiEth = function () {
               throw Error(msg);
 
             case 3:
-              contract = this.contracts[name];
-              _context.next = 6;
+              _context.next = 5;
+              return _regenerator2.default.awrap(this.getContract(name));
+
+            case 5:
+              contract = _context.sent;
+              _context.next = 8;
               return _regenerator2.default.awrap(contract.deploy({ arguments: args }).send());
 
-            case 6:
+            case 8:
               deployedContract = _context.sent;
               return _context.abrupt('return', deployedContract);
 
-            case 8:
+            case 10:
             case 'end':
               return _context.stop();
           }
@@ -205,27 +223,27 @@ var ParatiiEth = exports.ParatiiEth = function () {
               paratiiAvatar.setProvider(this.web3.currentProvider);
 
               _context3.next = 31;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Avatar', paratiiAvatar.options.address));
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Avatar', paratiiAvatar.options.address).send());
 
             case 31:
               _context3.next = 33;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('ParatiiToken', paratiiToken.options.address));
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('ParatiiToken', paratiiToken.options.address).send());
 
             case 33:
               _context3.next = 35;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('SendEther', sendEther.options.address));
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('SendEther', sendEther.options.address).send());
 
             case 35:
               _context3.next = 37;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Videos', videoRegistry.options.address));
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Videos', videoRegistry.options.address).send());
 
             case 37:
               _context3.next = 39;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Store', videoStore.options.address));
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Store', videoStore.options.address).send());
 
             case 39:
               _context3.next = 41;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Users', userRegistry.options.address));
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Users', userRegistry.options.address).send());
 
             case 41:
               _context3.next = 43;
@@ -403,11 +421,9 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 17:
               _context6.prev = 17;
               _context6.t0 = _context6['catch'](5);
-
-              console.log(_context6.t0);
               throw _context6.t0;
 
-            case 21:
+            case 20:
             case 'end':
               return _context6.stop();
           }
@@ -495,52 +511,74 @@ var ParatiiEth = exports.ParatiiEth = function () {
         }
       }, null, this);
     }
+    // async _transferETH (beneficiary, amount) {
+    //   // @args amount is in Wei
+    //   // TODO: use the SendEther contract
+    //   // TODO: this will only work on testrpc with unlocked accounts..
+    //   let from = this.config.account.address
+    //   if (!from) {
+    //     throw Error('No account set! Cannot send transactions')
+    //   }
+    //   if (!beneficiary) {
+    //     throw Error('No beneficiary given.')
+    //   }
+    //   from = add0x(from)
+    //   beneficiary = add0x(beneficiary)
+    //
+    //   let result = await this.web3.eth.sendTransaction({
+    //     from: from,
+    //     to: beneficiary,
+    //     value: amount,
+    //     gasPrice: 20000000000,
+    //     gas: 21000
+    //   })
+    //   return result
+    // }
+
   }, {
     key: '_transferETH',
-    value: function _transferETH(beneficiary, amount) {
-      var from, result;
+    value: function _transferETH(beneficiary, amount, description) {
+      var contract, from, result;
       return _regenerator2.default.async(function _transferETH$(_context8) {
         while (1) {
           switch (_context8.prev = _context8.next) {
             case 0:
-              // @args amount is in Wei
-              // TODO: use the SendEther contract
-              // TODO: this will only work on testrpc with unlocked accounts..
+              _context8.next = 2;
+              return _regenerator2.default.awrap(this.getContract('SendEther'));
+
+            case 2:
+              contract = _context8.sent;
+
+              if (!(!contract.options || !contract.options.address)) {
+                _context8.next = 5;
+                break;
+              }
+
+              throw Error('No SendEther contract known - please run paratii.diagnose()');
+
+            case 5:
               from = this.config.account.address;
 
               if (from) {
-                _context8.next = 3;
+                _context8.next = 8;
                 break;
               }
 
               throw Error('No account set! Cannot send transactions');
 
-            case 3:
-              if (beneficiary) {
-                _context8.next = 5;
-                break;
-              }
+            case 8:
 
-              throw Error('No beneficiary given.');
-
-            case 5:
               from = (0, _utils.add0x)(from);
               beneficiary = (0, _utils.add0x)(beneficiary);
 
-              _context8.next = 9;
-              return _regenerator2.default.awrap(this.web3.eth.sendTransaction({
-                from: from,
-                to: beneficiary,
-                value: amount,
-                gasPrice: 20000000000,
-                gas: 21000
-              }));
+              _context8.next = 12;
+              return _regenerator2.default.awrap(contract.methods.transfer(beneficiary, description).send({ value: amount }));
 
-            case 9:
+            case 12:
               result = _context8.sent;
               return _context8.abrupt('return', result);
 
-            case 11:
+            case 14:
             case 'end':
               return _context8.stop();
           }
@@ -598,7 +636,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
     }
   }, {
     key: 'transfer',
-    value: function transfer(beneficiary, amount, symbol) {
+    value: function transfer(beneficiary, amount, symbol, description) {
       return _regenerator2.default.async(function transfer$(_context10) {
         while (1) {
           switch (_context10.prev = _context10.next) {
@@ -608,7 +646,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
                 break;
               }
 
-              return _context10.abrupt('return', this._transferETH(beneficiary, amount));
+              return _context10.abrupt('return', this._transferETH(beneficiary, amount, description));
 
             case 4:
               if (!(symbol === 'PTI')) {
@@ -621,26 +659,6 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 6:
             case 'end':
               return _context10.stop();
-          }
-        }
-      }, null, this);
-    }
-  }, {
-    key: 'subscribe',
-    value: function subscribe(type, options) {
-      return _regenerator2.default.async(function subscribe$(_context11) {
-        while (1) {
-          switch (_context11.prev = _context11.next) {
-            case 0:
-              this.web3.eth.subscribe(type, function () {
-                // if (!error) { console.log(result) } else {
-                //   console.log(error)
-                // }
-              });
-
-            case 1:
-            case 'end':
-              return _context11.stop();
           }
         }
       }, null, this);
