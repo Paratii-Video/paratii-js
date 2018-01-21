@@ -5,16 +5,16 @@ import { assert } from 'chai'
 
 describe('ParatiiUtils:', function () {
   let paratiiUtils
+  let paratii
   this.timeout(30000)
-
-  beforeEach(function () {
-    paratiiUtils = new ParatiiUtils({
+  beforeEach(async function () {
+    paratii = await new Paratii({
       provider: 'http://localhost:8545',
-      account: {
-        address: address,
-        privateKey: privateKey
-      }
+      address: address,
+      privateKey: privateKey
     })
+    await paratii.eth.deployContracts()
+    paratiiUtils = new ParatiiUtils(paratii.config)
   })
 
   it('should exist', (done) => {
