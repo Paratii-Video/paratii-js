@@ -20,4 +20,8 @@ let mnemonic23 = 'jelly better achieve collect unaware mountain thought cargo ox
 // this is the first HD address generated
 let address23 = '0x9e2d04eef5b16CFfB4328Ddd027B55736407B275'
 
-export { address, address1, address99, privateKey, address17, privateKey17, mnemonic23, address23 }
+// auth testing
+let challenge1 = 'd2aa70afd1d9ba25104bfb2193493ccf'
+let signedMessage3 = '0x8fbfd66142afe511247398d752cd419a09d0cf04fe11f3e5eff507fd7f2b815e73740f4218ec676e749836057afc3b4c3261b614513d1b5cdd987d2944f2beb11c'
+
+export { address, address1, address99, privateKey, address17, privateKey17, mnemonic23, address23, challenge1, signedMessage3 }
