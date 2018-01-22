@@ -69,6 +69,13 @@ describe('paratii.eth API: :', function () {
     assert.isOk(contract)
   })
 
+  it('getcontract() should return a meaningful error if the address of the contrat is not known', async function () {
+    let registry = await paratii.eth.getContract('Registry')
+    await registry.methods.registerAddress('Videos', '').send()
+    assert.equal(await registry.methods.getContract('Videos').call(), '0x0000000000000000000000000000000000000000')
+
+    await paratii.eth.vids.get('some-id')
+  })
   it('balanceOf() should return the right balances', async function () {
     let balance
 

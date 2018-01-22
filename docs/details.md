@@ -47,7 +47,7 @@ The [Registry.sol](../contracts/paratii/Registry.sol) contract is a simple key-v
 For example, the following call will get the address of the `ParatiiToken` contract:
 
     let paratiiRegistery = paratii.contracts.Registry
-    paratiiRegistry.getAddress('ParatiiToken')
+    paratiiRegistry.getContract('ParatiiToken')
 
 The `Registry` is an `Ownable` contract, and contains simple setters and getters for several solidity types:
 

@@ -124,7 +124,7 @@ var Paratii = function () {
               log('*** No registry address found!');
               log('Value of this.config.registryAddress: ' + this.config.registryAddress);
               isOk = false;
-              _context.next = 34;
+              _context.next = 35;
               break;
 
             case 15:
@@ -143,40 +143,42 @@ var Paratii = function () {
                 // log(`We found the following code on the registry address ${address}`)
                 // log(msg)
               }
-              log('checking for addresses');
+              log('checking for addresses on registry@' + address);
               _context.next = 23;
               return _regenerator2.default.awrap(this.eth.getContract('Registry'));
 
             case 23:
               registry = _context.sent;
+
+              log('(registry address is ' + registry.options.address + ')');
               _context.t0 = _regenerator2.default.keys(this.eth.contracts);
 
-            case 25:
+            case 26:
               if ((_context.t1 = _context.t0()).done) {
-                _context.next = 34;
+                _context.next = 35;
                 break;
               }
 
               name = _context.t1.value;
 
               if (!(name !== 'Registry')) {
-                _context.next = 32;
+                _context.next = 33;
                 break;
               }
 
-              _context.next = 30;
+              _context.next = 31;
               return _regenerator2.default.awrap(registry.methods.getContract(name).call());
 
-            case 30:
+            case 31:
               address = _context.sent;
 
               log('address of ' + name + ': ' + address);
 
-            case 32:
-              _context.next = 25;
+            case 33:
+              _context.next = 26;
               break;
 
-            case 34:
+            case 35:
               if (isOk) {
                 log('---- everything seems fine -----');
               } else {
@@ -184,7 +186,7 @@ var Paratii = function () {
               }
               return _context.abrupt('return', msgs);
 
-            case 36:
+            case 37:
             case 'end':
               return _context.stop();
           }

@@ -104,6 +104,7 @@ describe('Paratii configuration:', function () {
     // promise = paratii.eth.transfer(beneficiary, amount, 'PTI')
     // await assert.isFulfilled(promise)
   })
+
   it('paratii.eth.web3 should be available', async function () {
     let paratii = new Paratii({})
     assert.isOk(paratii.eth.web3)

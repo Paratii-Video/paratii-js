@@ -136,9 +136,11 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
             case 8:
               deployedContract = _context.sent;
+
+              this.contracts[name] = deployedContract;
               return _context.abrupt('return', deployedContract);
 
-            case 10:
+            case 11:
             case 'end':
               return _context.stop();
           }
