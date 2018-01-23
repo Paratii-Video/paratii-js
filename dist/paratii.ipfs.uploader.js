@@ -1,12 +1,9 @@
+/* global File, ArrayBuffer */
 'use strict';
 
 /**
  * @module IPFS UPLOADER : Paratii IPFS uploader interface.
  */
-
-var _promise = require('babel-runtime/core-js/promise');
-
-var _promise2 = _interopRequireDefault(_promise);
 
 var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
 
@@ -36,7 +33,9 @@ var _require = require('events'),
 var dopts = require('default-options');
 var pull = require('pull-stream');
 var pullFilereader = require('pull-filereader');
-// const toPull = require('stream-to-pull-stream')
+var toPull = require('stream-to-pull-stream');
+var fs = require('fs');
+var path = require('path');
 // const ytdl = require('ytdl-core')
 // const vidl = require('vimeo-downloader')
 // const readline = require('readline')
@@ -69,58 +68,90 @@ var Uploader = function (_EventEmitter) {
   }, {
     key: 'onDrop',
     value: function onDrop(ev) {}
+
+    /**
+     * uploads a single file to local IPFS node
+     * @param {File} file HTML5 File Object.
+     * @returns {EventEmitter} checkout the upload function below for details.
+     */
+
   }, {
     key: 'add',
     value: function add(file) {
-      var that = this;
-      return new _promise2.default(function (resolve, reject) {
-        var files = void 0;
-        if (Array.isArray(file)) {
-          files = file;
-        } else {
-          files = [file];
-        }
+      var files = void 0;
+      if (Array.isArray(file)) {
+        files = file;
+      } else {
+        files = [file];
+      }
 
-        var opts = {
-          onDone: function onDone(files) {
-            resolve(files);
-          },
-          onError: function onError(err) {
-            reject(err);
+      // return this.upload(files)
+      var result = [];
+
+      for (var i = 0; i < files.length; i++) {
+        if (typeof File !== 'undefined') {
+          if (files[i] instanceof File) {
+            console.log('this is an HTML5 File ', files[i]);
+            result.push(this.html5FileToPull(files[i]));
+          } else {
+            console.log('this is not File ', files[i]);
+            result.push(this.fsFileToPull(files[i]));
           }
+        } else {
+          console.log('here');
+          result.push(this.fsFileToPull(files[i]));
+        }
+      }
+
+      console.log('result: ', result);
+      return this.upload(result);
+    }
+  }, {
+    key: 'html5FileToPull',
+    value: function html5FileToPull(file) {
+      return {
+        name: file.name,
+        size: file.size,
+        _pullStream: pullFilereader(file)
+      };
+    }
+  }, {
+    key: 'fsFileToPull',
+    value: function fsFileToPull(filePath) {
+      var stats = fs.statSync(filePath);
+      if (stats) {
+        return {
+          name: path.basename(filePath),
+          size: stats.size,
+          _pullStream: toPull(fs.createReadStream(filePath))
         };
-        console.log(opts);
-        return that.upload(files, opts);
-      });
+      } else {
+        return null;
+      }
     }
 
     /**
-     * upload a file as is to the local IPFS node
-     * @param  {file} file    HTML5 File Object
-     * @param  {Object} options Holds various callbacks, ref: https://github.com/Paratii-Video/paratii-lib/blob/master/docs/paratii-ipfs.md#ipfsuploaderuploadfile-options
+     * upload an Array of files as is to the local IPFS node
+     * @param  {Array} files    HTML5 File Object Array.
+     * @return {EventEmitter} returns EventEmitter with the following events:
+     *    - 'start': uploader started.
+     *    - 'progress': (chunkLength, progressPercent)
+     *    - 'fileReady': (file) triggered when a file is uploaded.
+     *    - 'done': (files) triggered when the uploader is done.
+     *    - 'error': (err) triggered whenever an error occurs.
      */
 
   }, {
     key: 'upload',
-    value: function upload(files, options) {
+    value: function upload(files) {
       var _this2 = this;
 
-      var defaults = {
-        onStart: function onStart() {}, // function()
-        onError: function onError(err) {
-          if (err) throw err;
-        }, // function (err)
-        onFileReady: function onFileReady(file) {}, // function(file)
-        onProgress: function onProgress(chunkLength, progress) {}, // function(chunkLength)
-        onDone: function onDone(file) {} // function(file)
-      };
-
-      var opts = dopts(options, defaults, { allowUnknown: true });
       var meta = {}; // holds File metadata.
-      // let files = [file]
+      var ev = new EventEmitter();
+
       this._ipfs.start(function () {
         // trigger onStart callback
-        opts.onStart();
+        ev.emit('start');
 
         pull(pull.values(files), pull.through(function (file) {
           console.log('Adding ', file);
@@ -130,26 +161,29 @@ var Uploader = function (_EventEmitter) {
           return pull(pull.values([{
             path: file.name,
             // content: pullFilereader(file)
-            content: pull(pullFilereader(file), pull.through(function (chunk) {
-              return opts.onProgress(chunk.length, Math.floor((meta.total + chunk.length) / meta.fileSize) * 100);
+            content: pull(file._pullStream, pull.through(function (chunk) {
+              return ev.emit('progress', chunk.length, Math.floor((meta.total + chunk.length) / meta.fileSize) * 100);
             }))
           }]), _this2._node.files.addPullStream({ chunkerOptions: { maxChunkSize: _this2._chunkSize } }), // default size 262144
           pull.collect(function (err, res) {
             if (err) {
-              return opts.onError(err);
+              return ev.emit('error', err);
             }
             var file = res[0];
-            console.log('Adding %s finished', file.path);
-            opts.onFileReady(file);
+            console.log('Adding %s finished as %s', file.path, file.hash);
+            ev.emit('fileReady', file);
+            cb(null, file);
           }));
         }), pull.collect(function (err, files) {
           if (err) {
-            return opts.onError(err);
+            ev.emit('error', err);
           }
-
-          return opts.onDone(files);
+          console.log('all files uploaded : ', files);
+          ev.emit('done', files);
         }));
       });
+
+      return ev;
     }
 
     /**
@@ -213,10 +247,17 @@ var Uploader = function (_EventEmitter) {
         });
       });
     }
+
+    /**
+     * convenience method for adding and transcoding files
+     * @param {Array} files Array of HTML5 File Objects
+     */
+
   }, {
     key: 'addAndTranscode',
     value: function addAndTranscode(files) {
-      this.upload(files, { onDone: this._signalTranscoder });
+      var ev = this.upload(files);
+      ev.on('done', this._signalTranscoder.bind(this));
     }
   }, {
     key: '_signalTranscoder',

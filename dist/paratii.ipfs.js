@@ -323,11 +323,12 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
       // }
 
       if (this.ipfs && this.ipfs.isOnline()) {
+        console.log('IPFS is already running');
         return callback();
       }
 
       this.getIPFSInstance().then(function (ipfs) {
-        ipfs.start(callback);
+        callback();
       });
     }
   }, {

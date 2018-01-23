@@ -3,10 +3,10 @@
 // import { Paratii } from '../lib/paratii.js'
 // import { address, privateKey } from './utils.js'
 import { ParatiiIPFS } from '../lib/paratii.ipfs.js'
-import { assert } from 'chai'
-const FileApi = require('file-api')
+import { assert, expect } from 'chai'
+// const FileApi = require('file-api')
 // const fs = require('fs')
-global.FileReader = FileApi.FileReader
+// global.FileReader = FileApi.FileReader
 
 describe('ParatiiIPFS: :', function () {
   let paratiiIPFS
@@ -37,15 +37,31 @@ describe('ParatiiIPFS: :', function () {
   // })
   // FIXME : this requires a browser to run.
   // I'm trying to mock the FileReader but it's glitchy so far :(
-  it.skip('should allow for file upload', async function () {
-    // let file = fs.createReadStream('test/data/some-file.txt')
-    // let file = 'test/data/some-file.txt'
-    let file = new FileApi.File('test/data/some-file.txt')
-    console.log('file: ', file)
-    file.slice = (offset, end) => {}
+  it('should allow for file upload', (done) => {
+    let file = 'test/data/some-file.txt'
 
     let files = [file]
-    await paratiiIPFS.uploader.add(files)
+    let uploaderEv = paratiiIPFS.uploader.add(files)
+
+    uploaderEv.once('start', () => {
+      console.log('uploader started')
+    })
+
+    uploaderEv.on('progress', (chunkLength, percent) => {
+      console.log('progress: ', percent)
+    })
+
+    uploaderEv.on('fileReady', (file) => {
+      console.log('got fileReady ', file)
+    })
+
+    uploaderEv.once('done', (files) => {
+      console.log('uploader done, ', files)
+      assert.isOk(files)
+      expect(files).to.have.lengthOf(1)
+      expect(files[0].hash).to.equal('QmS8yinWCD1vm7WJx34tg81FpjEXbdYXf3Y5XcCeh29C6K')
+      done()
+    })
   })
 
   // it('should add a directory to IPFS', async function () {
