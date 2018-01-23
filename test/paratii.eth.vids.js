@@ -47,6 +47,14 @@ describe('paratii.eth.vids:', function () {
   it('vids.get() should return an error if no video was found', async function () {
     assert.isRejected(paratii.eth.vids.get('thisviddoesnotexist'), Error, 'No video')
   })
+
+  it('vids.create() should create a fresh id if non is given', async function () {
+    let videoId = paratii.eth.vids.create({
+      owner: address1
+    })
+    assert.isOk(videoId)
+  })
+
   it.skip('vids.create() should throw meaningful errors', async function () {
     let vids = paratii.eth.vids
     await assert.isRejected(vids.create({}), Error, 'No id was given')

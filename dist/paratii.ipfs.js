@@ -56,7 +56,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
       'ipfs.repo': '/tmp/paratii-alpha-' + String(Math.random()), // key where to save information
       'ipfs.bitswap.maxMessageSize': 32 * 1024,
       'address': null, // 'Ethereum address'
-      'verbose': true
+      'verbose': false
     };
     this.config = dopts(config, defaults, { allowUnknown: true });
 

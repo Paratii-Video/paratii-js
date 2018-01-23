@@ -53,6 +53,19 @@ describe('paratii.core.vids:', function () {
     assert.equal(data.ipfsHash, ipfsHash)
   })
 
+  it('core.vids.create() should create a fresh id if none is given', async function () {
+    let video = await paratii.core.vids.create({
+      owner: address1,
+      title: videoTitle
+    })
+    assert.isOk(video.id)
+    let videoId2 = await paratii.core.vids.create({
+      owner: address1,
+      title: videoTitle
+    })
+    assert.notEqual(videoId, videoId2)
+  })
+
   it('core.vids.update() should work as expected', async function () {
     await paratii.core.vids.create({
       id: videoId,

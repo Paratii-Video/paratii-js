@@ -36,15 +36,16 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
     var options = dopts(config, defaults, { allowUnknown: true });
     this.config = options;
     this.paratii = this.config.paratii;
-
-    this._defaults = {
-      id: undefined, // must be a string
-      owner: undefined, // must be a string
-      price: 0, // must be a number, optional, default is 0
-      title: undefined, // must be a string
-      file: null, // must be string, optional
-      ipfsHash: '' // must be a string, optional, default is ''
-    };
+    //
+    // this._defaults = {
+    //   id: undefined, // must be a string
+    //   owner: String, // must be a string
+    //   price: 0, // must be a number, optional, default is 0
+    //   title: String, // must be a string
+    //   descripton: undefined, // must be a string, optional
+    //   file: null, // must be string, optional
+    //   ipfsHash: '' // must be a string, optional, default is ''
+    // }
   }
 
   (0, _createClass3.default)(ParatiiCoreVids, [{
@@ -56,10 +57,11 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
           switch (_context.prev = _context.next) {
             case 0:
               defaults = {
-                id: undefined, // must be a string
+                id: null, // optional, a string
                 owner: undefined, // must be a string
                 price: 0, // must be a number, optional, default is 0
                 title: undefined, // must be a string
+                description: null, // must be a string, optional
                 file: null, // must be string, optional
                 ipfsHash: '' // must be a string, optional, default is ''
               };
@@ -67,17 +69,22 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
 
               options = dopts(options, defaults);
 
-              _context.next = 4;
+              if (options.id === null) {
+                options.id = this.paratii.eth.vids.makeId();
+              }
+
+              _context.next = 5;
               return _regenerator2.default.awrap(this.paratii.ipfs.addJSON({
-                title: options.title
+                title: options.title,
+                description: options.description
               }));
 
-            case 4:
+            case 5:
               hash = _context.sent;
 
 
               options.ipfsData = hash;
-              _context.next = 8;
+              _context.next = 9;
               return _regenerator2.default.awrap(this.paratii.eth.vids.create({
                 id: options.id,
                 owner: options.owner,
@@ -86,10 +93,10 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 ipfsData: options.ipfsData
               }));
 
-            case 8:
+            case 9:
               return _context.abrupt('return', options);
 
-            case 9:
+            case 10:
             case 'end':
               return _context.stop();
           }
@@ -105,6 +112,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
           switch (_context2.prev = _context2.next) {
             case 0:
               defaults = {
+                description: null,
                 owner: null, // must be a string, optional
                 price: null, // must be a number, optional, default is 0
                 title: null, // must be a string, optional

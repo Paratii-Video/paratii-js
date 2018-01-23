@@ -65,6 +65,12 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
       }, null, this);
     }
   }, {
+    key: 'makeId',
+    value: function makeId() {
+      // create a fresh ID
+      return (0, _utils.makeId)();
+    }
+  }, {
     key: 'create',
     value: function create(options, type) {
       var defaults, msg, contract, tx, videoId;
@@ -73,37 +79,42 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
           switch (_context2.prev = _context2.next) {
             case 0:
               defaults = {
-                id: undefined,
+                id: null,
                 owner: undefined,
                 price: 0,
                 ipfsHash: undefined,
                 ipfsData: undefined
               };
 
+              options = dopts(options, defaults);
+
+              if (options.id === null) {
+                options.id = this.makeId();
+              }
+
               if (this.eth.web3.utils.isAddress(options.owner)) {
-                _context2.next = 4;
+                _context2.next = 6;
                 break;
               }
 
               msg = 'The owner argument should be a valid address, not ' + options.owner;
               throw Error(msg);
 
-            case 4:
-              options = dopts(options, defaults);
-              _context2.next = 7;
+            case 6:
+              _context2.next = 8;
               return _regenerator2.default.awrap(this.getRegistry());
 
-            case 7:
+            case 8:
               contract = _context2.sent;
-              _context2.next = 10;
+              _context2.next = 11;
               return _regenerator2.default.awrap(contract.methods.create(options.id, options.owner, options.price, options.ipfsHash, options.ipfsData).send());
 
-            case 10:
+            case 11:
               tx = _context2.sent;
               videoId = (0, _utils.getInfoFromLogs)(tx, 'LogCreateVideo', 'videoId');
               return _context2.abrupt('return', videoId);
 
-            case 13:
+            case 14:
             case 'end':
               return _context2.stop();
           }
