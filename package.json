@@ -3,7 +3,10 @@
   "version": "0.0.1",
   "description": "Paratii Library",
   "main": "dist/paratii.js",
-  "browser": "dist/bundle.js",
+  "browser": {
+    "fs": false,
+    "path": false
+  },
   "directories": {
     "test": "test"
   },
