@@ -35,8 +35,8 @@ describe('paratii.core.vids:', function () {
   it('core.vids.create() should accept ipfsHash as argument', async function () {
     let data
 
-    data = await paratii.core.vids.get(videoId)
-    assert.equal(data.ipfsHash, '')
+    // make sure the video does not exist
+    assert.isRejected(paratii.eth.vids.get(videoId), Error, 'No video')
 
     data = await paratii.core.vids.create({
       id: videoId,

@@ -34,13 +34,30 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
   (0, _createClass3.default)(ParatiiEthVids, [{
     key: 'getRegistry',
     value: function getRegistry() {
+      var contract;
       return _regenerator2.default.async(function getRegistry$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              return _context.abrupt('return', this.eth.getContract('Videos'));
+              _context.next = 2;
+              return _regenerator2.default.awrap(this.eth.getContract('Videos'));
 
-            case 1:
+            case 2:
+              contract = _context.sent;
+
+              console.log(contract.options.address);
+
+              if (!(contract.options.address === '0x0')) {
+                _context.next = 6;
+                break;
+              }
+
+              throw Error('There is not Videos contract known in the registry');
+
+            case 6:
+              return _context.abrupt('return', contract);
+
+            case 7:
             case 'end':
               return _context.stop();
           }
@@ -118,9 +135,18 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
                 ipfsHash: videoInfo[2],
                 ipfsData: videoInfo[3]
               };
+
+              if (!(result.owner === _utils.NULL_ADDRESS)) {
+                _context3.next = 9;
+                break;
+              }
+
+              throw Error('No video with id \'' + videoId + '\' was registered');
+
+            case 9:
               return _context3.abrupt('return', result);
 
-            case 8:
+            case 10:
             case 'end':
               return _context3.stop();
           }

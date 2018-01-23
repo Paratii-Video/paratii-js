@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.add0x = add0x;
 exports.getInfoFromLogs = getInfoFromLogs;
 var assert = require('assert');
+var NULL_ADDRESS = exports.NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 function add0x(input) {
   if (typeof input !== 'string') {
