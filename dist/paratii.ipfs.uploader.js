@@ -1,3 +1,4 @@
+/* global File, ArrayBuffer */
 'use strict';
 
 /**
@@ -32,7 +33,9 @@ var _require = require('events'),
 var dopts = require('default-options');
 var pull = require('pull-stream');
 var pullFilereader = require('pull-filereader');
-// const toPull = require('stream-to-pull-stream')
+var toPull = require('stream-to-pull-stream');
+var fs = require('fs');
+var path = require('path');
 // const ytdl = require('ytdl-core')
 // const vidl = require('vimeo-downloader')
 // const readline = require('readline')
@@ -82,7 +85,49 @@ var Uploader = function (_EventEmitter) {
         files = [file];
       }
 
-      return this.upload(files);
+      // return this.upload(files)
+      var result = [];
+
+      for (var i = 0; i < files.length; i++) {
+        if (typeof File !== 'undefined') {
+          if (files[i] instanceof File) {
+            console.log('this is an HTML5 File ', files[i]);
+            result.push(this.html5FileToPull(files[i]));
+          } else {
+            console.log('this is not File ', files[i]);
+            result.push(this.fsFileToPull(files[i]));
+          }
+        } else {
+          console.log('here');
+          result.push(this.fsFileToPull(files[i]));
+        }
+      }
+
+      console.log('result: ', result);
+      return this.upload(result);
+    }
+  }, {
+    key: 'html5FileToPull',
+    value: function html5FileToPull(file) {
+      return {
+        name: file.name,
+        size: file.size,
+        _pullStream: pullFilereader(file)
+      };
+    }
+  }, {
+    key: 'fsFileToPull',
+    value: function fsFileToPull(filePath) {
+      var stats = fs.statSync(filePath);
+      if (stats) {
+        return {
+          name: path.basename(filePath),
+          size: stats.size,
+          _pullStream: toPull(fs.createReadStream(filePath))
+        };
+      } else {
+        return null;
+      }
     }
 
     /**
@@ -116,7 +161,7 @@ var Uploader = function (_EventEmitter) {
           return pull(pull.values([{
             path: file.name,
             // content: pullFilereader(file)
-            content: pull(pullFilereader(file), pull.through(function (chunk) {
+            content: pull(file._pullStream, pull.through(function (chunk) {
               return ev.emit('progress', chunk.length, Math.floor((meta.total + chunk.length) / meta.fileSize) * 100);
             }))
           }]), _this2._node.files.addPullStream({ chunkerOptions: { maxChunkSize: _this2._chunkSize } }), // default size 262144
@@ -125,15 +170,16 @@ var Uploader = function (_EventEmitter) {
               return ev.emit('error', err);
             }
             var file = res[0];
-            console.log('Adding %s finished', file.path);
+            console.log('Adding %s finished as %s', file.path, file.hash);
             ev.emit('fileReady', file);
+            cb(null, file);
           }));
         }), pull.collect(function (err, files) {
           if (err) {
-            return ev.emit('error', err);
+            ev.emit('error', err);
           }
-
-          return ev.emit('done', files);
+          console.log('all files uploaded : ', files);
+          ev.emit('done', files);
         }));
       });
 
