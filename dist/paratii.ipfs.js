@@ -203,8 +203,8 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
 
           ipfs.on('error', function (err) {
             if (err) {
-              _this.log('IPFS node ', ipfs);
-              _this.error('[IPFS] ', err);
+              // this.log('IPFS node ', ipfs)
+              _this.error('[IPFS] Error ', err);
               reject(err);
             }
           });
