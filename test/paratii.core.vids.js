@@ -21,6 +21,7 @@ describe('paratii.core.vids:', function () {
       id: 'some-id',
       owner: address1,
       title: 'some Title',
+      description: 'A long description',
       price: '0',
       file: videoFile
     }
@@ -64,6 +65,10 @@ describe('paratii.core.vids:', function () {
 
     data = await paratii.core.vids.update(videoId, {title: 'another-title'})
     assert.equal(data.title, 'another-title')
+    assert.equal(data.owner, address1)
+
+    data = await paratii.core.vids.update(videoId, {description: 'another description'})
+    assert.equal(data.description, 'another description')
     assert.equal(data.owner, address1)
 
     data = await paratii.core.vids.get(videoId)
