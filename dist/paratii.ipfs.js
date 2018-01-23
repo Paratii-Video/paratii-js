@@ -190,11 +190,6 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
                 _this.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
               });
 
-              // setTimeout(() => {
-              //   this.protocol.start(noop)
-              //   this.triggerOnReady()
-              // }, 10)
-
               _this.ipfs = ipfs;
 
               resolve(ipfs);

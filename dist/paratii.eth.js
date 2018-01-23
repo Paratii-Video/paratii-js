@@ -441,6 +441,10 @@ var ParatiiEth = exports.ParatiiEth = function () {
     key: 'setRegistryAddress',
     value: function setRegistryAddress(registryAddress) {
       this.config.registryAddress = registryAddress;
+      for (var name in this.contracts) {
+        var contract = this.contracts[name];
+        contract.options.address = undefined;
+      }
     }
   }, {
     key: 'balanceOf',
