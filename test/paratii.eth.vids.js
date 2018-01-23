@@ -41,11 +41,12 @@ describe('paratii.eth.vids:', function () {
 
     await paratii.eth.vids.delete(videoId)
 
-    vid = await paratii.eth.vids.get(videoId)
-    assert.equal(vid.ipfsHash, '') // or should we raise an error?
-    assert.equal(vid.price, 0) // or should we raise an error?
+    assert.isRejected(paratii.eth.vids.get(videoId), Error, 'No video')
   })
 
+  it('vids.get() should return an error if no video was found', async function () {
+    assert.isRejected(paratii.eth.vids.get('thisviddoesnotexist'), Error, 'No video')
+  })
   it.skip('vids.create() should throw meaningful errors', async function () {
     let vids = paratii.eth.vids
     await assert.isRejected(vids.create({}), Error, 'No id was given')
