@@ -52,8 +52,6 @@ describe('paratii.eth.events API: :', function () {
     let ipfsData = 'zzz'
     let videoId = 'some-id'
 
-
-
     let userId = address
     let userData = {
       id: userId,
@@ -62,36 +60,64 @@ describe('paratii.eth.events API: :', function () {
       ipfsHash: 'some-hash'
     }
 
-    paratii.eth.events.addListener('CreateVideo', function (log) {
-      console.log('video created')
-      console.log(paratii.eth.events._subscriptions)
-      const receivedVideoId = log.returnValues.videoId
-      assert.equal(videoId, receivedVideoId)
-
-    })
-
-    await sleep(100)
-    console.log(paratii.eth.events._subscriptions)
-    // paratii.eth.events.addListener('CreateUser', function (log) {
-    //   console.log('user created')
-    //   console.log(log)
-    //   const receivedVideoId = log.returnValues._address
-    //   assert.equal(userData.id, receivedVideoId)
-    //   done()
+    // await paratii.eth.web3.eth.clearSubscriptions()
+    // await paratii.eth.events.addListener('CreateVideo', function (log) {
+    //   console.log('video created')
+    //   // console.log(paratii.eth.events._subscriptions)
+    //   const receivedVideoId = log.returnValues.videoId
+    //   assert.equal(videoId, receivedVideoId)
     // })
 
-    // await sleep(1000)
+    let options = {
+      fromBlock: null,
+      topics: null
+    }
+
+    let subscription2Logs = await paratii.eth.web3.eth.subscribe('logs', options, function (err, result, subscription) {
+      // console.log(err, result, subscription)
+      console.log('2-callback subscription2Logs')
+      console.log(err)
+      console.log(result)
+    })
+
+    let contract = await paratii.eth.getContract('Videos')
+    let subscription2Create = await contract.events.LogCreateVideo(options, function (err, result) {
+      console.log('callback subscription2Create')
+      console.log(err)
+    })
+    subscription2Create.on('data', function (log) {
+      console.log('---------------subscription2Create Triggered!')
+      // const receivedVideoId = log.returnValues.videoId
+    })
+    subscription2Create.on('error', function (err) {
+      console.log(err)
+    })
+    // console.log(subscription2Create)
+
+    // await sleep(100)
+    // console.log(subscription)
     // console.log(paratii.eth.events._subscriptions)
     // paratii.eth.users.create(userData)
-    // await sleep(1000)
-    paratii.eth.vids.create({
+    await sleep(1000)
+    console.log('create video..')
+    await paratii.eth.vids.create({
       id: videoId,
       price: price,
       owner: creator,
       ipfsHash: ipfsHash,
       ipfsData: ipfsData
     })
+
+    // await paratii.eth.vids.create({
+    //   id: videoId + '1',
+    //   price: price,
+    //   owner: creator,
+    //   ipfsHash: ipfsHash,
+    //   ipfsData: ipfsData
+    // })
+
     await sleep(1000)
+    // await sleep(1000)
       // paratii.eth.vids.delete(videoId).then(function(res){
       //   console.log('deleted', res)
       // })
@@ -99,8 +125,6 @@ describe('paratii.eth.events API: :', function () {
     function sleep (ms) {
       return new Promise(resolve => setTimeout(resolve, ms))
     }
-
-
   })
 
   it.skip('TOFIX: subscription to Update Video events should work as expected', function (done) {
@@ -153,5 +177,4 @@ describe('paratii.eth.events API: :', function () {
 
     paratii.eth.users.create(userData)
   })
-
 })
