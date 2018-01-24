@@ -74,6 +74,7 @@ var Uploader = function (_EventEmitter) {
       // }
       this._node = opts.node; // this is the actual IPFS node.
       this._chunkSize = opts.chunkSize || 64048;
+      this._defaultTranscoder = opts.defaultTranscoder || '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'; // Address of transcoder
     }
   }, {
     key: 'onDrop',
@@ -291,7 +292,7 @@ var Uploader = function (_EventEmitter) {
 
       var defaults = {
         author: '0x', // ETH/PTI address of the file owner
-        transcoder: '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW' // Address of transcoder
+        transcoder: this._defaultTranscoder
         // onError: (err) => { if (err) throw err },
         // onProgress: (progress) => { }, // TODO update client on progress.
         // onDone: (err, result) => { if (err) throw err },
@@ -302,7 +303,7 @@ var Uploader = function (_EventEmitter) {
       if (!opts.ev) {
         throw new Error('transcode requires an eventemitter to report back result!');
       }
-      console.log('fileHash: ', fileHash);
+
       if (fileHash === '') {
         // empty hash for testing eventemitter
         return opts.ev.emit('transcoder:done', { test: 1 });
