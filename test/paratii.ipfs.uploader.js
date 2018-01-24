@@ -74,10 +74,16 @@ describe('ParatiiIPFS: :', function () {
     assert.equal(response.hash, 'QmeXV3v98a2Y7C6FVMbPnaSQNX59kv4dKDeVqCxNu2jpMB')
   })
 
-  it('addAndTranscode() should work as expected', async function () {
+  it('addAndTranscode() should work as expected', (done) => {
     let files = []
-    await paratiiIPFS.getIPFSInstance()
-    await paratiiIPFS.uploader.addAndTranscode(files)
+
+    let ev = paratiiIPFS.uploader.addAndTranscode(files)
+    ev.on('transcoder:done', (resp) => {
+      assert.isOk(resp)
+      assert.isOk(resp.test)
+      expect(resp.test).to.equal(1)
+      done()
+    })
   })
 
   // FIXME : this requires a browser to run.

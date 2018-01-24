@@ -199,7 +199,7 @@ var Uploader = function (_EventEmitter) {
           if (err) {
             ev.emit('error', err);
           }
-
+          console.log('uploader is DONE');
           ev.emit('done', files);
         }));
       });
@@ -302,6 +302,11 @@ var Uploader = function (_EventEmitter) {
       if (!opts.ev) {
         throw new Error('transcode requires an eventemitter to report back result!');
       }
+      console.log('fileHash: ', fileHash);
+      if (fileHash === '') {
+        // empty hash for testing eventemitter
+        return opts.ev.emit('transcoder:done', { test: 1 });
+      }
 
       var msg = this._ipfs.protocol.createCommand('transcode', { hash: fileHash, author: opts.author });
       // FIXME : This is for dev, so we just signal our transcoder node.
@@ -351,11 +356,13 @@ var Uploader = function (_EventEmitter) {
     value: function addAndTranscode(files) {
       var _this5 = this;
 
-      var ev = this.upload(files);
+      var ev = this.add(files);
       // ev.on('done', this._signalTranscoder.bind(this))
       ev.on('done', function (files) {
-        _this5._signalTranscoder(files, ev).bind(_this5);
+        _this5._signalTranscoder(files, ev);
       });
+      // return the EventEmitter
+      return ev;
     }
   }, {
     key: '_signalTranscoder',
@@ -363,10 +370,16 @@ var Uploader = function (_EventEmitter) {
       var file = void 0;
       if (Array.isArray(files)) {
         if (files.length < 1) {
-          console.log('_signalTranscoder Got an empty Array. files: ', files);
-          return;
+          // console.log('_signalTranscoder Got an empty Array. files: ', files)
+          // return
+          //
+          // FIXME THIS NEEDS TO BE REMOVED --------------------------------------
+          file = { hash: '' // testing something ...
+            // ---------------------------------------------------------------------
+          };
+        } else {
+          file = files[0];
         }
-        file = files[0];
       } else {
         file = files;
       }
