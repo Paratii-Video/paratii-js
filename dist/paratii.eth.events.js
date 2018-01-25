@@ -190,14 +190,15 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
 
       return subscription;
     }
-
-    // removeAllSubscriptions (eventType) {
-    //   if (eventType === undefined) {
-    //     this._subscriptions = {}
-    //   } else {
-    //     delete this._subscriptions[eventType]
-    //   }
-    // }
+  }, {
+    key: 'removeAllSubscriptions',
+    value: function removeAllSubscriptions(eventType) {
+      if (eventType === undefined) {
+        this._subscriptions = {};
+      } else {
+        delete this._subscriptions[eventType];
+      }
+    }
     //
     // getSubscriptionsForType (eventType) {
     //   return this._subscriptions[eventType]
