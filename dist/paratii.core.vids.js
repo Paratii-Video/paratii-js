@@ -63,6 +63,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 title: undefined, // must be a string
                 description: null, // must be a string, optional
                 file: null, // must be string, optional
+                ipfsHashOrig: '', // must be a string, optional, default is ''
                 ipfsHash: '' // must be a string, optional, default is ''
               };
 
@@ -89,6 +90,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 id: options.id,
                 owner: options.owner,
                 price: options.price,
+                ipfsHashOrig: options.ipfsHashOrig,
                 ipfsHash: options.ipfsHash,
                 ipfsData: options.ipfsData
               }));
@@ -117,6 +119,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 price: null, // must be a number, optional, default is 0
                 title: null, // must be a string, optional
                 file: null, // must be string, optional
+                ipfsHashOrig: '', // must be a string, optional, default is ''
                 ipfsHash: null // must be a string, optional, default is ''
               };
 

@@ -74,6 +74,7 @@ describe('paratii.core.vids:', function () {
     })
     let data
     data = await paratii.core.vids.get(videoId)
+    console.log(data)
     assert.equal(data.title, videoTitle)
 
     data = await paratii.core.vids.update(videoId, {title: 'another-title'})

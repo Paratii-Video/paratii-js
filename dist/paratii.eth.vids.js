@@ -100,31 +100,20 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
               throw Error(msg);
 
             case 6:
-
-              console.log('1');
-              console.log(options.id);
-              _context2.next = 10;
+              _context2.next = 8;
               return _regenerator2.default.awrap(this.getVideoRegistry());
 
-            case 10:
+            case 8:
               contract = _context2.sent;
-
-              console.log('2');
-              console.log(options);
-              _context2.next = 15;
+              _context2.next = 11;
               return _regenerator2.default.awrap(contract.methods.create(options.id, options.owner, options.price, options.ipfsHashOrig, options.ipfsHash, options.ipfsData).send());
 
-            case 15:
+            case 11:
               tx = _context2.sent;
-
-              console.log('3');
               videoId = (0, _utils.getInfoFromLogs)(tx, 'LogCreateVideo', 'videoId');
-
-              console.log(videoId);
-
               return _context2.abrupt('return', videoId);
 
-            case 20:
+            case 14:
             case 'end':
               return _context2.stop();
           }
@@ -153,8 +142,9 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
                 id: videoId,
                 owner: videoInfo[0],
                 price: videoInfo[1],
-                ipfsHash: videoInfo[2],
-                ipfsData: videoInfo[3]
+                ipfsHashOrig: videoInfo[2],
+                ipfsHash: videoInfo[3],
+                ipfsData: videoInfo[4]
               };
 
               if (!(result.owner === _utils.NULL_ADDRESS)) {
