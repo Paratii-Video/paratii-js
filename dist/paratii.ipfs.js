@@ -56,7 +56,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
       'ipfs.repo': '/tmp/paratii-alpha-' + String(Math.random()), // key where to save information
       'ipfs.bitswap.maxMessageSize': 32 * 1024,
       'address': null, // 'Ethereum address'
-      'verbose': true
+      'verbose': false
     };
     this.config = dopts(config, defaults, { allowUnknown: true });
 
@@ -189,11 +189,6 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
               _this.protocol.notifications.on('message:new', function (peerId, msg) {
                 _this.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
               });
-
-              // setTimeout(() => {
-              //   this.protocol.start(noop)
-              //   this.triggerOnReady()
-              // }, 10)
 
               _this.ipfs = ipfs;
 

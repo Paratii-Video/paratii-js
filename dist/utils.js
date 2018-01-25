@@ -5,6 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.add0x = add0x;
 exports.getInfoFromLogs = getInfoFromLogs;
+exports.makeId = makeId;
 var assert = require('assert');
 var NULL_ADDRESS = exports.NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -45,4 +46,16 @@ function getInfoFromLogs(tx, eventName, arg) {
   }
   assert(log.logIndex === index);
   return log.returnValues[arg];
+}
+
+function makeId() {
+  var LENGTH = 12;
+  var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var text = '';
+
+  for (var i = 0; i < LENGTH; i++) {
+    text += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+
+  return text;
 }

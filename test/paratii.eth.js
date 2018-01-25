@@ -6,7 +6,6 @@ describe('paratii.eth API: :', function () {
   let paratii
   beforeEach(async function () {
     paratii = await new Paratii({
-      provider: 'http://localhost:8545/rpc/',
       address: address,
       privateKey: privateKey
     })
@@ -33,7 +32,6 @@ describe('paratii.eth API: :', function () {
 
     // If Paratii was created with a registeryAddress, addresses of other contracts should be known
     paratii = await new Paratii({
-      provider: 'http://localhost:8545',
       registryAddress: registryAddress
     })
 
