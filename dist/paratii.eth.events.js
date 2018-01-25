@@ -140,6 +140,7 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
                 };
               }
               subscription = this.subscribe('logs', options);
+
               subscription.on(structuredEvent.emit, listener);
               return _context2.abrupt('break', 21);
 
@@ -181,21 +182,23 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
         this._subscriptions[eventType] = [];
       }
 
-      var key = this._subscriptions[eventType].length;
+      // const key = this._subscriptions[eventType].length
       subscription.eventType = eventType;
-      subscription.id = key;
+      // subscription.id = key
+      // console.log(subscription)
       this._subscriptions[eventType].push(subscription);
 
       return subscription;
     }
-
-    // removeAllSubscriptions (eventType) {
-    //   if (eventType === undefined) {
-    //     this._subscriptions = {}
-    //   } else {
-    //     delete this._subscriptions[eventType]
-    //   }
-    // }
+  }, {
+    key: 'removeAllSubscriptions',
+    value: function removeAllSubscriptions(eventType) {
+      if (eventType === undefined) {
+        this._subscriptions = {};
+      } else {
+        delete this._subscriptions[eventType];
+      }
+    }
     //
     // getSubscriptionsForType (eventType) {
     //   return this._subscriptions[eventType]

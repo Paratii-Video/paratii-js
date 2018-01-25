@@ -17,7 +17,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var Mnemonic = require('bitcore-mnemonic');
 var bitcore = require('bitcore-lib');
 
-function patchWallet(wallet) {
+function patchWallet(wallet, config) {
   function create(numberOfAccounts, mnemonic) {
     var hdRoot, i, hdprivkey, privkeyBuf, privkeyHex, x;
     return _regenerator2.default.async(function create$(_context) {
@@ -44,7 +44,7 @@ function patchWallet(wallet) {
             }
 
             if (!isValidMnemonic(mnemonic)) {
-              _context.next = 26;
+              _context.next = 27;
               break;
             }
 
@@ -59,7 +59,7 @@ function patchWallet(wallet) {
 
           case 9:
             if (!(i < numberOfAccounts)) {
-              _context.next = 24;
+              _context.next = 25;
               break;
             }
 
@@ -87,23 +87,26 @@ function patchWallet(wallet) {
             x = this._accounts.privateKeyToAccount(privkeyHex).privateKey;
 
             this.add(x);
+            if (i === 0) {
+              config.account.address = this[0].address;
+            }
 
-          case 21:
+          case 22:
             ++i;
             _context.next = 9;
             break;
 
-          case 24:
-            _context.next = 27;
+          case 25:
+            _context.next = 28;
             break;
 
-          case 26:
+          case 27:
             throw Error('Mnemonic was not valid: ' + mnemonic);
 
-          case 27:
+          case 28:
             return _context.abrupt('return', this);
 
-          case 28:
+          case 29:
           case 'end':
             return _context.stop();
         }

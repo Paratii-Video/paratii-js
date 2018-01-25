@@ -1,12 +1,9 @@
+/* global File, ArrayBuffer */
 'use strict';
 
 /**
  * @module IPFS UPLOADER : Paratii IPFS uploader interface.
  */
-
-var _setImmediate2 = require('babel-runtime/core-js/set-immediate');
-
-var _setImmediate3 = _interopRequireDefault(_setImmediate2);
 
 var _promise = require('babel-runtime/core-js/promise');
 
@@ -39,12 +36,9 @@ var _require = require('events'),
 
 var dopts = require('default-options');
 var pull = require('pull-stream');
-// const pullFilereader = require('pull-filereader')
-var fs = require('fs');
+var pullFilereader = require('pull-filereader');
 var toPull = require('stream-to-pull-stream');
-// const ytdl = require('ytdl-core')
-// const vidl = require('vimeo-downloader')
-// const readline = require('readline')
+var fs = require('fs');
 var path = require('path');
 
 var _require2 = require('async'),
@@ -52,6 +46,9 @@ var _require2 = require('async'),
     nextTick = _require2.nextTick;
 
 var once = require('once');
+// const ytdl = require('ytdl-core')
+// const vidl = require('vimeo-downloader')
+// const readline = require('readline')
 
 var Uploader = function (_EventEmitter) {
   (0, _inherits3.default)(Uploader, _EventEmitter);
@@ -63,6 +60,7 @@ var Uploader = function (_EventEmitter) {
 
     _this.setOptions(opts);
     _this._ipfs = paratiiIPFS; // this is the paratii.ipfs.js
+    // console.log('========================browser-uploader=====================')
     return _this;
   }
 
@@ -76,62 +74,106 @@ var Uploader = function (_EventEmitter) {
       // }
       this._node = opts.node; // this is the actual IPFS node.
       this._chunkSize = opts.chunkSize || 64048;
+      this._defaultTranscoder = opts.defaultTranscoder || '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'; // Address of transcoder
     }
   }, {
     key: 'onDrop',
     value: function onDrop(ev) {}
+
+    /**
+     * uploads a single file to local IPFS node
+     * @param {File} file HTML5 File Object.
+     * @returns {EventEmitter} checkout the upload function below for details.
+     */
+
   }, {
     key: 'add',
     value: function add(file) {
-      var that = this;
-      return new _promise2.default(function (resolve, reject) {
-        var files = void 0;
-        if (Array.isArray(file)) {
-          files = file;
-        } else {
-          files = [file];
-        }
+      var files = void 0;
+      if (Array.isArray(file)) {
+        files = file;
+      } else {
+        files = [file];
+      }
 
-        var opts = {
-          onDone: function onDone(files) {
-            return resolve(files);
-          },
-          onError: function onError(err) {
-            return reject(err);
+      var result = [];
+
+      for (var i = 0; i < files.length; i++) {
+        // check if File is actually available or not.
+        // if not it means we're not in the browser land.
+        if (typeof File !== 'undefined') {
+          if (files[i] instanceof File) {
+            result.push(this.html5FileToPull(files[i]));
+          } else {
+            result.push(this.fsFileToPull(files[i]));
           }
-        };
-        console.log(opts);
-        return that.upload(files, opts);
-      });
+        } else {
+          result.push(this.fsFileToPull(files[i]));
+        }
+      }
+
+      return this.upload(result);
     }
 
     /**
-     * upload a file as is to the local IPFS node
-     * @param  {file} file    HTML5 File Object
-     * @param  {Object} options Holds various callbacks, ref: https://github.com/Paratii-Video/paratii-lib/blob/master/docs/paratii-ipfs.md#ipfsuploaderuploadfile-options
+     * returns a generic File Object with a Pull Stream from an HTML5 File
+     * @param  {File} file HTML5 File Object
+     * @return {Object}      generic file object.
+     */
+
+  }, {
+    key: 'html5FileToPull',
+    value: function html5FileToPull(file) {
+      return {
+        name: file.name,
+        size: file.size,
+        _pullStream: pullFilereader(file)
+      };
+    }
+
+    /**
+     * returns a generic file Object from a file path
+     * @param  {String} filePath Path to file.
+     * @return {Object}          generic file object.
+     */
+
+  }, {
+    key: 'fsFileToPull',
+    value: function fsFileToPull(filePath) {
+      var stats = fs.statSync(filePath);
+      if (stats) {
+        return {
+          name: path.basename(filePath),
+          size: stats.size,
+          _pullStream: toPull(fs.createReadStream(filePath))
+        };
+      } else {
+        return null;
+      }
+    }
+
+    /**
+     * upload an Array of files as is to the local IPFS node
+     * @param  {Array} files    HTML5 File Object Array.
+     * @return {EventEmitter} returns EventEmitter with the following events:
+     *    - 'start': uploader started.
+     *    - 'progress': (chunkLength, progressPercent)
+     *    - 'fileReady': (file) triggered when a file is uploaded.
+     *    - 'done': (files) triggered when the uploader is done.
+     *    - 'error': (err) triggered whenever an error occurs.
      */
 
   }, {
     key: 'upload',
-    value: function upload(files, options) {
+    value: function upload(files) {
       var _this2 = this;
 
-      var defaults = {
-        onStart: function onStart() {}, // function()
-        onError: function onError(err) {
-          if (err) throw err;
-        }, // function (err)
-        onFileReady: function onFileReady(file) {}, // function(file)
-        onProgress: function onProgress(chunkLength, progress) {}, // function(chunkLength)
-        onDone: function onDone(file) {} // function(file)
-      };
-
-      var opts = dopts(options, defaults, { allowUnknown: true });
       var meta = {}; // holds File metadata.
-      // let files = [file]
+      var ev = new EventEmitter();
+
       this._ipfs.start(function () {
         // trigger onStart callback
-        opts.onStart();
+        ev.emit('start');
 
         pull(pull.values(files), pull.through(function (file) {
           console.log('Adding ', file);
@@ -141,30 +183,29 @@ var Uploader = function (_EventEmitter) {
           return pull(pull.values([{
             path: file.name,
             // content: pullFilereader(file)
-            content: pull(toPull(fs.createReadStream(file)), // file here is a path to file.
-            pull.through(function (chunk) {
-              return opts.onProgress(chunk.length, Math.floor((meta.total + chunk.length) / meta.fileSize) * 100);
+            content: pull(file._pullStream, pull.through(function (chunk) {
+              return ev.emit('progress', chunk.length, Math.floor((meta.total + chunk.length) / meta.fileSize) * 100);
             }))
           }]), _this2._node.files.addPullStream({ chunkerOptions: { maxChunkSize: _this2._chunkSize } }), // default size 262144
           pull.collect(function (err, res) {
             if (err) {
-              return opts.onError(err);
+              return ev.emit('error', err);
             }
             var file = res[0];
-            console.log('Adding %s finished', file.path);
-            opts.onFileReady(file);
-            (0, _setImmediate3.default)(function () {
-              cb();
-            });
+            console.log('Adding %s finished as %s', file.path, file.hash);
+            ev.emit('fileReady', file);
+            cb(null, file);
           }));
         }), pull.collect(function (err, files) {
           if (err) {
-            return opts.onError(err);
+            ev.emit('error', err);
           }
-          console.log('uploader Finished', files);
-          return opts.onDone(files);
+          console.log('uploader is DONE');
+          ev.emit('done', files);
         }));
       });
+
+      return ev;
     }
 
     /**
@@ -251,30 +292,36 @@ var Uploader = function (_EventEmitter) {
 
       var defaults = {
         author: '0x', // ETH/PTI address of the file owner
-        transcoder: '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW', // Address of transcoder
-        onError: function onError(err) {
-          if (err) throw err;
-        },
-        onProgress: function onProgress(progress) {}, // TODO update client on progress.
-        onDone: function onDone(err, result) {
-          if (err) throw err;
-        }
+        transcoder: this._defaultTranscoder
+        // onError: (err) => { if (err) throw err },
+        // onProgress: (progress) => { }, // TODO update client on progress.
+        // onDone: (err, result) => { if (err) throw err },
       };
 
       var opts = dopts(options, defaults, { allowUnknown: true });
+
+      if (!opts.ev) {
+        throw new Error('transcode requires an eventemitter to report back result!');
+      }
+
+      if (fileHash === '') {
+        // empty hash for testing eventemitter
+        return opts.ev.emit('transcoder:done', { test: 1 });
+      }
 
       var msg = this._ipfs.protocol.createCommand('transcode', { hash: fileHash, author: opts.author });
       // FIXME : This is for dev, so we just signal our transcoder node.
       // This needs to be dynamic later on.
       this._node.swarm.connect(opts.transcoder, function (err, success) {
-        if (err) return opts.onError(err);
+        if (err) return opts.ev.emit('transcoder:error', err);
+
         _this4._node.swarm.peers(function (err, peers) {
           console.log('peers: ', peers);
-          if (err) return opts.onError(err);
+          if (err) return opts.ev.emit('transcoder:error', err);
           peers.map(function (peer) {
             console.log('sending transcode msg to ', peer.peer.id.toB58String());
             _this4._ipfs.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
-              if (err) opts.onError(err);
+              if (err) opts.ev.emit('transcoder:error', err);
             });
 
             if (peer.addr) {}
@@ -290,40 +337,65 @@ var Uploader = function (_EventEmitter) {
               if (args.hash === fileHash) {
                 console.log('args: ', args);
                 console.log('result: ', result);
-                return opts.onDone(null, fileHash);
+                return opts.ev.emit('transcoder:done', fileHash);
               }
             }
           });
 
-          opts.onProgress(0); // TODO : add an event for starting.
+          opts.ev.emit('transcoder:progress', 0); // TODO : add an event for starting.
         });
       });
     }
+
+    /**
+     * convenience method for adding and transcoding files
+     * @param {Array} files Array of HTML5 File Objects
+     */
+
   }, {
     key: 'addAndTranscode',
     value: function addAndTranscode(files) {
-      this.upload(files, { onDone: this._signalTranscoder });
+      var _this5 = this;
+
+      var ev = this.add(files);
+      // ev.on('done', this._signalTranscoder.bind(this))
+      ev.on('done', function (files) {
+        _this5._signalTranscoder(files, ev);
+      });
+      // return the EventEmitter
+      return ev;
     }
   }, {
     key: '_signalTranscoder',
-    value: function _signalTranscoder(files) {
+    value: function _signalTranscoder(files, ev) {
       var file = void 0;
       if (Array.isArray(files)) {
         if (files.length < 1) {
-          console.log('_signalTranscoder Got an empty Array. files: ', files);
-          return;
+          // console.log('_signalTranscoder Got an empty Array. files: ', files)
+          // return
+          //
+          // FIXME THIS NEEDS TO BE REMOVED --------------------------------------
+          file = { hash: '' // testing something ...
+            // ---------------------------------------------------------------------
+          };
+        } else {
+          file = files[0];
         }
-        file = files[0];
       } else {
         file = files;
       }
 
+      if (!ev) {
+        ev = new EventEmitter();
+      }
+
       this.transcode(file.hash, {
         author: '0x', // author address,
-        onDone: function onDone(err, folderHash) {
-          if (err) throw err;
-          console.log('transcoder done ', folderHash);
-        }
+        // onDone: (err, folderHash) => {
+        //   if (err) throw err
+        //   console.log('transcoder done ', folderHash)
+        // },
+        ev: ev
       });
     }
 
@@ -413,75 +485,70 @@ var Uploader = function (_EventEmitter) {
     //     this._signalTranscoderPull(callback)
     //   )
     // }
+    //
+    // _signalTranscoderPull (callback) {
+    //   return pull.collect((err, res) => {
+    //     if (err) {
+    //       return callback(err)
+    //     }
+    //     const file = res[0]
+    //     console.log('Adding %s finished', file.path)
+    //
+    //     // statusEl.innerHTML += `Added ${file.path} as ${file.hash} ` + '<br>'
+    //     // Trigger paratii transcoder signal
+    //     this.signalTrancoder(file, callback)
+    //   })
+    // }
+    //
+    // signalTranscoder (file, callback) {
+    //   let msg = this._ipfs.protocol.createCommand('transcode', {hash: file.hash, author: this.id.id})
+    //   this._node.swarm.connect('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW', (err, success) => {
+    //     if (err) throw err
+    //     this._node.swarm.peers((err, peers) => {
+    //       console.log('peers: ', peers)
+    //       if (err) throw err
+    //       peers.map((peer) => {
+    //         console.log('sending transcode msg to ', peer.peer.id.toB58String())
+    //         this._ipfs.protocol.network.sendMessage(peer.peer.id, msg, (err) => {
+    //           if (err) console.warn('[Paratii-protocol] Error ', err)
+    //         })
+    //
+    //         if (peer.addr) {
+    //         }
+    //       })
+    //       callback(null, file)
+    //     })
+    //   })
+    //     // paratii transcoder signal.
+    //   this._ipfs.protocol.notifications.on('command', (peerId, command) => {
+    //     console.log('paratii protocol: Got Command ', command)
+    //     if (command.payload.toString() === 'transcoding:done') {
+    //       let args = JSON.parse(command.args.toString())
+    //       let result = JSON.parse(args.result)
+    //       console.log('args: ', args)
+    //       console.log('result: ', result)
+    //         // statusEl.innerHTML += `Video HLS link: /ipfs/${result.master.hash}\n`
+    //
+    //         // titleEl = document.querySelector('#input-title')
+    //         // console.log('titleEl: ', titleEl)
+    //       //   Meteor.call('videos.create', {
+    //       //     id: String(Math.random()).split('.')[1],
+    //       //     title: titleEl.value,
+    //       //     price: 0.0,
+    //       //     src: '/ipfs/' + result.master.hash,
+    //       //     mimetype: 'video/mp4',
+    //       //     stats: {
+    //       //       likes: 0,
+    //       //       dislikes: 0
+    //       //     }}, (err, videoId) => {
+    //       //       if (err) throw err
+    //       //       console.log('[upload] Video Uploaded: ', videoId)
+    //       //       statusEl.innerHTML += '\n Video Uploaded go to <b><a href="/play/' + videoId + '">/play/' + videoId + '</a></b>\n'
+    //       //     })
+    //     }
+    //   })
+    // }
 
-  }, {
-    key: '_signalTranscoderPull',
-    value: function _signalTranscoderPull(callback) {
-      var _this5 = this;
-
-      return pull.collect(function (err, res) {
-        if (err) {
-          return callback(err);
-        }
-        var file = res[0];
-        console.log('Adding %s finished', file.path);
-
-        // statusEl.innerHTML += `Added ${file.path} as ${file.hash} ` + '<br>'
-        // Trigger paratii transcoder signal
-        _this5.signalTrancoder(file, callback);
-      });
-    }
-  }, {
-    key: 'signalTranscoder',
-    value: function signalTranscoder(file, callback) {
-      var _this6 = this;
-
-      var msg = this._ipfs.protocol.createCommand('transcode', { hash: file.hash, author: this.id.id });
-      this._node.swarm.connect('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW', function (err, success) {
-        if (err) throw err;
-        _this6._node.swarm.peers(function (err, peers) {
-          console.log('peers: ', peers);
-          if (err) throw err;
-          peers.map(function (peer) {
-            console.log('sending transcode msg to ', peer.peer.id.toB58String());
-            _this6._ipfs.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
-              if (err) console.warn('[Paratii-protocol] Error ', err);
-            });
-
-            if (peer.addr) {}
-          });
-          callback(null, file);
-        });
-      });
-      // paratii transcoder signal.
-      this._ipfs.protocol.notifications.on('command', function (peerId, command) {
-        console.log('paratii protocol: Got Command ', command);
-        if (command.payload.toString() === 'transcoding:done') {
-          var args = JSON.parse(command.args.toString());
-          var result = JSON.parse(args.result);
-          console.log('args: ', args);
-          console.log('result: ', result);
-          // statusEl.innerHTML += `Video HLS link: /ipfs/${result.master.hash}\n`
-
-          // titleEl = document.querySelector('#input-title')
-          // console.log('titleEl: ', titleEl)
-          //   Meteor.call('videos.create', {
-          //     id: String(Math.random()).split('.')[1],
-          //     title: titleEl.value,
-          //     price: 0.0,
-          //     src: '/ipfs/' + result.master.hash,
-          //     mimetype: 'video/mp4',
-          //     stats: {
-          //       likes: 0,
-          //       dislikes: 0
-          //     }}, (err, videoId) => {
-          //       if (err) throw err
-          //       console.log('[upload] Video Uploaded: ', videoId)
-          //       statusEl.innerHTML += '\n Video Uploaded go to <b><a href="/play/' + videoId + '">/play/' + videoId + '</a></b>\n'
-          //     })
-        }
-      });
-    }
   }]);
   return Uploader;
 }(EventEmitter);

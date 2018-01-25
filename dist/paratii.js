@@ -64,20 +64,11 @@ var Paratii = function () {
     } else {
       this.config.isTestNet = false;
     }
-
+    this.config.account = {
+      address: options.address,
+      privateKey: options.privateKey
+    };
     this.config.registryAddress = options.registryAddress;
-
-    if (options.address) {
-      this.config.account = {
-        address: options.address,
-        privateKey: options.privateKey
-      };
-    } else {
-      this.config.account = {
-        address: null,
-        privateKey: null
-      };
-    }
 
     this.config.paratii = this;
     this.core = new _paratiiCore.ParatiiCore(this.config);
@@ -89,13 +80,7 @@ var Paratii = function () {
   (0, _createClass3.default)(Paratii, [{
     key: 'setAccount',
     value: function setAccount(address, privateKey) {
-      this.config.account = {
-        address: address,
-        privateKey: privateKey
-      };
-      if (privateKey) {
-        this.web3.eth.accounts.wallet.add(privateKey);
-      }
+      this.eth.setAccount(address, privateKey);
     }
   }, {
     key: 'setRegistryAddress',
@@ -123,25 +108,31 @@ var Paratii = function () {
 
               log('Paratii was initialized with the following options:');
               log(this.config);
+              log('Checking main account');
+              if (this.config.account.address && this.config.account.privateKey) {
+                log('Your private key: ' + this.config.account.privateKey);
+                log('Your private key: ' + this.config.account.privateKey);
+                log('First wallet account: ' + this.eth.web3.eth.accounts.wallet[0].address);
+              }
               address = this.eth.getRegistryAddress();
 
               if (address) {
-                _context.next = 13;
+                _context.next = 15;
                 break;
               }
 
               log('*** No registry address found!');
               log('Value of this.config.registryAddress: ' + this.config.registryAddress);
               isOk = false;
-              _context.next = 32;
+              _context.next = 35;
               break;
 
-            case 13:
+            case 15:
               log('checking deployed code of Registry...');
-              _context.next = 16;
+              _context.next = 18;
               return _regenerator2.default.awrap(this.eth.web3.eth.getCode(address));
 
-            case 16:
+            case 18:
               msg = _context.sent;
 
               if (msg === '0x') {
@@ -152,40 +143,42 @@ var Paratii = function () {
                 // log(`We found the following code on the registry address ${address}`)
                 // log(msg)
               }
-              log('checking for addresses');
-              _context.next = 21;
+              log('checking for addresses on registry@' + address);
+              _context.next = 23;
               return _regenerator2.default.awrap(this.eth.getContract('Registry'));
 
-            case 21:
+            case 23:
               registry = _context.sent;
+
+              log('(registry address is ' + registry.options.address + ')');
               _context.t0 = _regenerator2.default.keys(this.eth.contracts);
 
-            case 23:
+            case 26:
               if ((_context.t1 = _context.t0()).done) {
-                _context.next = 32;
+                _context.next = 35;
                 break;
               }
 
               name = _context.t1.value;
 
               if (!(name !== 'Registry')) {
-                _context.next = 30;
+                _context.next = 33;
                 break;
               }
 
-              _context.next = 28;
+              _context.next = 31;
               return _regenerator2.default.awrap(registry.methods.getContract(name).call());
 
-            case 28:
+            case 31:
               address = _context.sent;
 
               log('address of ' + name + ': ' + address);
 
-            case 30:
-              _context.next = 23;
+            case 33:
+              _context.next = 26;
               break;
 
-            case 32:
+            case 35:
               if (isOk) {
                 log('---- everything seems fine -----');
               } else {
@@ -193,7 +186,7 @@ var Paratii = function () {
               }
               return _context.abrupt('return', msgs);
 
-            case 34:
+            case 37:
             case 'end':
               return _context.stop();
           }

@@ -109,23 +109,29 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
     }
   }, {
     key: 'log',
-    value: function log(msg) {
+    value: function log() {
       if (this.config.verbose) {
-        console.log(msg);
+        var _console;
+
+        (_console = console).log.apply(_console, arguments);
       }
     }
   }, {
     key: 'warn',
-    value: function warn(msg) {
+    value: function warn() {
       if (this.config.verbose) {
-        console.warn(msg);
+        var _console2;
+
+        (_console2 = console).warn.apply(_console2, arguments);
       }
     }
   }, {
     key: 'error',
-    value: function error(msg) {
+    value: function error() {
       if (this.config.verbose) {
-        console.error(msg);
+        var _console3;
+
+        (_console3 = console).error.apply(_console3, arguments);
       }
     }
   }, {
@@ -168,7 +174,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
             ipfs.id().then(function (id) {
               var peerInfo = id;
               _this.id = id;
-              _this.log('[IPFS] id: ', peerInfo);
+              _this.log('[IPFS] id:  ' + peerInfo);
               var ptiAddress = _this.config.address || 'no_address';
               _this.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
               // add ETH Address here.
@@ -184,11 +190,6 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
                 _this.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
               });
 
-              // setTimeout(() => {
-              //   this.protocol.start(noop)
-              //   this.triggerOnReady()
-              // }, 10)
-
               _this.ipfs = ipfs;
 
               resolve(ipfs);
@@ -197,8 +198,8 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
 
           ipfs.on('error', function (err) {
             if (err) {
-              _this.log('IPFS node ', ipfs);
-              _this.error('[IPFS] ', err);
+              // this.log('IPFS node ', ipfs)
+              _this.error('[IPFS] Error ', err);
               reject(err);
             }
           });
@@ -317,11 +318,12 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
       // }
 
       if (this.ipfs && this.ipfs.isOnline()) {
+        console.log('IPFS is already running');
         return callback();
       }
 
       this.getIPFSInstance().then(function (ipfs) {
-        ipfs.start(callback);
+        callback();
       });
     }
   }, {

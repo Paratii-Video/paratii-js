@@ -18,6 +18,7 @@ The `paratii.eth.getContract` attribute of gives access to the different contrac
 
 ### `eth.getContractAddress(contractName)`
 
+
 ### `eth.getContracts()`
 
 Returns all contracts

@@ -3,9 +3,10 @@
 // import { Paratii } from '../lib/paratii.js'
 // import { address, privateKey } from './utils.js'
 import { ParatiiIPFS } from '../lib/paratii.ipfs.js'
-import { assert } from 'chai'
+import { assert, expect } from 'chai'
 // const FileApi = require('file-api')
 // const fs = require('fs')
+// global.FileReader = FileApi.FileReader
 
 describe('ParatiiIPFS: :', function () {
   let paratiiIPFS
@@ -34,12 +35,33 @@ describe('ParatiiIPFS: :', function () {
   //   // console.log('paratiiIPFS: ', paratiiIPFS)
   //   // global.asyncDump()
   // })
-
-  it('should allow for file upload', async function () {
-    // let file = fs.createReadStream('test/data/some-file.txt')
+  // FIXME : this requires a browser to run.
+  // I'm trying to mock the FileReader but it's glitchy so far :(
+  it('should allow for file upload', (done) => {
     let file = 'test/data/some-file.txt'
+
     let files = [file]
-    await paratiiIPFS.uploader.add(files)
+    let uploaderEv = paratiiIPFS.uploader.add(files)
+
+    uploaderEv.once('start', () => {
+      console.log('uploader started')
+    })
+
+    uploaderEv.on('progress', (chunkLength, percent) => {
+      console.log('progress: ', percent)
+    })
+
+    uploaderEv.on('fileReady', (file) => {
+      console.log('got fileReady ', file)
+    })
+
+    uploaderEv.once('done', (files) => {
+      console.log('uploader done, ', files)
+      assert.isOk(files)
+      expect(files).to.have.lengthOf(1)
+      expect(files[0].hash).to.equal('QmS8yinWCD1vm7WJx34tg81FpjEXbdYXf3Y5XcCeh29C6K')
+      done()
+    })
   })
 
   it('should add a directory to IPFS', async function () {
@@ -52,10 +74,16 @@ describe('ParatiiIPFS: :', function () {
     assert.equal(response.hash, 'QmeXV3v98a2Y7C6FVMbPnaSQNX59kv4dKDeVqCxNu2jpMB')
   })
 
-  it('addAndTranscode() should work as expected', async function () {
+  it('addAndTranscode() should work as expected', (done) => {
     let files = []
-    await paratiiIPFS.getIPFSInstance()
-    await paratiiIPFS.uploader.addAndTranscode(files)
+
+    let ev = paratiiIPFS.uploader.addAndTranscode(files)
+    ev.on('transcoder:done', (resp) => {
+      assert.isOk(resp)
+      assert.isOk(resp.test)
+      expect(resp.test).to.equal(1)
+      done()
+    })
   })
 
   // FIXME : this requires a browser to run.

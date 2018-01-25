@@ -1,10 +1,11 @@
 {
   "name": "paratii-lib",
   "version": "0.0.1",
-  "description": "Paratii Smart Contracts",
+  "description": "Paratii Library",
   "main": "dist/paratii.js",
   "browser": {
-    "./lib/paratii.ipfs.uploader.js": "./lib/paratii.ipfs.uploader.browser.js"
+    "fs": false,
+    "path": false
   },
   "directories": {
     "test": "test"
@@ -13,7 +14,6 @@
     "build": "babel ./lib -d ./dist",
     "build-browser": "webpack --progress --colors",
     "test": "mocha --require babel.js --exit --timeout 10000 test/*.js",
-    "testrpc": "testrpc --deterministic",
     "parity": "parity --config parity-config.toml",
     "lint": "standard",
     "lint-fix": "standard --fix",
@@ -28,7 +28,7 @@
     "default-options": "^1.0.0",
     "ipfs": "github:Paratii-Video/js-ipfs#paratii/v0.27.1",
     "once": "^1.4.0",
-    "paratii-contracts": "github:Paratii-Video/paratii-contracts#fc5949dcfe166ebeab702609d9f3035fd361416d",
+    "paratii-contracts": "github:Paratii-Video/paratii-contracts#8db835572fb38f694dccf4268fb66ab69f346687",
     "paratii-protocol": "github:Paratii-Video/paratii-protocol#master",
     "promisify-node": "^0.4.0",
     "pull-filereader": "^1.0.1",
