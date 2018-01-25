@@ -25,7 +25,7 @@
     "default-options": "^1.0.0",
     "ipfs": "github:Paratii-Video/js-ipfs#paratii/v0.27.1",
     "once": "^1.4.0",
-    "paratii-contracts": "github:Paratii-Video/paratii-contracts#fc5949dcfe166ebeab702609d9f3035fd361416d",
+    "paratii-contracts": "github:Paratii-Video/paratii-contracts#54383e87c5080a196e24b1d4cf6238e5a5e7db38",
     "paratii-protocol": "github:Paratii-Video/paratii-protocol#master",
     "promisify-node": "^0.4.0",
     "pull-filereader": "^1.0.1",
