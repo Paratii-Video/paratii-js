@@ -14,10 +14,6 @@ describe('paratii.eth.events API: :', function () {
     // paratii.eth.web3.setProvider('ws://localhost:8546')
   })
 
-  beforeEach(async function () {
-    paratii.eth.events._subscriptions = {}
-  })
-
   it('subscription to Tranfer PTI events should work as expected', function (done) {
     let beneficiary = '0xDbC8232Bd8DEfCbc034a0303dd3f0Cf41d1a55Cf'
     let amount = paratii.eth.web3.utils.toWei('4', 'ether')
@@ -54,12 +50,15 @@ describe('paratii.eth.events API: :', function () {
     let price = 3 * 10 ** 18
     let ipfsHash = 'xyz'
     let ipfsData = 'zzz'
-    let videoId = 'some-id'
+    let number = Math.random()
+    let videoId = number.toString(36).substr(2, 9)
 
     paratii.eth.events.addListener('CreateVideo', function (log) {
       const receivedVideoId = log.returnValues.videoId
-      assert.equal(videoId, receivedVideoId)
-      done()
+      if (videoId === receivedVideoId) {
+        assert.equal(videoId, receivedVideoId)
+        done()
+      }
     })
 
     paratii.eth.vids.create({
@@ -71,13 +70,15 @@ describe('paratii.eth.events API: :', function () {
     })
   })
 
-  it.skip('subscription to Create Video events should work as expected if triggered twice', function (done) {
+  it('subscription to Create Video events should work as expected if triggered twice', function (done) {
     let creator = address1
     let price = 3 * 10 ** 18
     let ipfsHash = 'xyz'
     let ipfsData = 'zzz'
-    let videoId = 'some-id1'
-    let videoId2 = 'some-id2'
+    let number = Math.random()
+    let number2 = Math.random()
+    let videoId = number.toString(36).substr(2, 9)
+    let videoId2 = number2.toString(36).substr(2, 9)
     let counter = 0
     let success = 2
 
@@ -113,30 +114,49 @@ describe('paratii.eth.events API: :', function () {
     })
   })
 
-  it.skip('subscription to Update Video events should work as expected', function (done) {
+  it('subscription to Update Video events should work as expected', function (done) {
     let creator = address1
     let price = 3 * 10 ** 18
     let ipfsHash = 'xyz'
     let ipfsData = 'zzz'
-    let videoId = 'some-id'
-
+    let number = Math.random()
+    let videoId = number.toString(36).substr(2, 9)
+    let counter = 0
+    // update it's call twice, from create and from update
+    let success = 2
     paratii.eth.events.addListener('UpdateVideo', function (log) {
       const receivedVideoId = log.returnValues.videoId
-      assert.equal(videoId, receivedVideoId)
-      done()
+      counter++
+      if (videoId === receivedVideoId && counter === success) {
+        assert.equal(videoId, receivedVideoId)
+        done()
+      }
     })
 
-    paratii.eth.vids.update(videoId, {
+    paratii.eth.vids.create({
       id: videoId,
       price: price,
       owner: creator,
       ipfsHash: ipfsHash,
       ipfsData: ipfsData
+    }).then(function () {
+      paratii.eth.vids.update(videoId, {
+        id: videoId,
+        price: price,
+        owner: creator,
+        ipfsHash: ipfsHash,
+        ipfsData: ipfsData
+      })
     })
   })
 
   it('subscription to Remove Video events should work as expected', function (done) {
-    let videoId = 'some-id'
+    let creator = address1
+    let price = 3 * 10 ** 18
+    let ipfsHash = 'xyz'
+    let ipfsData = 'zzz'
+    let number = Math.random()
+    let videoId = number.toString(36).substr(2, 9)
 
     paratii.eth.events.addListener('RemoveVideo', function (log) {
       const receivedVideoId = log.returnValues.videoId
@@ -144,7 +164,15 @@ describe('paratii.eth.events API: :', function () {
       done()
     })
 
-    paratii.eth.vids.delete(videoId)
+    paratii.eth.vids.create({
+      id: videoId,
+      price: price,
+      owner: creator,
+      ipfsHash: ipfsHash,
+      ipfsData: ipfsData
+    }).then(function () {
+      paratii.eth.vids.delete(videoId)
+    })
   })
   it('subscription to Create User events should work as expected', function (done) {
     let userId = address
