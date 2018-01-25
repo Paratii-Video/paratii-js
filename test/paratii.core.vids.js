@@ -21,6 +21,7 @@ describe('paratii.core.vids:', function () {
       id: 'some-id',
       owner: address1,
       title: 'some Title',
+      description: 'A long description',
       price: '0',
       file: videoFile
     }
@@ -35,20 +36,34 @@ describe('paratii.core.vids:', function () {
   it('core.vids.create() should accept ipfsHash as argument', async function () {
     let data
 
-    data = await paratii.core.vids.get(videoId)
-    assert.equal(data.ipfsHash, '')
+    // make sure the video does not exist
+    assert.isRejected(paratii.eth.vids.get(videoId), Error, 'No video')
 
     data = await paratii.core.vids.create({
       id: videoId,
       owner: address1,
       title: videoTitle,
-      ipfsHash: ipfsHash
+      ipfsHash: ipfsHash,
+      price: 1
     })
 
     assert.equal(data.ipfsHash, ipfsHash)
 
     data = await paratii.core.vids.get(videoId)
     assert.equal(data.ipfsHash, ipfsHash)
+  })
+
+  it('core.vids.create() should create a fresh id if none is given', async function () {
+    let video = await paratii.core.vids.create({
+      owner: address1,
+      title: videoTitle
+    })
+    assert.isOk(video.id)
+    let videoId2 = await paratii.core.vids.create({
+      owner: address1,
+      title: videoTitle
+    })
+    assert.notEqual(videoId, videoId2)
   })
 
   it('core.vids.update() should work as expected', async function () {
@@ -59,10 +74,15 @@ describe('paratii.core.vids:', function () {
     })
     let data
     data = await paratii.core.vids.get(videoId)
+    console.log(data)
     assert.equal(data.title, videoTitle)
 
     data = await paratii.core.vids.update(videoId, {title: 'another-title'})
     assert.equal(data.title, 'another-title')
+    assert.equal(data.owner, address1)
+
+    data = await paratii.core.vids.update(videoId, {description: 'another description'})
+    assert.equal(data.description, 'another description')
     assert.equal(data.owner, address1)
 
     data = await paratii.core.vids.get(videoId)

@@ -6,7 +6,6 @@ describe('paratii.eth API: :', function () {
   let paratii
   beforeEach(async function () {
     paratii = await new Paratii({
-      provider: 'http://localhost:8545/rpc/',
       address: address,
       privateKey: privateKey
     })
@@ -33,7 +32,6 @@ describe('paratii.eth API: :', function () {
 
     // If Paratii was created with a registeryAddress, addresses of other contracts should be known
     paratii = await new Paratii({
-      provider: 'http://localhost:8545',
       registryAddress: registryAddress
     })
 
@@ -69,6 +67,14 @@ describe('paratii.eth API: :', function () {
     assert.isOk(contract)
   })
 
+  it.skip('getcontract() should return a meaningful error if the address of the contract is not known', async function () {
+    let registry = await paratii.eth.getContract('Registry')
+    // the next line does not update the get contract address
+    await registry.methods.registerAddress('Videos', '').send()
+    assert.equal(await registry.methods.getContract('Videos').options.address, '0x0000000000000000000000000000000000000000')
+
+    await paratii.eth.vids.get('some-id')
+  })
   it('balanceOf() should return the right balances', async function () {
     let balance
 

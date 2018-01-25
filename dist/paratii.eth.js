@@ -61,7 +61,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
       this.web3.setProvider(new this.web3.providers.WebsocketProvider(options.wsprovider));
     }
 
-    this.wallet = (0, _paratiiEthWallet.patchWallet)(this.web3.eth.accounts.wallet);
+    this.wallet = (0, _paratiiEthWallet.patchWallet)(this.web3.eth.accounts.wallet, this.config);
     this.setAccount(this.config.account.address, this.config.account.privateKey);
 
     this.contracts = {};
@@ -136,9 +136,11 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
             case 8:
               deployedContract = _context.sent;
+
+              this.contracts[name] = deployedContract;
               return _context.abrupt('return', deployedContract);
 
-            case 10:
+            case 11:
             case 'end':
               return _context.stop();
           }
@@ -464,6 +466,10 @@ var ParatiiEth = exports.ParatiiEth = function () {
     key: 'setRegistryAddress',
     value: function setRegistryAddress(registryAddress) {
       this.config.registryAddress = registryAddress;
+      for (var name in this.contracts) {
+        var contract = this.contracts[name];
+        contract.options.address = undefined;
+      }
     }
   }, {
     key: 'balanceOf',
