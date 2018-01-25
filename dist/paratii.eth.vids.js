@@ -32,10 +32,10 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
   }
 
   (0, _createClass3.default)(ParatiiEthVids, [{
-    key: 'getRegistry',
-    value: function getRegistry() {
+    key: 'getVideoRegistry',
+    value: function getVideoRegistry() {
       var contract;
-      return _regenerator2.default.async(function getRegistry$(_context) {
+      return _regenerator2.default.async(function getVideoRegistry$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
@@ -45,19 +45,17 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
             case 2:
               contract = _context.sent;
 
-              console.log(contract.options.address);
-
               if (!(contract.options.address === '0x0')) {
-                _context.next = 6;
+                _context.next = 5;
                 break;
               }
 
               throw Error('There is not Videos contract known in the registry');
 
-            case 6:
+            case 5:
               return _context.abrupt('return', contract);
 
-            case 7:
+            case 6:
             case 'end':
               return _context.stop();
           }
@@ -82,8 +80,9 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
                 id: null,
                 owner: undefined,
                 price: 0,
-                ipfsHash: undefined,
-                ipfsData: undefined
+                ipfsHashOrig: '',
+                ipfsHash: '',
+                ipfsData: ''
               };
 
               options = dopts(options, defaults);
@@ -101,20 +100,31 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
               throw Error(msg);
 
             case 6:
-              _context2.next = 8;
-              return _regenerator2.default.awrap(this.getRegistry());
 
-            case 8:
+              console.log('1');
+              console.log(options.id);
+              _context2.next = 10;
+              return _regenerator2.default.awrap(this.getVideoRegistry());
+
+            case 10:
               contract = _context2.sent;
-              _context2.next = 11;
-              return _regenerator2.default.awrap(contract.methods.create(options.id, options.owner, options.price, options.ipfsHash, options.ipfsData).send());
 
-            case 11:
+              console.log('2');
+              console.log(options);
+              _context2.next = 15;
+              return _regenerator2.default.awrap(contract.methods.create(options.id, options.owner, options.price, options.ipfsHashOrig, options.ipfsHash, options.ipfsData).send());
+
+            case 15:
               tx = _context2.sent;
+
+              console.log('3');
               videoId = (0, _utils.getInfoFromLogs)(tx, 'LogCreateVideo', 'videoId');
+
+              console.log(videoId);
+
               return _context2.abrupt('return', videoId);
 
-            case 14:
+            case 20:
             case 'end':
               return _context2.stop();
           }
@@ -130,7 +140,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
           switch (_context3.prev = _context3.next) {
             case 0:
               _context3.next = 2;
-              return _regenerator2.default.awrap(this.getRegistry());
+              return _regenerator2.default.awrap(this.getVideoRegistry());
 
             case 2:
               contract = _context3.sent;
@@ -204,7 +214,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
           switch (_context5.prev = _context5.next) {
             case 0:
               _context5.next = 2;
-              return _regenerator2.default.awrap(this.getRegistry());
+              return _regenerator2.default.awrap(this.getVideoRegistry());
 
             case 2:
               contract = _context5.sent;

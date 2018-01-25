@@ -14,12 +14,13 @@ describe('paratii.eth.vids:', function () {
     await paratii.eth.deployContracts()
   })
 
-  it('vids.create(),  .get(), .update() and .delete() should work', async function () {
+  it.skip('vids.create(),  .get(), .update() and .delete() should work', async function () {
     let price = 3 * 10 ** 18
     let ipfsHash = 'xyz'
     let ipfsData = 'zzz'
-    let videoId = 'some-id'
     let vid
+    let videoId
+    videoId = 'some-id'
 
     let result = await paratii.eth.vids.create({
       id: videoId,
@@ -44,15 +45,16 @@ describe('paratii.eth.vids:', function () {
     assert.isRejected(paratii.eth.vids.get(videoId), Error, 'No video')
   })
 
-  it('vids.get() should return an error if no video was found', async function () {
-    assert.isRejected(paratii.eth.vids.get('thisviddoesnotexist'), Error, 'No video')
-  })
-
   it('vids.create() should create a fresh id if non is given', async function () {
-    let videoId = paratii.eth.vids.create({
+    let videoId = await paratii.eth.vids.create({
       owner: address1
     })
     assert.isOk(videoId)
+    assert.equal(videoId.length, 10)
+  })
+
+  it('vids.get() should return an error if no video was found', async function () {
+    assert.isRejected(paratii.eth.vids.get('thisviddoesnotexist'), Error, 'No video')
   })
 
   it.skip('vids.create() should throw meaningful errors', async function () {
