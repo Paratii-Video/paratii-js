@@ -20,7 +20,8 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run: bash <(curl https://get.parity.io -Lk)
+      - run: wget -q http://d1h4xl4cr1h0mo.cloudfront.net/v1.8.6/x86_64-unknown-debian-gnu/parity_1.8.6_amd64.deb
+      - run: sudo dpkg -i parity_1.8.6_amd64.deb
       - run: yarn install
       # get the latest paratii-contracts version from the repo (and not from the cache)
       - run: yarn upgrade paratii-contracts
