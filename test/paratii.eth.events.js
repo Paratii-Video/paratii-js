@@ -184,11 +184,36 @@ describe('paratii.eth.events API: :', function () {
     }
 
     paratii.eth.events.addListener('CreateUser', function (log) {
-      const receivedVideoId = log.returnValues._address
-      assert.equal(userData.id, receivedVideoId)
-      done()
+      const receivedUserId = log.returnValues._address
+
+      if (receivedUserId === userId) {
+        assert.equal(userData.id, receivedUserId)
+        done()
+      }
     })
 
     paratii.eth.users.create(userData)
+  })
+  it('subscription to Remove User events should work as expected', function (done) {
+    let userId = address1
+    let userData = {
+      id: userId,
+      name: 'Humbert Humbert',
+      email: 'humbert@humbert.ru',
+      ipfsHash: 'some-hash'
+    }
+
+    paratii.eth.events.addListener('RemoveUser', function (log) {
+      const receivedUserId = log.returnValues._address
+
+      if (receivedUserId === userId) {
+        assert.equal(userData.id, receivedUserId)
+        done()
+      }
+    })
+
+    paratii.eth.users.create(userData).then(function () {
+      paratii.eth.users.delete(userId)
+    })
   })
 })
