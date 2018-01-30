@@ -284,9 +284,10 @@ var Uploader = function (_EventEmitter) {
      * @param  {String} fileHash IPFS file hash.
      * @param  {Object} options  ref: https://github.com/Paratii-Video/paratii-lib/blob/master/docs/paratii-ipfs.md#ipfsuploadertranscodefilehash-options
      * @return {EventEmitter} returns EventEmitter with the following events:
-     *    - 'transcoder.progress': (progressPercent) [NOT WORKING (yet)]
-     *    - 'transcoder.done': (hash) triggered when the transcoder is done - returns the hash of the transcoded file
-     *    - 'transcoder.error': (err) triggered whenever an error occurs.
+     *    - 'transcoding.started': (hash, author)
+     *    - 'transcoding.progress': (hash, downsample, progressPercent)
+     *    - 'transcoding.done': (hash, transcoderResult) triggered when the transcoder is done - returns the hash of the transcoded file
+     *    - 'transcoding.error': (err) triggered whenever an error occurs.
      */
 
   }, {
