@@ -78,7 +78,7 @@ describe('ParatiiIPFS: :', function () {
     let files = []
 
     let ev = paratiiIPFS.uploader.addAndTranscode(files)
-    ev.on('transcoder:done', (resp) => {
+    ev.on('transcoding:done', (resp) => {
       assert.isOk(resp)
       assert.isOk(resp.test)
       expect(resp.test).to.equal(1)
