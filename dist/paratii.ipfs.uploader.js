@@ -309,22 +309,22 @@ var Uploader = function (_EventEmitter) {
 
       if (fileHash === '') {
         // empty hash for testing eventemitter
-        return ev.emit('transcoder:done', { test: 1 });
+        return ev.emit('transcoding:done', { test: 1 });
       }
 
       var msg = this._ipfs.protocol.createCommand('transcode', { hash: fileHash, author: opts.author });
       // FIXME : This is for dev, so we just signal our transcoder node.
       // This needs to be dynamic later on.
       this._node.swarm.connect(opts.transcoder, function (err, success) {
-        if (err) return ev.emit('transcoder:error', err);
+        if (err) return ev.emit('transcoding:error', err);
 
         _this4._node.swarm.peers(function (err, peers) {
           console.log('peers: ', peers);
-          if (err) return ev.emit('transcoder:error', err);
+          if (err) return ev.emit('transcoding:error', err);
           peers.map(function (peer) {
             console.log('sending transcode msg to ', peer.peer.id.toB58String());
             _this4._ipfs.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
-              if (err) ev.emit('transcoder:error', err);
+              if (err) ev.emit('transcoding:error', err);
             });
 
             if (peer.addr) {}
@@ -332,20 +332,45 @@ var Uploader = function (_EventEmitter) {
 
           // paratii transcoder signal.
           _this4._ipfs.protocol.notifications.on('command', function (peerId, command) {
-            console.log('paratii protocol: Got Command ', command);
-            if (command.payload.toString() === 'transcoding:done') {
-              var args = JSON.parse(command.args.toString());
-              var result = JSON.parse(args.result);
+            console.log('paratii protocol: Got Command ', command.payload.toString(), 'args: ', command.args.toString());
+            // if (command.payload.toString() === 'transcoding:done') {
+            //   let args = JSON.parse(command.args.toString())
+            //   let result = JSON.parse(args.result)
+            //
+            //   if (args.hash === fileHash) {
+            //     console.log('args: ', args)
+            //     console.log('result: ', result)
+            //     return ev.emit('transcoder:done', fileHash)
+            //   }
+            // }
 
-              if (args.hash === fileHash) {
-                console.log('args: ', args);
-                console.log('result: ', result);
-                return ev.emit('transcoder:done', fileHash);
-              }
+            var commandStr = command.payload.toString();
+            var argsObj = void 0;
+            try {
+              argsObj = JSON.parse(command.args.toString());
+            } catch (e) {
+              console.log('couldn\'t parse args, ', command.args.toString());
+            }
+
+            switch (commandStr) {
+              case 'transcoding:started':
+                ev.emit('transcoding:started', argsObj.hash, argsObj.author);
+                break;
+              case 'transcoding:progress':
+                ev.emit('transcoding:progress', argsObj.hash, argsObj.size, argsObj.percent);
+                break;
+              case 'transcoding:downsample:ready':
+                ev.emit('transcoding:downsample:ready', argsObj.hash, argsObj.size);
+                break;
+              case 'transcoding:done':
+                ev.emit('transcoding:done', argsObj.hash, argsObj.result);
+                break;
+              default:
+                console.log('unknown command : ', commandStr);
             }
           });
 
-          ev.emit('transcoder:progress', 0); // TODO : add an event for starting.
+          // ev.emit('transcoder:progress', 0) // TODO : add an event for starting.
         });
       });
     }
