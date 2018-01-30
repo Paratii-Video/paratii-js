@@ -283,6 +283,10 @@ var Uploader = function (_EventEmitter) {
      * signals transcoder(s) to transcode fileHash
      * @param  {String} fileHash IPFS file hash.
      * @param  {Object} options  ref: https://github.com/Paratii-Video/paratii-lib/blob/master/docs/paratii-ipfs.md#ipfsuploadertranscodefilehash-options
+     * @return {EventEmitter} returns EventEmitter with the following events:
+     *    - 'transcoder.progress': (progressPercent) [NOT WORKING (yet)]
+     *    - 'transcoder.done': (hash) triggered when the transcoder is done - returns the hash of the transcoded file
+     *    - 'transcoder.error': (err) triggered whenever an error occurs.
      */
 
   }, {
@@ -293,35 +297,34 @@ var Uploader = function (_EventEmitter) {
       var defaults = {
         author: '0x', // ETH/PTI address of the file owner
         transcoder: this._defaultTranscoder
-        // onError: (err) => { if (err) throw err },
-        // onProgress: (progress) => { }, // TODO update client on progress.
-        // onDone: (err, result) => { if (err) throw err },
       };
 
       var opts = dopts(options, defaults, { allowUnknown: true });
-
-      if (!opts.ev) {
-        throw new Error('transcode requires an eventemitter to report back result!');
+      var ev = void 0;
+      if (opts.ev) {
+        ev = opts.ev;
+      } else {
+        ev = new EventEmitter();
       }
 
       if (fileHash === '') {
         // empty hash for testing eventemitter
-        return opts.ev.emit('transcoder:done', { test: 1 });
+        return ev.emit('transcoder:done', { test: 1 });
       }
 
       var msg = this._ipfs.protocol.createCommand('transcode', { hash: fileHash, author: opts.author });
       // FIXME : This is for dev, so we just signal our transcoder node.
       // This needs to be dynamic later on.
       this._node.swarm.connect(opts.transcoder, function (err, success) {
-        if (err) return opts.ev.emit('transcoder:error', err);
+        if (err) return ev.emit('transcoder:error', err);
 
         _this4._node.swarm.peers(function (err, peers) {
           console.log('peers: ', peers);
-          if (err) return opts.ev.emit('transcoder:error', err);
+          if (err) return ev.emit('transcoder:error', err);
           peers.map(function (peer) {
             console.log('sending transcode msg to ', peer.peer.id.toB58String());
             _this4._ipfs.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
-              if (err) opts.ev.emit('transcoder:error', err);
+              if (err) ev.emit('transcoder:error', err);
             });
 
             if (peer.addr) {}
@@ -337,12 +340,12 @@ var Uploader = function (_EventEmitter) {
               if (args.hash === fileHash) {
                 console.log('args: ', args);
                 console.log('result: ', result);
-                return opts.ev.emit('transcoder:done', fileHash);
+                return ev.emit('transcoder:done', fileHash);
               }
             }
           });
 
-          opts.ev.emit('transcoder:progress', 0); // TODO : add an event for starting.
+          ev.emit('transcoder:progress', 0); // TODO : add an event for starting.
         });
       });
     }
