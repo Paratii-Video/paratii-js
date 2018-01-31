@@ -356,7 +356,7 @@ var Uploader = function (_EventEmitter) {
 
             switch (commandStr) {
               case 'transcoding:error':
-                ev.emit('transcoding:err', argsObj.err);
+                ev.emit('transcoding:error', argsObj.err);
                 break;
               case 'transcoding:started':
                 ev.emit('transcoding:started', argsObj.hash, argsObj.author);
