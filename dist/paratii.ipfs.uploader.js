@@ -184,7 +184,7 @@ var Uploader = function (_EventEmitter) {
             path: file.name,
             // content: pullFilereader(file)
             content: pull(file._pullStream, pull.through(function (chunk) {
-              return ev.emit('progress', chunk.length, Math.floor((meta.total + chunk.length) / meta.fileSize) * 100);
+              return ev.emit('progress', chunk.length, Math.floor((meta.total += chunk.length) * 1.0 / meta.fileSize * 100));
             }))
           }]), _this2._node.files.addPullStream({ chunkerOptions: { maxChunkSize: _this2._chunkSize } }), // default size 262144
           pull.collect(function (err, res) {
