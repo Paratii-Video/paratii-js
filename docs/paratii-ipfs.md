@@ -89,6 +89,8 @@ https://github.com/ipfs/js-ipfs-api#api
 
 This will just upload the file _as is_ to your local IPFS node.
 
+**Note: signature has changed - add now returns an event emitter**
+
     ipfs.add(file, {
       onStart: Function, // function()
       onFileReady: Function, // function(file)
@@ -115,13 +117,9 @@ Send transcode signal:
 
     transcode ('hash-of-file', {
         author: String,
-        onError: function (err) {
-          if (err) this.warn('[Paratii-protocol] Error ', err)
-        },
-        onDone: function (err, result) {
-          if (err) this.warn('[Paratii-protocol] Error ', err)
-        }
       })
+
+Returns an EventEmitter with the following events:
 
 
 ##  `ipfs.uploader.addAndTrancode`

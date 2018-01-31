@@ -299,6 +299,7 @@ var Uploader = function (_EventEmitter) {
         author: '0x', // ETH/PTI address of the file owner
         transcoder: this._defaultTranscoder
       };
+      console.log('Signaling transoder...');
 
       var opts = dopts(options, defaults, { allowUnknown: true });
       var ev = void 0;
@@ -310,9 +311,9 @@ var Uploader = function (_EventEmitter) {
 
       if (fileHash === '') {
         // empty hash for testing eventemitter
-        return ev.emit('transcoding:done', { test: 1 });
+        ev.emit('transcoding:done', { test: 1 });
+        return ev;
       }
-
       var msg = this._ipfs.protocol.createCommand('transcode', { hash: fileHash, author: opts.author });
       // FIXME : This is for dev, so we just signal our transcoder node.
       // This needs to be dynamic later on.
@@ -374,6 +375,7 @@ var Uploader = function (_EventEmitter) {
           // ev.emit('transcoder:progress', 0) // TODO : add an event for starting.
         });
       });
+      return ev;
     }
 
     /**
