@@ -148,6 +148,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
             bitswap: {
               maxMessageSize: config['ipfs.bitswap.maxMessageSize']
             },
+            start: true,
             repo: config['repo'] || '/tmp/test-repo-' + String(Math.random()),
             config: {
               Addresses: {
@@ -191,8 +192,9 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
               });
 
               _this.ipfs = ipfs;
-
-              resolve(ipfs);
+              _this.protocol.start(function () {
+                resolve(ipfs);
+              });
             });
           });
 
