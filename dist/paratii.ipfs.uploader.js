@@ -284,10 +284,11 @@ var Uploader = function (_EventEmitter) {
      * @param  {String} fileHash IPFS file hash.
      * @param  {Object} options  ref: https://github.com/Paratii-Video/paratii-lib/blob/master/docs/paratii-ipfs.md#ipfsuploadertranscodefilehash-options
      * @return {EventEmitter} returns EventEmitter with the following events:
-     *    - 'transcoding.started': (hash, author)
-     *    - 'transcoding.progress': (hash, downsample, progressPercent)
-     *    - 'transcoding.done': (hash, transcoderResult) triggered when the transcoder is done - returns the hash of the transcoded file
-     *    - 'transcoding.error': (err) triggered whenever an error occurs.
+     *    - 'transcoding:started': (hash, author)
+     *    - 'transcoding:progress': (hash, size, percent)
+     *    - 'transcoding:downsample:ready' (hash, size)
+     *    - 'transcoding:done': (hash, transcoderResult) triggered when the transcoder is done - returns the hash of the transcoded file
+     *    - 'transcoder:error': (err) triggered whenever an error occurs.
      */
 
   }, {
@@ -324,9 +325,12 @@ var Uploader = function (_EventEmitter) {
           console.log('peers: ', peers);
           if (err) return ev.emit('transcoding:error', err);
           peers.map(function (peer) {
-            console.log('sending transcode msg to ', peer.peer.id.toB58String());
+            console.log('sending transcode msg to ' + peer.peer.id.toB58String() + ' with request to transcode ' + fileHash);
             _this4._ipfs.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
-              if (err) ev.emit('transcoding:error', err);
+              if (err) {
+                ev.emit('transcoding:error', err);
+                return ev;
+              }
             });
 
             if (peer.addr) {}
@@ -335,17 +339,6 @@ var Uploader = function (_EventEmitter) {
           // paratii transcoder signal.
           _this4._ipfs.protocol.notifications.on('command', function (peerId, command) {
             console.log('paratii protocol: Got Command ', command.payload.toString(), 'args: ', command.args.toString());
-            // if (command.payload.toString() === 'transcoding:done') {
-            //   let args = JSON.parse(command.args.toString())
-            //   let result = JSON.parse(args.result)
-            //
-            //   if (args.hash === fileHash) {
-            //     console.log('args: ', args)
-            //     console.log('result: ', result)
-            //     return ev.emit('transcoder:done', fileHash)
-            //   }
-            // }
-
             var commandStr = command.payload.toString();
             var argsObj = void 0;
             try {

@@ -18,7 +18,7 @@ jobs:
           keys:
           - v1-dependencies-{{ checksum "package.json" }}
           # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+          # - v1-dependencies-
       - run: wget -q http://d1h4xl4cr1h0mo.cloudfront.net/v1.8.6/x86_64-unknown-debian-gnu/parity_1.8.6_amd64.deb
       - run: sudo dpkg -i parity_1.8.6_amd64.deb
       - run: yarn install
