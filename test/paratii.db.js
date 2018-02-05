@@ -1,26 +1,30 @@
-import { Paratii, ParatiiDb } from '../lib/paratii.js'
+import { Paratii } from '../lib/paratii.js'
 import { assert } from 'chai'
 
 describe('paratii.db API: :', function () {
-  let paratiiDb
-  let dbProvider = 'https://mock'
-  beforeEach(function () {
-    paratiiDb = new ParatiiDb({
+  let paratii
+  let dbProvider = 'http://localhost:3000'
+  beforeEach(async function () {
+    paratii = await new Paratii({
       'db.provider': dbProvider
     })
+
+    // console.log(paratii)
   })
 
   it('should be configured', async function () {
-    assert.equal(paratiiDb.config['db.provider'], dbProvider)
+    assert.equal(paratii.config['db.provider'], dbProvider)
   })
 
-  it.skip('db.vids.get() should work as expected', async function () {
+  it('db.vids.get() should work as expected', async function () {
+    let data = await paratii.db.vids.get()
+    console.log(data)
   })
 
   it.skip('db.users.get() should work as expected', async function () {
   })
 
-  it.skip('db.vids.search() should work as expected', async function () {
+  it('db.vids.search() should work as expected', async function () {
   })
 
   it('should be available as an attribute on Paratii instances', function () {
