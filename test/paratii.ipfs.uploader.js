@@ -71,7 +71,7 @@ describe('ParatiiIPFS: :', function () {
     assert.isOk(response)
     assert.isOk(response.hash)
     // NOTE THIS WILL Trigger an error if the director test/data content changes.
-    assert.equal(response.hash, 'QmeXV3v98a2Y7C6FVMbPnaSQNX59kv4dKDeVqCxNu2jpMB')
+    assert.equal(response.hash, 'QmbwqfRAtRRpuf87He77tGmunwihd7bFSLVstVNM8FxS5s')
   })
 
   it('addAndTranscode() should work as expected', (done) => {
