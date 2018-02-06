@@ -5,6 +5,7 @@ import nock from 'nock'
 
 nock.enableNetConnect()
 nock('https://db.paratii.video/api/v1')
+.persist()
 .get('/videos/some-id')
 .reply(200, {
   id: 'some-id',
