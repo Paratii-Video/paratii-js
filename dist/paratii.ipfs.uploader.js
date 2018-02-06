@@ -192,7 +192,7 @@ var Uploader = function (_EventEmitter) {
               return ev.emit('error', err);
             }
             var file = res[0];
-            console.log('Adding %s finished as %s', file.path, file.hash);
+            console.log('Adding %s finished as %s, size: %s', file.path, file.hash, file.size);
             ev.emit('fileReady', file);
             cb(null, file);
           }));
@@ -315,7 +315,7 @@ var Uploader = function (_EventEmitter) {
         ev.emit('transcoding:done', { test: 1 });
         return ev;
       }
-      var msg = this._ipfs.protocol.createCommand('transcode', { hash: fileHash, author: opts.author });
+      var msg = this._ipfs.protocol.createCommand('transcode', { hash: fileHash, author: opts.author, size: opts.size });
       // FIXME : This is for dev, so we just signal our transcoder node.
       // This needs to be dynamic later on.
       this._node.swarm.connect(opts.transcoder, function (err, success) {
@@ -357,11 +357,15 @@ var Uploader = function (_EventEmitter) {
               case 'transcoding:progress':
                 ev.emit('transcoding:progress', argsObj.hash, argsObj.size, argsObj.percent);
                 break;
+              case 'uploader:progress':
+                ev.emit('uploader:progress', argsObj.hash, argsObj.chunkSize, argsObj.percent);
+                break;
               case 'transcoding:downsample:ready':
                 ev.emit('transcoding:downsample:ready', argsObj.hash, argsObj.size);
                 break;
               case 'transcoding:done':
-                ev.emit('transcoding:done', argsObj.hash, argsObj.result);
+                var result = JSON.parse(argsObj.result.toString());
+                ev.emit('transcoding:done', argsObj.hash, result);
                 break;
               default:
                 console.log('unknown command : ', commandStr);
