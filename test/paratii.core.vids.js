@@ -1,11 +1,53 @@
 import { Paratii } from '../lib/paratii.js'
 import { assert } from 'chai'
 import { address, address1, privateKey } from './utils.js'
+import nock from 'nock'
+
+nock.enableNetConnect()
+nock('https://db.paratii.video/api/v1')
+.get('/videos/some-id')
+.reply(200, {
+  id: 'some-id',
+  owner: address1,
+  title: 'some Title',
+  description: 'A long description',
+  price: '0',
+  ipfsData: 'QmY88mq3yPsMxB8MBAy8eaAGBjByGnA2YJG66mDdoGsspv',
+  ipfsHash: '',
+  ipfsHashOrig: ''
+
+})
+.get('/videos/some-id2')
+.reply(200, {
+  id: 'some-id2',
+  owner: address1,
+  title: 'some title',
+  description: 'A long description',
+  price: '0',
+  ipfsData: 'QmY88mq3yPsMxB8MBAy8eaAGBjByGnA2YJG66mDdoGsspv',
+  ipfsHash: 'some-hash',
+  ipfsHashOrig: ''
+
+})
+.get('/videos/some-id3')
+.reply(200, {
+  id: 'some-id3',
+  owner: address1,
+  title: 'another-title',
+  description: 'A long description',
+  price: '0',
+  ipfsData: 'QmY88mq3yPsMxB8MBAy8eaAGBjByGnA2YJG66mDdoGsspv',
+  ipfsHash: 'some-hash',
+  ipfsHashOrig: ''
+
+})
 
 describe('paratii.core.vids:', function () {
   let paratii
   let videoFile = 'test/data/some-file.txt'
   let videoId = 'some-id'
+  let videoId2 = 'some-id2'
+  let videoId3 = 'some-id3'
   let ipfsHash = 'some-hash'
   let videoTitle = 'some title'
   let dbProvider = 'https://db.paratii.video'
@@ -42,7 +84,7 @@ describe('paratii.core.vids:', function () {
     assert.isRejected(paratii.eth.vids.get(videoId), Error, 'No video')
 
     data = await paratii.core.vids.create({
-      id: videoId,
+      id: videoId2,
       owner: address1,
       title: videoTitle,
       ipfsHash: ipfsHash,
@@ -51,7 +93,7 @@ describe('paratii.core.vids:', function () {
 
     assert.equal(data.ipfsHash, ipfsHash)
 
-    data = await paratii.core.vids.get(videoId)
+    data = await paratii.core.vids.get(videoId2)
     assert.equal(data.ipfsHash, ipfsHash)
   })
 
@@ -70,24 +112,23 @@ describe('paratii.core.vids:', function () {
 
   it('core.vids.update() should work as expected', async function () {
     await paratii.core.vids.create({
-      id: videoId,
+      id: videoId2,
       owner: address1,
       title: videoTitle
     })
     let data
-    data = await paratii.core.vids.get(videoId)
-    console.log(data)
+    data = await paratii.core.vids.get(videoId2)
     assert.equal(data.title, videoTitle)
 
-    data = await paratii.core.vids.update(videoId, {title: 'another-title'})
+    data = await paratii.core.vids.update(videoId3, {title: 'another-title'})
     assert.equal(data.title, 'another-title')
     assert.equal(data.owner, address1)
 
-    data = await paratii.core.vids.update(videoId, {description: 'another description'})
+    data = await paratii.core.vids.update(videoId3, {description: 'another description'})
     assert.equal(data.description, 'another description')
     assert.equal(data.owner, address1)
 
-    data = await paratii.core.vids.get(videoId)
+    data = await paratii.core.vids.get(videoId3)
     assert.equal(data.title, 'another-title')
     assert.equal(data.owner, address1)
   })
