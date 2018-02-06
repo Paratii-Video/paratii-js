@@ -1,24 +1,40 @@
 import { Paratii } from '../lib/paratii.js'
 import { assert } from 'chai'
+import nock from 'nock'
+const videos = require('./data/fixtures')
 
 describe('paratii.db API: :', function () {
   let paratii
-  let dbProvider = 'http://localhost:3000'
+  let dbProvider = 'https://db.paratii.video'
+
+  before(function () {
+    nock('https://db.paratii.video/api/v1')
+    .get('/videos/')
+    .reply(200, videos)
+    .get('/videos/QmNZS5J3LS1tMEVEP3tz3jyd2LXUEjkYJHyWSuwUvHDaRJ')
+    .reply(200, videos[0])
+  })
   beforeEach(async function () {
     paratii = await new Paratii({
       'db.provider': dbProvider
     })
-
-    // console.log(paratii)
   })
 
   it('should be configured', async function () {
     assert.equal(paratii.config['db.provider'], dbProvider)
   })
 
-  it('db.vids.get() should work as expected', async function () {
-    let data = await paratii.db.vids.get()
-    console.log(data)
+  it('db.vids.search() should work as expected', async function () {
+    let data = await paratii.db.vids.search()
+    let check = data.length > 1
+    assert.equal(check, true)
+  })
+
+  it('db.vids.get(videoid) should work as expected', async function () {
+    let videoid = 'QmNZS5J3LS1tMEVEP3tz3jyd2LXUEjkYJHyWSuwUvHDaRJ'
+    let data = await paratii.db.vids.get(videoid)
+    let check = data._id === videoid
+    assert.equal(check, true)
   })
 
   it.skip('db.users.get() should work as expected', async function () {

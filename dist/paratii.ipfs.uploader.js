@@ -361,7 +361,8 @@ var Uploader = function (_EventEmitter) {
                 ev.emit('transcoding:downsample:ready', argsObj.hash, argsObj.size);
                 break;
               case 'transcoding:done':
-                ev.emit('transcoding:done', argsObj.hash, argsObj.result);
+                var result = JSON.parse(argsObj.result.toString());
+                ev.emit('transcoding:done', argsObj.hash, result);
                 break;
               default:
                 console.log('unknown command : ', commandStr);
