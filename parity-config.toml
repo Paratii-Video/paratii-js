@@ -10,4 +10,4 @@ reseal_max_period = 0
 reseal_on_uncle = true
 force_sealing = true
 [rpc]
-cors = "*"
+cors = []
