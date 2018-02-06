@@ -37,13 +37,13 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
 
   (0, _createClass3.default)(ParatiiDbVids, [{
     key: 'get',
-    value: function get() {
+    value: function get(videoId) {
       var videos;
       return _regenerator2.default.async(function get$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              videos = fetch(this.config['db.provider'] + this.apiVersion + this.apiVideos, {
+              videos = fetch(this.config['db.provider'] + this.apiVersion + this.apiVideos + videoId, {
                 method: 'get'
               }).then(function (response) {
                 return response.json();
@@ -53,6 +53,28 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
             case 2:
             case 'end':
               return _context.stop();
+          }
+        }
+      }, null, this);
+    }
+  }, {
+    key: 'search',
+    value: function search() {
+      var videos;
+      return _regenerator2.default.async(function search$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              videos = fetch(this.config['db.provider'] + this.apiVersion + this.apiVideos, {
+                method: 'get'
+              }).then(function (response) {
+                return response.json();
+              });
+              return _context2.abrupt('return', videos);
+
+            case 2:
+            case 'end':
+              return _context2.stop();
           }
         }
       }, null, this);
