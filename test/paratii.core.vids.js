@@ -8,10 +8,12 @@ describe('paratii.core.vids:', function () {
   let videoId = 'some-id'
   let ipfsHash = 'some-hash'
   let videoTitle = 'some title'
+  let dbProvider = 'https://db.paratii.video'
   beforeEach(async function () {
     paratii = new Paratii({
       address: address,
-      privateKey: privateKey
+      privateKey: privateKey,
+      'db.provider': dbProvider
     })
     await paratii.eth.deployContracts()
   })
