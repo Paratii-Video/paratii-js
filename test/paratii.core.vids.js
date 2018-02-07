@@ -13,7 +13,7 @@ nock('https://db.paratii.video/api/v1')
   title: 'some Title',
   description: 'A long description',
   price: '0',
-  ipfsData: 'QmY88mq3yPsMxB8MBAy8eaAGBjByGnA2YJG66mDdoGsspv',
+  ipfsData: 'QmUUMpwyWBbJKeNCbwDySXJCay5TBBuur3c59m1ajQufmn',
   ipfsHash: '',
   ipfsHashOrig: ''
 
@@ -25,7 +25,7 @@ nock('https://db.paratii.video/api/v1')
   title: 'some title',
   description: 'A long description',
   price: '0',
-  ipfsData: 'QmY88mq3yPsMxB8MBAy8eaAGBjByGnA2YJG66mDdoGsspv',
+  ipfsData: 'QmUUMpwyWBbJKeNCbwDySXJCay5TBBuur3c59m1ajQufmn',
   ipfsHash: 'some-hash',
   ipfsHashOrig: ''
 
@@ -37,7 +37,7 @@ nock('https://db.paratii.video/api/v1')
   title: 'another-title',
   description: 'A long description',
   price: '0',
-  ipfsData: 'QmY88mq3yPsMxB8MBAy8eaAGBjByGnA2YJG66mDdoGsspv',
+  ipfsData: 'QmUUMpwyWBbJKeNCbwDySXJCay5TBBuur3c59m1ajQufmn',
   ipfsHash: 'some-hash',
   ipfsHashOrig: ''
 
