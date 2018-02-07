@@ -56,6 +56,7 @@ var Paratii = function () {
     this.config = {};
     this.config.provider = options.provider;
     this.config.repo = options.repo;
+    this.config['db.provider'] = options['db.provider'];
 
     if (this.config.provider === 'http://localhost:8545') {
       this.config.isTestNet = true;
