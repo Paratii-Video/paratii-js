@@ -63,24 +63,29 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
     }
   }, {
     key: 'search',
-    value: function search() {
-      var videos;
+    value: function search(keyword) {
+      var k, videos;
       return _regenerator2.default.async(function search$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              _context2.next = 2;
-              return _regenerator2.default.awrap(fetch(this.config['db.provider'] + this.apiVersion + this.apiVideos, {
+              k = '';
+
+              if (keyword !== undefined && keyword !== '') {
+                k = '?s=' + keyword;
+              }
+              _context2.next = 4;
+              return _regenerator2.default.awrap(fetch(this.config['db.provider'] + this.apiVersion + this.apiVideos + k, {
                 method: 'get'
               }).then(function (response) {
                 return response.json();
               }));
 
-            case 2:
+            case 4:
               videos = _context2.sent;
               return _context2.abrupt('return', videos);
 
-            case 4:
+            case 6:
             case 'end':
               return _context2.stop();
           }
