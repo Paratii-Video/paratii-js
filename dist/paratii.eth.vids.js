@@ -268,14 +268,9 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
 
             case 25:
               tx = _context5.sent;
-
-
-              console.log(options);
-              console.log(tx);
-
               return _context5.abrupt('return', tx);
 
-            case 29:
+            case 27:
             case 'end':
               return _context5.stop();
           }
@@ -289,9 +284,10 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
         while (1) {
           switch (_context6.prev = _context6.next) {
             case 0:
-              this.sendLike({ videoId: videoId, liked: true });
+              _context6.next = 2;
+              return _regenerator2.default.awrap(this.sendLike({ videoId: videoId, liked: true }));
 
-            case 1:
+            case 2:
             case 'end':
               return _context6.stop();
           }
@@ -305,9 +301,10 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
         while (1) {
           switch (_context7.prev = _context7.next) {
             case 0:
-              this.sendLike({ videoId: videoId, liked: false });
+              _context7.next = 2;
+              return _regenerator2.default.awrap(this.sendLike({ videoId: videoId, liked: false }));
 
-            case 1:
+            case 2:
             case 'end':
               return _context7.stop();
           }
@@ -361,12 +358,9 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
 
             case 6:
               likeInfo = _context9.sent;
-
-              console.log(address);
-              console.log(likeInfo);
               return _context9.abrupt('return', likeInfo);
 
-            case 10:
+            case 8:
             case 'end':
               return _context9.stop();
           }

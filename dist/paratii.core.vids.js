@@ -51,74 +51,30 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   (0, _createClass3.default)(ParatiiCoreVids, [{
     key: 'like',
     value: function like(videoId) {
-      return _regenerator2.default.async(function like$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              return _context.abrupt('return', this.paratii.eth.vids.like(videoId));
-
-            case 1:
-            case 'end':
-              return _context.stop();
-          }
-        }
-      }, null, this);
+      return this.paratii.eth.vids.like(videoId);
     }
   }, {
     key: 'dislike',
     value: function dislike(videoId) {
-      return _regenerator2.default.async(function dislike$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              return _context2.abrupt('return', this.paratii.eth.vids.dislike(videoId));
-
-            case 1:
-            case 'end':
-              return _context2.stop();
-          }
-        }
-      }, null, this);
+      return this.paratii.eth.vids.dislike(videoId);
     }
   }, {
     key: 'doesLike',
     value: function doesLike(videoId) {
-      return _regenerator2.default.async(function doesLike$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              return _context3.abrupt('return', this.paratii.eth.vids.doesLike(videoId));
-
-            case 1:
-            case 'end':
-              return _context3.stop();
-          }
-        }
-      }, null, this);
+      return this.paratii.eth.vids.doesLike(videoId);
     }
   }, {
     key: 'doesDislike',
     value: function doesDislike(videoId) {
-      return _regenerator2.default.async(function doesDislike$(_context4) {
-        while (1) {
-          switch (_context4.prev = _context4.next) {
-            case 0:
-              return _context4.abrupt('return', this.paratii.eth.vids.doesDislike(videoId));
-
-            case 1:
-            case 'end':
-              return _context4.stop();
-          }
-        }
-      }, null, this);
+      return this.paratii.eth.vids.doesDislike(videoId);
     }
   }, {
     key: 'create',
     value: function create(options) {
       var defaults, hash;
-      return _regenerator2.default.async(function create$(_context5) {
+      return _regenerator2.default.async(function create$(_context) {
         while (1) {
-          switch (_context5.prev = _context5.next) {
+          switch (_context.prev = _context.next) {
             case 0:
               defaults = {
                 id: null, // optional, a string
@@ -138,18 +94,18 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 options.id = this.paratii.eth.vids.makeId();
               }
 
-              _context5.next = 5;
+              _context.next = 5;
               return _regenerator2.default.awrap(this.paratii.ipfs.addJSON({
                 title: options.title,
                 description: options.description
               }));
 
             case 5:
-              hash = _context5.sent;
+              hash = _context.sent;
 
 
               options.ipfsData = hash;
-              _context5.next = 9;
+              _context.next = 9;
               return _regenerator2.default.awrap(this.paratii.eth.vids.create({
                 id: options.id,
                 owner: options.owner,
@@ -160,11 +116,11 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
               }));
 
             case 9:
-              return _context5.abrupt('return', options);
+              return _context.abrupt('return', options);
 
             case 10:
             case 'end':
-              return _context5.stop();
+              return _context.stop();
           }
         }
       }, null, this);
@@ -173,9 +129,9 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
     key: 'update',
     value: function update(videoId, options) {
       var defaults, data, key;
-      return _regenerator2.default.async(function update$(_context6) {
+      return _regenerator2.default.async(function update$(_context2) {
         while (1) {
-          switch (_context6.prev = _context6.next) {
+          switch (_context2.prev = _context2.next) {
             case 0:
               defaults = {
                 description: null,
@@ -189,11 +145,11 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
 
               options = dopts(options, defaults);
 
-              _context6.next = 4;
+              _context2.next = 4;
               return _regenerator2.default.awrap(this.get(videoId));
 
             case 4:
-              data = _context6.sent;
+              data = _context2.sent;
 
               delete data['ipfsData'];
               for (key in options) {
@@ -202,15 +158,15 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 }
               }
 
-              _context6.next = 9;
+              _context2.next = 9;
               return _regenerator2.default.awrap(this.create(data));
 
             case 9:
-              return _context6.abrupt('return', data);
+              return _context2.abrupt('return', data);
 
             case 10:
             case 'end':
-              return _context6.stop();
+              return _context2.stop();
           }
         }
       }, null, this);
@@ -218,15 +174,15 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   }, {
     key: 'get',
     value: function get(videoId) {
-      return _regenerator2.default.async(function get$(_context7) {
+      return _regenerator2.default.async(function get$(_context3) {
         while (1) {
-          switch (_context7.prev = _context7.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
-              return _context7.abrupt('return', this.paratii.db.vids.get(videoId));
+              return _context3.abrupt('return', this.paratii.db.vids.get(videoId));
 
             case 1:
             case 'end':
-              return _context7.stop();
+              return _context3.stop();
           }
         }
       }, null, this);
