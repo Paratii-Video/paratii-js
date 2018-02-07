@@ -48,7 +48,6 @@
     "browserify-fs": "^1.0.0",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
-    "ethereumjs-testrpc": "^6.0.1",
     "file-api": "^0.10.4",
     "mocha": "^4.0.1",
     "nock": "^9.1.6",
