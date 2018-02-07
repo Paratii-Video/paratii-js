@@ -137,10 +137,30 @@ describe('paratii.core.vids:', function () {
   it.skip('core.vids.delete() should work as expected', async function () {
   })
 
-  it.skip('core.vids.like() should work as expected', async function () {
+  it('core.vids.like() should work as expected', async function () {
+    let video = await paratii.core.vids.create({
+      owner: address1,
+      title: videoTitle
+    })
+    let newVideoId = video.id
+    await paratii.core.vids.like(newVideoId)
+    let dataLikes = await paratii.core.vids.doesLike(newVideoId)
+    let dataDislikes = await paratii.core.vids.doesDislike(newVideoId)
+    assert.isOk(dataLikes)
+    assert.isNotOk(dataDislikes)
   })
 
-  it.skip('core.vids.dislike() should work as expected', async function () {
+  it('core.vids.dislike() should work as expected', async function () {
+    let video = await paratii.core.vids.create({
+      owner: address1,
+      title: videoTitle
+    })
+    let newVideoId = video.id
+    await paratii.core.vids.dislike(newVideoId)
+    let dataLikes = await paratii.core.vids.doesLike(newVideoId)
+    let dataDislikes = await paratii.core.vids.doesDislike(newVideoId)
+    assert.isOk(dataDislikes)
+    assert.isNotOk(dataLikes)
   })
 
   it.skip('core.vids.view() should work as expected', async function () {

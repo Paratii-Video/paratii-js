@@ -49,6 +49,26 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   }
 
   (0, _createClass3.default)(ParatiiCoreVids, [{
+    key: 'like',
+    value: function like(videoId) {
+      return this.paratii.eth.vids.like(videoId);
+    }
+  }, {
+    key: 'dislike',
+    value: function dislike(videoId) {
+      return this.paratii.eth.vids.dislike(videoId);
+    }
+  }, {
+    key: 'doesLike',
+    value: function doesLike(videoId) {
+      return this.paratii.eth.vids.doesLike(videoId);
+    }
+  }, {
+    key: 'doesDislike',
+    value: function doesDislike(videoId) {
+      return this.paratii.eth.vids.doesDislike(videoId);
+    }
+  }, {
     key: 'create',
     value: function create(options) {
       var defaults, hash;

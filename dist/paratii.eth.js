@@ -72,6 +72,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
     this.contracts.Users = this.requireContract('Users');
     this.contracts.Videos = this.requireContract('Videos');
     this.contracts.Store = this.requireContract('Store');
+    this.contracts.Likes = this.requireContract('Likes');
 
     this.vids = new _paratiiEthVids.ParatiiEthVids(this);
     this.users = new _paratiiEthUsers.ParatiiEthUsers(this);
@@ -171,7 +172,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: 'deployContracts',
     value: function deployContracts() {
-      var paratiiRegistry, paratiiRegistryAddress, paratiiAvatar, paratiiToken, sendEther, userRegistry, videoRegistry, videoStore;
+      var paratiiRegistry, paratiiRegistryAddress, paratiiAvatar, paratiiToken, sendEther, userRegistry, videoRegistry, videoStore, likes;
       return _regenerator2.default.async(function deployContracts$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -217,42 +218,51 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 23:
               videoStore = _context3.sent;
               _context3.next = 26;
-              return _regenerator2.default.awrap(this.getContract('Registry'));
+              return _regenerator2.default.awrap(this.deployContract('Likes', paratiiRegistryAddress));
 
             case 26:
-              paratiiRegistry = _context3.sent;
+              likes = _context3.sent;
               _context3.next = 29;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Avatar', paratiiAvatar.options.address).send());
+              return _regenerator2.default.awrap(this.getContract('Registry'));
 
             case 29:
-              _context3.next = 31;
+              paratiiRegistry = _context3.sent;
+              _context3.next = 32;
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Avatar', paratiiAvatar.options.address).send());
+
+            case 32:
+              _context3.next = 34;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('ParatiiToken', paratiiToken.options.address).send());
 
-            case 31:
-              _context3.next = 33;
+            case 34:
+              _context3.next = 36;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('SendEther', sendEther.options.address).send());
 
-            case 33:
-              _context3.next = 35;
+            case 36:
+              _context3.next = 38;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Videos', videoRegistry.options.address).send());
 
-            case 35:
-              _context3.next = 37;
+            case 38:
+              _context3.next = 40;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Store', videoStore.options.address).send());
 
-            case 37:
-              _context3.next = 39;
+            case 40:
+              _context3.next = 42;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Users', userRegistry.options.address).send());
 
-            case 39:
-              _context3.next = 41;
+            case 42:
+              _context3.next = 44;
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Likes', likes.options.address).send());
+
+            case 44:
+              _context3.next = 46;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerUint('VideoRedistributionPoolShare', this.web3.utils.toWei('0.3')));
 
-            case 41:
-              _context3.next = 43;
+            case 46:
+              _context3.next = 48;
               return _regenerator2.default.awrap(paratiiAvatar.methods.addToWhitelist(videoStore.address));
 
-            case 43:
+            case 48:
 
               this.contracts = {
                 Avatar: paratiiAvatar,
@@ -261,6 +271,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
                 SendEther: sendEther,
                 Users: userRegistry,
                 Videos: videoRegistry,
+                Likes: likes,
                 Store: videoStore
 
                 // await this.setContractsProvider()
@@ -269,7 +280,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
               return _context3.abrupt('return', this.contracts);
 
-            case 46:
+            case 51:
             case 'end':
               return _context3.stop();
           }
