@@ -284,6 +284,7 @@ var Uploader = function (_EventEmitter) {
      * @param  {String} fileHash IPFS file hash.
      * @param  {Object} options  ref: https://github.com/Paratii-Video/paratii-lib/blob/master/docs/paratii-ipfs.md#ipfsuploadertranscodefilehash-options
      * @return {EventEmitter} returns EventEmitter with the following events:
+     *    - 'uploader:progress': (hash, chunkSize, percent) client to transcoder upload progress.
      *    - 'transcoding:started': (hash, author)
      *    - 'transcoding:progress': (hash, size, percent)
      *    - 'transcoding:downsample:ready' (hash, size)
@@ -332,50 +333,59 @@ var Uploader = function (_EventEmitter) {
                 return ev;
               }
             });
-
-            if (peer.addr) {}
           });
 
           // paratii transcoder signal.
-          _this4._ipfs.protocol.notifications.on('command', function (peerId, command) {
-            console.log('paratii protocol: Got Command ', command.payload.toString(), 'args: ', command.args.toString());
-            var commandStr = command.payload.toString();
-            var argsObj = void 0;
-            try {
-              argsObj = JSON.parse(command.args.toString());
-            } catch (e) {
-              console.log('couldn\'t parse args, ', command.args.toString());
-            }
-
-            switch (commandStr) {
-              case 'transcoding:error':
-                ev.emit('transcoding:error', argsObj.err);
-                break;
-              case 'transcoding:started':
-                ev.emit('transcoding:started', argsObj.hash, argsObj.author);
-                break;
-              case 'transcoding:progress':
-                ev.emit('transcoding:progress', argsObj.hash, argsObj.size, argsObj.percent);
-                break;
-              case 'uploader:progress':
-                ev.emit('uploader:progress', argsObj.hash, argsObj.chunkSize, argsObj.percent);
-                break;
-              case 'transcoding:downsample:ready':
-                ev.emit('transcoding:downsample:ready', argsObj.hash, argsObj.size);
-                break;
-              case 'transcoding:done':
-                var result = JSON.parse(argsObj.result.toString());
-                ev.emit('transcoding:done', argsObj.hash, result);
-                break;
-              default:
-                console.log('unknown command : ', commandStr);
-            }
-          });
-
+          _this4._ipfs.on('protocol:incoming', _this4._transcoderRespHander(ev));
           // ev.emit('transcoder:progress', 0) // TODO : add an event for starting.
         });
       });
       return ev;
+    }
+
+    /**
+     * handles responses from the paratii-protocol in case of transcoding.
+     * @param  {EventEmitter} ev the transcoding job EventEmitter
+     * @return {function}    returns various events based on transcoder response.
+     */
+
+  }, {
+    key: '_transcoderRespHander',
+    value: function _transcoderRespHander(ev) {
+      return function (peerId, command) {
+        console.log('paratii protocol: Got Command ', command.payload.toString(), 'args: ', command.args.toString());
+        var commandStr = command.payload.toString();
+        var argsObj = void 0;
+        try {
+          argsObj = JSON.parse(command.args.toString());
+        } catch (e) {
+          console.log('couldn\'t parse args, ', command.args.toString());
+        }
+
+        switch (commandStr) {
+          case 'transcoding:error':
+            ev.emit('transcoding:error', argsObj.err);
+            break;
+          case 'transcoding:started':
+            ev.emit('transcoding:started', argsObj.hash, argsObj.author);
+            break;
+          case 'transcoding:progress':
+            ev.emit('transcoding:progress', argsObj.hash, argsObj.size, argsObj.percent);
+            break;
+          case 'uploader:progress':
+            ev.emit('uploader:progress', argsObj.hash, argsObj.chunkSize, argsObj.percent);
+            break;
+          case 'transcoding:downsample:ready':
+            ev.emit('transcoding:downsample:ready', argsObj.hash, argsObj.size);
+            break;
+          case 'transcoding:done':
+            var result = JSON.parse(argsObj.result.toString());
+            ev.emit('transcoding:done', argsObj.hash, result);
+            break;
+          default:
+            console.log('unknown command : ', commandStr);
+        }
+      };
     }
 
     /**
@@ -428,6 +438,80 @@ var Uploader = function (_EventEmitter) {
         // },
         ev: ev
       });
+    }
+  }, {
+    key: 'pinFile',
+    value: function pinFile(fileHash, options) {
+      var _this6 = this;
+
+      var defaults = {
+        author: '0x', // ETH/PTI address of the file owner
+        transcoder: this._defaultTranscoder,
+        size: 0
+      };
+      console.log('Signaling transoder...');
+
+      var opts = dopts(options, defaults, { allowUnknown: true });
+      var ev = void 0;
+      if (opts.ev) {
+        ev = opts.ev;
+      } else {
+        ev = new EventEmitter();
+      }
+
+      var msg = this._ipfs.protocol.createCommand('pin', { hash: fileHash, author: opts.author, size: opts.size });
+      // FIXME : This is for dev, so we just signal our transcoder node.
+      // This needs to be dynamic later on.
+      this._node.swarm.connect(opts.transcoder, function (err, success) {
+        if (err) return ev.emit('pin:error', err);
+
+        _this6._node.swarm.peers(function (err, peers) {
+          console.log('peers: ', peers);
+          if (err) return ev.emit('pin:error', err);
+          peers.map(function (peer) {
+            console.log('sending pin msg to ' + peer.peer.id.toB58String() + ' with request to pin ' + fileHash);
+            _this6._ipfs.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
+              if (err) {
+                ev.emit('pin:error', err);
+                return ev;
+              }
+            });
+          });
+
+          // paratii pinning response.
+          _this6._ipfs.on('protocol:incoming', _this6._pinResponseHandler(ev));
+        });
+      });
+
+      return ev;
+    }
+  }, {
+    key: '_pinResponseHandler',
+    value: function _pinResponseHandler(ev) {
+      return function (peerId, command) {
+        console.log('paratii protocol: Got Command ', command.payload.toString(), 'args: ', command.args.toString());
+        var commandStr = command.payload.toString();
+        var argsObj = void 0;
+        try {
+          argsObj = JSON.parse(command.args.toString());
+        } catch (e) {
+          console.log('couldn\'t parse args, ', command.args.toString());
+        }
+
+        switch (commandStr) {
+          case 'pin:error':
+            ev.emit('pin:error', argsObj.err);
+            break;
+          case 'pin:progress':
+            ev.emit('pin:progress', argsObj.hash, argsObj.chunkSize, argsObj.percent);
+            break;
+          case 'pin:done':
+            ev.emit('pin:done', argsObj.hash);
+            break;
+          default:
+            console.log('unknown command : ', commandStr);
+        }
+      };
     }
 
     // grabYt (url, onResponse, callback) {
