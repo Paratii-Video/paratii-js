@@ -16,8 +16,6 @@ describe('paratii.core.users: ', function () {
   let dbProvider = 'https://db.paratii.video'
 
   before(function () {
-    nock.cleanAll()
-
     nock('https://db.paratii.video/api/v1')
     .persist()
     .get('/users/' + users[0]['_id'])
