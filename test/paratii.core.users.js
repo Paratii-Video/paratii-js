@@ -3,17 +3,16 @@ import { assert } from 'chai'
 import { address, privateKey } from './utils.js'
 import nock from 'nock'
 const users = require('./data/users-fixtures')
-const videos = require('./data/fixtures')
 
 describe('paratii.core.users: ', function () {
   let paratii
   let newUserData = {
-		id: '0xa99dBd162ad5E1601E8d8B20703e5A3bA5c00Be7',
-		email: 'humbert@humbert.ru',
-		ipfsHash: 'some-hash',
-		name: 'Humbert Humbert' 
-	}
-	let newUserId = '0xa99dBd162ad5E1601E8d8B20703e5A3bA5c00Be7'
+    id: '0xa99dBd162ad5E1601E8d8B20703e5A3bA5c00Be7',
+    email: 'humbert@humbert.ru',
+    ipfsHash: 'some-hash',
+    name: 'Humbert Humbert'
+  }
+  let newUserId = '0xa99dBd162ad5E1601E8d8B20703e5A3bA5c00Be7'
   let dbProvider = 'https://db.paratii.video'
 
   before(function () {
@@ -40,12 +39,12 @@ describe('paratii.core.users: ', function () {
 
   it('core.users.create() should work as expected', async function () {
     let result = await paratii.core.users.create(newUserData)
-	assert.equal(result, newUserId)
+    assert.equal(result, newUserId)
   })
 
   it('core.users.get() should work as expected', async function () {
     let result = await paratii.core.users.get(newUserId)
-	assert.deepEqual(result, users[0])
+    assert.deepEqual(result, users[0])
   })
 
   it('core.users.update() should work as expected', async function () {

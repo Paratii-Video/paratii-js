@@ -65,7 +65,7 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
                 break;
               }
 
-              msg = 'The"id" argument should be a valid address, not ' + options.id;
+              msg = 'The "id" argument should be a valid address, not ' + options.id;
               throw Error(msg);
 
             case 4:
