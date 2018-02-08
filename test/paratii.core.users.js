@@ -2,7 +2,7 @@ import { Paratii } from '../lib/paratii.js'
 import { assert } from 'chai'
 import { address, privateKey } from './utils.js'
 import nock from 'nock'
-const users = require('./data/users-fixtures')
+const users = require('./users-fixtures')
 
 describe('paratii.core.users: ', function () {
   let paratii
