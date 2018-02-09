@@ -30,8 +30,9 @@ describe('paratii.eth.vouchers:', function () {
 
   it('vouchers.redeem() should fail on used code', async function () {
     let newVoucher = await paratii.eth.vouchers.create({ voucherCode: voucherCode11, amount: voucherAmount11 })
+    console.log(newVoucher)
     await paratii.eth.vouchers.redeem(newVoucher)
-    assert.isNotOk(await paratii.eth.vouchers.redeem(newVoucher))
+    await assert.isRejected(await paratii.eth.vouchers.redeem(newVoucher), Error)
   })
 
   it('vouchers.create() should fail on invalid data', async function () {
@@ -41,6 +42,7 @@ describe('paratii.eth.vouchers:', function () {
     await assert.isRejected(paratii.eth.vouchers.create({ voucherCode: voucherCode11, amount: 0 }))
   })
 
-  it.skip('vouchers.create() should throw meaningful errors on failure', async function () {
+  it('vouchers.create() should throw meaningful errors on failure', async function () {
+    assert.isRejected(paratii.eth.vouchers.test(), Error, 'test')
   })
 })
