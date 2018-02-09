@@ -57,7 +57,7 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
                 id: String,
                 name: String,
                 email: String,
-                ipfsHash: String
+                ipfsData: String
               };
 
               if (this.eth.web3.utils.isAddress(options.id)) {
@@ -76,7 +76,7 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
             case 7:
               contract = _context2.sent;
               _context2.next = 10;
-              return _regenerator2.default.awrap(contract.methods.create(options.id, options.name, options.email, options.ipfsHash).send());
+              return _regenerator2.default.awrap(contract.methods.create(options.id, options.name, options.email, options.ipfsData).send());
 
             case 10:
               return _context2.abrupt('return', options.id);
@@ -110,7 +110,7 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
                 id: userId,
                 name: userInfo[0],
                 email: userInfo[1],
-                ipfsHash: userInfo[2]
+                ipfsData: userInfo[2]
               };
               return _context3.abrupt('return', result);
 
