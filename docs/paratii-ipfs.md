@@ -82,6 +82,17 @@ Instantiate an IPFS istance of `jsipfs`. This API is documented here:
 
 https://github.com/ipfs/js-ipfs-api#api
 
+## `ipfs.addJSON(data)`
+
+adds a `data` Object to the IPFS local instance.
+
+**return** a `Promise` with the IPFS `multihash`
+
+## `ipfs.getJSON(multihash)`
+
+gets a JSON object stored in IPFS.
+
+**returns** a `Promise` of requested Object.
 
 # `ipfs.uploader`
 
@@ -133,6 +144,30 @@ The function `addAndTranscode` is an abbreviation for the following pattern:
       }
     })
 
+## `ipfs.uploader.pinFile(multihash)`
+
+Sends out a `pin` order to the paratii network in order to persist the Data
+added to the local IPFS node.
+
+**returns** `EventEmitter` instance with `pin:done` and `pin:error` events.
+
+**Example**
+
+```javascript
+it('should be able to pin a JSON Object', (done) => {
+  paratiiIPFS.addJSON({test: 1}).then((multihash) => {
+    assert.isOk(multihash)
+    let ev = paratiiIPFS.uploader.pinFile(multihash)
+    ev.once('pin:error', done)
+    ev.once('pin:done', (hash) => {
+      expect(hash).to.equal(multihash)
+      done()
+    })
+  }).catch((err) => {
+    done(err)
+  })
+})
+```
 
 #### `ipfs.uploader.grabYT(url, options)`
 

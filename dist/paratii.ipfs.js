@@ -21,6 +21,10 @@ var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
+var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
 var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
@@ -28,6 +32,14 @@ var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 var _createClass2 = require('babel-runtime/helpers/createClass');
 
 var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _paratiiProtocol = require('paratii-protocol');
 
@@ -41,12 +53,19 @@ global.Buffer = global.Buffer || require('buffer').Buffer; // import { paratiiIP
 var Ipfs = require('ipfs');
 var dopts = require('default-options');
 var Uploader = require('./paratii.ipfs.uploader.js');
+
+var _require = require('events'),
+    EventEmitter = _require.EventEmitter;
 // var pull = require('pull-stream')
 // var pullFilereader = require('pull-filereader')
 
-var ParatiiIPFS = exports.ParatiiIPFS = function () {
+var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
+  (0, _inherits3.default)(ParatiiIPFS, _EventEmitter);
+
   function ParatiiIPFS(config) {
     (0, _classCallCheck3.default)(this, ParatiiIPFS);
+
+    var _this = (0, _possibleConstructorReturn3.default)(this, (ParatiiIPFS.__proto__ || (0, _getPrototypeOf2.default)(ParatiiIPFS)).call(this));
 
     var defaults = {
       protocol: null,
@@ -58,9 +77,10 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
       'address': null, // 'Ethereum address'
       'verbose': false
     };
-    this.config = dopts(config, defaults, { allowUnknown: true });
+    _this.config = dopts(config, defaults, { allowUnknown: true });
 
-    this.uploader = new Uploader(this);
+    _this.uploader = new Uploader(_this);
+    return _this;
   }
 
   (0, _createClass3.default)(ParatiiIPFS, [{
@@ -137,13 +157,13 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
   }, {
     key: 'getIPFSInstance',
     value: function getIPFSInstance() {
-      var _this = this;
+      var _this2 = this;
 
       return new _promise2.default(function (resolve, reject) {
-        if (_this.ipfs) {
-          resolve(_this.ipfs);
+        if (_this2.ipfs) {
+          resolve(_this2.ipfs);
         } else {
-          var config = _this.config;
+          var config = _this2.config;
           var ipfs = new Ipfs({
             bitswap: {
               maxMessageSize: config['ipfs.bitswap.maxMessageSize']
@@ -158,41 +178,46 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
             }
           });
 
-          _this.ipfs = ipfs;
+          _this2.ipfs = ipfs;
 
           ipfs.on('ready', function () {
-            _this.log('[IPFS] node Ready.');
+            _this2.log('[IPFS] node Ready.');
 
             ipfs._bitswap.notifications.on('receivedNewBlock', function (peerId, block) {
-              _this.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length);
-              _this.log('---------[IPFS] bitswap LedgerMap ---------------------');
+              _this2.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length);
+              _this2.log('---------[IPFS] bitswap LedgerMap ---------------------');
               ipfs._bitswap.engine.ledgerMap.forEach(function (ledger, peerId, ledgerMap) {
-                _this.log(peerId + ' : ' + (0, _stringify2.default)(ledger.accounting) + '\n');
+                _this2.log(peerId + ' : ' + (0, _stringify2.default)(ledger.accounting) + '\n');
               });
-              _this.log('-------------------------------------------------------');
+              _this2.log('-------------------------------------------------------');
             });
 
             ipfs.id().then(function (id) {
               var peerInfo = id;
-              _this.id = id;
-              _this.log('[IPFS] id:  ' + peerInfo);
-              var ptiAddress = _this.config.address || 'no_address';
-              _this.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
+              _this2.id = id;
+              _this2.log('[IPFS] id:  ' + peerInfo);
+              var ptiAddress = _this2.config.address || 'no_address';
+              _this2.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
               // add ETH Address here.
               ptiAddress);
 
               // uploader
-              _this.uploader.setOptions({
+              _this2.uploader.setOptions({
                 node: ipfs,
                 chunkSize: 64048
               });
 
-              _this.protocol.notifications.on('message:new', function (peerId, msg) {
-                _this.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
+              _this2.protocol.notifications.on('message:new', function (peerId, msg) {
+                _this2.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
+              });
+              // emit all commands.
+              // NOTE : this will be changed once protocol upgrades are ready.
+              _this2.protocol.notifications.on('command', function (peerId, command) {
+                _this2.emit('protocol:incoming', peerId, command);
               });
 
-              _this.ipfs = ipfs;
-              _this.protocol.start(function () {
+              _this2.ipfs = ipfs;
+              _this2.protocol.start(function () {
                 resolve(ipfs);
               });
             });
@@ -201,7 +226,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
           ipfs.on('error', function (err) {
             if (err) {
               // this.log('IPFS node ', ipfs)
-              _this.error('[IPFS] Error ', err);
+              _this2.error('[IPFS] Error ', err);
               reject(err);
             }
           });
@@ -232,7 +257,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
               node = void 0;
               _context3.prev = 5;
               _context3.next = 8;
-              return _regenerator2.default.awrap(ipfs.object.put(obj));
+              return _regenerator2.default.awrap(ipfs.files.add(obj.Data));
 
             case 8:
               node = _context3.sent;
@@ -251,7 +276,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
               throw _context3.t0;
 
             case 15:
-              return _context3.abrupt('return', node.toJSON().multihash);
+              return _context3.abrupt('return', node[0].hash);
 
             case 16:
             case 'end':
@@ -281,7 +306,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
               node = void 0;
               _context4.prev = 4;
               _context4.next = 7;
-              return _regenerator2.default.awrap(ipfs.object.get(multihash));
+              return _regenerator2.default.awrap(ipfs.files.cat(multihash));
 
             case 7:
               node = _context4.sent;
@@ -300,7 +325,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
               throw _context4.t0;
 
             case 14:
-              return _context4.abrupt('return', JSON.parse(node.toJSON().data));
+              return _context4.abrupt('return', JSON.parse(node.toString()));
 
             case 15:
             case 'end':
@@ -346,4 +371,4 @@ var ParatiiIPFS = exports.ParatiiIPFS = function () {
     }
   }]);
   return ParatiiIPFS;
-}();
+}(EventEmitter);
