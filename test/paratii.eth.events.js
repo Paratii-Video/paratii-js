@@ -180,7 +180,7 @@ describe('paratii.eth.events API: :', function () {
       id: userId,
       name: 'Humbert Humbert',
       email: 'humbert@humbert.ru',
-      ipfsHash: 'some-hash'
+      ipfsData: 'some-hash'
     }
 
     paratii.eth.events.addListener('CreateUser', function (log) {
@@ -200,7 +200,7 @@ describe('paratii.eth.events API: :', function () {
       id: userId,
       name: 'Humbert Humbert',
       email: 'humbert@humbert.ru',
-      ipfsHash: 'some-hash'
+      ipfsData: 'some-hash'
     }
 
     paratii.eth.events.addListener('RemoveUser', function (log) {

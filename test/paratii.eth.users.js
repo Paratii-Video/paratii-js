@@ -20,7 +20,7 @@ describe('paratii.eth.users: :', function () {
       id: userId,
       name: 'Humbert Humbert',
       email: 'humbert@humbert.ru',
-      ipfsHash: 'some-hash'
+      ipfsData: 'some-hash'
     }
     let result = await paratii.eth.users.create(userData)
 
@@ -29,14 +29,14 @@ describe('paratii.eth.users: :', function () {
     user = await paratii.eth.users.get(userId)
     assert.deepEqual(user, userData)
 
-    await paratii.eth.users.update(userId, {ipfsHash: 'new-hash'})
+    await paratii.eth.users.update(userId, {ipfsData: 'new-hash'})
     user = await paratii.eth.users.get(userId)
-    assert.equal(user.ipfsHash, 'new-hash')
+    assert.equal(user.ipfsData, 'new-hash')
 
     await paratii.eth.users.delete(userId)
 
     user = await paratii.eth.users.get(userId)
-    assert.equal(user.ipfsHash, '')
+    assert.equal(user.ipfsData, '')
   })
 
   it.skip('missing or wrong arguments in users.create() should trhow meaningful errors', async function () {
