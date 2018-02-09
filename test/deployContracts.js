@@ -3,8 +3,8 @@ import { Paratii } from '../lib/paratii.js'
 import { address, privateKey } from './utils.js'
 import { assert } from 'chai'
 
-describe('Paratii API:', function () {
-  it('deployContracts should deploy and register all contracts', async function () {
+describe('deployContracts:', function () {
+  it('should deploy and register all contracts', async function () {
     let paratii = new Paratii({
       // this address and key are the first accounts on testrpc when started with the --deterministic flag
       address,
