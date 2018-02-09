@@ -68,7 +68,7 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
             case 7:
               hash = _context.sent;
 
-              optionsBlockchain['ipfsHash'] = hash;
+              optionsBlockchain['ipfsData'] = hash;
               return _context.abrupt('return', this.paratii.eth.users.create(optionsBlockchain));
 
             case 10:
@@ -93,8 +93,7 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
             case 0:
               defaults = {
                 name: null, // must be a string, optional
-                email: null, // must be a string, optional
-                ipfsHash: null // must be a string, optional, default is ''
+                email: null // must be a string, optional
               };
 
               options = dopts(options, defaults);
