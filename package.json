@@ -29,7 +29,7 @@
     "ipfs": "github:Paratii-Video/js-ipfs#paratii/v0.27.1",
     "isomorphic-fetch": "^2.2.1",
     "once": "^1.4.0",
-    "paratii-contracts": "github:Paratii-Video/paratii-contracts#970d7a30817da4521ac393e871817b2f8fecb7e4",
+    "paratii-contracts": "github:Paratii-Video/paratii-contracts#eb606943fe7051aab0936e6b67a765806a8611e2",
     "paratii-protocol": "github:Paratii-Video/paratii-protocol#master",
     "promisify-node": "^0.4.0",
     "pull-filereader": "^1.0.1",
