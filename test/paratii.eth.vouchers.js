@@ -48,4 +48,9 @@ describe('paratii.eth.vouchers:', function () {
     assert.isRejected(paratii.eth.vouchers.redeem(voucherCode11), Error, /This voucher was already used/g)
     assert.isRejected(paratii.eth.vouchers.redeem('blah-blah-blah'), Error, /This voucher doesn't exist/g)
   })
+
+  it('vouchers.createVouchers() should work as expected', async function () {
+    let vouchers = await paratii.eth.vouchers.createVouchers(10, voucherAmount11 / 10)
+    assert.equal(vouchers.length, 10)
+  })
 })
