@@ -4,8 +4,8 @@ import { assert } from 'chai'
 
 describe('paratii.core API: :', function () {
   let paratii, paratiiCore
-  beforeEach(function () {
-    paratii = new Paratii({
+  beforeEach(async function () {
+    paratii = await new Paratii({
       address: address,
       privateKey: privateKey
     })

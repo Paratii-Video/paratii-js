@@ -9,7 +9,7 @@ describe('Paratii configuration:', function () {
   })
 
   it('paratii.config should return the configuration with default values', async function () {
-    paratii = new Paratii({
+    paratii = await new Paratii({
       address: address,
       privateKey: privateKey
     })
@@ -19,7 +19,7 @@ describe('Paratii configuration:', function () {
         address: address,
         privateKey: privateKey
       },
-      provider: 'http://localhost:8545',
+      provider: 'ws://localhost:8546',
       registryAddress: null,
       isTestNet: true
     }
@@ -27,15 +27,15 @@ describe('Paratii configuration:', function () {
   })
 
   it('testnet configuration should be recognized', async function () {
-    paratii = new Paratii({provider: 'http://127.0.0.1:8545'})
+    paratii = await new Paratii({provider: 'http://127.0.0.1:8545'})
     assert.isOk(paratii.config.isTestNet)
-    paratii = new Paratii({provider: 'http://localhost:8545'})
+    paratii = await new Paratii({provider: 'http://localhost:8545'})
     assert.isOk(paratii.config.isTestNet)
   })
 
   it('should be possible to create a second Paratii object with the same settings', async function () {
     // deploy the contracts so we have a registry address
-    paratii = new Paratii({
+    paratii = await new Paratii({
       // this address and key are the first accounts on testrpc when started with the --deterministic flag
       provider: 'http://localhost:8545',
       address: address,
@@ -45,7 +45,7 @@ describe('Paratii configuration:', function () {
     await paratii.eth.deployContracts()
     assert.isOk(paratii.eth.config.registryAddress)
 
-    let paratii2 = new Paratii({
+    let paratii2 = await new Paratii({
       address: address,
       privateKey: privateKey,
       registryAddress: paratii.config.registryAddress,
@@ -60,7 +60,7 @@ describe('Paratii configuration:', function () {
   })
 
   it('should be possible to create a Paratii instance without an address or registryAddress', async function () {
-    let paratii = new Paratii({
+    let paratii = await new Paratii({
       provider: 'http://chain.paratii.video/'
     })
     let expected = {
@@ -80,7 +80,7 @@ describe('Paratii configuration:', function () {
   })
 
   it('the account should be added to the wallet if a private key is given', async function () {
-    let paratii = new Paratii({
+    let paratii = await new Paratii({
       address: address,
       privateKey: privateKey,
       provider: 'http://localhost:8545'
@@ -89,7 +89,7 @@ describe('Paratii configuration:', function () {
   })
 
   it('setAccount should set the account', async function () {
-    let paratii = new Paratii({
+    let paratii = await new Paratii({
       provider: 'http://127.0.0.1:8545'
     })
     // let beneficiary = account1
@@ -106,7 +106,31 @@ describe('Paratii configuration:', function () {
   })
 
   it('paratii.eth.web3 should be available', async function () {
-    let paratii = new Paratii({})
+    let paratii = await new Paratii({})
     assert.isOk(paratii.eth.web3)
   })
+
+  // it('sending transactions should work both with http as with ws providers', async function () {
+    // let paratii
+    // paratii = await new Paratii({
+      // provider: 'http://localhost:8545',
+      // address: address,
+      // privateKey: privateKey
+    // })
+    // await paratii.eth.deployContract('Registry')
+
+    // paratii = await new Paratii({
+      // provider: 'http://localhost:8545/rpc',
+      // address: address,
+      // privateKey: privateKey
+    // })
+    // await paratii.eth.deployContract('Registry')
+
+    // paratii = await new Paratii({
+      // provider: 'ws://localhost:8546',
+      // address: address,
+      // privateKey: privateKey
+    // })
+    // await paratii.eth.deployContract('Registry')
+  // })
 })

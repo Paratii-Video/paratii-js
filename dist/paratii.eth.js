@@ -43,8 +43,8 @@ var ParatiiEth = exports.ParatiiEth = function () {
     (0, _classCallCheck3.default)(this, ParatiiEth);
 
     var defaults = {
-      provider: 'http://localhost:8545/rpc/',
-      wsprovider: 'ws://localhost:8546',
+      // provider: 'http://localhost:8545/rpc/',
+      provider: 'ws://localhost:8546',
       registryAddress: null,
       account: {
         address: null,
@@ -60,7 +60,8 @@ var ParatiiEth = exports.ParatiiEth = function () {
       this.web3 = options.web3;
     } else {
       this.web3 = new Web3();
-      this.web3.setProvider(new this.web3.providers.WebsocketProvider(options.wsprovider));
+      // this.web3.setProvider(new this.web3.providers.WebsocketProvider(options.provider))
+      this.web3.setProvider(options.provider);
     }
 
     this.wallet = (0, _paratiiEthWallet.patchWallet)(this.web3.eth.accounts.wallet, this.config);
