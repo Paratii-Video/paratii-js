@@ -158,7 +158,7 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
   }, {
     key: 'redeem',
     value: function redeem(voucherCode) {
-      var contract, thisVoucher, thisVoucherClaimant, thisVoucherAmount, voucherContractBalance, tx, claimant;
+      var contract, voucherBytes, thisVoucher, thisVoucherClaimant, thisVoucherAmount, vouchersContractBalance, tx, claimant;
       return _regenerator2.default.async(function redeem$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
@@ -169,81 +169,82 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
             case 2:
               contract = _context4.sent;
               _context4.next = 5;
-              return _regenerator2.default.awrap(contract.methods.vouchers(voucherCode).call());
+              return _regenerator2.default.awrap(contract.methods.hashVoucher(voucherCode).call());
 
             case 5:
+              voucherBytes = _context4.sent;
+              _context4.next = 8;
+              return _regenerator2.default.awrap(contract.methods.vouchers(voucherBytes).call());
+
+            case 8:
               thisVoucher = _context4.sent;
-              thisVoucherClaimant = String(thisVoucher[0]);
+              thisVoucherClaimant = thisVoucher[0].toString();
               thisVoucherAmount = Number(thisVoucher[1]);
               _context4.t0 = Number;
-              _context4.next = 11;
+              _context4.next = 14;
               return _regenerator2.default.awrap(this.eth.balanceOf(contract.options.address, 'PTI'));
 
-            case 11:
+            case 14:
               _context4.t1 = _context4.sent;
-              voucherContractBalance = (0, _context4.t0)(_context4.t1);
+              vouchersContractBalance = (0, _context4.t0)(_context4.t1);
 
-              if (!(thisVoucherClaimant !== String(_utils.NULL_ADDRESS))) {
-                _context4.next = 15;
+              if (!(thisVoucherClaimant !== _utils.NULL_ADDRESS)) {
+                _context4.next = 18;
                 break;
               }
 
               throw Error('This voucher was already used');
 
-            case 15:
-              if (!(thisVoucherAmount > voucherContractBalance)) {
-                _context4.next = 17;
+            case 18:
+              if (!(thisVoucherAmount > vouchersContractBalance)) {
+                _context4.next = 20;
                 break;
               }
 
               throw Error('The Vouchers contract doesn\'t have enough PTI to redeem the voucher');
 
-            case 17:
+            case 20:
               if (!(thisVoucherAmount === Number(0))) {
-                _context4.next = 19;
+                _context4.next = 22;
                 break;
               }
 
               throw Error('This voucher doesn\'t exist');
 
-            case 19:
-              _context4.next = 21;
+            case 22:
+              _context4.prev = 22;
+              _context4.next = 25;
               return _regenerator2.default.awrap(contract.methods.redeem(voucherCode).send());
 
-            case 21:
+            case 25:
               tx = _context4.sent;
-
-              console.log(tx);
-              _context4.prev = 23;
-              claimant = (0, _utils.getInfoFromLogs)(tx, 'LogRedeemVoucher', '_claimant');
+              claimant = (0, _utils.getInfoFromLogs)(tx, 'LogRedeemVoucher', '_claimant', 1);
 
               if (!(claimant === this.eth.config.account.address)) {
-                _context4.next = 29;
+                _context4.next = 31;
                 break;
               }
 
               return _context4.abrupt('return', true);
 
-            case 29:
+            case 31:
               return _context4.abrupt('return', false);
 
-            case 30:
-              _context4.next = 36;
+            case 32:
+              _context4.next = 37;
               break;
 
-            case 32:
-              _context4.prev = 32;
-              _context4.t2 = _context4['catch'](23);
-
-              console.log(_context4.t2);
+            case 34:
+              _context4.prev = 34;
+              _context4.t2 = _context4['catch'](22);
               throw Error('An unknown error occurred');
 
-            case 36:
+            case 37:
             case 'end':
               return _context4.stop();
           }
         }
-      }, null, this, [[23, 32]]);
+      }, null, this, [[22, 34]]);
     }
   }]);
   return ParatiiEthVouchers;
