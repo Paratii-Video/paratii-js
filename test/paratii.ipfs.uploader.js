@@ -86,6 +86,20 @@ describe('ParatiiIPFS: :', function () {
     })
   })
 
+  it('should be able to pin a JSON Object', (done) => {
+    paratiiIPFS.addJSON({test: 1}).then((multihash) => {
+      assert.isOk(multihash)
+      let ev = paratiiIPFS.uploader.pinFile(multihash)
+      ev.once('pin:error', done)
+      ev.once('pin:done', (hash) => {
+        expect(hash).to.equal(multihash)
+        done()
+      })
+    }).catch((err) => {
+      done(err)
+    })
+  })
+
   // FIXME : this requires a browser to run.
   // TODO : use karma with mocha to run browser tests.
   // it('should allow for generic file upload', (done) => {

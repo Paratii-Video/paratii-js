@@ -19,7 +19,7 @@ describe('Paratii configuration:', function () {
         address: address,
         privateKey: privateKey
       },
-      provider: 'http://localhost:8545',
+      provider: 'ws://localhost:8546',
       registryAddress: null,
       isTestNet: true
     }
@@ -108,5 +108,29 @@ describe('Paratii configuration:', function () {
   it('paratii.eth.web3 should be available', async function () {
     let paratii = new Paratii({})
     assert.isOk(paratii.eth.web3)
+  })
+
+  it('sending transactions should work both with http as with ws providers', async function () {
+    let paratii
+    paratii = new Paratii({
+      provider: 'http://localhost:8545',
+      address: address,
+      privateKey: privateKey
+    })
+    await paratii.eth.deployContract('Registry')
+
+    paratii = new Paratii({
+      provider: 'http://localhost:8545/rpc',
+      address: address,
+      privateKey: privateKey
+    })
+    await paratii.eth.deployContract('Registry')
+
+    paratii = new Paratii({
+      provider: 'ws://localhost:8546',
+      address: address,
+      privateKey: privateKey
+    })
+    await paratii.eth.deployContract('Registry')
   })
 })

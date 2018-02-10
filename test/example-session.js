@@ -6,7 +6,8 @@ describe('Paratii API:', function () {
   it('example session from ../docs/example-session.md should work', async function () {
     let paratii = new Paratii({
       // this address and key are the first accounts on testrpc when started with the --deterministic flag
-      provider: 'http://127.0.0.1:8545/rpc/',
+      // provider: 'http://127.0.0.1:8545/rpc/',
+      provider: 'ws://localhost:8546',
       address,
       privateKey
     })

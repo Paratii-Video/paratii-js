@@ -42,8 +42,8 @@ var Paratii = function () {
     (0, _classCallCheck3.default)(this, Paratii);
 
     var defaults = {
-      provider: 'http://localhost:8545',
-      wsprovider: 'ws://localhost:8546',
+      // provider: 'http://localhost:8545',
+      provider: 'ws://localhost:8546',
       registryAddress: null,
       address: null, //  Ethereum address
       privateKey: null,
@@ -61,6 +61,8 @@ var Paratii = function () {
     if (this.config.provider === 'http://localhost:8545') {
       this.config.isTestNet = true;
     } else if (this.config.provider === 'http://127.0.0.1:8545') {
+      this.config.isTestNet = true;
+    } else if (this.config.provider === 'ws://localhost:8546') {
       this.config.isTestNet = true;
     } else {
       this.config.isTestNet = false;
