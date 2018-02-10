@@ -7,15 +7,14 @@ describe('paratii.eth.vouchers:', function () {
 
   beforeEach(async function () {
     paratii = await new Paratii({
-      provider: 'http://localhost:8545',
+      // provider: 'http://localhost:8545',
       address: address,
       privateKey: privateKey
     })
     await paratii.eth.deployContracts()
     let token = await paratii.eth.getContract('ParatiiToken')
     let vouchers = await paratii.eth.getContract('Vouchers')
-    let addressOfVouchers = vouchers.options.address
-    await token.methods.transfer(addressOfVouchers, voucherAmountInitial11).send()
+    await token.methods.transfer(vouchers.options.address, voucherAmountInitial11).send()
   })
 
   it('vouchers.create() should work as expected', async function () {
@@ -24,25 +23,29 @@ describe('paratii.eth.vouchers:', function () {
   })
 
   it('vouchers.redeem() should work as expected', async function () {
-    let newVoucher = await paratii.eth.vouchers.create({ voucherCode: voucherCode11, amount: voucherAmount11 })
-    assert.isOk(paratii.eth.vouchers.redeem(newVoucher))
+    await paratii.eth.vouchers.create({ voucherCode: voucherCode11, amount: voucherAmount11 })
+    assert.isOk(await paratii.eth.vouchers.redeem(voucherCode11))
   })
 
-  it('vouchers.redeem() should fail on used code', async function () {
-    let newVoucher = await paratii.eth.vouchers.create({ voucherCode: voucherCode11, amount: voucherAmount11 })
-    console.log(newVoucher)
-    await paratii.eth.vouchers.redeem(newVoucher)
-    await assert.isRejected(await paratii.eth.vouchers.redeem(newVoucher), Error)
+  it('vouchers.redeem() should fail on used code (and with a meaningful error)', async function () {
+    await paratii.eth.vouchers.create({ voucherCode: voucherCode11, amount: voucherAmount11 })
+    await paratii.eth.vouchers.redeem(voucherCode11)
+    assert.isRejected(paratii.eth.vouchers.redeem(voucherCode11), Error, /This voucher was already used/g)
   })
 
   it('vouchers.create() should fail on invalid data', async function () {
-    await assert.isRejected(paratii.eth.vouchers.create({ voucherCode: null, amount: voucherAmount11 }))
-    await assert.isRejected(paratii.eth.vouchers.create({ voucherCode: 123, amount: voucherAmount11 }))
-    await assert.isRejected(paratii.eth.vouchers.create({ voucherCode: voucherCode11, amount: 'test' }))
-    await assert.isRejected(paratii.eth.vouchers.create({ voucherCode: voucherCode11, amount: 0 }))
+    assert.isRejected(paratii.eth.vouchers.create({ voucherCode: null, amount: voucherAmount11 }))
+    assert.isRejected(paratii.eth.vouchers.create({ voucherCode: 123, amount: voucherAmount11 }))
+    assert.isRejected(paratii.eth.vouchers.create({ voucherCode: voucherCode11, amount: 'test' }))
+    assert.isRejected(paratii.eth.vouchers.create({ voucherCode: voucherCode11, amount: 0 }))
   })
 
-  it('vouchers.create() should throw meaningful errors on failure', async function () {
-    assert.isRejected(paratii.eth.vouchers.test(), Error, 'test')
+  it('vouchers.redeem() should throw meaningful errors on failure', async function () {
+    await paratii.eth.vouchers.create({ voucherCode: voucherCode11, amount: voucherAmount11 * 10 })
+    assert.isRejected(paratii.eth.vouchers.redeem(voucherCode11), Error, /The Vouchers contract doesn't have enough PTI to redeem the voucher/g)
+    await paratii.eth.vouchers.create({ voucherCode: voucherCode11, amount: voucherAmount11 })
+    await paratii.eth.vouchers.redeem(voucherCode11)
+    assert.isRejected(paratii.eth.vouchers.redeem(voucherCode11), Error, /This voucher was already used/g)
+    assert.isRejected(paratii.eth.vouchers.redeem('blah-blah-blah'), Error, /This voucher doesn't exist/g)
   })
 })

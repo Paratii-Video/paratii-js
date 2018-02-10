@@ -60,8 +60,12 @@ var ParatiiEth = exports.ParatiiEth = function () {
       this.web3 = options.web3;
     } else {
       this.web3 = new Web3();
-      // this.web3.setProvider(new this.web3.providers.WebsocketProvider(options.provider))
-      this.web3.setProvider(options.provider);
+      if (options.provider.substring(0, 2) === 'ws') {
+        this.web3.setProvider(new this.web3.providers.WebsocketProvider(options.provider));
+      } else {
+        this.web3.setProvider(new this.web3.providers.HttpProvider(options.provider));
+      }
+      // this.web3.setProvider(options.provider)
     }
 
     this.wallet = (0, _paratiiEthWallet.patchWallet)(this.web3.eth.accounts.wallet, this.config);
