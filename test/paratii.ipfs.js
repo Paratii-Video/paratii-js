@@ -59,7 +59,7 @@ describe('ParatiiIPFS: :', function () {
   })
 
   it('should exist and work as an attribute on the Paratii object', async function () {
-    let paratii = new Paratii()
+    let paratii = await new Paratii()
     assert.isOk(paratii.ipfs)
     assert.isOk(await paratii.ipfs.getIPFSInstance())
   })

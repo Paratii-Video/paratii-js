@@ -125,7 +125,7 @@ describe('paratii.eth API: :', function () {
     // assert.equal(contracts.Videos.options.address, (await paratii.eth.getContract('Registry')).options.address)
   })
   it('deployContract should throw a sensible error if address is not set', async function () {
-    paratii = new Paratii()
+    paratii = await new Paratii()
     await assert.isRejected(paratii.eth.deployContract('ParatiiToken'), Error, 'You need an Ethereum account')
   })
 })
