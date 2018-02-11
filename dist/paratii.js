@@ -58,15 +58,12 @@ var Paratii = function () {
     this.config.repo = options.repo;
     this.config['db.provider'] = options['db.provider'];
 
-    if (this.config.provider === 'http://localhost:8545') {
-      this.config.isTestNet = true;
-    } else if (this.config.provider === 'http://127.0.0.1:8545') {
-      this.config.isTestNet = true;
-    } else if (this.config.provider === 'ws://localhost:8546') {
+    if (this.config.provider.match(/(localhost|127\.0\.0\.1)/g)) {
       this.config.isTestNet = true;
     } else {
       this.config.isTestNet = false;
     }
+
     this.config.account = {
       address: options.address,
       privateKey: options.privateKey
