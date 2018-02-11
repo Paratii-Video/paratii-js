@@ -156,40 +156,81 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
       }, null, this);
     }
   }, {
-    key: 'redeem',
-    value: function redeem(voucherCode) {
-      var contract, voucherBytes, thisVoucher, thisVoucherClaimant, thisVoucherAmount, vouchersContractBalance, tx, claimant;
-      return _regenerator2.default.async(function redeem$(_context4) {
+    key: 'createVouchers',
+    value: function createVouchers(number, amount) {
+      var i, vouchers, code, voucher;
+      return _regenerator2.default.async(function createVouchers$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
-              _context4.next = 2;
+              i = void 0;
+              vouchers = [];
+              i = 0;
+
+            case 3:
+              if (!(i < number)) {
+                _context4.next = 12;
+                break;
+              }
+
+              code = (0, _utils.makeId)();
+              voucher = { voucherCode: code, amount: amount };
+              _context4.next = 8;
+              return _regenerator2.default.awrap(this.create(voucher));
+
+            case 8:
+              vouchers.push(voucher);
+
+            case 9:
+              i++;
+              _context4.next = 3;
+              break;
+
+            case 12:
+              return _context4.abrupt('return', vouchers);
+
+            case 13:
+            case 'end':
+              return _context4.stop();
+          }
+        }
+      }, null, this);
+    }
+  }, {
+    key: 'redeem',
+    value: function redeem(voucherCode) {
+      var contract, voucherBytes, thisVoucher, thisVoucherClaimant, thisVoucherAmount, vouchersContractBalance, tx, claimant;
+      return _regenerator2.default.async(function redeem$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              _context5.next = 2;
               return _regenerator2.default.awrap(this.getVouchersContract());
 
             case 2:
-              contract = _context4.sent;
-              _context4.next = 5;
+              contract = _context5.sent;
+              _context5.next = 5;
               return _regenerator2.default.awrap(contract.methods.hashVoucher(voucherCode).call());
 
             case 5:
-              voucherBytes = _context4.sent;
-              _context4.next = 8;
+              voucherBytes = _context5.sent;
+              _context5.next = 8;
               return _regenerator2.default.awrap(contract.methods.vouchers(voucherBytes).call());
 
             case 8:
-              thisVoucher = _context4.sent;
+              thisVoucher = _context5.sent;
               thisVoucherClaimant = thisVoucher[0].toString();
               thisVoucherAmount = Number(thisVoucher[1]);
-              _context4.t0 = Number;
-              _context4.next = 14;
+              _context5.t0 = Number;
+              _context5.next = 14;
               return _regenerator2.default.awrap(this.eth.balanceOf(contract.options.address, 'PTI'));
 
             case 14:
-              _context4.t1 = _context4.sent;
-              vouchersContractBalance = (0, _context4.t0)(_context4.t1);
+              _context5.t1 = _context5.sent;
+              vouchersContractBalance = (0, _context5.t0)(_context5.t1);
 
               if (!(thisVoucherClaimant !== _utils.NULL_ADDRESS)) {
-                _context4.next = 18;
+                _context5.next = 18;
                 break;
               }
 
@@ -197,7 +238,7 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
 
             case 18:
               if (!(thisVoucherAmount > vouchersContractBalance)) {
-                _context4.next = 20;
+                _context5.next = 20;
                 break;
               }
 
@@ -205,43 +246,43 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
 
             case 20:
               if (!(thisVoucherAmount === Number(0))) {
-                _context4.next = 22;
+                _context5.next = 22;
                 break;
               }
 
               throw Error('This voucher doesn\'t exist');
 
             case 22:
-              _context4.prev = 22;
-              _context4.next = 25;
+              _context5.prev = 22;
+              _context5.next = 25;
               return _regenerator2.default.awrap(contract.methods.redeem(voucherCode).send());
 
             case 25:
-              tx = _context4.sent;
+              tx = _context5.sent;
               claimant = (0, _utils.getInfoFromLogs)(tx, 'LogRedeemVoucher', '_claimant', 1);
 
               if (!(claimant === this.eth.config.account.address)) {
-                _context4.next = 31;
+                _context5.next = 31;
                 break;
               }
 
-              return _context4.abrupt('return', true);
+              return _context5.abrupt('return', true);
 
             case 31:
-              return _context4.abrupt('return', false);
+              return _context5.abrupt('return', false);
 
             case 32:
-              _context4.next = 37;
+              _context5.next = 37;
               break;
 
             case 34:
-              _context4.prev = 34;
-              _context4.t2 = _context4['catch'](22);
+              _context5.prev = 34;
+              _context5.t2 = _context5['catch'](22);
               throw Error('An unknown error occurred');
 
             case 37:
             case 'end':
-              return _context4.stop();
+              return _context5.stop();
           }
         }
       }, null, this, [[22, 34]]);
