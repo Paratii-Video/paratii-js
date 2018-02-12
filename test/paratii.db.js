@@ -52,8 +52,8 @@ describe('paratii.db API: :', function () {
     assert.equal(check, true)
   })
 
-  it('should be available as an attribute on Paratii instances', function () {
-    let paratii = new Paratii({
+  it('should be available as an attribute on Paratii instances', async function () {
+    let paratii = await new Paratii({
       'db.provider': dbProvider
     })
     assert.isOk(paratii.db)

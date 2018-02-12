@@ -20,4 +20,10 @@ let mnemonic23 = 'jelly better achieve collect unaware mountain thought cargo ox
 // this is the first HD address generated
 let address23 = '0x9e2d04eef5b16CFfB4328Ddd027B55736407B275'
 
-export { address, address1, address99, privateKey, address17, privateKey17, mnemonic23, address23 }
+// a voucher code and an amount
+let voucherCode11 = 'ZJLUaMqLR1'
+let voucherAmount11 = 0.3141 * 10 ** 18
+let voucherAmountInitial11 = 2 * 10 ** 18
+let hashedVoucherCode11 = '0x182b41b125c1c14efaf188d95b6a7e2074d8b746237fc47b48beb63551d742f9'
+
+export { address, address1, address99, privateKey, address17, privateKey17, mnemonic23, address23, voucherAmountInitial11, voucherAmount11, hashedVoucherCode11, voucherCode11 }

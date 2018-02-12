@@ -104,24 +104,30 @@ Remarks:
       id: 0x1234,
       name: 'A user name',
       email: 'some@email.com',
-      ... (other fields to be defined)
+      // ... (other fields to be defined)
     })
+	
+Creates a user, fields `id`, `name` and `email` go to the smart contract `Users`, other fields are stored on IPFS.
 
 ## `core.users.get`
 
     core.users.get(0x1234)
+	
+Calls paratii-db and returns user's details for a given ID.
 
-returns
+Sample output:
+
     {
       id: 0x1234,
       name: 'A user name',
       email: 'some@email.com',
-      ... (other fields to be defined)
+      // ... (other fields to be defined)
     }
 
 ## `core.users.update`
-
-
-    core.users.ipdate(0x1244, {
-      name: 'A user name',
+	
+Updates a user's details. `name` and `email` are defined in the smart contract `Users`, other fields get written to IPFS.
+	
+    core.users.update(0x1234, {
+      name: 'A new user name',
     })
