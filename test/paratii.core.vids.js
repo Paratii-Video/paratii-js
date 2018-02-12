@@ -1,6 +1,6 @@
 import { Paratii } from '../lib/paratii.js'
 import { assert } from 'chai'
-import { address, address1, privateKey } from './utils.js'
+import { address, address1, address99, privateKey } from './utils.js'
 import nock from 'nock'
 
 nock.enableNetConnect()
@@ -163,7 +163,13 @@ describe('paratii.core.vids:', function () {
     assert.isNotOk(dataLikes)
   })
 
-  it.skip('core.vids.view() should work as expected', async function () {
+  it('core.vids.view() should work as expected', async function () {
+    await paratii.core.vids.view({
+      viewer: address99,
+      videoId: address1
+    })
+    let hasViewed = await paratii.core.vids.hasViewedVideo(address99, address1)
+    assert.isOk(hasViewed)
   })
 
   it.skip('core.vids.buy() should work as expected', async function () {
