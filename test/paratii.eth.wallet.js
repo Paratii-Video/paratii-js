@@ -12,7 +12,7 @@ describe('paratii.eth.wallet: :', function () {
   let password = 'some-password'
 
   it('init account is added to wallet', async function () {
-    paratii = await new Paratii({
+    paratii = new Paratii({
       provider: 'http://localhost:8545',
       address: address,
       privateKey: privateKey
@@ -70,7 +70,7 @@ describe('paratii.eth.wallet: :', function () {
 
   it('send() should fail if no wallet is present', async function () {
     // instantiate paratii with an unlocked account
-    paratii = await new Paratii({
+    paratii = new Paratii({
       provider: 'http://localhost:8545',
       address: address17
     })
@@ -78,7 +78,7 @@ describe('paratii.eth.wallet: :', function () {
   })
 
   it('send() should succeed if a  private key is passed to the constructor', async function () {
-    paratii = await new Paratii({
+    paratii = new Paratii({
       provider: 'http://localhost:8545',
       address: address,
       privateKey: privateKey
@@ -101,7 +101,7 @@ describe('paratii.eth.wallet: :', function () {
     assert.isOk(paratii.eth.wallet.isValidMnemonic(m1))
   })
   it('eth.wallet.create() should throw if a wallet already has an account', async function () {
-    paratii = await new Paratii({
+    paratii = new Paratii({
       address: address,
       privateKey: privateKey
     })
@@ -116,7 +116,7 @@ describe('paratii.eth.wallet: :', function () {
     assert.isOk(wallet.isValidMnemonic(wallet.getMnemonic()))
 
     // if we construct the paratii object with
-    paratii = await new Paratii({
+    paratii = new Paratii({
       address: address,
       privateKey: privateKey
     })

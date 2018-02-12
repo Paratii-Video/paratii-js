@@ -5,7 +5,7 @@ import { assert } from 'chai'
 describe('paratii.core API: :', function () {
   let paratii, paratiiCore
   beforeEach(async function () {
-    paratii = await new Paratii({
+    paratii = new Paratii({
       address: address,
       privateKey: privateKey
     })

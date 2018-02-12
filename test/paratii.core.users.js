@@ -22,7 +22,7 @@ describe('paratii.core.users: ', function () {
     .reply(200, users[0])
   })
   beforeEach(async function () {
-    paratii = await new Paratii({
+    paratii = new Paratii({
       provider: 'http://localhost:8545/rpc/',
       address: address,
       privateKey: privateKey,

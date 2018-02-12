@@ -53,7 +53,7 @@ describe('paratii.core.vids:', function () {
   let videoTitle = 'some title'
   let dbProvider = 'https://db.paratii.video'
   beforeEach(async function () {
-    paratii = await new Paratii({
+    paratii = new Paratii({
       address: address,
       privateKey: privateKey,
       'db.provider': dbProvider

@@ -5,7 +5,7 @@ import { assert } from 'chai'
 describe('paratii.eth.users: :', function () {
   let paratii
   beforeEach(async function () {
-    paratii = await new Paratii({
+    paratii = new Paratii({
       provider: 'http://localhost:8545',
       address: address,
       privateKey: privateKey
