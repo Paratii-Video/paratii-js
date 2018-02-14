@@ -5,6 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ParatiiCoreVids = undefined;
 
+var _keys = require('babel-runtime/core-js/object/keys');
+
+var _keys2 = _interopRequireDefault(_keys);
+
 var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
@@ -62,6 +66,11 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
     key: 'doesLike',
     value: function doesLike(videoId) {
       return this.paratii.eth.vids.doesLike(videoId);
+    }
+  }, {
+    key: 'hasViewedVideo',
+    value: function hasViewedVideo(viewer, videoId) {
+      return this.paratii.eth.vids.userViewedVideo({ viewer: viewer, videoId: videoId });
     }
   }, {
     key: 'doesDislike',
@@ -172,17 +181,53 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
       }, null, this);
     }
   }, {
-    key: 'get',
-    value: function get(videoId) {
-      return _regenerator2.default.async(function get$(_context3) {
+    key: 'view',
+    value: function view(options) {
+      var keysForBlockchain, optionsKeys, optionsBlockchain, optionsIpfs, hash;
+      return _regenerator2.default.async(function view$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              return _context3.abrupt('return', this.paratii.db.vids.get(videoId));
+              keysForBlockchain = ['viewer', 'videoId'];
+              optionsKeys = (0, _keys2.default)(options);
+              optionsBlockchain = {};
+              optionsIpfs = {};
+
+              optionsKeys.forEach(function (key) {
+                if (keysForBlockchain.includes(key)) {
+                  optionsBlockchain[key] = options[key];
+                } else {
+                  optionsIpfs[key] = options[key];
+                }
+              });
+              _context3.next = 7;
+              return _regenerator2.default.awrap(this.paratii.ipfs.addJSON(optionsIpfs));
+
+            case 7:
+              hash = _context3.sent;
+
+              optionsBlockchain['ipfsData'] = hash;
+              return _context3.abrupt('return', this.paratii.eth.vids.view(optionsBlockchain));
+
+            case 10:
+            case 'end':
+              return _context3.stop();
+          }
+        }
+      }, null, this);
+    }
+  }, {
+    key: 'get',
+    value: function get(videoId) {
+      return _regenerator2.default.async(function get$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              return _context4.abrupt('return', this.paratii.db.vids.get(videoId));
 
             case 1:
             case 'end':
-              return _context3.stop();
+              return _context4.stop();
           }
         }
       }, null, this);
