@@ -46,6 +46,8 @@ var _require2 = require('async'),
     nextTick = _require2.nextTick;
 
 var once = require('once');
+var Multiaddr = require('multiaddr');
+
 // const ytdl = require('ytdl-core')
 // const vidl = require('vimeo-downloader')
 // const readline = require('readline')
@@ -73,8 +75,9 @@ var Uploader = function (_EventEmitter) {
       //   throw new Error('IPFS Instance is required By Uploader.')
       // }
       this._node = opts.node; // this is the actual IPFS node.
-      this._chunkSize = opts.chunkSize || 64048;
-      this._defaultTranscoder = opts.defaultTranscoder || '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'; // Address of transcoder
+      this._chunkSize = opts.chunkSize || 100 * 1024;
+      this._defaultTranscoder = opts.defaultTranscoder || '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'; // Address of transcoder '/ip4/127.0.0.1/tcp/4003/ws/ipfs/Qmbd5jx8YF1QLhvwfLbCTWXGyZLyEJHrPbtbpRESvYs4FS'
+      // '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW' // Address of transcoder
     }
   }, {
     key: 'onDrop',
@@ -299,9 +302,11 @@ var Uploader = function (_EventEmitter) {
 
       var defaults = {
         author: '0x', // ETH/PTI address of the file owner
-        transcoder: this._defaultTranscoder
+        transcoder: this._defaultTranscoder,
+        transcoderId: Multiaddr(this._defaultTranscoder).getPeerId()
       };
-      console.log('Signaling transoder...');
+
+      console.log('Signaling transcoder...');
 
       var opts = dopts(options, defaults, { allowUnknown: true });
       var ev = void 0;
@@ -322,17 +327,22 @@ var Uploader = function (_EventEmitter) {
       this._node.swarm.connect(opts.transcoder, function (err, success) {
         if (err) return ev.emit('transcoding:error', err);
 
+        opts.transcoderId = opts.transcoderId || Multiaddr(opts.transcoder).getPeerId();
+        console.log('transcoderId: ', opts.transcoderId);
         _this4._node.swarm.peers(function (err, peers) {
           console.log('peers: ', peers);
           if (err) return ev.emit('transcoding:error', err);
           peers.map(function (peer) {
-            console.log('sending transcode msg to ' + peer.peer.id.toB58String() + ' with request to transcode ' + fileHash);
-            _this4._ipfs.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
-              if (err) {
-                ev.emit('transcoding:error', err);
-                return ev;
-              }
-            });
+            console.log('peerID : ', peer.peer.id.toB58String(), opts.transcoderId, peer.peer.id.toB58String() === opts.transcoder);
+            if (peer.peer.id.toB58String() === opts.transcoderId) {
+              console.log('sending transcode msg to ' + peer.peer.id.toB58String() + ' with request to transcode ' + fileHash);
+              _this4._ipfs.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
+                if (err) {
+                  ev.emit('transcoding:error', err);
+                  return ev;
+                }
+              });
+            }
           });
 
           // paratii transcoder signal.
@@ -449,7 +459,7 @@ var Uploader = function (_EventEmitter) {
         transcoder: this._defaultTranscoder,
         size: 0
       };
-      console.log('Signaling transoder...');
+      console.log('Signaling transcoder...');
 
       var opts = dopts(options, defaults, { allowUnknown: true });
       var ev = void 0;
