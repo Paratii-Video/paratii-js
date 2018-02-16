@@ -68,15 +68,21 @@ Get the data of the video identified by `videoId`.
 
 Remove the data of this video from the register. This method can only be called by the owner of the contract, or by the original registrar of the video.
 
+## core.vids.like(videoId)
 
-## core.vids.like(videoId, [proof])
+Writes a like for the video on the blockchain (contract `Likes`), and negates a dislike for the video, if it exists.
 
+## core.vids.dislike(videoId)
 
-## core.vids.dislike(videoId, [proof])
+Writes a dislike for the video on the blockchain (contract `Likes`), and negates a like for the video, if it exists.
 
-## core.vids.view(videoId, [proof])
+## core.vids.view(data)
 
-Register a view on the blockchain
+Register a view on the blockchain. 
+
+Accepts parameter data that contains keys `viewer`, which is an address of the viewer, and `videoId`, which is the ID of the video for which the view will be registered.
+
+All other parameters are stored on IPFS and passed as `ipfsData` on the blockchain.
 
 ## core.vids.buy(videoId)
 
