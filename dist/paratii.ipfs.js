@@ -70,10 +70,12 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     var defaults = {
       protocol: null,
       onReadyHook: [],
-      'config.addresses.swarm': ['/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star'],
-      'ipfs.config.Bootstrap': ['/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'],
+      'config.addresses.swarm': ['/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star', '/dns/ws.star.paratii.video/wss/p2p-websocket-star/'],
+      'ipfs.config.Bootstrap': ['/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
+      // '/ip4/127.0.0.1/tcp/4003/ws/ipfs/Qmbd5jx8YF1QLhvwfLbCTWXGyZLyEJHrPbtbpRESvYs4FS'
+      ],
       'ipfs.repo': '/tmp/paratii-alpha-' + String(Math.random()), // key where to save information
-      'ipfs.bitswap.maxMessageSize': 32 * 1024,
+      'ipfs.bitswap.maxMessageSize': 128 * 1024,
       'address': null, // 'Ethereum address'
       'verbose': false
     };
@@ -204,7 +206,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
               // uploader
               _this2.uploader.setOptions({
                 node: ipfs,
-                chunkSize: 64048
+                chunkSize: 128 * 1024
               });
 
               _this2.protocol.notifications.on('message:new', function (peerId, msg) {
