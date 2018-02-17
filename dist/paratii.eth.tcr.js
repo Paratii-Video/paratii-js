@@ -104,6 +104,15 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         }
       }, null, this);
     }
+
+    /**
+     * check if video is already whitelisted or not. note that this returns false
+     * till the video is actually whitelisted. use didVideoApply in case you want
+     * to check whether the video is in application process.
+     * @param  {string}  videoId videoId
+     * @return {boolean}         is video whitelisted or not.
+     */
+
   }, {
     key: 'isWhitelisted',
     value: function isWhitelisted(videoId) {
@@ -131,6 +140,13 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         }
       }, null, this);
     }
+
+    /**
+     * check whether a video started the application process or not yet.
+     * @param  {string}  videoId videoId
+     * @return {boolean}         did the video start the TCR process.
+     */
+
   }, {
     key: 'didVideoApply',
     value: function didVideoApply(videoId) {
@@ -158,6 +174,15 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         }
       }, null, this);
     }
+
+    /**
+     * start the application process.
+     * @param  {string}  videoId       videoId
+     * @param  {Float}  amountToStake number of tokens to stake. must >= minDeposit
+     * @return {boolean}               returns true if all is good, plus _Application
+     * event.
+     */
+
   }, {
     key: 'apply',
     value: function apply(videoId, amountToStake) {
