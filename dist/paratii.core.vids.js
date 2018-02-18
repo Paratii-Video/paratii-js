@@ -23,7 +23,6 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var dopts = require('default-options');
 var joi = require('joi');
 
 /**
@@ -76,41 +75,50 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   }, {
     key: 'create',
     value: function create(options) {
-      var defaults, hash;
+      var schema, result, error, hash;
       return _regenerator2.default.async(function create$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              defaults = {
-                id: null, // optional, a string
-                owner: undefined, // must be a string
-                price: 0, // must be a number, optional, default is 0
-                title: undefined, // must be a string
-                description: null, // must be a string, optional
-                file: null, // must be string, optional
-                ipfsHashOrig: '', // must be a string, optional, default is ''
-                ipfsHash: '' // must be a string, optional, default is ''
-              };
+              schema = joi.object({
+                id: joi.string().default(null),
+                owner: joi.string().required(),
+                price: joi.number().default(0),
+                title: joi.string().required(),
+                description: joi.string().default(null),
+                file: joi.string().default(null),
+                ipfsHashOrig: joi.string().empty('').default(''),
+                ipfsHash: joi.string().default('')
+              });
+              result = joi.validate(options, schema);
+              error = result.error;
 
+              if (!error) {
+                _context.next = 5;
+                break;
+              }
 
-              options = dopts(options, defaults);
+              throw error;
+
+            case 5:
+              options = result.value;
 
               if (options.id === null) {
                 options.id = this.paratii.eth.vids.makeId();
               }
 
-              _context.next = 5;
+              _context.next = 9;
               return _regenerator2.default.awrap(this.paratii.ipfs.addJSON({
                 title: options.title,
                 description: options.description
               }));
 
-            case 5:
+            case 9:
               hash = _context.sent;
 
 
               options.ipfsData = hash;
-              _context.next = 9;
+              _context.next = 13;
               return _regenerator2.default.awrap(this.paratii.eth.vids.create({
                 id: options.id,
                 owner: options.owner,
@@ -120,10 +128,10 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 ipfsData: options.ipfsData
               }));
 
-            case 9:
+            case 13:
               return _context.abrupt('return', options);
 
-            case 10:
+            case 14:
             case 'end':
               return _context.stop();
           }
@@ -141,12 +149,9 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
               schema = joi.object({
                 description: joi.string().default(null),
                 owner: joi.string().default(null),
-                price: joi.number().default(0),
                 title: joi.string().default(null),
-                file: joi.string().default(null),
-                ipfsHashOrig: joi.string().default(''),
-                ipfsHash: joi.string().default(null)
-              });
+                file: joi.string().default(null)
+              }).unknown();
               result = joi.validate(options, schema);
               error = result.error;
 
