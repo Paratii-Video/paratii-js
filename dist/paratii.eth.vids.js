@@ -240,79 +240,71 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
   }, {
     key: 'sendLike',
     value: function sendLike(options, type) {
-      var defaults, msg, _msg, _msg2, contract, contract2, videoInfo, _msg3, tx;
+      var schema, result, error, msg, contract, contract2, videoInfo, _msg, tx;
 
       return _regenerator2.default.async(function sendLike$(_context6) {
         while (1) {
           switch (_context6.prev = _context6.next) {
             case 0:
-              defaults = {
-                videoId: null,
-                liked: null
-              };
+              schema = joi.object({
+                videoId: joi.string().required(),
+                liked: joi.bool().required()
+              });
+              result = joi.validate(options, schema);
+              error = result.error;
 
-              options = dopts(options, defaults);
-
-              if (!(options.videoId === null)) {
+              if (!error) {
                 _context6.next = 5;
                 break;
               }
 
-              msg = 'The videoId argument should be provided';
-              throw Error(msg);
+              throw error;
 
             case 5:
-              if (!(options.liked === null)) {
-                _context6.next = 8;
-                break;
-              }
+              options = result.value;
 
-              _msg = 'The liked argument should be provided';
-              throw Error(_msg);
-
-            case 8:
               if (!(options.liked !== true && options.liked !== false)) {
-                _context6.next = 11;
+                _context6.next = 9;
                 break;
               }
 
-              _msg2 = 'The liked argument should be a boolean';
-              throw Error(_msg2);
+              msg = 'The liked argument should be a boolean';
+              throw Error(msg);
 
-            case 11:
-              _context6.next = 13;
+            case 9:
+              _context6.next = 11;
               return _regenerator2.default.awrap(this.getVideoRegistry());
 
-            case 13:
+            case 11:
               contract = _context6.sent;
-              _context6.next = 16;
+              _context6.next = 14;
               return _regenerator2.default.awrap(this.getLikesContract());
 
-            case 16:
+            case 14:
               contract2 = _context6.sent;
-              _context6.next = 19;
+              _context6.next = 17;
               return _regenerator2.default.awrap(contract.methods.get(options.videoId).call());
 
-            case 19:
+            case 17:
               videoInfo = _context6.sent;
 
               if (!(videoInfo[0] === _utils.NULL_ADDRESS)) {
-                _context6.next = 23;
+                _context6.next = 21;
                 break;
               }
 
-              _msg3 = 'Video with ID \'' + options.videoId + '\' doesn\'t exist';
-              throw Error(_msg3);
+              _msg = 'Video with ID \'' + options.videoId + '\' doesn\'t exist';
+              throw Error(_msg);
 
-            case 23:
-              _context6.next = 25;
+            case 21:
+              _context6.next = 23;
               return _regenerator2.default.awrap(contract2.methods.likeVideo(options.videoId, options.liked).send());
 
-            case 25:
+            case 23:
               tx = _context6.sent;
               return _context6.abrupt('return', tx);
 
-            case 27:
+            case 25:
             case 'end':
               return _context6.stop();
           }
