@@ -314,32 +314,42 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
   }, {
     key: 'view',
     value: function view(options) {
-      var defaults, contract, tx;
+      var schema, result, error, contract, tx;
       return _regenerator2.default.async(function view$(_context7) {
         while (1) {
           switch (_context7.prev = _context7.next) {
             case 0:
-              defaults = {
-                viewer: undefined,
-                videoId: undefined,
-                ipfsData: null
-              };
+              schema = joi.object({
+                viewer: joi.string().required(),
+                videoId: joi.string().required(),
+                ipfsData: joi.string().default(null)
+              });
+              result = joi.validate(options, schema);
+              error = result.error;
 
-              options = dopts(options, defaults);
+              if (!error) {
+                _context7.next = 5;
+                break;
+              }
 
-              _context7.next = 4;
+              throw error;
+
+            case 5:
+              options = result.value;
+
+              _context7.next = 8;
               return _regenerator2.default.awrap(this.getViewsContract());
 
-            case 4:
+            case 8:
               contract = _context7.sent;
-              _context7.next = 7;
+              _context7.next = 11;
               return _regenerator2.default.awrap(contract.methods.create(options.viewer, options.videoId, options.ipfsData).send());
 
-            case 7:
+            case 11:
               tx = _context7.sent;
               return _context7.abrupt('return', tx);
 
-            case 9:
+            case 13:
             case 'end':
               return _context7.stop();
           }
