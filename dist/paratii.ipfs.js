@@ -51,7 +51,7 @@ global.Buffer = global.Buffer || require('buffer').Buffer; // import { paratiiIP
 
 
 var Ipfs = require('ipfs');
-var dopts = require('default-options');
+var joi = require('joi');
 var Uploader = require('./paratii.ipfs.uploader.js');
 
 var _require = require('events'),
@@ -67,20 +67,21 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
 
     var _this = (0, _possibleConstructorReturn3.default)(this, (ParatiiIPFS.__proto__ || (0, _getPrototypeOf2.default)(ParatiiIPFS)).call(this));
 
-    var defaults = {
-      protocol: null,
-      onReadyHook: [],
-      'config.addresses.swarm': ['/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star', '/dns/ws.star.paratii.video/wss/p2p-websocket-star/'],
-      'ipfs.config.Bootstrap': ['/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
-      // '/ip4/127.0.0.1/tcp/4003/ws/ipfs/Qmbd5jx8YF1QLhvwfLbCTWXGyZLyEJHrPbtbpRESvYs4FS'
-      ],
-      'ipfs.repo': '/tmp/paratii-alpha-' + String(Math.random()), // key where to save information
-      'ipfs.bitswap.maxMessageSize': 128 * 1024,
-      'address': null, // 'Ethereum address'
-      'verbose': false
-    };
-    _this.config = dopts(config, defaults, { allowUnknown: true });
+    var schema = joi.object({
+      protocol: joi.string().default(null),
+      onReadyHook: joi.array().ordered().default([]),
+      'config.addresses.swarm': joi.array().ordered(joi.string().default('/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star'), joi.string().default('/dns/ws.star.paratii.video/wss/p2p-websocket-star/')),
+      'ipfs.config.Bootstrap': joi.array().ordered(joi.string().default('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW')),
+      'ipfs.repo': joi.string().default('/tmp/paratii-alpha-' + String(Math.random())),
+      'ipfs.bitswap.maxMessageSize': joi.number().default(128 * 1024),
+      address: joi.string().default(null),
+      verbose: joi.bool().default(false)
+    }).unknown();
 
+    var result = joi.validate(config, schema);
+    var error = result.error;
+    if (error) throw error;
+    _this.config = result.value;
     _this.uploader = new Uploader(_this);
     return _this;
   }
