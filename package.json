@@ -30,7 +30,7 @@
     "isomorphic-fetch": "^2.2.1",
     "multiaddr": "^3.0.2",
     "once": "^1.4.0",
-    "paratii-contracts": "github:Paratii-Video/paratii-contracts#eb606943fe7051aab0936e6b67a765806a8611e2",
+    "paratii-contracts": "github:Paratii-Video/paratii-contracts#cbd7fb99b1bcc3c08d87723359ea22c327f5c38d",
     "paratii-protocol": "github:Paratii-Video/paratii-protocol#4e6f4da9c0f0eb0e79cf1c1b2eafb788cc134888",
     "promisify-node": "^0.4.0",
     "pull-filereader": "^1.0.1",
