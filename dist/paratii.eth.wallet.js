@@ -133,7 +133,6 @@ function patchWallet(wallet, config) {
     }
     return newWallet;
   }
-  _decrypt.bind(wallet);
 
   wallet._mnemonic = undefined;
   wallet.create = create;
