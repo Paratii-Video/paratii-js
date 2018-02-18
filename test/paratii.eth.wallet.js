@@ -36,9 +36,6 @@ describe('paratii.eth.wallet: :', function () {
     assert.isTrue(paratii.eth.web3.utils.isAddress(wallet[1].address))
     assert.isTrue(paratii.eth.web3.utils.isAddress(wallet[2].address))
     assert.equal(wallet[0].address, addresses[0])
-
-    // also the config object should be updated
-    assert.equal(paratii.config.account.address, addresses[0])
   })
 
   it('wallet.create() does not create a new wallet object', async function () {
@@ -52,6 +49,29 @@ describe('paratii.eth.wallet: :', function () {
     let wallet = paratii.eth.wallet
     await wallet.create()
     wallet.isValidMnemonic(wallet.getMnemonic())
+  })
+
+  it('wallet.create() sets config.account.address and privatekey', async function () {
+    paratii = await new Paratii()
+    let wallet = paratii.eth.wallet
+    await wallet.create()
+    assert.equal(wallet[0].address, paratii.config.account.address)
+    assert.isOk(paratii.config.account.privateKey)
+  })
+
+  it('wallet.decrypt() sets config.account.address and privatekey', async function () {
+    // serialzie a wallet so we can test the decryption
+    paratii = await new Paratii()
+    let wallet = paratii.eth.wallet
+
+    wallet = await wallet.create(1, mnemonic)
+    let data = wallet.encrypt(password)
+
+    // get a frsh paratii object
+    paratii = await new Paratii()
+    let decryptedWallet = await paratii.eth.wallet.decrypt(data, password)
+    assert.equal(decryptedWallet[0].address, paratii.config.account.address)
+    assert.isOk(paratii.config.account.privateKey)
   })
 
   it('wallet.encrypt() and decrypt() works', async function () {
@@ -68,13 +88,22 @@ describe('paratii.eth.wallet: :', function () {
     assert.equal(wallet[0].address, addresses[0])
   })
 
-  it('send() should fail if no wallet is present', async function () {
+  it.skip('send() should fail if no wallet is present', async function () {
+    paratii = new Paratii({
+      address: address,
+      privateKey: privateKey
+    })
+    await paratii.eth.deployContracts()
+
     // instantiate paratii with an unlocked account
     paratii = new Paratii({
       provider: 'http://localhost:8545',
-      address: address17
+      address: address17,
+      registryAddress: paratii.config.registryAddress
     })
-    assert.isRejected(paratii.eth.transfer(address1, 2e18, 'ETH'), 'could not unlock signer account')
+    // set the account but not the private key
+    // paratii.setAccount(address17)
+    await assert.isRejected(paratii.eth.transfer(address1, 2e18, 'ETH'), 'could not unlock signer account')
   })
 
   it('send() should succeed if a  private key is passed to the constructor', async function () {

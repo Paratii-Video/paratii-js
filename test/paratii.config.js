@@ -5,9 +5,6 @@ import { assert } from 'chai'
 describe('Paratii configuration:', function () {
   let paratii
 
-  beforeEach(function () {
-  })
-
   it('paratii.config should return the configuration with default values', async function () {
     paratii = new Paratii({
       address: address,
@@ -76,7 +73,7 @@ describe('Paratii configuration:', function () {
 
     // functions should still work
     let promise = paratii.eth.getContract('ParatiiToken')
-    assert.isRejected(promise, /No registry/)
+    await assert.isRejected(promise, /No registry/)
   })
 
   it('the account should be added to the wallet if a private key is given', async function () {

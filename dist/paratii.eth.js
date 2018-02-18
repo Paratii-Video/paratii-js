@@ -603,7 +603,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: '_transferETH',
     value: function _transferETH(beneficiary, amount, description) {
-      var contract, from, result;
+      var contract, from;
       return _regenerator2.default.async(function _transferETH$(_context9) {
         while (1) {
           switch (_context9.prev = _context9.next) {
@@ -633,22 +633,30 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
             case 8:
 
+              if (!description) {
+                description = '';
+              }
               from = (0, _utils.add0x)(from);
               beneficiary = (0, _utils.add0x)(beneficiary);
 
-              _context9.next = 12;
+              _context9.prev = 11;
+              _context9.next = 14;
               return _regenerator2.default.awrap(contract.methods.transfer(beneficiary, description).send({ value: amount }));
 
-            case 12:
-              result = _context9.sent;
-              return _context9.abrupt('return', result);
-
             case 14:
+              return _context9.abrupt('return', _context9.sent);
+
+            case 17:
+              _context9.prev = 17;
+              _context9.t0 = _context9['catch'](11);
+              throw _context9.t0;
+
+            case 20:
             case 'end':
               return _context9.stop();
           }
         }
-      }, null, this);
+      }, null, this, [[11, 17]]);
     }
   }, {
     key: '_transferPTI',

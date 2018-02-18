@@ -82,7 +82,7 @@ describe('paratii.core.vids:', function () {
     let data
 
     // make sure the video does not exist
-    assert.isRejected(paratii.eth.vids.get(videoId), Error, 'No video')
+    await assert.isRejected(paratii.eth.vids.get(videoId), Error, 'No video')
 
     data = await paratii.core.vids.create({
       id: videoId2,
