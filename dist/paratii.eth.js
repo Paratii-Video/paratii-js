@@ -31,6 +31,8 @@ var _paratiiEthEvents = require('./paratii.eth.events.js');
 
 var _paratiiEthVouchers = require('./paratii.eth.vouchers.js');
 
+var _paratiiEthTcr = require('./paratii.eth.tcr.js');
+
 var _paratiiEthWallet = require('./paratii.eth.wallet.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -82,11 +84,13 @@ var ParatiiEth = exports.ParatiiEth = function () {
     this.contracts.Likes = this.requireContract('Likes');
     this.contracts.Views = this.requireContract('Views');
     this.contracts.Vouchers = this.requireContract('Vouchers');
+    this.contracts.TcrPlaceholder = this.requireContract('TcrPlaceholder');
 
     this.vids = new _paratiiEthVids.ParatiiEthVids(this);
     this.users = new _paratiiEthUsers.ParatiiEthUsers(this);
     this.events = new _paratiiEthEvents.ParatiiEthEvents(this);
     this.vouchers = new _paratiiEthVouchers.ParatiiEthVouchers(this);
+    this.tcr = new _paratiiEthTcr.ParatiiEthTcr(this);
   }
 
   (0, _createClass3.default)(ParatiiEth, [{
@@ -182,7 +186,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: 'deployContracts',
     value: function deployContracts() {
-      var paratiiRegistry, paratiiRegistryAddress, paratiiAvatar, paratiiToken, sendEther, userRegistry, videoRegistry, videoStore, likes, views, vouchers;
+      var paratiiRegistry, paratiiRegistryAddress, paratiiAvatar, paratiiToken, sendEther, userRegistry, videoRegistry, videoStore, likes, views, vouchers, tcrPlaceholder;
       return _regenerator2.default.async(function deployContracts$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -243,54 +247,63 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 32:
               vouchers = _context3.sent;
               _context3.next = 35;
-              return _regenerator2.default.awrap(this.getContract('Registry'));
+              return _regenerator2.default.awrap(this.deployContract('TcrPlaceholder', paratiiRegistryAddress, paratiiToken.options.address, 5, 100));
 
             case 35:
-              paratiiRegistry = _context3.sent;
+              tcrPlaceholder = _context3.sent;
               _context3.next = 38;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Avatar', paratiiAvatar.options.address).send());
+              return _regenerator2.default.awrap(this.getContract('Registry'));
 
             case 38:
-              _context3.next = 40;
+              paratiiRegistry = _context3.sent;
+              _context3.next = 41;
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Avatar', paratiiAvatar.options.address).send());
+
+            case 41:
+              _context3.next = 43;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('ParatiiToken', paratiiToken.options.address).send());
 
-            case 40:
-              _context3.next = 42;
+            case 43:
+              _context3.next = 45;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('SendEther', sendEther.options.address).send());
 
-            case 42:
-              _context3.next = 44;
+            case 45:
+              _context3.next = 47;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Videos', videoRegistry.options.address).send());
 
-            case 44:
-              _context3.next = 46;
+            case 47:
+              _context3.next = 49;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Store', videoStore.options.address).send());
 
-            case 46:
-              _context3.next = 48;
+            case 49:
+              _context3.next = 51;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Users', userRegistry.options.address).send());
 
-            case 48:
-              _context3.next = 50;
+            case 51:
+              _context3.next = 53;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Likes', likes.options.address).send());
 
-            case 50:
-              _context3.next = 52;
+            case 53:
+              _context3.next = 55;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Views', views.options.address).send());
 
-            case 52:
-              _context3.next = 54;
+            case 55:
+              _context3.next = 57;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Vouchers', vouchers.options.address).send());
 
-            case 54:
-              _context3.next = 56;
+            case 57:
+              _context3.next = 59;
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('TcrPlaceholder', tcrPlaceholder.options.address).send());
+
+            case 59:
+              _context3.next = 61;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerUint('VideoRedistributionPoolShare', this.web3.utils.toWei('0.3')));
 
-            case 56:
-              _context3.next = 58;
+            case 61:
+              _context3.next = 63;
               return _regenerator2.default.awrap(paratiiAvatar.methods.addToWhitelist(videoStore.address));
 
-            case 58:
+            case 63:
 
               this.contracts = {
                 Avatar: paratiiAvatar,
@@ -302,7 +315,8 @@ var ParatiiEth = exports.ParatiiEth = function () {
                 Likes: likes,
                 Views: views,
                 Vouchers: vouchers,
-                Store: videoStore
+                Store: videoStore,
+                TcrPlaceholder: tcrPlaceholder
 
                 // await this.setContractsProvider()
 
@@ -310,7 +324,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
               return _context3.abrupt('return', this.contracts);
 
-            case 61:
+            case 66:
             case 'end':
               return _context3.stop();
           }

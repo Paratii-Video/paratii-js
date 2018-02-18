@@ -1,0 +1,239 @@
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.ParatiiEthTcr = undefined;
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _utils = require('./utils.js');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
+  /**
+   * TCR functionality
+   * @param  {object} context ParatiiEth Instance
+   * @return {TCR}      returns instances of Tcr
+   */
+  function ParatiiEthTcr(context) {
+    (0, _classCallCheck3.default)(this, ParatiiEthTcr);
+
+    this.eth = context;
+  }
+
+  /**
+   * get TCR contract instance.
+   * @return {Promise} Contract instance.
+   */
+
+
+  (0, _createClass3.default)(ParatiiEthTcr, [{
+    key: 'getTcrContract',
+    value: function getTcrContract() {
+      var contract;
+      return _regenerator2.default.async(function getTcrContract$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return _regenerator2.default.awrap(this.eth.getContract('TcrPlaceholder'));
+
+            case 2:
+              contract = _context.sent;
+
+              if (!(contract.options.address === '0x0')) {
+                _context.next = 5;
+                break;
+              }
+
+              throw Error('There is no TCR contract known in the registry');
+
+            case 5:
+              return _context.abrupt('return', contract);
+
+            case 6:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, null, this);
+    }
+
+    /**
+     * get the minimum amount required to stake a video.
+     * @return {Float} amount required in PTI
+     * @todo return amount as bignumber.js Object
+     */
+
+  }, {
+    key: 'getMinDeposit',
+    value: function getMinDeposit() {
+      var contract, minDeposit;
+      return _regenerator2.default.async(function getMinDeposit$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.next = 2;
+              return _regenerator2.default.awrap(this.getTcrContract());
+
+            case 2:
+              contract = _context2.sent;
+              _context2.next = 5;
+              return _regenerator2.default.awrap(contract.methods.getMinDeposit().call());
+
+            case 5:
+              minDeposit = _context2.sent;
+              return _context2.abrupt('return', minDeposit);
+
+            case 7:
+            case 'end':
+              return _context2.stop();
+          }
+        }
+      }, null, this);
+    }
+
+    /**
+     * check if video is already whitelisted or not. note that this returns false
+     * till the video is actually whitelisted. use didVideoApply in case you want
+     * to check whether the video is in application process.
+     * @param  {string}  videoId videoId
+     * @return {boolean}         is video whitelisted or not.
+     */
+
+  }, {
+    key: 'isWhitelisted',
+    value: function isWhitelisted(videoId) {
+      var contract, isWhitelisted;
+      return _regenerator2.default.async(function isWhitelisted$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.next = 2;
+              return _regenerator2.default.awrap(this.getTcrContract());
+
+            case 2:
+              contract = _context3.sent;
+              _context3.next = 5;
+              return _regenerator2.default.awrap(contract.methods.isWhitelisted(videoId).call());
+
+            case 5:
+              isWhitelisted = _context3.sent;
+              return _context3.abrupt('return', isWhitelisted);
+
+            case 7:
+            case 'end':
+              return _context3.stop();
+          }
+        }
+      }, null, this);
+    }
+
+    /**
+     * check whether a video started the application process or not yet.
+     * @param  {string}  videoId videoId
+     * @return {boolean}         did the video start the TCR process.
+     */
+
+  }, {
+    key: 'didVideoApply',
+    value: function didVideoApply(videoId) {
+      var contract, appWasMade;
+      return _regenerator2.default.async(function didVideoApply$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.next = 2;
+              return _regenerator2.default.awrap(this.getTcrContract());
+
+            case 2:
+              contract = _context4.sent;
+              _context4.next = 5;
+              return _regenerator2.default.awrap(contract.methods.appWasMade(videoId).call());
+
+            case 5:
+              appWasMade = _context4.sent;
+              return _context4.abrupt('return', appWasMade);
+
+            case 7:
+            case 'end':
+              return _context4.stop();
+          }
+        }
+      }, null, this);
+    }
+
+    /**
+     * start the application process.
+     * @param  {string}  videoId       videoId
+     * @param  {Float}  amountToStake number of tokens to stake. must >= minDeposit
+     * @return {boolean}               returns true if all is good, plus _Application
+     * event.
+     */
+
+  }, {
+    key: 'apply',
+    value: function apply(videoId, amountToStake) {
+      var minDeposit, contract, tx, vId;
+      return _regenerator2.default.async(function apply$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              _context5.next = 2;
+              return _regenerator2.default.awrap(this.getMinDeposit());
+
+            case 2:
+              minDeposit = _context5.sent;
+
+              if (!(amountToStake < minDeposit)) {
+                _context5.next = 5;
+                break;
+              }
+
+              throw new Error('amount to stake ' + amountToStake + ' is less than minDeposit ' + minDeposit.toString());
+
+            case 5:
+              _context5.next = 7;
+              return _regenerator2.default.awrap(this.getTcrContract());
+
+            case 7:
+              contract = _context5.sent;
+              _context5.next = 10;
+              return _regenerator2.default.awrap(contract.methods.apply(videoId, amountToStake).send());
+
+            case 10:
+              tx = _context5.sent;
+              vId = (0, _utils.getInfoFromLogs)(tx, '_Application', 'videoId', 1);
+
+              if (!vId) {
+                _context5.next = 16;
+                break;
+              }
+
+              return _context5.abrupt('return', true);
+
+            case 16:
+              return _context5.abrupt('return', false);
+
+            case 17:
+            case 'end':
+              return _context5.stop();
+          }
+        }
+      }, null, this);
+    }
+  }]);
+  return ParatiiEthTcr;
+}();
