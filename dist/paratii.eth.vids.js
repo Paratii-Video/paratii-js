@@ -21,7 +21,6 @@ var _utils = require('./utils.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var dopts = require('default-options');
 var joi = require('joi');
 
 var ParatiiEthVids = exports.ParatiiEthVids = function () {
@@ -140,7 +139,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
           switch (_context4.prev = _context4.next) {
             case 0:
               schema = joi.object({
-                id: joi.string().default(null),
+                id: joi.string(),
                 owner: joi.string().required(),
                 price: joi.number().default(0),
                 ipfsHashOrig: joi.string().empty('').default(''),
@@ -359,31 +358,36 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
   }, {
     key: 'userViewedVideo',
     value: function userViewedVideo(options) {
-      var defaults, contract, result;
+      var schema, result, error, contract;
       return _regenerator2.default.async(function userViewedVideo$(_context8) {
         while (1) {
           switch (_context8.prev = _context8.next) {
             case 0:
-              defaults = {
-                viewer: undefined,
-                videoId: undefined
-              };
+              schema = joi.object({
+                viewer: joi.string().required(),
+                videoId: joi.string().required()
+              });
+              result = joi.validate(options, schema);
+              error = result.error;
 
-              options = dopts(options, defaults);
+              if (!error) {
+                _context8.next = 5;
+                break;
+              }
 
-              _context8.next = 4;
+              throw error;
+
+            case 5:
+              options = result.value;
+
+              _context8.next = 8;
               return _regenerator2.default.awrap(this.getViewsContract());
 
-            case 4:
+            case 8:
               contract = _context8.sent;
-              _context8.next = 7;
-              return _regenerator2.default.awrap(contract.methods.userViewedVideo(options.viewer, options.videoId).call());
+              return _context8.abrupt('return', contract.methods.userViewedVideo(options.viewer, options.videoId).call());
 
-            case 7:
-              result = _context8.sent;
-              return _context8.abrupt('return', result);
-
-            case 9:
+            case 10:
             case 'end':
               return _context8.stop();
           }
