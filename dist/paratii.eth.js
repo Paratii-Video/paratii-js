@@ -36,24 +36,27 @@ var _paratiiEthWallet = require('./paratii.eth.wallet.js');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Web3 = require('web3');
-var dopts = require('default-options');
+var joi = require('joi');
 
 var ParatiiEth = exports.ParatiiEth = function () {
   function ParatiiEth(config) {
     (0, _classCallCheck3.default)(this, ParatiiEth);
 
-    var defaults = {
-      // provider: 'http://localhost:8545/rpc/',
-      provider: 'ws://localhost:8546',
-      registryAddress: null,
-      account: {
-        address: null,
-        privateKey: null
-      },
-      web3: null,
-      isTestNet: false
-    };
-    var options = dopts(config, defaults, { allowUnknown: true });
+    var schema = joi.object({
+      provider: joi.string().default('ws://localhost:8546'),
+      registryAddress: joi.string().allow(null).default(null),
+      account: joi.object({
+        address: joi.string().allow(null).default(null),
+        privateKey: joi.string().allow(null).default(null)
+      }),
+      web3: joi.any().default(null),
+      isTestNet: joi.bool().default(false)
+    }).unknown();
+
+    var result = joi.validate(config, schema);
+    var error = result.error;
+    if (error) throw error;
+    var options = result.value;
     this.config = config;
 
     if (options.web3) {
@@ -515,8 +518,6 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 0:
               balance = void 0;
               balances = {};
-
-              // TODO: use default-options for argument type checking
 
               if (!(symbol && !['PTI', 'ETH'].includes(symbol))) {
                 _context8.next = 4;
