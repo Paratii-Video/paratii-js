@@ -24,6 +24,7 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var dopts = require('default-options');
+var joi = require('joi');
 
 /**
  * ParatiiCoreVids
@@ -34,22 +35,17 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   function ParatiiCoreVids(config) {
     (0, _classCallCheck3.default)(this, ParatiiCoreVids);
 
-    var defaults = {
-      'db.provider': null
-    };
-    var options = dopts(config, defaults, { allowUnknown: true });
+    var schema = joi.object({
+      'db.provider': joi.string().default(null)
+    }).unknown();
+
+    var result = joi.validate(config, schema);
+    var error = result.error;
+    if (error) throw error;
+    var options = result.value;
+
     this.config = options;
     this.paratii = this.config.paratii;
-    //
-    // this._defaults = {
-    //   id: undefined, // must be a string
-    //   owner: String, // must be a string
-    //   price: 0, // must be a number, optional, default is 0
-    //   title: String, // must be a string
-    //   descripton: undefined, // must be a string, optional
-    //   file: null, // must be string, optional
-    //   ipfsHash: '' // must be a string, optional, default is ''
-    // }
   }
 
   (0, _createClass3.default)(ParatiiCoreVids, [{
@@ -137,27 +133,37 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   }, {
     key: 'update',
     value: function update(videoId, options) {
-      var defaults, data, key;
+      var schema, result, error, data, key;
       return _regenerator2.default.async(function update$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              defaults = {
-                description: null,
-                owner: null, // must be a string, optional
-                price: null, // must be a number, optional, default is 0
-                title: null, // must be a string, optional
-                file: null, // must be string, optional
-                ipfsHashOrig: '', // must be a string, optional, default is ''
-                ipfsHash: null // must be a string, optional, default is ''
-              };
+              schema = joi.object({
+                description: joi.string().default(null),
+                owner: joi.string().default(null),
+                price: joi.number().default(0),
+                title: joi.string().default(null),
+                file: joi.string().default(null),
+                ipfsHashOrig: joi.string().default(''),
+                ipfsHash: joi.string().default(null)
+              });
+              result = joi.validate(options, schema);
+              error = result.error;
 
-              options = dopts(options, defaults);
+              if (!error) {
+                _context2.next = 5;
+                break;
+              }
 
-              _context2.next = 4;
+              throw error;
+
+            case 5:
+              options = result.value;
+
+              _context2.next = 8;
               return _regenerator2.default.awrap(this.get(videoId));
 
-            case 4:
+            case 8:
               data = _context2.sent;
 
               delete data['ipfsData'];
@@ -167,13 +173,13 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 }
               }
 
-              _context2.next = 9;
+              _context2.next = 13;
               return _regenerator2.default.awrap(this.create(data));
 
-            case 9:
+            case 13:
               return _context2.abrupt('return', data);
 
-            case 10:
+            case 14:
             case 'end':
               return _context2.stop();
           }
