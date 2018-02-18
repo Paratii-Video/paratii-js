@@ -22,6 +22,7 @@ var _utils = require('./utils.js');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var dopts = require('default-options');
+var joi = require('joi');
 
 var ParatiiEthVids = exports.ParatiiEthVids = function () {
   function ParatiiEthVids(context) {
@@ -133,49 +134,59 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
   }, {
     key: 'create',
     value: function create(options, type) {
-      var defaults, msg, contract, tx, videoId;
+      var schema, result, error, msg, contract, tx, videoId;
       return _regenerator2.default.async(function create$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
-              defaults = {
-                id: null,
-                owner: undefined,
-                price: 0,
-                ipfsHashOrig: '',
-                ipfsHash: '',
-                ipfsData: ''
-              };
+              schema = joi.object({
+                id: joi.string().default(null),
+                owner: joi.string().required(),
+                price: joi.number().default(0),
+                ipfsHashOrig: joi.string().empty('').default(''),
+                ipfsHash: joi.string().empty('').default(''),
+                ipfsData: joi.string().default('')
+              });
+              result = joi.validate(options, schema);
+              error = result.error;
 
-              options = dopts(options, defaults);
+              if (!error) {
+                _context4.next = 5;
+                break;
+              }
 
-              if (options.id === null) {
+              throw error;
+
+            case 5:
+              options = result.value;
+
+              if (!options.id) {
                 options.id = this.makeId();
               }
 
               if (this.eth.web3.utils.isAddress(options.owner)) {
-                _context4.next = 6;
+                _context4.next = 10;
                 break;
               }
 
               msg = 'The owner argument should be a valid address, not ' + options.owner;
               throw Error(msg);
 
-            case 6:
-              _context4.next = 8;
+            case 10:
+              _context4.next = 12;
               return _regenerator2.default.awrap(this.getVideoRegistry());
 
-            case 8:
+            case 12:
               contract = _context4.sent;
-              _context4.next = 11;
+              _context4.next = 15;
               return _regenerator2.default.awrap(contract.methods.create(options.id, options.owner, options.price, options.ipfsHashOrig, options.ipfsHash, options.ipfsData).send());
 
-            case 11:
+            case 15:
               tx = _context4.sent;
               videoId = (0, _utils.getInfoFromLogs)(tx, 'LogCreateVideo', 'videoId');
               return _context4.abrupt('return', videoId);
 
-            case 14:
+            case 18:
             case 'end':
               return _context4.stop();
           }
