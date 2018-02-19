@@ -24,7 +24,6 @@
     "babel-plugin-transform-runtime": "^6.23.0",
     "bitcore-lib": "^0.15.0",
     "bitcore-mnemonic": "^1.5.0",
-    "default-options": "^1.0.0",
     "es6-promise": "^4.2.4",
     "ipfs": "github:Paratii-Video/js-ipfs#paratii/v0.27.1",
     "isomorphic-fetch": "^2.2.1",
