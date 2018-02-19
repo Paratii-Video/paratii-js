@@ -34,7 +34,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var _require = require('events'),
     EventEmitter = _require.EventEmitter;
 
-var dopts = require('default-options');
 var joi = require('joi');
 var pull = require('pull-stream');
 var pullFilereader = require('pull-filereader');
@@ -461,14 +460,21 @@ var Uploader = function (_EventEmitter) {
     value: function pinFile(fileHash, options) {
       var _this7 = this;
 
-      var defaults = {
-        author: '0x', // ETH/PTI address of the file owner
-        transcoder: this._defaultTranscoder,
-        size: 0
-      };
+      if (options === undefined) options = {};
+
+      var schema = joi.object({
+        author: joi.string().default('0x'), // ETH/PTI address of the file owner
+        transcoder: joi.string().default(this._defaultTranscoder),
+        size: joi.number().default(0)
+      }).unknown();
+
       this._ipfs.log('Signaling transcoder...');
 
-      var opts = dopts(options, defaults, { allowUnknown: true });
+      var result = joi.validate(options, schema);
+      var error = result.error;
+      if (error) throw error;
+      var opts = result.value;
+
       var ev = void 0;
       if (opts.ev) {
         ev = opts.ev;

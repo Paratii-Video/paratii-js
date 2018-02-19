@@ -150,7 +150,9 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 description: joi.string().default(null),
                 owner: joi.string().default(null),
                 title: joi.string().default(null),
-                file: joi.string().default(null)
+                file: joi.string().default(null),
+                ipfsHashOrig: joi.string().empty('').default(''),
+                ipfsHash: joi.string().default(null)
               }).unknown();
               result = joi.validate(options, schema);
               error = result.error;
