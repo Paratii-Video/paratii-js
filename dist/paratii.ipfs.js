@@ -172,7 +172,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
               maxMessageSize: config['ipfs.bitswap.maxMessageSize']
             },
             start: true,
-            repo: config['repo'] || '/tmp/test-repo-' + String(Math.random()),
+            repo: config['ipfs.repo'] || '/tmp/test-repo-' + String(Math.random()),
             config: {
               Addresses: {
                 Swarm: config['ipfs.config.addresses.swarm']
