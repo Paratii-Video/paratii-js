@@ -19,7 +19,7 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var dopts = require('default-options');
+var joi = require('joi');
 
 var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
   function ParatiiEthUsers(context) {
@@ -48,17 +48,17 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
   }, {
     key: 'create',
     value: function create(options) {
-      var defaults, msg, contract;
+      var schema, msg, result, error, contract;
       return _regenerator2.default.async(function create$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              defaults = {
-                id: String,
-                name: String,
-                email: String,
-                ipfsData: String
-              };
+              schema = joi.object({
+                id: joi.string(),
+                name: joi.string(),
+                email: joi.string(),
+                ipfsData: joi.string()
+              });
 
               if (this.eth.web3.utils.isAddress(options.id)) {
                 _context2.next = 4;
@@ -69,19 +69,31 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
               throw Error(msg);
 
             case 4:
-              options = dopts(options, defaults);
-              _context2.next = 7;
+              result = joi.validate(options, schema);
+              error = result.error;
+
+              if (!error) {
+                _context2.next = 8;
+                break;
+              }
+
+              throw error;
+
+            case 8:
+              options = result.value;
+
+              _context2.next = 11;
               return _regenerator2.default.awrap(this.getRegistry());
 
-            case 7:
+            case 11:
               contract = _context2.sent;
-              _context2.next = 10;
+              _context2.next = 14;
               return _regenerator2.default.awrap(contract.methods.create(options.id, options.name, options.email, options.ipfsData).send());
 
-            case 10:
+            case 14:
               return _context2.abrupt('return', options.id);
 
-            case 11:
+            case 15:
             case 'end':
               return _context2.stop();
           }

@@ -133,16 +133,36 @@ The `eth.vids` namespace contains functions to interact with the video registrat
 
 ## `eth.users`
 
-The `eth.user` namespace contains functions to interact with the video registration on the blockchain. Mostly TBD.
+The `eth.user` namespace contains functions to interact with the video registration on the blockchain.
 
-### `eth.users.create()`
+### `eth.users.create(options)`
 
-### `eth.users.update()`
+Creates a user. Takes one argument, options, that is an object of the following keys:
+
+ - id
+ - name
+ - email
+ - ipfsData
+
+If the ID is not a valid address, it will throw an error, otherwise it will save the user on the blockchain and return the ID.
+
+### `eth.users.update(options)`
+
+Updates a user on the blockchain. Takes one argument, options, which is an object that contains the data to be written to the new user. Left-out data is kept the same. Returns the full user object.
 
 
-### `eth.users.get()`
-### `eth.users.delete()`
+### `eth.users.get(userId)`
 
+Get a users details from the blockchain. Returns an object with the following keys:
+
+ - id
+ - name
+ - email
+ - ipfsData
+
+### `eth.users.delete(userId)`
+
+Deletes a user from the blockchain. Can only be called by the contract owner or the user him/her-self. Returns a transaction.
 
 ## `eth.store`
 
@@ -152,6 +172,27 @@ Functions for buying and selling. TBD
 ## `eth.bank`
 
 Functions for lending money. Completely TBD
+
+## `eth.vouchers`
+
+Functions for redeeming vouchers.
+
+### `eth.vouchers.redeem(voucherCode)`
+
+Function for redeeming a voucher to the current account's address. Takes only one parameter, `voucherCode`, and returns a promise that resolves to a boolean if the transfer is successful or not, and if there are any problems it tries to guess the reason and throws an Error.
+
+Possible errors:
+
+ - This voucher doesn't exist
+ - This voucher was already used
+ - The Vouchers contract doesn't have enough PTI to redeem the voucher
+ - An unknown error occurred
+ 
+### `eth.vouchers.create(data)`
+
+Function for creating a voucher. Can only be called by the owner of the contract. Takes a single parameter, data, which is an object containing `voucherCode`, which is a unique string that is the actual voucher's code, and amount, which is the amount of PTI in Wei that the voucher will net the redeeming user.
+
+Returns a promised voucherId, or throws an Error, mostly when there are issues with parameters, like amount is 0, or voucherCode isn't a string, etc...
 
 ## "Admin function"
 
@@ -165,6 +206,14 @@ This function will deploy are contracts and link them to the
 
     contracts = await paratii.eth.deployContracts({owner: '0x1234435'})
 
+### `eth.vouchers.createVouchers(number, amount)`
+
+Generates a given number of vouchers with unique IDs, and the given amount, and returns an array of objects. Takes two parameters, the number of vouchers to create, and the amount of PTI to value each voucher at.
+
+i.e.
+	
+	[{ voucherCode: 'aaaa', amount: 1 }, { voucherCode: 'bbbb', amount: 1 }]
+	
 ## `eth.events`
 
 `eth.events` implements a part of the API of the EventEmitter, that can be used to manage subscriptions to Ethereum events.

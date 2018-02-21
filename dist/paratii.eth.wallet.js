@@ -19,7 +19,7 @@ var bitcore = require('bitcore-lib');
 
 function patchWallet(wallet, config) {
   function create(numberOfAccounts, mnemonic) {
-    var hdRoot, i, hdprivkey, privkeyBuf, privkeyHex, x;
+    var hdRoot, i, hdprivkey, privkeyBuf, privkeyHex, privateKey;
     return _regenerator2.default.async(function create$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -83,12 +83,11 @@ function patchWallet(wallet, config) {
             throw new Error('Private key larger than 32 bytes. Aborting!');
 
           case 19:
-            // privkeyHex = '0x' + privkeyHex
-            x = this._accounts.privateKeyToAccount(privkeyHex).privateKey;
+            privateKey = this._accounts.privateKeyToAccount(privkeyHex).privateKey;
 
-            this.add(x);
+            this.add(privateKey);
             if (i === 0) {
-              config.account.address = this[0].address;
+              config.paratii.eth.setAccount(this[0].address, privateKey);
             }
 
           case 22:
@@ -126,8 +125,18 @@ function patchWallet(wallet, config) {
     return this._mnemonic;
   }
 
+  var origDecrypt = wallet.decrypt.bind(wallet);
+  function _decrypt(data, password) {
+    var newWallet = origDecrypt(data, password);
+    if (newWallet) {
+      config.paratii.eth.setAccount(newWallet['0'].address, newWallet['0'].privateKey);
+    }
+    return newWallet;
+  }
+
   wallet._mnemonic = undefined;
   wallet.create = create;
+  wallet.decrypt = _decrypt;
   wallet.isValidMnemonic = isValidMnemonic;
   wallet.newMnemonic = newMnemonic;
   wallet.getMnemonic = getMnemonic;

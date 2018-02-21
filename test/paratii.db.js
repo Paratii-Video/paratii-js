@@ -23,7 +23,7 @@ describe('paratii.db API: :', function () {
     .reply(200, videos[0])
   })
   beforeEach(async function () {
-    paratii = await new Paratii({
+    paratii = new Paratii({
       'db.provider': dbProvider
     })
   })
@@ -53,7 +53,7 @@ describe('paratii.db API: :', function () {
   })
 
   it('should be available as an attribute on Paratii instances', async function () {
-    let paratii = await new Paratii({
+    let paratii = new Paratii({
       'db.provider': dbProvider
     })
     assert.isOk(paratii.db)

@@ -12,7 +12,7 @@ describe('paratii.eth.wallet: :', function () {
   let password = 'some-password'
 
   it('init account is added to wallet', async function () {
-    paratii = await new Paratii({
+    paratii = new Paratii({
       provider: 'http://localhost:8545',
       address: address,
       privateKey: privateKey
@@ -36,9 +36,6 @@ describe('paratii.eth.wallet: :', function () {
     assert.isTrue(paratii.eth.web3.utils.isAddress(wallet[1].address))
     assert.isTrue(paratii.eth.web3.utils.isAddress(wallet[2].address))
     assert.equal(wallet[0].address, addresses[0])
-
-    // also the config object should be updated
-    assert.equal(paratii.config.account.address, addresses[0])
   })
 
   it('wallet.create() does not create a new wallet object', async function () {
@@ -52,6 +49,45 @@ describe('paratii.eth.wallet: :', function () {
     let wallet = paratii.eth.wallet
     await wallet.create()
     wallet.isValidMnemonic(wallet.getMnemonic())
+  })
+
+  it('wallet.create() sets config.account.address and privatekey', async function () {
+    paratii = await new Paratii()
+    let wallet = paratii.eth.wallet
+    await wallet.create()
+    assert.equal(wallet[0].address, paratii.config.account.address)
+    assert.isOk(paratii.config.account.privateKey)
+  })
+
+  it('wallet.create(), wallet.encrypt() and wallet.decrypt() play nicely together', async function () {
+    paratii = await new Paratii()
+    let w1 = await paratii.eth.wallet.create(1)
+    let w1encrypted = w1.encrypt('')
+    assert.equal(w1[0].address.toLowerCase(), '0x' + w1encrypted[0].address)
+    let w1decrypted = paratii.eth.wallet.decrypt(w1encrypted, '')
+    assert.equal(w1[0].address, w1decrypted[0].address)
+  })
+
+  it('wallet.decrypt() sets config.account.address and privatekey', async function () {
+    let data = [
+      {
+        'version': 3,
+        'id': '34765d92-5855-416e-bf47-2b63433bb1b4',
+        'address': '0xCbe4f07b343171ac37055B25a5266f48f6945b7d',
+        'crypto': {
+          'ciphertext': 'f8f83eb1afb7d5d149cd8a721f5cbfb788adf1d426ac74921f4e5948eff01c9a',
+          'cipherparams': {'iv': '08557eddac9a617c2022df8480807026'},
+          'cipher': 'aes-128-ctr',
+          'kdf': 'scrypt',
+          'kdfparams': {
+            'dklen': 32, 'salt': 'b741c07d066a7a15cb2d68a223b291d83d3366e4320ec015eb4fab80b9b94fbb', 'n': 8192, 'r': 8, 'p': 1
+          },
+          'mac': '3d68528168be9aebc3e7f38576af628ad98da60a2b2256d87bef3d9fa5e4640f'}}
+    ]
+    paratii = await new Paratii()
+    let decryptedWallet = await paratii.eth.wallet.decrypt(data, '')
+    assert.equal(decryptedWallet[0].address, paratii.config.account.address)
+    assert.isOk(paratii.config.account.privateKey)
   })
 
   it('wallet.encrypt() and decrypt() works', async function () {
@@ -68,17 +104,26 @@ describe('paratii.eth.wallet: :', function () {
     assert.equal(wallet[0].address, addresses[0])
   })
 
-  it('send() should fail if no wallet is present', async function () {
-    // instantiate paratii with an unlocked account
-    paratii = await new Paratii({
-      provider: 'http://localhost:8545',
-      address: address17
+  it.skip('send() should fail if no wallet is present', async function () {
+    paratii = new Paratii({
+      address: address,
+      privateKey: privateKey
     })
-    assert.isRejected(paratii.eth.transfer(address1, 2e18, 'ETH'), 'could not unlock signer account')
+    await paratii.eth.deployContracts()
+
+    // instantiate paratii with an unlocked account
+    paratii = new Paratii({
+      provider: 'http://localhost:8545',
+      address: address17,
+      registryAddress: paratii.config.registryAddress
+    })
+    // set the account but not the private key
+    // paratii.setAccount(address17)
+    await assert.isRejected(paratii.eth.transfer(address1, 2e18, 'ETH'), 'could not unlock signer account')
   })
 
   it('send() should succeed if a  private key is passed to the constructor', async function () {
-    paratii = await new Paratii({
+    paratii = new Paratii({
       provider: 'http://localhost:8545',
       address: address,
       privateKey: privateKey
@@ -101,7 +146,7 @@ describe('paratii.eth.wallet: :', function () {
     assert.isOk(paratii.eth.wallet.isValidMnemonic(m1))
   })
   it('eth.wallet.create() should throw if a wallet already has an account', async function () {
-    paratii = await new Paratii({
+    paratii = new Paratii({
       address: address,
       privateKey: privateKey
     })
@@ -116,7 +161,7 @@ describe('paratii.eth.wallet: :', function () {
     assert.isOk(wallet.isValidMnemonic(wallet.getMnemonic()))
 
     // if we construct the paratii object with
-    paratii = await new Paratii({
+    paratii = new Paratii({
       address: address,
       privateKey: privateKey
     })

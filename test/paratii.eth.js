@@ -5,7 +5,7 @@ import { assert } from 'chai'
 describe('paratii.eth API: :', function () {
   let paratii
   beforeEach(async function () {
-    paratii = await new Paratii({
+    paratii = new Paratii({
       address: address,
       privateKey: privateKey
     })
@@ -31,7 +31,7 @@ describe('paratii.eth API: :', function () {
     assert.isOk(contracts.Registry.options.address)
 
     // If Paratii was created with a registeryAddress, addresses of other contracts should be known
-    paratii = await new Paratii({
+    paratii = new Paratii({
       registryAddress: registryAddress
     })
 
@@ -43,7 +43,7 @@ describe('paratii.eth API: :', function () {
     assert.isOk(contracts.Registry.options.address)
 
     // if the reigstryAddress was set at a later stage, using parati.eth.setRegistryAddress
-    paratii = await new Paratii({
+    paratii = new Paratii({
       provider: 'http://localhost:8545'
     })
 
@@ -65,6 +65,15 @@ describe('paratii.eth API: :', function () {
     assert.isOk(contract)
     contract = await paratii.eth.getContract('Registry')
     assert.isOk(contract)
+  })
+
+  it('getContract() should return set and update the from address on the contract', async function () {
+    let contract
+    contract = await paratii.eth.getContract('ParatiiToken')
+    assert.equal(contract.options.from, address)
+    await paratii.setAccount(address1)
+    contract = await paratii.eth.getContract('ParatiiToken')
+    assert.equal(contract.options.from, address1)
   })
 
   it.skip('getcontract() should return a meaningful error if the address of the contract is not known', async function () {
