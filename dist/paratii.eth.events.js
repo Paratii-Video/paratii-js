@@ -130,7 +130,7 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
               subscription = _context2.sent;
 
               subscription.on(structuredEvent.emit, listener);
-              return _context2.abrupt('break', 22);
+              return _context2.abrupt('break', 21);
 
             case 10:
               if (options === undefined) {
@@ -142,7 +142,7 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
               subscription = this.subscribe('logs', options);
 
               subscription.on(structuredEvent.emit, listener);
-              return _context2.abrupt('break', 22);
+              return _context2.abrupt('break', 21);
 
             case 14:
               _context2.next = 16;
@@ -150,21 +150,19 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
 
             case 16:
               contract = _context2.sent;
-
-              console.log(this.config.getContract(this._customEvents[structuredEvent.event].contract));
-              _context2.next = 20;
+              _context2.next = 19;
               return _regenerator2.default.awrap(contract.events[this._customEvents[structuredEvent.event].event](options));
 
-            case 20:
+            case 19:
               subscription = _context2.sent;
 
 
               subscription.on(structuredEvent.emit, listener);
 
-            case 22:
+            case 21:
               return _context2.abrupt('return', this.addSubscription(eventType, subscription));
 
-            case 23:
+            case 22:
             case 'end':
               return _context2.stop();
           }

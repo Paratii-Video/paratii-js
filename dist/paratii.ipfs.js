@@ -65,6 +65,8 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   function ParatiiIPFS(config) {
     (0, _classCallCheck3.default)(this, ParatiiIPFS);
 
+    console.log('config ipfs', config);
+
     var _this = (0, _possibleConstructorReturn3.default)(this, (ParatiiIPFS.__proto__ || (0, _getPrototypeOf2.default)(ParatiiIPFS)).call(this));
 
     var schema = joi.object({
@@ -167,6 +169,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
           resolve(_this2.ipfs);
         } else {
           var config = _this2.config;
+          console.log('ipfs repo from lib', config['ipfs.repo']);
           var ipfs = new Ipfs({
             bitswap: {
               maxMessageSize: config['ipfs.bitswap.maxMessageSize']
