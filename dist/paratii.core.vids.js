@@ -84,8 +84,8 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 id: joi.string().default(null),
                 owner: joi.string().required(),
                 price: joi.number().default(0),
-                title: joi.string().default(null),
-                description: joi.string().default(null),
+                title: joi.string().empty('').default(''),
+                description: joi.string().empty('').default(''),
                 file: joi.string().default(null),
                 ipfsHashOrig: joi.string().empty('').default(''),
                 ipfsHash: joi.string().default('')
@@ -141,52 +141,37 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   }, {
     key: 'update',
     value: function update(videoId, options) {
-      var schema, result, error, data, key;
+      var data, dataToSave, key;
       return _regenerator2.default.async(function update$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              schema = joi.object({
-                description: joi.string().default(null),
-                owner: joi.string().default(null),
-                title: joi.string().default(null),
-                file: joi.string().default(null),
-                ipfsHashOrig: joi.string().empty('').default(''),
-                ipfsHash: joi.string().default(null)
-              }).unknown();
-              result = joi.validate(options, schema);
-              error = result.error;
-
-              if (!error) {
-                _context2.next = 5;
-                break;
-              }
-
-              throw error;
-
-            case 5:
-              options = result.value;
-
-              _context2.next = 8;
+              _context2.next = 2;
               return _regenerator2.default.awrap(this.get(videoId));
 
-            case 8:
+            case 2:
               data = _context2.sent;
+              dataToSave = {};
 
-              delete data['ipfsData'];
+
+              if (data && data['ipfsData']) {
+                delete data['ipfsData'];
+              }
               for (key in options) {
                 if (options[key] !== null) {
-                  data[key] = options[key];
+                  dataToSave[key] = options[key];
+                } else {
+                  dataToSave[key] = data[key];
                 }
               }
 
-              _context2.next = 13;
-              return _regenerator2.default.awrap(this.create(data));
+              _context2.next = 8;
+              return _regenerator2.default.awrap(this.create(dataToSave));
 
-            case 13:
-              return _context2.abrupt('return', data);
+            case 8:
+              return _context2.abrupt('return', dataToSave);
 
-            case 14:
+            case 9:
             case 'end':
               return _context2.stop();
           }
