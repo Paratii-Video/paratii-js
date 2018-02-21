@@ -12,7 +12,7 @@ nock('https://db.paratii.video/api/v1')
   owner: address1,
   title: 'some Title',
   description: 'A long description',
-  price: '0',
+  price: 0,
   ipfsData: 'QmUUMpwyWBbJKeNCbwDySXJCay5TBBuur3c59m1ajQufmn',
   ipfsHash: '',
   ipfsHashOrig: ''
@@ -24,7 +24,7 @@ nock('https://db.paratii.video/api/v1')
   owner: address1,
   title: 'some title',
   description: 'A long description',
-  price: '0',
+  price: 0,
   ipfsData: 'QmUUMpwyWBbJKeNCbwDySXJCay5TBBuur3c59m1ajQufmn',
   ipfsHash: 'some-hash',
   ipfsHashOrig: ''
@@ -36,7 +36,7 @@ nock('https://db.paratii.video/api/v1')
   owner: address1,
   title: 'another-title',
   description: 'A long description',
-  price: '0',
+  price: 0,
   ipfsData: 'QmUUMpwyWBbJKeNCbwDySXJCay5TBBuur3c59m1ajQufmn',
   ipfsHash: 'some-hash',
   ipfsHashOrig: ''
@@ -67,7 +67,7 @@ describe('paratii.core.vids:', function () {
       owner: address1,
       title: 'some Title',
       description: 'A long description',
-      price: '0',
+      price: 0,
       file: videoFile
     }
     let videoInfo = await paratii.core.vids.create(vidToAdd)

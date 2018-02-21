@@ -21,7 +21,7 @@ var _utils = require('./utils.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var dopts = require('default-options');
+var joi = require('joi');
 
 var ParatiiEthVids = exports.ParatiiEthVids = function () {
   function ParatiiEthVids(context) {
@@ -133,49 +133,59 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
   }, {
     key: 'create',
     value: function create(options, type) {
-      var defaults, msg, contract, tx, videoId;
+      var schema, result, error, msg, contract, tx, videoId;
       return _regenerator2.default.async(function create$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
-              defaults = {
-                id: null,
-                owner: undefined,
-                price: 0,
-                ipfsHashOrig: '',
-                ipfsHash: '',
-                ipfsData: ''
-              };
+              schema = joi.object({
+                id: joi.string(),
+                owner: joi.string().required(),
+                price: joi.number().default(0),
+                ipfsHashOrig: joi.string().empty('').default(''),
+                ipfsHash: joi.string().empty('').default(''),
+                ipfsData: joi.string().default('')
+              });
+              result = joi.validate(options, schema);
+              error = result.error;
 
-              options = dopts(options, defaults);
+              if (!error) {
+                _context4.next = 5;
+                break;
+              }
 
-              if (options.id === null) {
+              throw error;
+
+            case 5:
+              options = result.value;
+
+              if (!options.id) {
                 options.id = this.makeId();
               }
 
               if (this.eth.web3.utils.isAddress(options.owner)) {
-                _context4.next = 6;
+                _context4.next = 10;
                 break;
               }
 
               msg = 'The owner argument should be a valid address, not ' + options.owner;
               throw Error(msg);
 
-            case 6:
-              _context4.next = 8;
+            case 10:
+              _context4.next = 12;
               return _regenerator2.default.awrap(this.getVideoRegistry());
 
-            case 8:
+            case 12:
               contract = _context4.sent;
-              _context4.next = 11;
+              _context4.next = 15;
               return _regenerator2.default.awrap(contract.methods.create(options.id, options.owner, options.price, options.ipfsHashOrig, options.ipfsHash, options.ipfsData).send());
 
-            case 11:
+            case 15:
               tx = _context4.sent;
               videoId = (0, _utils.getInfoFromLogs)(tx, 'LogCreateVideo', 'videoId');
               return _context4.abrupt('return', videoId);
 
-            case 14:
+            case 18:
             case 'end':
               return _context4.stop();
           }
@@ -229,79 +239,71 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
   }, {
     key: 'sendLike',
     value: function sendLike(options, type) {
-      var defaults, msg, _msg, _msg2, contract, contract2, videoInfo, _msg3, tx;
+      var schema, result, error, msg, contract, contract2, videoInfo, _msg, tx;
 
       return _regenerator2.default.async(function sendLike$(_context6) {
         while (1) {
           switch (_context6.prev = _context6.next) {
             case 0:
-              defaults = {
-                videoId: null,
-                liked: null
-              };
+              schema = joi.object({
+                videoId: joi.string().required(),
+                liked: joi.bool().required()
+              });
+              result = joi.validate(options, schema);
+              error = result.error;
 
-              options = dopts(options, defaults);
-
-              if (!(options.videoId === null)) {
+              if (!error) {
                 _context6.next = 5;
                 break;
               }
 
-              msg = 'The videoId argument should be provided';
-              throw Error(msg);
+              throw error;
 
             case 5:
-              if (!(options.liked === null)) {
-                _context6.next = 8;
-                break;
-              }
+              options = result.value;
 
-              _msg = 'The liked argument should be provided';
-              throw Error(_msg);
-
-            case 8:
               if (!(options.liked !== true && options.liked !== false)) {
-                _context6.next = 11;
+                _context6.next = 9;
                 break;
               }
 
-              _msg2 = 'The liked argument should be a boolean';
-              throw Error(_msg2);
+              msg = 'The liked argument should be a boolean';
+              throw Error(msg);
 
-            case 11:
-              _context6.next = 13;
+            case 9:
+              _context6.next = 11;
               return _regenerator2.default.awrap(this.getVideoRegistry());
 
-            case 13:
+            case 11:
               contract = _context6.sent;
-              _context6.next = 16;
+              _context6.next = 14;
               return _regenerator2.default.awrap(this.getLikesContract());
 
-            case 16:
+            case 14:
               contract2 = _context6.sent;
-              _context6.next = 19;
+              _context6.next = 17;
               return _regenerator2.default.awrap(contract.methods.get(options.videoId).call());
 
-            case 19:
+            case 17:
               videoInfo = _context6.sent;
 
               if (!(videoInfo[0] === _utils.NULL_ADDRESS)) {
-                _context6.next = 23;
+                _context6.next = 21;
                 break;
               }
 
-              _msg3 = 'Video with ID \'' + options.videoId + '\' doesn\'t exist';
-              throw Error(_msg3);
+              _msg = 'Video with ID \'' + options.videoId + '\' doesn\'t exist';
+              throw Error(_msg);
 
-            case 23:
-              _context6.next = 25;
+            case 21:
+              _context6.next = 23;
               return _regenerator2.default.awrap(contract2.methods.likeVideo(options.videoId, options.liked).send());
 
-            case 25:
+            case 23:
               tx = _context6.sent;
               return _context6.abrupt('return', tx);
 
-            case 27:
+            case 25:
             case 'end':
               return _context6.stop();
           }
@@ -311,32 +313,42 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
   }, {
     key: 'view',
     value: function view(options) {
-      var defaults, contract, tx;
+      var schema, result, error, contract, tx;
       return _regenerator2.default.async(function view$(_context7) {
         while (1) {
           switch (_context7.prev = _context7.next) {
             case 0:
-              defaults = {
-                viewer: undefined,
-                videoId: undefined,
-                ipfsData: null
-              };
+              schema = joi.object({
+                viewer: joi.string().required(),
+                videoId: joi.string().required(),
+                ipfsData: joi.string().default(null)
+              });
+              result = joi.validate(options, schema);
+              error = result.error;
 
-              options = dopts(options, defaults);
+              if (!error) {
+                _context7.next = 5;
+                break;
+              }
 
-              _context7.next = 4;
+              throw error;
+
+            case 5:
+              options = result.value;
+
+              _context7.next = 8;
               return _regenerator2.default.awrap(this.getViewsContract());
 
-            case 4:
+            case 8:
               contract = _context7.sent;
-              _context7.next = 7;
+              _context7.next = 11;
               return _regenerator2.default.awrap(contract.methods.create(options.viewer, options.videoId, options.ipfsData).send());
 
-            case 7:
+            case 11:
               tx = _context7.sent;
               return _context7.abrupt('return', tx);
 
-            case 9:
+            case 13:
             case 'end':
               return _context7.stop();
           }
@@ -346,31 +358,36 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
   }, {
     key: 'userViewedVideo',
     value: function userViewedVideo(options) {
-      var defaults, contract, result;
+      var schema, result, error, contract;
       return _regenerator2.default.async(function userViewedVideo$(_context8) {
         while (1) {
           switch (_context8.prev = _context8.next) {
             case 0:
-              defaults = {
-                viewer: undefined,
-                videoId: undefined
-              };
+              schema = joi.object({
+                viewer: joi.string().required(),
+                videoId: joi.string().required()
+              });
+              result = joi.validate(options, schema);
+              error = result.error;
 
-              options = dopts(options, defaults);
+              if (!error) {
+                _context8.next = 5;
+                break;
+              }
 
-              _context8.next = 4;
+              throw error;
+
+            case 5:
+              options = result.value;
+
+              _context8.next = 8;
               return _regenerator2.default.awrap(this.getViewsContract());
 
-            case 4:
+            case 8:
               contract = _context8.sent;
-              _context8.next = 7;
-              return _regenerator2.default.awrap(contract.methods.userViewedVideo(options.viewer, options.videoId).call());
+              return _context8.abrupt('return', contract.methods.userViewedVideo(options.viewer, options.videoId).call());
 
-            case 7:
-              result = _context8.sent;
-              return _context8.abrupt('return', result);
-
-            case 9:
+            case 10:
             case 'end':
               return _context8.stop();
           }
