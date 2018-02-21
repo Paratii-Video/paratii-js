@@ -134,6 +134,39 @@ describe('paratii.core.vids:', function () {
     assert.equal(data.owner, address1)
   })
 
+  it('vids.upsert() should create a fresh id if non is given', async function () {
+    let video = await paratii.core.vids.upsert({
+      owner: address1,
+      title: videoTitle
+    })
+    assert.isOk(video.id)
+    assert.equal(video.id.length, 12)
+  })
+
+  it('vids.upsert() should update the video if id exist', async function () {
+    await paratii.core.vids.upsert({
+      id: videoId2,
+      owner: address1,
+      title: videoTitle
+    })
+
+    let data
+    data = await paratii.core.vids.get(videoId2)
+    assert.equal(data.title, videoTitle)
+
+    data = await paratii.core.vids.upsert({id: videoId3, title: 'another-title'})
+    assert.equal(data.title, 'another-title')
+    assert.equal(data.owner, address1)
+
+    data = await paratii.core.vids.upsert({id: videoId3, description: 'another description'})
+    assert.equal(data.description, 'another description')
+    assert.equal(data.owner, address1)
+
+    data = await paratii.core.vids.get(videoId3)
+    assert.equal(data.title, 'another-title')
+    assert.equal(data.owner, address1)
+  })
+
   it.skip('core.vids.delete() should work as expected', async function () {
   })
 

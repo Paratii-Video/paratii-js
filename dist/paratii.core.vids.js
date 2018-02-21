@@ -84,7 +84,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 id: joi.string().default(null),
                 owner: joi.string().required(),
                 price: joi.number().default(0),
-                title: joi.string().required(),
+                title: joi.string().default(null),
                 description: joi.string().default(null),
                 file: joi.string().default(null),
                 ipfsHashOrig: joi.string().empty('').default(''),
@@ -194,12 +194,36 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
       }, null, this);
     }
   }, {
+    key: 'upsert',
+    value: function upsert(options) {
+      return _regenerator2.default.async(function upsert$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              if (options.id) {
+                _context3.next = 4;
+                break;
+              }
+
+              return _context3.abrupt('return', this.create(options));
+
+            case 4:
+              return _context3.abrupt('return', this.update(options.id, options));
+
+            case 5:
+            case 'end':
+              return _context3.stop();
+          }
+        }
+      }, null, this);
+    }
+  }, {
     key: 'view',
     value: function view(options) {
       var keysForBlockchain, optionsKeys, optionsBlockchain, optionsIpfs, hash;
-      return _regenerator2.default.async(function view$(_context3) {
+      return _regenerator2.default.async(function view$(_context4) {
         while (1) {
-          switch (_context3.prev = _context3.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
               keysForBlockchain = ['viewer', 'videoId'];
               optionsKeys = (0, _keys2.default)(options);
@@ -213,18 +237,18 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                   optionsIpfs[key] = options[key];
                 }
               });
-              _context3.next = 7;
+              _context4.next = 7;
               return _regenerator2.default.awrap(this.paratii.ipfs.addJSON(optionsIpfs));
 
             case 7:
-              hash = _context3.sent;
+              hash = _context4.sent;
 
               optionsBlockchain['ipfsData'] = hash;
-              return _context3.abrupt('return', this.paratii.eth.vids.view(optionsBlockchain));
+              return _context4.abrupt('return', this.paratii.eth.vids.view(optionsBlockchain));
 
             case 10:
             case 'end':
-              return _context3.stop();
+              return _context4.stop();
           }
         }
       }, null, this);
@@ -232,15 +256,15 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   }, {
     key: 'get',
     value: function get(videoId) {
-      return _regenerator2.default.async(function get$(_context4) {
+      return _regenerator2.default.async(function get$(_context5) {
         while (1) {
-          switch (_context4.prev = _context4.next) {
+          switch (_context5.prev = _context5.next) {
             case 0:
-              return _context4.abrupt('return', this.paratii.db.vids.get(videoId));
+              return _context5.abrupt('return', this.paratii.db.vids.get(videoId));
 
             case 1:
             case 'end':
-              return _context4.stop();
+              return _context5.stop();
           }
         }
       }, null, this);

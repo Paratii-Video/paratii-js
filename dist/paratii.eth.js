@@ -150,13 +150,14 @@ var ParatiiEth = exports.ParatiiEth = function () {
               }
 
             case 8:
-              // if (!contract.methods.constructor._ethAccounts) {
-              contract.methods.constructor._ethAccounts = this.web3.eth.accounts;
-              // }
+              if (!contract.methods.constructor._ethAccounts) {
+                contract.methods.constructor._ethAccounts = this.web3.eth.accounts;
+              }
+              contract.options.from = this.config.account.address;
 
               return _context.abrupt('return', contract);
 
-            case 10:
+            case 11:
             case 'end':
               return _context.stop();
           }
