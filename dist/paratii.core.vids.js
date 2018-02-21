@@ -148,7 +148,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
             case 0:
               schema = joi.object({
                 description: joi.string().default(null),
-                owner: joi.string().default(this.paratii.config.account.address),
+                owner: joi.string().default(null),
                 title: joi.string().default(null),
                 file: joi.string().default(null),
                 ipfsHashOrig: joi.string().empty('').default(''),
