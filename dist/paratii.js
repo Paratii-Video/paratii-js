@@ -47,7 +47,7 @@ var Paratii = function () {
       address: joi.string().default(null),
       privateKey: joi.string().default(null),
       mnemonic: joi.string().default(null),
-      repo: joi.string(),
+      'ipfs.repo': joi.string(),
       'db.provider': joi.string()
     });
 
@@ -58,7 +58,7 @@ var Paratii = function () {
 
     this.config = {};
     this.config.provider = options.provider;
-    this.config.repo = options.repo;
+    this.config['ipfs.repo'] = options['ipfs.repo'];
     this.config['db.provider'] = options['db.provider'];
 
     if (this.config.provider.match(/(localhost|127\.0\.0\.1)/g)) {
