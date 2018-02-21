@@ -5,7 +5,8 @@
   "main": "dist/paratii.js",
   "browser": {
     "fs": false,
-    "path": false
+    "path": false,
+    "net": false
   },
   "directories": {
     "test": "test"

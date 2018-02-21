@@ -108,7 +108,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
               }
 
               _context.next = 9;
-              return _regenerator2.default.awrap(this.paratii.ipfs.addJSON({
+              return _regenerator2.default.awrap(this.paratii.ipfs.addAndPinJSON({
                 title: options.title,
                 description: options.description
               }));
@@ -148,7 +148,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
             case 0:
               schema = joi.object({
                 description: joi.string().default(null),
-                owner: joi.string().default(null),
+                owner: joi.string().default(this.paratii.config.account.address),
                 title: joi.string().default(null),
                 file: joi.string().default(null),
                 ipfsHashOrig: joi.string().empty('').default(''),
