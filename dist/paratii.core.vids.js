@@ -143,16 +143,30 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   }, {
     key: 'update',
     value: function update(videoId, options) {
-      var data, schema, elements, dataToSave;
+      var _data, schema, elements, dataToSave;
+
       return _regenerator2.default.async(function update$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              _context2.next = 2;
+              _context2.prev = 0;
+              _context2.next = 3;
               return _regenerator2.default.awrap(this.get(videoId));
 
-            case 2:
-              data = _context2.sent;
+            case 3:
+              _data = _context2.sent;
+              _context2.next = 9;
+              break;
+
+            case 6:
+              _context2.prev = 6;
+              _context2.t0 = _context2['catch'](0);
+              throw _context2.t0;
+
+            case 9:
+
+              console.log(data);
+
               schema = joi.object({
                 id: joi.string().default(null),
                 owner: joi.string().required(),
@@ -172,6 +186,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
               elements.forEach(function (name) {
                 var key = name.key;
                 console.log(key, options[key]);
+                console.log(key, data[key]);
                 if (options[key] !== undefined) {
                   dataToSave[key] = options[key];
                 } else {
@@ -179,18 +194,18 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 }
               });
 
-              _context2.next = 9;
+              _context2.next = 16;
               return _regenerator2.default.awrap(this.create(dataToSave));
 
-            case 9:
+            case 16:
               return _context2.abrupt('return', dataToSave);
 
-            case 10:
+            case 17:
             case 'end':
               return _context2.stop();
           }
         }
-      }, null, this);
+      }, null, this, [[0, 6]]);
     }
   }, {
     key: 'upsert',
