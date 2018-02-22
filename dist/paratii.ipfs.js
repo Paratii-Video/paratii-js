@@ -318,7 +318,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
               });
 
               pinEv.on('pin:done', function (hash) {
-                console.log('pin:done:', hash);
+                // console.log('pin:done:', hash)
               });
 
               return _context4.abrupt('return', hash);

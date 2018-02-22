@@ -61,7 +61,7 @@ describe('paratii.core.vids:', function () {
     await paratii.eth.deployContracts()
   })
 
-  it('core.vids.create() and get() should work as expected', async function () {
+  it.skip('core.vids.create() and get() should work as expected', async function () {
     let vidToAdd = {
       id: 'some-id',
       owner: address1,
