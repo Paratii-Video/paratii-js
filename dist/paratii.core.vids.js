@@ -90,7 +90,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 author: joi.string().empty('').default(''),
                 file: joi.string().default(null),
                 ipfsHashOrig: joi.string().empty('').default(''),
-                ipfsHash: joi.string().default('')
+                ipfsHash: joi.string().empty('').default('')
               });
               result = joi.validate(options, schema);
               error = result.error;
@@ -143,30 +143,25 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   }, {
     key: 'update',
     value: function update(videoId, options) {
-      var _data, schema, elements, dataToSave;
-
+      var data, schema, elements, dataToSave;
       return _regenerator2.default.async(function update$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              _context2.prev = 0;
-              _context2.next = 3;
+              _context2.next = 2;
               return _regenerator2.default.awrap(this.get(videoId));
 
-            case 3:
-              _data = _context2.sent;
-              _context2.next = 9;
-              break;
+            case 2:
+              data = _context2.sent;
 
-            case 6:
-              _context2.prev = 6;
-              _context2.t0 = _context2['catch'](0);
-              throw _context2.t0;
+              if (!(data === null)) {
+                _context2.next = 5;
+                break;
+              }
 
-            case 9:
+              throw new Error('No video to update');
 
-              console.log(data);
-
+            case 5:
               schema = joi.object({
                 id: joi.string().default(null),
                 owner: joi.string().required(),
@@ -177,7 +172,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 duration: joi.string().empty('').default(''),
                 file: joi.string().default(null),
                 ipfsHashOrig: joi.string().empty('').default(''),
-                ipfsHash: joi.string().default('')
+                ipfsHash: joi.string().empty().default('')
               });
               elements = schema._inner.children;
               dataToSave = {};
@@ -185,46 +180,50 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
 
               elements.forEach(function (name) {
                 var key = name.key;
-                console.log(key, options[key]);
-                console.log(key, data[key]);
                 if (options[key] !== undefined) {
                   dataToSave[key] = options[key];
                 } else {
                   dataToSave[key] = data[key];
                 }
               });
-
-              _context2.next = 16;
+              _context2.next = 11;
               return _regenerator2.default.awrap(this.create(dataToSave));
 
-            case 16:
+            case 11:
               return _context2.abrupt('return', dataToSave);
 
-            case 17:
+            case 12:
             case 'end':
               return _context2.stop();
           }
         }
-      }, null, this, [[0, 6]]);
+      }, null, this);
     }
   }, {
     key: 'upsert',
     value: function upsert(options) {
+      var data;
       return _regenerator2.default.async(function upsert$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              if (options.id) {
-                _context3.next = 4;
+              _context3.next = 2;
+              return _regenerator2.default.awrap(this.get(options.id));
+
+            case 2:
+              data = _context3.sent;
+
+              if (!(data === null)) {
+                _context3.next = 7;
                 break;
               }
 
               return _context3.abrupt('return', this.create(options));
 
-            case 4:
+            case 7:
               return _context3.abrupt('return', this.update(options.id, options));
 
-            case 5:
+            case 8:
             case 'end':
               return _context3.stop();
           }
