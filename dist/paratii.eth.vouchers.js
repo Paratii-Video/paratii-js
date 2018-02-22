@@ -165,6 +165,11 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
         }
       }, null, this);
     }
+
+    /*
+     * A convenience function to generate new vouchers - does not change anything on the blockchain
+     */
+
   }, {
     key: 'createVouchers',
     value: function createVouchers(number, amount) {
