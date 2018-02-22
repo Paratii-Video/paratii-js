@@ -291,51 +291,93 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
         }
       }, null, this, [[5, 11]]);
     }
+
+    /**
+     * convenient method to add JSON and send it for persistance storage.
+     * @param  {object}  data JSON object to store
+     * @return {string}      returns multihash of the stored object.
+     */
+
   }, {
-    key: 'getJSON',
-    value: function getJSON(multihash) {
-      var ipfs, node;
-      return _regenerator2.default.async(function getJSON$(_context4) {
+    key: 'addAndPinJSON',
+    value: function addAndPinJSON(data) {
+      var hash, pinEv;
+      return _regenerator2.default.async(function addAndPinJSON$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
               _context4.next = 2;
+              return _regenerator2.default.awrap(this.addJSON(data));
+
+            case 2:
+              hash = _context4.sent;
+              pinEv = this.uploader.pinFile(hash, {
+                author: '0x' // TODO , allow paratii.ipfs to access general eth info
+              });
+
+
+              pinEv.on('pin:error', function (err) {
+                console.warn('pin:error:', hash, ' : ', err);
+              });
+
+              pinEv.on('pin:done', function (hash) {
+                console.log('pin:done:', hash);
+              });
+
+              return _context4.abrupt('return', hash);
+
+            case 7:
+            case 'end':
+              return _context4.stop();
+          }
+        }
+      }, null, this);
+    }
+  }, {
+    key: 'getJSON',
+    value: function getJSON(multihash) {
+      var ipfs, node;
+      return _regenerator2.default.async(function getJSON$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              _context5.next = 2;
               return _regenerator2.default.awrap(this.getIPFSInstance());
 
             case 2:
-              ipfs = _context4.sent;
+              ipfs = _context5.sent;
 
               // if (!this.ipfs || !this.ipfs.isOnline()) {
               //   throw new Error('IPFS node is not ready, please trigger getIPFSInstance first')
               // }
 
               node = void 0;
-              _context4.prev = 4;
-              _context4.next = 7;
+              _context5.prev = 4;
+              _context5.next = 7;
               return _regenerator2.default.awrap(ipfs.files.cat(multihash));
 
             case 7:
-              node = _context4.sent;
-              _context4.next = 14;
+              node = _context5.sent;
+              _context5.next = 14;
               break;
 
             case 10:
-              _context4.prev = 10;
-              _context4.t0 = _context4['catch'](4);
+              _context5.prev = 10;
+              _context5.t0 = _context5['catch'](4);
 
-              if (!_context4.t0) {
-                _context4.next = 14;
+              if (!_context5.t0) {
+                _context5.next = 14;
                 break;
               }
 
-              throw _context4.t0;
+              throw _context5.t0;
 
             case 14:
-              return _context4.abrupt('return', JSON.parse(node.toString()));
+              return _context5.abrupt('return', JSON.parse(node.toString()));
 
             case 15:
             case 'end':
-              return _context4.stop();
+              return _context5.stop();
           }
         }
       }, null, this, [[4, 10]]);
