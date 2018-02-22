@@ -141,7 +141,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   }, {
     key: 'update',
     value: function update(videoId, options) {
-      var data, dataToSave, key;
+      var data, schema, elements, dataToSave;
       return _regenerator2.default.async(function update$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -151,27 +151,37 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
 
             case 2:
               data = _context2.sent;
+              schema = joi.object({
+                id: joi.string().default(null),
+                owner: joi.string().required(),
+                price: joi.number().default(0),
+                title: joi.string().empty('').default(''),
+                description: joi.string().empty('').default(''),
+                file: joi.string().default(null),
+                ipfsHashOrig: joi.string().empty('').default(''),
+                ipfsHash: joi.string().default('')
+              });
+              elements = schema._inner.children;
               dataToSave = {};
 
 
-              if (data && data['ipfsData']) {
-                delete data['ipfsData'];
-              }
-              for (key in options) {
-                if (options[key] !== null) {
+              elements.forEach(function (name) {
+                var key = name.key;
+                console.log(key, options[key]);
+                if (options[key] !== undefined) {
                   dataToSave[key] = options[key];
                 } else {
                   dataToSave[key] = data[key];
                 }
-              }
+              });
 
-              _context2.next = 8;
+              _context2.next = 9;
               return _regenerator2.default.awrap(this.create(dataToSave));
 
-            case 8:
+            case 9:
               return _context2.abrupt('return', dataToSave);
 
-            case 9:
+            case 10:
             case 'end':
               return _context2.stop();
           }
