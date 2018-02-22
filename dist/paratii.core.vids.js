@@ -84,8 +84,8 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 id: joi.string().default(null),
                 owner: joi.string().required(),
                 price: joi.number().default(0),
-                title: joi.string().default(null),
-                description: joi.string().default(null),
+                title: joi.string().empty('').default(''),
+                description: joi.string().empty('').default(''),
                 file: joi.string().default(null),
                 ipfsHashOrig: joi.string().empty('').default(''),
                 ipfsHash: joi.string().default('')
@@ -108,7 +108,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
               }
 
               _context.next = 9;
-              return _regenerator2.default.awrap(this.paratii.ipfs.addJSON({
+              return _regenerator2.default.awrap(this.paratii.ipfs.addAndPinJSON({
                 title: options.title,
                 description: options.description
               }));
@@ -141,52 +141,47 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   }, {
     key: 'update',
     value: function update(videoId, options) {
-      var schema, result, error, data, key;
+      var data, schema, elements, dataToSave;
       return _regenerator2.default.async(function update$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              schema = joi.object({
-                description: joi.string().default(null),
-                owner: joi.string().default(null),
-                title: joi.string().default(null),
-                file: joi.string().default(null),
-                ipfsHashOrig: joi.string().empty('').default(''),
-                ipfsHash: joi.string().default(null)
-              }).unknown();
-              result = joi.validate(options, schema);
-              error = result.error;
-
-              if (!error) {
-                _context2.next = 5;
-                break;
-              }
-
-              throw error;
-
-            case 5:
-              options = result.value;
-
-              _context2.next = 8;
+              _context2.next = 2;
               return _regenerator2.default.awrap(this.get(videoId));
 
-            case 8:
+            case 2:
               data = _context2.sent;
+              schema = joi.object({
+                id: joi.string().default(null),
+                owner: joi.string().required(),
+                price: joi.number().default(0),
+                title: joi.string().empty('').default(''),
+                description: joi.string().empty('').default(''),
+                file: joi.string().default(null),
+                ipfsHashOrig: joi.string().empty('').default(''),
+                ipfsHash: joi.string().default('')
+              });
+              elements = schema._inner.children;
+              dataToSave = {};
 
-              delete data['ipfsData'];
-              for (key in options) {
-                if (options[key] !== null) {
-                  data[key] = options[key];
+
+              elements.forEach(function (name) {
+                var key = name.key;
+                console.log(key, options[key]);
+                if (options[key] !== undefined) {
+                  dataToSave[key] = options[key];
+                } else {
+                  dataToSave[key] = data[key];
                 }
-              }
+              });
 
-              _context2.next = 13;
-              return _regenerator2.default.awrap(this.create(data));
+              _context2.next = 9;
+              return _regenerator2.default.awrap(this.create(dataToSave));
 
-            case 13:
-              return _context2.abrupt('return', data);
+            case 9:
+              return _context2.abrupt('return', dataToSave);
 
-            case 14:
+            case 10:
             case 'end':
               return _context2.stop();
           }
