@@ -82,10 +82,12 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
             case 0:
               schema = joi.object({
                 id: joi.string().default(null),
+                duration: joi.string().empty('').default(''),
                 owner: joi.string().required(),
                 price: joi.number().default(0),
                 title: joi.string().empty('').default(''),
                 description: joi.string().empty('').default(''),
+                author: joi.string().empty('').default(''),
                 file: joi.string().default(null),
                 ipfsHashOrig: joi.string().empty('').default(''),
                 ipfsHash: joi.string().default('')
@@ -157,6 +159,8 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 price: joi.number().default(0),
                 title: joi.string().empty('').default(''),
                 description: joi.string().empty('').default(''),
+                author: joi.string().empty('').default(''),
+                duration: joi.string().empty('').default(''),
                 file: joi.string().default(null),
                 ipfsHashOrig: joi.string().empty('').default(''),
                 ipfsHash: joi.string().default('')
