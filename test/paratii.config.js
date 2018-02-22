@@ -47,7 +47,7 @@ describe('Paratii configuration:', function () {
       privateKey: privateKey,
       registryAddress: paratii.config.registryAddress,
       provider: 'http://localhost:8545',
-      repo: paratii.config.repo
+      'ipfs.repo': paratii.config['ipfs.repo']
     })
 
     // the two config's are equal, except for the reference to the Paratii object itself
