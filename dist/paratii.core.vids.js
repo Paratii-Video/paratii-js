@@ -142,26 +142,39 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
     }
   }, {
     key: 'update',
-    value: function update(videoId, options) {
+    value: function update(videoId, options, dataToUpdate) {
       var data, schema, elements, dataToSave;
       return _regenerator2.default.async(function update$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              _context2.next = 2;
+              data = void 0;
+
+              if (!dataToUpdate) {
+                _context2.next = 5;
+                break;
+              }
+
+              data = dataToUpdate;
+              _context2.next = 8;
+              break;
+
+            case 5:
+              _context2.next = 7;
               return _regenerator2.default.awrap(this.get(videoId));
 
-            case 2:
+            case 7:
               data = _context2.sent;
 
+            case 8:
               if (!(data === null)) {
-                _context2.next = 5;
+                _context2.next = 10;
                 break;
               }
 
               throw new Error('No video to update');
 
-            case 5:
+            case 10:
               schema = joi.object({
                 id: joi.string().default(null),
                 owner: joi.string().required(),
@@ -186,13 +199,13 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                   dataToSave[key] = data[key];
                 }
               });
-              _context2.next = 11;
+              _context2.next = 16;
               return _regenerator2.default.awrap(this.create(dataToSave));
 
-            case 11:
+            case 16:
               return _context2.abrupt('return', dataToSave);
 
-            case 12:
+            case 17:
             case 'end':
               return _context2.stop();
           }
@@ -202,21 +215,38 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   }, {
     key: 'upsert',
     value: function upsert(options) {
+      var data;
       return _regenerator2.default.async(function upsert$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              if (!(options.id === undefined)) {
-                _context3.next = 4;
+              _context3.t0 = options.id;
+
+              if (!_context3.t0) {
+                _context3.next = 5;
+                break;
+              }
+
+              _context3.next = 4;
+              return _regenerator2.default.awrap(this.get(options.id));
+
+            case 4:
+              _context3.t0 = _context3.sent;
+
+            case 5:
+              data = _context3.t0;
+
+              if (!(data === null)) {
+                _context3.next = 10;
                 break;
               }
 
               return _context3.abrupt('return', this.create(options));
 
-            case 4:
-              return _context3.abrupt('return', this.update(options.id, options));
+            case 10:
+              return _context3.abrupt('return', this.update(options.id, options, data));
 
-            case 5:
+            case 11:
             case 'end':
               return _context3.stop();
           }
