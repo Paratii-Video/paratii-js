@@ -210,13 +210,15 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 7:
               contract = _context5.sent;
-              amountInHex = this.eth.web3.utils.toHex(amountToStake.toString());
-              // console.log('amountInHex: ', amountInHex)
 
-              _context5.next = 11;
+              // let amountInWei = this.eth.web3.utils.toWei(amountToStake.toString())
+              amountInHex = this.eth.web3.utils.toHex(amountToStake.toString());
+
+              console.log('amountInHex: ', amountInHex);
+              _context5.next = 12;
               return _regenerator2.default.awrap(contract.methods.apply(videoId, amountInHex).send());
 
-            case 11:
+            case 12:
               tx = _context5.sent;
 
               console.log('tx: ', tx);
@@ -225,16 +227,16 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
               console.log('vId: ', vId);
 
               if (!vId) {
-                _context5.next = 19;
+                _context5.next = 20;
                 break;
               }
 
               return _context5.abrupt('return', true);
 
-            case 19:
+            case 20:
               return _context5.abrupt('return', false);
 
-            case 20:
+            case 21:
             case 'end':
               return _context5.stop();
           }

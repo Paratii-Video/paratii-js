@@ -19,7 +19,7 @@ describe('paratii.eth.tcr:', function () {
   it('should be able to get minDeposit', async function () {
     let amount = await paratii.eth.tcr.getMinDeposit()
     assert.isOk(amount)
-    assert.equal(amount.valueOf(), 5)
+    assert.equal(amount.toString(), '5000000000000000000')
   })
 
   it('videoId should not be whitelisted yet', async function () {
@@ -47,7 +47,7 @@ describe('paratii.eth.tcr:', function () {
     let allowance = await token.methods.allowance(address, tcrPlaceholder.options.address).call()
     assert.equal(allowance, paratii.eth.web3.utils.toWei('100'))
 
-    let result = await paratii.eth.tcr.apply(videoId, amount)
+    let result = await paratii.eth.tcr.apply(videoId, paratii.eth.web3.utils.toWei(amount.toString()))
     assert.isTrue(result)
     let allowanceAfter = await token.methods.allowance(address, tcrPlaceholder.options.address).call()
     assert.equal(paratii.eth.web3.utils.toWei('95'), allowanceAfter)
