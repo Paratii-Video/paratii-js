@@ -90,7 +90,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 author: joi.string().empty('').default(''),
                 file: joi.string().default(null),
                 ipfsHashOrig: joi.string().empty('').default(''),
-                ipfsHash: joi.string().default('')
+                ipfsHash: joi.string().empty('').default('')
               });
               result = joi.validate(options, schema);
               error = result.error;
@@ -153,6 +153,15 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
 
             case 2:
               data = _context2.sent;
+
+              if (!(data === null)) {
+                _context2.next = 5;
+                break;
+              }
+
+              throw new Error('No video to update');
+
+            case 5:
               schema = joi.object({
                 id: joi.string().default(null),
                 owner: joi.string().required(),
@@ -163,7 +172,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 duration: joi.string().empty('').default(''),
                 file: joi.string().default(null),
                 ipfsHashOrig: joi.string().empty('').default(''),
-                ipfsHash: joi.string().default('')
+                ipfsHash: joi.string().empty().default('')
               });
               elements = schema._inner.children;
               dataToSave = {};
@@ -171,21 +180,19 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
 
               elements.forEach(function (name) {
                 var key = name.key;
-                console.log(key, options[key]);
                 if (options[key] !== undefined) {
                   dataToSave[key] = options[key];
                 } else {
                   dataToSave[key] = data[key];
                 }
               });
-
-              _context2.next = 9;
+              _context2.next = 11;
               return _regenerator2.default.awrap(this.create(dataToSave));
 
-            case 9:
+            case 11:
               return _context2.abrupt('return', dataToSave);
 
-            case 10:
+            case 12:
             case 'end':
               return _context2.stop();
           }
@@ -195,21 +202,28 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   }, {
     key: 'upsert',
     value: function upsert(options) {
+      var data;
       return _regenerator2.default.async(function upsert$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              if (options.id) {
-                _context3.next = 4;
+              _context3.next = 2;
+              return _regenerator2.default.awrap(this.get(options.id));
+
+            case 2:
+              data = _context3.sent;
+
+              if (!(data === null)) {
+                _context3.next = 7;
                 break;
               }
 
               return _context3.abrupt('return', this.create(options));
 
-            case 4:
+            case 7:
               return _context3.abrupt('return', this.update(options.id, options));
 
-            case 5:
+            case 8:
             case 'end':
               return _context3.stop();
           }
