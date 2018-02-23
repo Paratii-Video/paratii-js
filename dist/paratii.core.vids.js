@@ -84,13 +84,15 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 id: joi.string().default(null),
                 duration: joi.string().empty('').default('').allow(null),
                 owner: joi.string().required(),
-                author: joi.string(),
                 price: joi.number().default(0),
                 title: joi.string().empty('').default(''),
                 description: joi.string().empty('').default(''),
                 file: joi.string().default(null),
                 ipfsHashOrig: joi.string().empty('').default(''),
-                ipfsHash: joi.string().empty('').default('')
+                ipfsHash: joi.string().empty('').default(''),
+                author: joi.string().empty('').default('').allow(null),
+                free: joi.string().empty('').default('').allow(null),
+                publish: joi.string().empty('').default(false).allow(null)
               });
               result = joi.validate(options, schema);
               error = result.error;
@@ -184,11 +186,13 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 price: joi.number().default(0),
                 title: joi.string().empty('').default(''),
                 description: joi.string().empty('').default(''),
-                author: joi.string().empty('').default(''),
                 duration: joi.string().empty('').default('').allow(null),
                 file: joi.string().default(null),
                 ipfsHashOrig: joi.string().empty('').default(''),
-                ipfsHash: joi.string().empty().default('')
+                ipfsHash: joi.string().empty().default(''),
+                author: joi.string().empty('').default('').allow(null),
+                free: joi.string().empty('').default('').allow(null),
+                publish: joi.string().empty('').default('').allow(null)
               });
               elements = schema._inner.children;
               dataToSave = {};
