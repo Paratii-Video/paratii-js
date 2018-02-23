@@ -167,17 +167,18 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
           resolve(_this2.ipfs);
         } else {
           var config = _this2.config;
+          // there will be no joi in IPFS (pun indended)
           var ipfs = new Ipfs({
             bitswap: {
-              maxMessageSize: config['ipfs.bitswap.maxMessageSize']
+              maxMessageSize: 128 * 1024
             },
             start: true,
             repo: config['ipfs.repo'] || '/tmp/test-repo-' + String(Math.random()),
             config: {
               Addresses: {
-                Swarm: config['ipfs.config.addresses.swarm']
+                Swarm: ['/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star', '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/']
               },
-              Bootstrap: config['ipfs.config.Bootstrap']
+              Bootstrap: ['/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW']
             }
           });
 
@@ -221,7 +222,9 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
 
               _this2.ipfs = ipfs;
               _this2.protocol.start(function () {
-                resolve(ipfs);
+                setTimeout(function () {
+                  resolve(ipfs);
+                }, 10);
               });
             });
           });
