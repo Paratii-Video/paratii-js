@@ -186,7 +186,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'apply',
     value: function apply(videoId, amountToStake) {
-      var minDeposit, contract, tx, vId;
+      var minDeposit, contract, amountInHex, tx, vId;
       return _regenerator2.default.async(function apply$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
@@ -210,26 +210,114 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 7:
               contract = _context5.sent;
-              _context5.next = 10;
-              return _regenerator2.default.awrap(contract.methods.apply(videoId, amountToStake).send());
+              amountInHex = this.eth.web3.utils.toHex(amountToStake.toString());
+              // console.log('amountInHex: ', amountInHex)
 
-            case 10:
+              _context5.next = 11;
+              return _regenerator2.default.awrap(contract.methods.apply(videoId, amountInHex).send());
+
+            case 11:
               tx = _context5.sent;
+
+              console.log('tx: ', tx);
               vId = (0, _utils.getInfoFromLogs)(tx, '_Application', 'videoId', 1);
 
+              console.log('vId: ', vId);
+
               if (!vId) {
-                _context5.next = 16;
+                _context5.next = 19;
                 break;
               }
 
               return _context5.abrupt('return', true);
 
-            case 16:
+            case 19:
               return _context5.abrupt('return', false);
 
-            case 17:
+            case 20:
             case 'end':
               return _context5.stop();
+          }
+        }
+      }, null, this);
+    }
+  }, {
+    key: 'checkEligiblityAndApply',
+    value: function checkEligiblityAndApply(videoId, amountToStake) {
+      var minDeposit, token, tcrPlaceholder, balance, tx2, allowance, result;
+      return _regenerator2.default.async(function checkEligiblityAndApply$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              _context6.next = 2;
+              return _regenerator2.default.awrap(this.getMinDeposit());
+
+            case 2:
+              minDeposit = _context6.sent;
+
+              if (!(amountToStake < minDeposit)) {
+                _context6.next = 5;
+                break;
+              }
+
+              throw new Error('amount to stake ' + amountToStake + ' is less than minDeposit ' + minDeposit.toString());
+
+            case 5:
+              _context6.next = 7;
+              return _regenerator2.default.awrap(this.eth.getContract('ParatiiToken'));
+
+            case 7:
+              token = _context6.sent;
+              _context6.next = 10;
+              return _regenerator2.default.awrap(this.eth.getContract('TcrPlaceholder'));
+
+            case 10:
+              tcrPlaceholder = _context6.sent;
+              _context6.next = 13;
+              return _regenerator2.default.awrap(token.methods.balanceOf(this.eth.config.account.address).call());
+
+            case 13:
+              balance = _context6.sent;
+
+              if (!(balance < amountToStake)) {
+                _context6.next = 16;
+                break;
+              }
+
+              throw new Error('you don\'t have enough balance ' + balance.toString() + ', ' + minDeposit.toString() + ' is required');
+
+            case 16:
+              _context6.next = 18;
+              return _regenerator2.default.awrap(token.methods.approve(tcrPlaceholder.options.address, amountToStake).send());
+
+            case 18:
+              tx2 = _context6.sent;
+
+              if (!tx2) {
+                // TODO better handle this.
+                console.error('checkEligiblityAndApply Error ', tx2);
+              }
+
+              _context6.next = 22;
+              return _regenerator2.default.awrap(token.methods.allowance(this.eth.config.account.address, tcrPlaceholder.options.address).call());
+
+            case 22:
+              allowance = _context6.sent;
+
+              if (allowance.toString() !== amountToStake.toString()) {
+                console.warn('allowance ' + allowance.toString() + ' != ' + amountToStake.toString());
+              }
+
+              _context6.next = 26;
+              return _regenerator2.default.awrap(this.apply(videoId, amountToStake));
+
+            case 26:
+              result = _context6.sent;
+              return _context6.abrupt('return', result);
+
+            case 28:
+            case 'end':
+              return _context6.stop();
           }
         }
       }, null, this);

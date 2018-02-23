@@ -350,7 +350,7 @@ var Uploader = function (_EventEmitter) {
           });
 
           // paratii transcoder signal.
-          _this4._ipfs.on('protocol:incoming', _this4._transcoderRespHander(ev));
+          _this4._ipfs.on('protocol:incoming', _this4._transcoderRespHander(ev, fileHash));
           // ev.emit('transcoder:progress', 0) // TODO : add an event for starting.
         });
       });
@@ -365,7 +365,7 @@ var Uploader = function (_EventEmitter) {
 
   }, {
     key: '_transcoderRespHander',
-    value: function _transcoderRespHander(ev) {
+    value: function _transcoderRespHander(ev, fileHash) {
       var _this5 = this;
 
       return function (peerId, command) {
@@ -380,7 +380,10 @@ var Uploader = function (_EventEmitter) {
 
         switch (commandStr) {
           case 'transcoding:error':
-            ev.emit('transcoding:error', argsObj.err);
+            console.log('DEBUG TRANSCODER ERROR: fileHash: ', fileHash, ' , errHash: ', argsObj.hash);
+            if (argsObj.hash === fileHash) {
+              ev.emit('transcoding:error', argsObj.err);
+            }
             break;
           case 'transcoding:started':
             ev.emit('transcoding:started', argsObj.hash, argsObj.author);

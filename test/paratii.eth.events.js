@@ -1,5 +1,5 @@
 import { Paratii } from '../lib/paratii.js'
-import { address, privateKey, address1 } from './utils.js'
+import { address, privateKey, address1, voucherAmountInitial11 } from './utils.js'
 import { assert } from 'chai'
 
 describe('paratii.eth.events API: :', function () {
@@ -11,6 +11,9 @@ describe('paratii.eth.events API: :', function () {
       privateKey: privateKey
     })
     await paratii.eth.deployContracts()
+    let token = await paratii.eth.getContract('ParatiiToken')
+    let vouchers = await paratii.eth.getContract('Vouchers')
+    await token.methods.transfer(vouchers.options.address, voucherAmountInitial11).send()
     // paratii.eth.web3.setProvider('ws://localhost:8546')
   })
 
@@ -20,8 +23,10 @@ describe('paratii.eth.events API: :', function () {
 
     paratii.eth.events.addListener('TransferPTI', function (log) {
       const received = log.returnValues.value
-      assert.equal(received, amount)
-      done()
+      if (amount === log.returnValues.value) {
+        assert.equal(received, amount)
+        done()
+      }
     })
 
     paratii.eth.transfer(beneficiary, amount, 'PTI')
@@ -215,5 +220,47 @@ describe('paratii.eth.events API: :', function () {
     paratii.eth.users.create(userData).then(function () {
       paratii.eth.users.delete(userId)
     })
+  })
+  it('subscription to Create Voucher should work as expected', function (done) {
+    let voucher = {
+      voucherCode: 'FISHFORFEE42',
+      amount: 42
+    }
+
+    paratii.eth.events.addListener('CreateVoucher', function (log) {
+      console.log('create')
+      assert.equal(log.returnValues._amount, voucher.amount)
+      done()
+    })
+
+    paratii.eth.vouchers.create(voucher)
+  })
+  it.skip('TO BE IMPLEMENTED: subscription to Remove Voucher should work as expected', function (done) {
+    let voucher = {
+      voucherCode: 'FISHFORFEE42',
+      amount: 42
+    }
+
+    paratii.eth.events.addListener('RemoveVoucher', function (log) {
+      assert.equal(log.returnValues._amount, voucher.amount)
+      done()
+    })
+
+    paratii.eth.vouchers.create(voucher).then(function () {
+      paratii.eth.vouchers.remove(voucher)
+    })
+  })
+  it('subscription to Redeem Voucher should work as expected', function (done) {
+    let voucher = {
+      voucherCode: 'FISHFORFEE42',
+      amount: 42
+    }
+
+    paratii.eth.events.addListener('RedeemVoucher', function (log) {
+      assert.equal(log.returnValues._amount, voucher.amount)
+      done()
+    })
+
+    paratii.eth.vouchers.redeem(voucher.voucherCode)
   })
 })

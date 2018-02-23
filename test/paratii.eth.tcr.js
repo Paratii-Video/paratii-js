@@ -46,6 +46,8 @@ describe('paratii.eth.tcr:', function () {
 
     let result = await paratii.eth.tcr.apply(videoId, amount)
     assert.isTrue(result)
+    let allowanceAfter = await token.methods.allowance(address, tcrPlaceholder.options.address).call()
+    assert.equal(allowance - amount, allowanceAfter)
   })
 
   it('videoId should be in process (appWasMade)', async function () {
