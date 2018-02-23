@@ -85,38 +85,31 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 duration: joi.string().empty('').default(''),
                 owner: joi.string().required(),
                 author: joi.string(),
-                duration: joi.string().empty(''),
                 price: joi.number().default(0),
                 title: joi.string().empty('').default(''),
                 description: joi.string().empty('').default(''),
-                author: joi.string().empty('').default(''),
                 file: joi.string().default(null),
                 ipfsHashOrig: joi.string().empty('').default(''),
                 ipfsHash: joi.string().empty('').default('')
               });
-
-
-              console.log('initial options:');
-              console.log(options);
-
               result = joi.validate(options, schema);
               error = result.error;
 
               if (!error) {
-                _context.next = 7;
+                _context.next = 5;
                 break;
               }
 
               throw error;
 
-            case 7:
+            case 5:
               options = result.value;
 
               if (options.id === null) {
                 options.id = this.paratii.eth.vids.makeId();
               }
 
-              _context.next = 11;
+              _context.next = 9;
               return _regenerator2.default.awrap(this.paratii.ipfs.addAndPinJSON({
                 title: options.title,
                 description: options.description,
@@ -124,13 +117,13 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 duration: options.duration
               }));
 
-            case 11:
+            case 9:
               hash = _context.sent;
 
 
               options.ipfsData = hash;
 
-              _context.next = 15;
+              _context.next = 13;
               return _regenerator2.default.awrap(this.paratii.eth.vids.create({
                 id: options.id,
                 owner: options.owner,
@@ -140,14 +133,10 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 ipfsData: options.ipfsData
               }));
 
-            case 15:
-
-              console.log('final options:');
-              console.log(options);
-
+            case 13:
               return _context.abrupt('return', options);
 
-            case 18:
+            case 14:
             case 'end':
               return _context.stop();
           }
@@ -234,9 +223,9 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              _context3.t0 = options.id;
+              data = null;
 
-              if (!_context3.t0) {
+              if (!options.id) {
                 _context3.next = 5;
                 break;
               }
@@ -245,22 +234,20 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
               return _regenerator2.default.awrap(this.get(options.id));
 
             case 4:
-              _context3.t0 = _context3.sent;
+              data = _context3.sent;
 
             case 5:
-              data = _context3.t0;
-
-              if (!(data === null)) {
-                _context3.next = 10;
+              if (data) {
+                _context3.next = 9;
                 break;
               }
 
               return _context3.abrupt('return', this.create(options));
 
-            case 10:
+            case 9:
               return _context3.abrupt('return', this.update(options.id, options, data));
 
-            case 11:
+            case 10:
             case 'end':
               return _context3.stop();
           }
