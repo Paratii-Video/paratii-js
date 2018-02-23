@@ -15,8 +15,9 @@ nock('https://db.paratii.video/api/v1')
   price: 0,
   ipfsData: 'QmVjxdPHKuNbSwatSqSZuRPAZAGT7KE9aYWmQL5ArEhv4C',
   ipfsHash: '',
-  ipfsHashOrig: ''
-
+  ipfsHashOrig: '',
+  author: 'Steven Spielberg',
+  duration: '2h 32m'
 })
 .get('/videos/some-id2')
 .reply(200, {

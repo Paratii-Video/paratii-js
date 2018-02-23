@@ -114,10 +114,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 options.id = this.paratii.eth.vids.makeId();
               }
 
-              console.log('IPFS options:');
-              console.log(options);
-
-              _context.next = 13;
+              _context.next = 11;
               return _regenerator2.default.awrap(this.paratii.ipfs.addAndPinJSON({
                 title: options.title,
                 description: options.description,
@@ -125,16 +122,13 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 duration: options.duration
               }));
 
-            case 13:
+            case 11:
               hash = _context.sent;
 
 
               options.ipfsData = hash;
 
-              console.log('vids options:');
-              console.log(options);
-
-              _context.next = 19;
+              _context.next = 15;
               return _regenerator2.default.awrap(this.paratii.eth.vids.create({
                 id: options.id,
                 owner: options.owner,
@@ -144,14 +138,14 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 ipfsData: options.ipfsData
               }));
 
-            case 19:
+            case 15:
 
               console.log('final options:');
               console.log(options);
 
               return _context.abrupt('return', options);
 
-            case 22:
+            case 18:
             case 'end':
               return _context.stop();
           }
