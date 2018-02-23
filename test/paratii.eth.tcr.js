@@ -35,6 +35,8 @@ describe('paratii.eth.tcr:', function () {
 
     let tx = await token.methods.transfer(address, 1000).send()
     assert.isOk(tx)
+    let balanceBefore = await token.methods.balanceOf(address).call()
+    console.log('balanceBefore: ', balanceBefore)
     // let balance = await token.methods.balanceOf(address).call()
     // assert.equal(balance, 1000)
 
@@ -48,6 +50,9 @@ describe('paratii.eth.tcr:', function () {
     assert.isTrue(result)
     let allowanceAfter = await token.methods.allowance(address, tcrPlaceholder.options.address).call()
     assert.equal(allowance - amount, allowanceAfter)
+    let balanceAfter = await token.methods.balanceOf(address).call()
+    console.log('balanceAfter: ', balanceAfter.toString())
+    assert.equal(paratii.eth.web3.utils.toBN(balanceBefore).sub(paratii.eth.web3.utils.toBN(balanceAfter)).toString(), amount.toString())
   })
 
   it('videoId should be in process (appWasMade)', async function () {
