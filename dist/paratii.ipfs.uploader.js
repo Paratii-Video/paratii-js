@@ -552,6 +552,7 @@ var Uploader = function (_EventEmitter) {
       var schema = joi.object({
         author: joi.string().default('0x'), // ETH/PTI address of the file owner
         transcoder: joi.string().default(this._defaultTranscoder),
+        transcoderId: joi.any().default(Multiaddr(this._defaultTranscoder).getPeerId()),
         size: joi.number().default(0)
       }).unknown();
 
@@ -579,13 +580,15 @@ var Uploader = function (_EventEmitter) {
           _this8._ipfs.log('peers: ', peers);
           if (err) return ev.emit('pin:error', err);
           peers.map(function (peer) {
-            _this8._ipfs.log('sending pin msg to ' + peer.peer.id.toB58String() + ' with request to pin ' + fileHash);
-            _this8._ipfs.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
-              if (err) {
-                ev.emit('pin:error', err);
-                return ev;
-              }
-            });
+            if (peer.peer.id.toB58String() === opts.transcoderId) {
+              _this8._ipfs.log('sending pin msg to ' + peer.peer.id.toB58String() + ' with request to pin ' + fileHash);
+              _this8._ipfs.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
+                if (err) {
+                  ev.emit('pin:error', err);
+                  return ev;
+                }
+              });
+            }
           });
 
           // paratii pinning response.
