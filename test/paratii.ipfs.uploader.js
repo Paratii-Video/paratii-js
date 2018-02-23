@@ -20,6 +20,7 @@ describe('ParatiiIPFS: :', function () {
     paratiiIPFS.stop(() => {
       delete paratiiIPFS.ipfs
       setImmediate(() => {
+        assert.isNotOk(paratiiIPFS.ipfs)
         done()
       })
     })
