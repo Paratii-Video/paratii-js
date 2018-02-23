@@ -153,15 +153,6 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
 
             case 2:
               data = _context2.sent;
-
-              if (!(data === null)) {
-                _context2.next = 5;
-                break;
-              }
-
-              throw new Error('No video to update');
-
-            case 5:
               schema = joi.object({
                 id: joi.string().default(null),
                 owner: joi.string().required(),
@@ -186,13 +177,14 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                   dataToSave[key] = data[key];
                 }
               });
-              _context2.next = 11;
+
+              _context2.next = 9;
               return _regenerator2.default.awrap(this.create(dataToSave));
 
-            case 11:
+            case 9:
               return _context2.abrupt('return', dataToSave);
 
-            case 12:
+            case 10:
             case 'end':
               return _context2.stop();
           }
