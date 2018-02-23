@@ -12,13 +12,12 @@ describe('paratii.db API: :', function () {
 
     nock('https://db.paratii.video/api/v1')
     .persist()
-    .get('/videos/')
-    .query({s: 'keyword'})
-    .reply(200, videos[0])
+    .get('/videos/?keyword=keyword')
+    .reply(200, videos)
     .get('/videos/')
     .reply(200, videos)
-    .get('/videos/?s=foo')
-    .reply(200, videos[0])
+    .get('/videos/?owner=0x9e2d04eef5b16CFfB4328Ddd027B55736407B275')
+    .reply(200, videos)
     .get('/videos/QmNZS5J3LS1tMEVEP3tz3jyd2LXUEjkYJHyWSuwUvHDaRJ')
     .reply(200, videos[0])
   })
@@ -33,14 +32,19 @@ describe('paratii.db API: :', function () {
   })
 
   it('db.vids.search("keyword") should work as expected', async function () {
-    let videoid = 'QmNZS5J3LS1tMEVEP3tz3jyd2LXUEjkYJHyWSuwUvHDaRJ'
-    let data = await paratii.db.vids.search('keyword')
-    let check = data._id === videoid
+    let data = await paratii.db.vids.search({'keyword': 'keyword'})
+    let check = data.length > 1
     assert.equal(check, true)
   })
 
   it('db.vids.search() should work as expected', async function () {
     let data = await paratii.db.vids.search()
+    let check = data.length > 1
+    assert.equal(check, true)
+  })
+
+  it('db.vids.search({owner: }) should work as expected', async function () {
+    let data = await paratii.db.vids.search({owner: '0x9e2d04eef5b16CFfB4328Ddd027B55736407B275', keyword: 'keyword'})
     let check = data.length > 1
     assert.equal(check, true)
   })

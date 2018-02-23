@@ -282,6 +282,11 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
         }
       }, null, this);
     }
+  }, {
+    key: 'search',
+    value: function search(options) {
+      return this.paratii.db.vids.search(options);
+    }
   }]);
   return ParatiiCoreVids;
 }();

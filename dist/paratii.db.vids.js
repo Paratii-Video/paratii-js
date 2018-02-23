@@ -23,6 +23,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * ParatiiDb contains a functionality to interact with the Paratii Blockchain Index
  *
  */
+var joi = require('joi');
 
 var fetch = require('isomorphic-fetch');
 
@@ -63,29 +64,48 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
     }
   }, {
     key: 'search',
-    value: function search(keyword) {
-      var k, videos;
+    value: function search(options) {
+      var schema, result, error, k, keyword, videos;
       return _regenerator2.default.async(function search$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
+              // FIXME: does not handle combinations of parameters yet
+              schema = joi.object({
+                'owner': joi.string().empty(),
+                'keyword': joi.string().empty()
+              });
+              result = joi.validate(options, schema);
+              error = result.error;
+
+              if (!error) {
+                _context2.next = 5;
+                break;
+              }
+
+              throw error;
+
+            case 5:
               k = '';
 
-              if (keyword !== undefined && keyword !== '') {
-                k = '?s=' + keyword;
+              for (keyword in options) {
+                k = keyword + '=' + options[keyword];
               }
-              _context2.next = 4;
+              if (k !== '') {
+                k = '?' + k;
+              }
+              _context2.next = 10;
               return _regenerator2.default.awrap(fetch(this.config['db.provider'] + this.apiVersion + this.apiVideos + k, {
                 method: 'get'
               }).then(function (response) {
                 return response.json();
               }));
 
-            case 4:
+            case 10:
               videos = _context2.sent;
               return _context2.abrupt('return', videos);
 
-            case 6:
+            case 12:
             case 'end':
               return _context2.stop();
           }
