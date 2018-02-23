@@ -13,7 +13,7 @@ nock('https://db.paratii.video/api/v1')
   title: 'some Title',
   description: 'A long description',
   price: 0,
-  ipfsData: 'QmUUMpwyWBbJKeNCbwDySXJCay5TBBuur3c59m1ajQufmn',
+  ipfsData: 'QmVjxdPHKuNbSwatSqSZuRPAZAGT7KE9aYWmQL5ArEhv4C',
   ipfsHash: '',
   ipfsHashOrig: ''
 
@@ -66,6 +66,8 @@ describe('paratii.core.vids:', function () {
       id: 'some-id',
       owner: address1,
       title: 'some Title',
+      author: 'Steven Spielberg',
+      duration: '2h 32m',
       description: 'A long description',
       price: 0,
       file: videoFile
@@ -115,7 +117,9 @@ describe('paratii.core.vids:', function () {
     await paratii.core.vids.create({
       id: videoId2,
       owner: address1,
-      title: videoTitle
+      title: videoTitle,
+      author: 'Steven Spielberg',
+      duration: '2h 32m'
     })
     let data
     data = await paratii.core.vids.get(videoId2)
