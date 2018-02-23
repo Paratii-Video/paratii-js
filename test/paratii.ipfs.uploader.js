@@ -28,21 +28,20 @@ describe('ParatiiIPFS: :', function () {
   // skip till i fix underlying libp2p issue.
   it.skip('should be able to getMetaData from Transcoder', (done) => {
     let testHash = 'QmTkuJTcQhtQm8bPzF1hQmhrDPsdLs28soUZQEUx7t9pBJ'
-    let ev = paratiiIPFS.uploader.getMetaData(testHash, {})
-    ev.once('getMetaData:error', (err, hash) => {
-      if (err) {
-        console.log('getMetaData ERROR ', err)
-        return done(err)
-      }
-    })
-
-    ev.once('getMetaData:done', (hash, data) => {
-      assert.isOk(hash)
-      assert.equal(testHash, hash)
+    paratiiIPFS.uploader.getMetaData(testHash, {}).then((data) => {
       assert.isOk(data)
       console.log(data)
       done()
-    })
+    }).catch(done)
+    // ev.once('getMetaData:error', (err, hash) => {
+    //   if (err) {
+    //     console.log('getMetaData ERROR ', err)
+    //     return done(err)
+    //   }
+    // })
+    //
+    // ev.once('getMetaData:done', (hash, data) => {
+    // })
   })
 
   // after(() => {

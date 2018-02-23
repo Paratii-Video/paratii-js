@@ -463,92 +463,89 @@ var Uploader = function (_EventEmitter) {
     value: function getMetaData(fileHash, options) {
       var _this7 = this;
 
-      var schema = joi.object({
-        transcoder: joi.string().default(this._defaultTranscoder),
-        transcoderId: joi.any().default(Multiaddr(this._defaultTranscoder).getPeerId())
-      }).unknown();
+      return new _promise2.default(function (resolve, reject) {
+        var schema = joi.object({
+          transcoder: joi.string().default(_this7._defaultTranscoder),
+          transcoderId: joi.any().default(Multiaddr(_this7._defaultTranscoder).getPeerId())
+        }).unknown();
 
-      this._ipfs.log('Signaling transcoder getMetaData...');
-      var result = joi.validate(options, schema);
-      var error = result.error;
-      if (error) throw error;
-      var opts = result.value;
-      console.log('opts: ', opts);
-      var ev = void 0;
-      if (opts.ev) {
-        ev = opts.ev;
-      } else {
-        ev = new EventEmitter();
-      }
-      this._ipfs.start(function () {
-        var msg = _this7._ipfs.protocol.createCommand('getMetaData', { hash: fileHash });
-        // FIXME : This is for dev, so we just signal our transcoder node.
-        // This needs to be dynamic later on.
-        _this7._ipfs.ipfs.swarm.connect(opts.transcoder, function (err, success) {
-          if (err) return ev.emit('getMetaData:error', err);
+        _this7._ipfs.log('Signaling transcoder getMetaData...');
+        var result = joi.validate(options, schema);
+        var error = result.error;
+        if (error) reject(error);
+        var opts = result.value;
+        console.log('opts: ', opts);
+        var ev = void 0;
+        if (opts.ev) {
+          ev = opts.ev;
+        } else {
+          ev = new EventEmitter();
+        }
+        _this7._ipfs.start(function () {
+          var msg = _this7._ipfs.protocol.createCommand('getMetaData', { hash: fileHash });
+          // FIXME : This is for dev, so we just signal our transcoder node.
+          // This needs to be dynamic later on.
+          _this7._ipfs.ipfs.swarm.connect(opts.transcoder, function (err, success) {
+            if (err) return reject(err);
 
-          opts.transcoderId = opts.transcoderId || Multiaddr(opts.transcoder).getPeerId();
-          _this7._ipfs.log('transcoderId: ', opts.transcoderId);
-          _this7._node.swarm.peers(function (err, peers) {
-            _this7._ipfs.log('peers: ', peers);
-            if (err) return ev.emit('getMetaData:error', err);
-            peers.map(function (peer) {
-              _this7._ipfs.log('peerID : ', peer.peer.id.toB58String(), opts.transcoderId, peer.peer.id.toB58String() === opts.transcoder);
-              if (peer.peer.id.toB58String() === opts.transcoderId) {
-                _this7._ipfs.log('sending getMetaData msg to ' + peer.peer.id.toB58String() + ' with request to transcode ' + fileHash);
-                _this7._ipfs.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
-                  if (err) {
-                    ev.emit('getMetaData:error', err);
-                    return ev;
-                  }
-                });
-              }
+            opts.transcoderId = opts.transcoderId || Multiaddr(opts.transcoder).getPeerId();
+            _this7._ipfs.log('transcoderId: ', opts.transcoderId);
+            _this7._node.swarm.peers(function (err, peers) {
+              _this7._ipfs.log('peers: ', peers);
+              if (err) return reject(err);
+
+              peers.map(function (peer) {
+                _this7._ipfs.log('peerID : ', peer.peer.id.toB58String(), opts.transcoderId, peer.peer.id.toB58String() === opts.transcoder);
+                if (peer.peer.id.toB58String() === opts.transcoderId) {
+                  _this7._ipfs.log('sending getMetaData msg to ' + peer.peer.id.toB58String() + ' with request to transcode ' + fileHash);
+                  _this7._ipfs.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
+                    if (err) {
+                      ev.emit('getMetaData:error', err);
+                      return ev;
+                    }
+                  });
+                }
+              });
+
+              // paratii getMetaData signal.
+              _this7._ipfs.on('protocol:incoming', function (peerId, command) {
+                _this7._ipfs.log('paratii protocol: Got Command ', command.payload.toString(), 'args: ', command.args.toString());
+                var commandStr = command.payload.toString();
+                var argsObj = void 0;
+                try {
+                  argsObj = JSON.parse(command.args.toString());
+                } catch (e) {
+                  _this7._ipfs.error('couldn\'t parse args, ', command.args.toString());
+                }
+
+                switch (commandStr) {
+                  case 'getMetaData:error':
+                    if (argsObj.hash === fileHash) {
+                      console.log('DEBUG getMetaData ERROR: fileHash: ', fileHash, ' , errHash: ', argsObj.hash);
+                      reject(argsObj.err);
+                    }
+                    break;
+                  case 'getMetaData:done':
+                    if (argsObj.hash === fileHash) {
+                      console.log('data: ', argsObj.data);
+                      var _result = argsObj.data;
+                      resolve(_result);
+                    }
+                    break;
+                  default:
+                    _this7._ipfs.log('unknown command : ', commandStr);
+                }
+              });
+              // ev.emit('transcoder:progress', 0) // TODO : add an event for starting.
             });
-
-            // paratii getMetaData signal.
-            _this7._ipfs.on('protocol:incoming', _this7._getMetaDataRespHandler(ev, fileHash));
-            // ev.emit('transcoder:progress', 0) // TODO : add an event for starting.
           });
         });
       });
-      return ev;
-    }
-  }, {
-    key: '_getMetaDataRespHandler',
-    value: function _getMetaDataRespHandler(ev, fileHash) {
-      var _this8 = this;
-
-      return function (peerId, command) {
-        _this8._ipfs.log('paratii protocol: Got Command ', command.payload.toString(), 'args: ', command.args.toString());
-        var commandStr = command.payload.toString();
-        var argsObj = void 0;
-        try {
-          argsObj = JSON.parse(command.args.toString());
-        } catch (e) {
-          _this8._ipfs.error('couldn\'t parse args, ', command.args.toString());
-        }
-
-        switch (commandStr) {
-          case 'getMetaData:error':
-            console.log('DEBUG getMetaData ERROR: fileHash: ', fileHash, ' , errHash: ', argsObj.hash);
-            if (argsObj.hash === fileHash) {
-              ev.emit('getMetaData:error', argsObj.err);
-            }
-            break;
-          case 'getMetaData:done':
-            console.log('data: ', argsObj.data);
-            var result = argsObj.data;
-            ev.emit('getMetaData:done', argsObj.hash, result);
-            break;
-          default:
-            _this8._ipfs.log('unknown command : ', commandStr);
-        }
-      };
     }
   }, {
     key: 'pinFile',
     value: function pinFile(fileHash, options) {
-      var _this9 = this;
+      var _this8 = this;
 
       if (options === undefined) options = {};
 
@@ -578,12 +575,12 @@ var Uploader = function (_EventEmitter) {
       this._node.swarm.connect(opts.transcoder, function (err, success) {
         if (err) return ev.emit('pin:error', err);
 
-        _this9._node.swarm.peers(function (err, peers) {
-          _this9._ipfs.log('peers: ', peers);
+        _this8._node.swarm.peers(function (err, peers) {
+          _this8._ipfs.log('peers: ', peers);
           if (err) return ev.emit('pin:error', err);
           peers.map(function (peer) {
-            _this9._ipfs.log('sending pin msg to ' + peer.peer.id.toB58String() + ' with request to pin ' + fileHash);
-            _this9._ipfs.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
+            _this8._ipfs.log('sending pin msg to ' + peer.peer.id.toB58String() + ' with request to pin ' + fileHash);
+            _this8._ipfs.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
               if (err) {
                 ev.emit('pin:error', err);
                 return ev;
@@ -592,7 +589,7 @@ var Uploader = function (_EventEmitter) {
           });
 
           // paratii pinning response.
-          _this9._ipfs.on('protocol:incoming', _this9._pinResponseHandler(ev));
+          _this8._ipfs.on('protocol:incoming', _this8._pinResponseHandler(ev));
         });
       });
 
@@ -601,16 +598,16 @@ var Uploader = function (_EventEmitter) {
   }, {
     key: '_pinResponseHandler',
     value: function _pinResponseHandler(ev) {
-      var _this10 = this;
+      var _this9 = this;
 
       return function (peerId, command) {
-        _this10._ipfs.log('paratii protocol: Got Command ', command.payload.toString(), 'args: ', command.args.toString());
+        _this9._ipfs.log('paratii protocol: Got Command ', command.payload.toString(), 'args: ', command.args.toString());
         var commandStr = command.payload.toString();
         var argsObj = void 0;
         try {
           argsObj = JSON.parse(command.args.toString());
         } catch (e) {
-          _this10._ipfs.log('couldn\'t parse args, ', command.args.toString());
+          _this9._ipfs.log('couldn\'t parse args, ', command.args.toString());
         }
 
         switch (commandStr) {
@@ -624,7 +621,7 @@ var Uploader = function (_EventEmitter) {
             ev.emit('pin:done', argsObj.hash);
             break;
           default:
-            _this10._ipfs.log('unknown command : ', commandStr);
+            _this9._ipfs.log('unknown command : ', commandStr);
         }
       };
     }
