@@ -244,10 +244,11 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              _context3.next = 2;
+              console.log(data);
+              _context3.next = 3;
               return _regenerator2.default.awrap(this.getIPFSInstance());
 
-            case 2:
+            case 3:
               ipfs = _context3.sent;
 
               // if (!this.ipfs || !this.ipfs.isOnline()) {
@@ -258,35 +259,35 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
                 Links: []
               };
               node = void 0;
-              _context3.prev = 5;
-              _context3.next = 8;
+              _context3.prev = 6;
+              _context3.next = 9;
               return _regenerator2.default.awrap(ipfs.files.add(obj.Data));
 
-            case 8:
+            case 9:
               node = _context3.sent;
-              _context3.next = 15;
+              _context3.next = 16;
               break;
 
-            case 11:
-              _context3.prev = 11;
-              _context3.t0 = _context3['catch'](5);
+            case 12:
+              _context3.prev = 12;
+              _context3.t0 = _context3['catch'](6);
 
               if (!_context3.t0) {
-                _context3.next = 15;
+                _context3.next = 16;
                 break;
               }
 
               throw _context3.t0;
 
-            case 15:
+            case 16:
               return _context3.abrupt('return', node[0].hash);
 
-            case 16:
+            case 17:
             case 'end':
               return _context3.stop();
           }
         }
-      }, null, this, [[5, 11]]);
+      }, null, this, [[6, 12]]);
     }
 
     /**
