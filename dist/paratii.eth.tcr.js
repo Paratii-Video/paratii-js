@@ -186,7 +186,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'apply',
     value: function apply(videoId, amountToStake) {
-      var minDeposit, contract, tx, vId;
+      var minDeposit, contract, amountInHex, tx, vId;
       return _regenerator2.default.async(function apply$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
@@ -210,26 +210,31 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 7:
               contract = _context5.sent;
-              _context5.next = 10;
-              return _regenerator2.default.awrap(contract.methods.apply(videoId, amountToStake).send());
+              amountInHex = this.eth.web3.utils.toHex(amountToStake.toString());
+              // console.log('amountInHex: ', amountInHex)
 
-            case 10:
+              _context5.next = 11;
+              return _regenerator2.default.awrap(contract.methods.apply(videoId, amountInHex).send());
+
+            case 11:
               tx = _context5.sent;
 
               console.log('tx: ', tx);
               vId = (0, _utils.getInfoFromLogs)(tx, '_Application', 'videoId', 1);
 
+              console.log('vId: ', vId);
+
               if (!vId) {
-                _context5.next = 17;
+                _context5.next = 19;
                 break;
               }
 
               return _context5.abrupt('return', true);
 
-            case 17:
+            case 19:
               return _context5.abrupt('return', false);
 
-            case 18:
+            case 20:
             case 'end':
               return _context5.stop();
           }
