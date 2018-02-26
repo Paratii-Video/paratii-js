@@ -35,7 +35,7 @@ var schema = joi.object({
   author: joi.string().empty('').default('').allow(null),
   description: joi.string().empty('').default(''),
   duration: joi.string().empty('').default('').allow(null),
-  file: joi.string().default('').allow(null),
+  filename: joi.string().default('').allow(null),
   filesize: joi.string().default('').allow(null),
   free: joi.string().empty('').default(null).allow(null),
   ipfsHashOrig: joi.string().empty('').default(''),
@@ -131,7 +131,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 author: options.author,
                 description: options.description,
                 duration: options.duration,
-                file: options.file,
+                filename: options.filename,
                 filesize: options.filesize,
                 free: options.fee,
                 published: options.published,
@@ -204,21 +204,6 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
 
             case 10:
 
-              // const schema = joi.object({
-              //   id: joi.string().default(null),
-              //   owner: joi.string().required(),
-              //   price: joi.number().default(0),
-              //   title: joi.string().empty('').default(''),
-              //   description: joi.string().empty('').default(''),
-              //   duration: joi.string().empty('').default('').allow(null),
-              //   file: joi.string().default(null),
-              //   ipfsHashOrig: joi.string().empty('').default(''),
-              //   ipfsHash: joi.string().empty().default(''),
-              //   author: joi.string().empty('').default('').allow(null),
-              //   free: joi.string().empty('').default('').allow(null),
-              //   publish: joi.string().empty('').default('').allow(null)
-              // })
-              //
               // FIXME: missing the validate invociation
 
               elements = schema._inner.children;
