@@ -197,7 +197,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
             case 2:
               minDeposit = _context5.sent;
 
-              if (!(amountToStake < minDeposit)) {
+              if (!this.eth.web3.utils.toBN(amountToStake).lt(minDeposit)) {
                 _context5.next = 5;
                 break;
               }
@@ -281,7 +281,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
             case 13:
               balance = _context6.sent;
 
-              if (!(balance < amountToStake)) {
+              if (!this.eth.web3.utils.toBN(balance.toString()).lt(amountToStake)) {
                 _context6.next = 16;
                 break;
               }
