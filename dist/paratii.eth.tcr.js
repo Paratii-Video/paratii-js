@@ -246,7 +246,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'checkEligiblityAndApply',
     value: function checkEligiblityAndApply(videoId, amountToStake) {
-      var minDeposit, token, tcrPlaceholder, balance, tx2, allowance, result;
+      var minDeposit, token, tcrPlaceholder, tx2, allowance, result;
       return _regenerator2.default.async(function checkEligiblityAndApply$(_context6) {
         while (1) {
           switch (_context6.prev = _context6.next) {
@@ -276,23 +276,9 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
             case 10:
               tcrPlaceholder = _context6.sent;
               _context6.next = 13;
-              return _regenerator2.default.awrap(token.methods.balanceOf(this.eth.config.account.address).call());
-
-            case 13:
-              balance = _context6.sent;
-
-              if (!this.eth.web3.utils.toBN(balance.toString()).lt(amountToStake)) {
-                _context6.next = 16;
-                break;
-              }
-
-              throw new Error('you don\'t have enough balance ' + balance.toString() + ', ' + minDeposit.toString() + ' is required');
-
-            case 16:
-              _context6.next = 18;
               return _regenerator2.default.awrap(token.methods.approve(tcrPlaceholder.options.address, amountToStake).send());
 
-            case 18:
+            case 13:
               tx2 = _context6.sent;
 
               if (!tx2) {
@@ -300,24 +286,24 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
                 console.error('checkEligiblityAndApply Error ', tx2);
               }
 
-              _context6.next = 22;
+              _context6.next = 17;
               return _regenerator2.default.awrap(token.methods.allowance(this.eth.config.account.address, tcrPlaceholder.options.address).call());
 
-            case 22:
+            case 17:
               allowance = _context6.sent;
 
               if (allowance.toString() !== amountToStake.toString()) {
                 console.warn('allowance ' + allowance.toString() + ' != ' + amountToStake.toString());
               }
 
-              _context6.next = 26;
+              _context6.next = 21;
               return _regenerator2.default.awrap(this.apply(videoId, amountToStake));
 
-            case 26:
+            case 21:
               result = _context6.sent;
               return _context6.abrupt('return', result);
 
-            case 28:
+            case 23:
             case 'end':
               return _context6.stop();
           }

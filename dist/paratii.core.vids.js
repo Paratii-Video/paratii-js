@@ -35,8 +35,8 @@ var schema = joi.object({
   author: joi.string().empty('').default('').allow(null),
   description: joi.string().empty('').default(''),
   duration: joi.string().empty('').default('').allow(null),
-  file: joi.string().default(''),
-  filesize: joi.string().default(''),
+  file: joi.string().default('').allow(null),
+  filesize: joi.string().default('').allow(null),
   free: joi.string().empty('').default(null).allow(null),
   ipfsHashOrig: joi.string().empty('').default(''),
   ipfsHash: joi.string().empty('').default(''),
@@ -44,7 +44,7 @@ var schema = joi.object({
   price: joi.number().default(0),
   published: joi.boolean().default(false).allow(null),
   title: joi.string().empty('').default(''),
-  // filesize: joi.string().default('').allow(null).optional(),
+  thumbnails: joi.array(),
   storageStatus: joi.object({
     name: joi.string().required(),
     data: joi.object().allow(null)
@@ -138,7 +138,8 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 storageStatus: options.storageStatus,
                 title: options.title,
                 transcodingStatus: options.transcodingStatus,
-                uploadStatus: options.uploadStatus
+                uploadStatus: options.uploadStatus,
+                thumbnails: options.thumbnails
               }));
 
             case 8:
