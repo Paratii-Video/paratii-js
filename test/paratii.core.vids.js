@@ -29,7 +29,6 @@ nock('https://db.paratii.video/api/v1')
   ipfsData: 'QmUUMpwyWBbJKeNCbwDySXJCay5TBBuur3c59m1ajQufmn',
   ipfsHash: 'some-hash',
   ipfsHashOrig: ''
-
 })
 .get('/videos/some-id3')
 .reply(200, {
@@ -63,7 +62,8 @@ describe('paratii.core.vids:', function () {
   })
 
   it.skip('core.vids.create() and get() should work as expected', async function () {
-    let vidToAdd = {
+    let vidToAdd, videoInfo, videoInfo2
+    vidToAdd = {
       id: 'some-id',
       owner: address1,
       title: 'some Title',
@@ -72,12 +72,14 @@ describe('paratii.core.vids:', function () {
       description: 'A long description',
       price: 0,
       file: videoFile
+      // free: '',
+      // publish: ''
     }
-    let videoInfo = await paratii.core.vids.create(vidToAdd)
+    videoInfo = await paratii.core.vids.create(vidToAdd)
     assert.equal(videoInfo.id, 'some-id')
 
     delete videoInfo.file
-    let videoInfo2 = await paratii.core.vids.get(videoInfo.id)
+    videoInfo2 = await paratii.core.vids.get(videoInfo.id)
     assert.deepEqual(videoInfo2, videoInfo)
   })
 

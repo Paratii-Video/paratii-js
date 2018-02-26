@@ -305,7 +305,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 32:
               vouchers = _context4.sent;
               _context4.next = 35;
-              return _regenerator2.default.awrap(this.deployContract('TcrPlaceholder', paratiiRegistryAddress, paratiiToken.options.address, 5, 100));
+              return _regenerator2.default.awrap(this.deployContract('TcrPlaceholder', paratiiRegistryAddress, paratiiToken.options.address, this.web3.utils.toWei('5'), 100));
 
             case 35:
               tcrPlaceholder = _context4.sent;

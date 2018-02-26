@@ -92,7 +92,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 ipfsHash: joi.string().empty('').default(''),
                 author: joi.string().empty('').default('').allow(null),
                 free: joi.string().empty('').default('').allow(null),
-                publish: joi.string().empty('').default(false).allow(null)
+                publish: joi.string().empty('').default('').allow(null)
               });
               result = joi.validate(options, schema);
               error = result.error;
@@ -194,6 +194,9 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 free: joi.string().empty('').default('').allow(null),
                 publish: joi.string().empty('').default('').allow(null)
               });
+
+              // FIXME: missing the validate invociation
+
               elements = schema._inner.children;
               dataToSave = {};
 
