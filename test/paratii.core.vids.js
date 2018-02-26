@@ -9,15 +9,24 @@ nock('https://db.paratii.video/api/v1')
 .get('/videos/some-id')
 .reply(200, {
   id: 'some-id',
-  owner: address1,
+  author: 'Steven Spielberg',
+  file: 'test/data/some-file.txt',
+  filesize: '',
+  free: null,
   title: 'some Title',
   description: 'A long description',
+  published: false,
   price: 0,
-  ipfsData: 'QmVjxdPHKuNbSwatSqSZuRPAZAGT7KE9aYWmQL5ArEhv4C',
+  ipfsData: 'QmVyzgSknYjcWBMX6LXYEixDa634sthqNNJpYN6eGERp7W',
   ipfsHash: '',
   ipfsHashOrig: '',
-  author: 'Steven Spielberg',
-  duration: '2h 32m'
+  duration: '2h 32m',
+  storageStatus: {},
+  transcodingStatus: {},
+  uploadStatus: {},
+  owner: address1
+  // published: false
+
 })
 .get('/videos/some-id2')
 .reply(200, {
@@ -61,9 +70,9 @@ describe('paratii.core.vids:', function () {
     await paratii.eth.deployContracts()
   })
 
-  it.skip('core.vids.create() and get() should work as expected', async function () {
-    let vidToAdd, videoInfo, videoInfo2
-    vidToAdd = {
+  it('core.vids.create() and get() should work as expected', async function () {
+    let videoFromCreate, videoFromDb
+    videoFromCreate = await paratii.core.vids.create({
       id: 'some-id',
       owner: address1,
       title: 'some Title',
@@ -72,18 +81,13 @@ describe('paratii.core.vids:', function () {
       description: 'A long description',
       price: 0,
       file: videoFile
-      // free: '',
-      // publish: ''
-    }
-    videoInfo = await paratii.core.vids.create(vidToAdd)
-    assert.equal(videoInfo.id, 'some-id')
-
-    delete videoInfo.file
-    videoInfo2 = await paratii.core.vids.get(videoInfo.id)
-    assert.deepEqual(videoInfo2, videoInfo)
+    })
+    assert.equal(videoFromCreate.id, 'some-id')
+    videoFromDb = await paratii.core.vids.get(videoFromCreate.id)
+    assert.deepEqual(videoFromCreate, videoFromDb)
   })
 
-  it('core.vids.create() should accept ipfsHash as argument', async function () {
+  it('core.vids.create() should accept many arguments', async function () {
     let data
 
     // make sure the video does not exist
@@ -94,13 +98,30 @@ describe('paratii.core.vids:', function () {
       owner: address1,
       title: videoTitle,
       ipfsHash: ipfsHash,
-      price: 1
+      price: 1,
+      transcodingStatus: {
+        name: 'done',
+        data: {
+          progress: 70
+        }
+      }
     })
 
     assert.equal(data.ipfsHash, ipfsHash)
 
     data = await paratii.core.vids.get(videoId2)
     assert.equal(data.ipfsHash, ipfsHash)
+
+    data = await paratii.core.vids.create({
+      id: 'some-id',
+      owner: address1,
+      title: 'some Title',
+      author: 'Steven Spielberg',
+      duration: '2h 32m',
+      description: 'A long description',
+      price: 0,
+      file: videoFile
+    })
   })
 
   it('core.vids.create() should create a fresh id if none is given', async function () {
@@ -210,9 +231,6 @@ describe('paratii.core.vids:', function () {
     })
     let hasViewed = await paratii.core.vids.hasViewedVideo(address99, address1)
     assert.isOk(hasViewed)
-  })
-
-  it.skip('core.vids.buy() should work as expected', async function () {
   })
 
   it.skip('core.vids.search() should work as expected', async function () {

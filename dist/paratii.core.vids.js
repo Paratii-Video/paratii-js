@@ -30,6 +30,35 @@ var joi = require('joi');
  *
  */
 
+var schema = joi.object({
+  id: joi.string().default(null),
+  author: joi.string().empty('').default('').allow(null),
+  description: joi.string().empty('').default(''),
+  duration: joi.string().empty('').default('').allow(null),
+  file: joi.string().default(''),
+  filesize: joi.string().default(''),
+  free: joi.string().empty('').default(null).allow(null),
+  ipfsHashOrig: joi.string().empty('').default(''),
+  ipfsHash: joi.string().empty('').default(''),
+  owner: joi.string().required(),
+  price: joi.number().default(0),
+  published: joi.boolean().default(false).allow(null),
+  title: joi.string().empty('').default(''),
+  // filesize: joi.string().default('').allow(null).optional(),
+  storageStatus: joi.object({
+    name: joi.string().required(),
+    data: joi.object().allow(null)
+  }).optional().default({}),
+  transcodingStatus: joi.object({
+    name: joi.string().required(),
+    data: joi.object().allow(null)
+  }).allow(null).default({}),
+  uploadStatus: joi.object({
+    name: joi.string().required(),
+    data: joi.object().allow(null)
+  }).allow(null).default({})
+});
+
 var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   function ParatiiCoreVids(config) {
     (0, _classCallCheck3.default)(this, ParatiiCoreVids);
@@ -75,57 +104,50 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   }, {
     key: 'create',
     value: function create(options) {
-      var schema, result, error, hash;
+      var result, error, hash;
       return _regenerator2.default.async(function create$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              schema = joi.object({
-                id: joi.string().default(null),
-                duration: joi.string().empty('').default('').allow(null),
-                owner: joi.string().required(),
-                price: joi.number().default(0),
-                title: joi.string().empty('').default(''),
-                description: joi.string().empty('').default(''),
-                file: joi.string().default(null),
-                ipfsHashOrig: joi.string().empty('').default(''),
-                ipfsHash: joi.string().empty('').default(''),
-                author: joi.string().empty('').default('').allow(null),
-                free: joi.string().empty('').default('').allow(null),
-                publish: joi.string().empty('').default('').allow(null)
-              });
               result = joi.validate(options, schema);
               error = result.error;
 
               if (!error) {
-                _context.next = 5;
+                _context.next = 4;
                 break;
               }
 
               throw error;
 
-            case 5:
+            case 4:
               options = result.value;
 
               if (options.id === null) {
                 options.id = this.paratii.eth.vids.makeId();
               }
 
-              _context.next = 9;
+              _context.next = 8;
               return _regenerator2.default.awrap(this.paratii.ipfs.addAndPinJSON({
-                title: options.title,
-                description: options.description,
                 author: options.author,
-                duration: options.duration
+                description: options.description,
+                duration: options.duration,
+                file: options.file,
+                filesize: options.filesize,
+                free: options.fee,
+                published: options.published,
+                storageStatus: options.storageStatus,
+                title: options.title,
+                transcodingStatus: options.transcodingStatus,
+                uploadStatus: options.uploadStatus
               }));
 
-            case 9:
+            case 8:
               hash = _context.sent;
 
 
               options.ipfsData = hash;
 
-              _context.next = 13;
+              _context.next = 12;
               return _regenerator2.default.awrap(this.paratii.eth.vids.create({
                 id: options.id,
                 owner: options.owner,
@@ -135,10 +157,10 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 ipfsData: options.ipfsData
               }));
 
-            case 13:
+            case 12:
               return _context.abrupt('return', options);
 
-            case 14:
+            case 13:
             case 'end':
               return _context.stop();
           }
@@ -148,7 +170,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   }, {
     key: 'update',
     value: function update(videoId, options, dataToUpdate) {
-      var data, schema, elements, dataToSave;
+      var data, elements, dataToSave;
       return _regenerator2.default.async(function update$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -180,21 +202,22 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
               throw new Error('No video to update');
 
             case 10:
-              schema = joi.object({
-                id: joi.string().default(null),
-                owner: joi.string().required(),
-                price: joi.number().default(0),
-                title: joi.string().empty('').default(''),
-                description: joi.string().empty('').default(''),
-                duration: joi.string().empty('').default('').allow(null),
-                file: joi.string().default(null),
-                ipfsHashOrig: joi.string().empty('').default(''),
-                ipfsHash: joi.string().empty().default(''),
-                author: joi.string().empty('').default('').allow(null),
-                free: joi.string().empty('').default('').allow(null),
-                publish: joi.string().empty('').default('').allow(null)
-              });
 
+              // const schema = joi.object({
+              //   id: joi.string().default(null),
+              //   owner: joi.string().required(),
+              //   price: joi.number().default(0),
+              //   title: joi.string().empty('').default(''),
+              //   description: joi.string().empty('').default(''),
+              //   duration: joi.string().empty('').default('').allow(null),
+              //   file: joi.string().default(null),
+              //   ipfsHashOrig: joi.string().empty('').default(''),
+              //   ipfsHash: joi.string().empty().default(''),
+              //   author: joi.string().empty('').default('').allow(null),
+              //   free: joi.string().empty('').default('').allow(null),
+              //   publish: joi.string().empty('').default('').allow(null)
+              // })
+              //
               // FIXME: missing the validate invociation
 
               elements = schema._inner.children;
@@ -209,13 +232,13 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                   dataToSave[key] = data[key];
                 }
               });
-              _context2.next = 16;
+              _context2.next = 15;
               return _regenerator2.default.awrap(this.create(dataToSave));
 
-            case 16:
+            case 15:
               return _context2.abrupt('return', dataToSave);
 
-            case 17:
+            case 16:
             case 'end':
               return _context2.stop();
           }

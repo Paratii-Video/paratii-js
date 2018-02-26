@@ -84,7 +84,7 @@ var Uploader = function (_EventEmitter) {
     value: function onDrop(ev) {}
 
     /**
-     * uploads a single file to local IPFS node
+     * uploads a single file to *local* IPFS node
      * @param {File} file HTML5 File Object.
      * @returns {EventEmitter} checkout the upload function below for details.
      */
