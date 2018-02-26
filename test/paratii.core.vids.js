@@ -61,6 +61,7 @@ describe('paratii.core.vids:', function () {
   let videoId3 = 'some-id3'
   let ipfsHash = 'some-hash'
   let videoTitle = 'some title'
+  let videoTitle2 = 'some title 2'
   let dbProvider = 'https://db.paratii.video'
   beforeEach(async function () {
     paratii = new Paratii({
@@ -149,7 +150,7 @@ describe('paratii.core.vids:', function () {
     })
     let data
     data = await paratii.core.vids.get(videoId2)
-    assert.equal(data.title, videoTitle)
+    assert.equal(data.title, videoTitle2)
 
     data = await paratii.core.vids.update(videoId3, {title: 'another-title'})
     assert.equal(data.title, 'another-title')
@@ -182,7 +183,7 @@ describe('paratii.core.vids:', function () {
 
     let data
     data = await paratii.core.vids.get(videoId2)
-    assert.equal(data.title, videoTitle)
+    assert.equal(data.title, videoTitle2)
 
     data = await paratii.core.vids.upsert({id: videoId3, title: 'another-title'})
     assert.equal(data.title, 'another-title')
