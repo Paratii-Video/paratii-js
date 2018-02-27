@@ -277,17 +277,16 @@ describe('paratii.eth.events API: :', function () {
 
     paratii.eth.vouchers.redeem(voucher.voucherCode)
   })
-  it('subscription to Application TCR should work as expected', async function  () {
+
+  it('subscription to Application TCR should work as expected', async function (done) {
     let amount = 5
     let videoId = 'some-vide-id'
 
+    paratii.eth.events.addListener('Application', function (log) {
+      console.log(log)
+      done()
+    })
 
-    // paratii.eth.events.addListener('Application', function (log) {
-    //   // assert.equal(log)
-    //   done()
-    // })
-
-    let result = await paratii.eth.tcr.apply(videoId, paratii.eth.web3.utils.toWei(amount.toString()))
-    console.log(result)
+    paratii.eth.tcr.apply(videoId, paratii.eth.web3.utils.toWei(amount.toString()))
   })
 })
