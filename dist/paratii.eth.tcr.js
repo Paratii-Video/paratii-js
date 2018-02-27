@@ -215,33 +215,43 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
               amountInHex = this.eth.web3.utils.toHex(amountToStake.toString());
 
               console.log('amountInHex: ', amountInHex);
-              _context5.next = 12;
+              tx = void 0;
+              _context5.prev = 11;
+              _context5.next = 14;
               return _regenerator2.default.awrap(contract.methods.apply(videoId, amountInHex).send());
 
-            case 12:
+            case 14:
               tx = _context5.sent;
+              _context5.next = 20;
+              break;
 
+            case 17:
+              _context5.prev = 17;
+              _context5.t0 = _context5['catch'](11);
+              throw _context5.t0;
+
+            case 20:
               console.log('tx: ', tx);
               vId = (0, _utils.getInfoFromLogs)(tx, '_Application', 'videoId', 1);
 
-              console.log('vId: ', vId);
+              console.log('videoId: ', vId);
 
               if (!vId) {
-                _context5.next = 20;
+                _context5.next = 27;
                 break;
               }
 
               return _context5.abrupt('return', true);
 
-            case 20:
+            case 27:
               return _context5.abrupt('return', false);
 
-            case 21:
+            case 28:
             case 'end':
               return _context5.stop();
           }
         }
-      }, null, this);
+      }, null, this, [[11, 17]]);
     }
   }, {
     key: 'checkEligiblityAndApply',
