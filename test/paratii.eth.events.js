@@ -228,7 +228,6 @@ describe('paratii.eth.events API: :', function () {
     }
 
     paratii.eth.events.addListener('CreateVoucher', function (log) {
-      console.log('create')
       assert.equal(log.returnValues._amount, voucher.amount)
       done()
     })
