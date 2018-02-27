@@ -122,7 +122,7 @@ describe('paratii.core.vids:', function () {
       duration: '2h 32m',
       description: 'A long description',
       price: 0,
-      file: videoFile,
+      filename: videoFile,
       thumbnails: ['a thumbnail']
     })
   })
