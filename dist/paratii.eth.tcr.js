@@ -224,26 +224,44 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
               tx = _context5.sent;
 
               console.log('tx: ', tx);
+              vId = void 0;
+              _context5.prev = 15;
+
               vId = (0, _utils.getInfoFromLogs)(tx, '_Application', 'videoId', 1);
+              _context5.next = 23;
+              break;
+
+            case 19:
+              _context5.prev = 19;
+              _context5.t0 = _context5['catch'](15);
+
+              if (!_context5.t0) {
+                _context5.next = 23;
+                break;
+              }
+
+              return _context5.abrupt('return', false);
+
+            case 23:
 
               console.log('vId: ', vId);
 
               if (!vId) {
-                _context5.next = 20;
+                _context5.next = 28;
                 break;
               }
 
               return _context5.abrupt('return', true);
 
-            case 20:
+            case 28:
               return _context5.abrupt('return', false);
 
-            case 21:
+            case 29:
             case 'end':
               return _context5.stop();
           }
         }
-      }, null, this);
+      }, null, this, [[15, 19]]);
     }
 
     /**
@@ -257,7 +275,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'checkEligiblityAndApply',
     value: function checkEligiblityAndApply(videoId, amountToStake) {
-      var minDeposit, token, tcrPlaceholder, tx2, allowance, result;
+      var minDeposit, isWhitelisted, appWasMade, token, tcrPlaceholder, tx2, allowance, result;
       return _regenerator2.default.async(function checkEligiblityAndApply$(_context6) {
         while (1) {
           switch (_context6.prev = _context6.next) {
@@ -268,7 +286,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
             case 2:
               minDeposit = _context6.sent;
 
-              if (!(amountToStake < minDeposit)) {
+              if (!this.eth.web3.utils.toBN(amountToStake).lt(minDeposit)) {
                 _context6.next = 5;
                 break;
               }
@@ -277,19 +295,49 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 5:
               _context6.next = 7;
-              return _regenerator2.default.awrap(this.eth.getContract('ParatiiToken'));
+              return _regenerator2.default.awrap(this.isWhitelisted(videoId));
 
             case 7:
-              token = _context6.sent;
-              _context6.next = 10;
-              return _regenerator2.default.awrap(this.eth.getContract('TcrPlaceholder'));
+              isWhitelisted = _context6.sent;
 
-            case 10:
-              tcrPlaceholder = _context6.sent;
+              if (!isWhitelisted) {
+                _context6.next = 11;
+                break;
+              }
+
+              console.log('video ' + videoId + ' is already whitelisted');
+              return _context6.abrupt('return', false);
+
+            case 11:
               _context6.next = 13;
-              return _regenerator2.default.awrap(token.methods.approve(tcrPlaceholder.options.address, amountToStake).send());
+              return _regenerator2.default.awrap(this.didVideoApply(videoId));
 
             case 13:
+              appWasMade = _context6.sent;
+
+              if (!appWasMade) {
+                _context6.next = 17;
+                break;
+              }
+
+              console.log('video ' + videoId + ' already applied and awaiting decision');
+              return _context6.abrupt('return', false);
+
+            case 17:
+              _context6.next = 19;
+              return _regenerator2.default.awrap(this.eth.getContract('ParatiiToken'));
+
+            case 19:
+              token = _context6.sent;
+              _context6.next = 22;
+              return _regenerator2.default.awrap(this.eth.getContract('TcrPlaceholder'));
+
+            case 22:
+              tcrPlaceholder = _context6.sent;
+              _context6.next = 25;
+              return _regenerator2.default.awrap(token.methods.approve(tcrPlaceholder.options.address, amountToStake).send());
+
+            case 25:
               tx2 = _context6.sent;
 
               if (!tx2) {
@@ -297,24 +345,24 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
                 console.error('checkEligiblityAndApply Error ', tx2);
               }
 
-              _context6.next = 17;
+              _context6.next = 29;
               return _regenerator2.default.awrap(token.methods.allowance(this.eth.config.account.address, tcrPlaceholder.options.address).call());
 
-            case 17:
+            case 29:
               allowance = _context6.sent;
 
               if (allowance.toString() !== amountToStake.toString()) {
                 console.warn('allowance ' + allowance.toString() + ' != ' + amountToStake.toString());
               }
 
-              _context6.next = 21;
+              _context6.next = 33;
               return _regenerator2.default.awrap(this.apply(videoId, amountToStake));
 
-            case 21:
+            case 33:
               result = _context6.sent;
               return _context6.abrupt('return', result);
 
-            case 23:
+            case 35:
             case 'end':
               return _context6.stop();
           }
