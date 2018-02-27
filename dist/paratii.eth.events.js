@@ -71,6 +71,14 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
       RedeemVoucher: {
         contract: 'Vouchers',
         event: 'LogRedeemVoucher'
+      },
+      Application: {
+        contract: 'TcrPlaceholder',
+        event: '_Application'
+      },
+      NewVideoWhitelisted: {
+        contract: 'TcrPlaceholder',
+        event: '_NewVideoWhitelisted'
       }
     };
   }
