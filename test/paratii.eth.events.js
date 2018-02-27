@@ -278,15 +278,29 @@ describe('paratii.eth.events API: :', function () {
     paratii.eth.vouchers.redeem(voucher.voucherCode)
   })
 
-  it('subscription to Application TCR should work as expected', async function (done) {
+  it('subscription to Application TCR should work as expected', function (done) {
     let amount = 5
+    amount = paratii.eth.web3.utils.toWei(amount.toString())
     let videoId = 'some-vide-id'
 
     paratii.eth.events.addListener('Application', function (log) {
-      console.log(log)
+      assert.equal(log.returnValues.videoId, videoId)
+      assert.equal(log.returnValues.deposit, amount)
       done()
     })
 
-    paratii.eth.tcr.apply(videoId, paratii.eth.web3.utils.toWei(amount.toString()))
+    paratii.eth.tcr.checkEligiblityAndApply(videoId, amount)
+  })
+  it.skip('TBI subscription to NewVideoWhitelisted TCR should work as expected', function (done) {
+    let amount = 5
+    amount = paratii.eth.web3.utils.toWei(amount.toString())
+    let videoId = 'some-vide-id'
+
+    paratii.eth.events.addListener('Application', function (log) {
+      assert.equal(log.returnValues.videoId, videoId)
+      assert.equal(log.returnValues.deposit, amount)
+      done()
+    })
+    paratii.eth.tcr.checkEligiblityAndApply(videoId, amount)
   })
 })
