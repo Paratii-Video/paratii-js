@@ -63,4 +63,11 @@ describe('paratii.eth.tcr:', function () {
     let appWasMade = await paratii.eth.tcr.didVideoApply(videoId)
     assert.isTrue(appWasMade)
   })
+
+  it('should NOT be able to apply twice', async function () {
+    let amount = 5
+
+    let result = await paratii.eth.tcr.checkEligiblityAndApply(videoId, paratii.eth.web3.utils.toWei(amount.toString()))
+    assert.isFalse(result)
+  })
 })
