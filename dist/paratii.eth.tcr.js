@@ -177,6 +177,8 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
     /**
      * start the application process.
+     * NOTE that this require the client approves PTI amount first before actually
+     * running this function, use `checkEligiblityAndApply` instead.
      * @param  {string}  videoId       videoId
      * @param  {Float}  amountToStake number of tokens to stake. must >= minDeposit
      * @return {boolean}               returns true if all is good, plus _Application
@@ -253,6 +255,15 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         }
       }, null, this, [[11, 17]]);
     }
+
+    /**
+     * check whether the user has enough funds to stake.
+     * it also approves the TCR contract to amountToStake.
+     * @param  {[type]}  videoId       [description]
+     * @param  {[type]}  amountToStake [description]
+     * @return {Promise}               [description]
+     */
+
   }, {
     key: 'checkEligiblityAndApply',
     value: function checkEligiblityAndApply(videoId, amountToStake) {
