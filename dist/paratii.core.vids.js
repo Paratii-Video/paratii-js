@@ -35,14 +35,15 @@ var schema = joi.object({
   author: joi.string().empty('').default('').allow(null),
   description: joi.string().empty('').default(''),
   duration: joi.string().empty('').default('').allow(null),
-  filename: joi.string().default('').allow(null),
-  filesize: joi.number().default('').allow(null),
+  filename: joi.string().empty('').default('').allow(null).allow(''),
+  filesize: joi.any(),
+  // .default(null).allow(null).empty(''),
   free: joi.string().empty('').default(null).allow(null),
   ipfsHashOrig: joi.string().empty('').default(''),
   ipfsHash: joi.string().empty('').default(''),
   owner: joi.string().required(),
-  price: joi.number().default(0),
-  published: joi.boolean().default(false).allow(null),
+  price: joi.any().default(0),
+  published: joi.any().default(false).allow(null),
   title: joi.string().empty('').default(''),
   thumbnails: joi.array(),
   storageStatus: joi.object({
@@ -109,6 +110,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
+              // FIXME: validate!!
               result = joi.validate(options, schema);
               error = result.error;
 

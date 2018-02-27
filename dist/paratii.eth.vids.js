@@ -141,7 +141,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
               schema = joi.object({
                 id: joi.string(),
                 owner: joi.string().required(),
-                price: joi.number().default(0),
+                price: joi.any().default(0),
                 ipfsHashOrig: joi.string().empty('').default(''),
                 ipfsHash: joi.string().empty('').default(''),
                 ipfsData: joi.string().default('')
