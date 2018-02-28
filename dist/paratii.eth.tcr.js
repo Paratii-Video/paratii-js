@@ -311,68 +311,69 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
               isWhitelisted = _context6.sent;
 
               if (!isWhitelisted) {
-                _context6.next = 11;
+                _context6.next = 10;
                 break;
               }
 
-              console.log('video ' + videoId + ' is already whitelisted');
-              return _context6.abrupt('return', false);
+              throw new Error('video ' + videoId + ' is already whitelisted');
 
-            case 11:
-              _context6.next = 13;
+            case 10:
+              _context6.next = 12;
               return _regenerator2.default.awrap(this.didVideoApply(videoId));
 
-            case 13:
+            case 12:
               appWasMade = _context6.sent;
 
               if (!appWasMade) {
-                _context6.next = 17;
+                _context6.next = 15;
                 break;
               }
 
-              console.log('video ' + videoId + ' already applied and awaiting decision');
-              return _context6.abrupt('return', false);
+              throw new Error('video ' + videoId + ' already applied and awaiting decision');
 
-            case 17:
-              _context6.next = 19;
+            case 15:
+              _context6.next = 17;
               return _regenerator2.default.awrap(this.eth.getContract('ParatiiToken'));
 
-            case 19:
+            case 17:
               token = _context6.sent;
-              _context6.next = 22;
+              _context6.next = 20;
               return _regenerator2.default.awrap(this.eth.getContract('TcrPlaceholder'));
 
-            case 22:
+            case 20:
               tcrPlaceholder = _context6.sent;
-              _context6.next = 25;
+              _context6.next = 23;
               return _regenerator2.default.awrap(token.methods.approve(tcrPlaceholder.options.address, amountToStake).send());
 
-            case 25:
+            case 23:
               tx2 = _context6.sent;
 
-              if (!tx2) {
-                // TODO better handle this.
-                console.error('checkEligiblityAndApply Error ', tx2);
+              if (tx2) {
+                _context6.next = 26;
+                break;
               }
 
-              _context6.next = 29;
+              throw new Error('checkEligiblityAndApply Error ', tx2);
+
+            case 26:
+              _context6.next = 28;
               return _regenerator2.default.awrap(token.methods.allowance(this.eth.config.account.address, tcrPlaceholder.options.address).call());
 
-            case 29:
+            case 28:
               allowance = _context6.sent;
 
               if (allowance.toString() !== amountToStake.toString()) {
                 console.warn('allowance ' + allowance.toString() + ' != ' + amountToStake.toString());
               }
 
-              _context6.next = 33;
+              _context6.next = 32;
               return _regenerator2.default.awrap(this.apply(videoId, amountToStake));
 
-            case 33:
+            case 32:
               result = _context6.sent;
               return _context6.abrupt('return', result);
 
-            case 35:
+            case 34:
             case 'end':
               return _context6.stop();
           }
