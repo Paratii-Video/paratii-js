@@ -386,20 +386,30 @@ var Uploader = function (_EventEmitter) {
             }
             break;
           case 'transcoding:started':
-            ev.emit('transcoding:started', argsObj.hash, argsObj.author);
+            if (argsObj.hash === fileHash) {
+              ev.emit('transcoding:started', argsObj.hash, argsObj.author);
+            }
             break;
           case 'transcoding:progress':
-            ev.emit('transcoding:progress', argsObj.hash, argsObj.size, argsObj.percent);
+            if (argsObj.hash === fileHash) {
+              ev.emit('transcoding:progress', argsObj.hash, argsObj.size, argsObj.percent);
+            }
             break;
           case 'uploader:progress':
-            ev.emit('uploader:progress', argsObj.hash, argsObj.chunkSize, argsObj.percent);
+            if (argsObj.hash === fileHash) {
+              ev.emit('uploader:progress', argsObj.hash, argsObj.chunkSize, argsObj.percent);
+            }
             break;
           case 'transcoding:downsample:ready':
-            ev.emit('transcoding:downsample:ready', argsObj.hash, argsObj.size);
+            if (argsObj.hash === fileHash) {
+              ev.emit('transcoding:downsample:ready', argsObj.hash, argsObj.size);
+            }
             break;
           case 'transcoding:done':
-            var result = JSON.parse(argsObj.result.toString());
-            ev.emit('transcoding:done', argsObj.hash, result);
+            if (argsObj.hash === fileHash) {
+              var result = JSON.parse(argsObj.result.toString());
+              ev.emit('transcoding:done', argsObj.hash, result);
+            }
             break;
           default:
             _this5._ipfs.log('unknown command : ', commandStr);
