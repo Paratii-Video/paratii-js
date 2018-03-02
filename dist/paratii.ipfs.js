@@ -301,7 +301,9 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   }, {
     key: 'addAndPinJSON',
     value: function addAndPinJSON(data) {
-      var hash, pinEv;
+      var _this3 = this;
+
+      var hash, pinFile, pinEv;
       return _regenerator2.default.async(function addAndPinJSON$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
@@ -311,17 +313,27 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
 
             case 2:
               hash = _context4.sent;
-              pinEv = this.uploader.pinFile(hash, {
-                author: '0x' // TODO , allow paratii.ipfs to access general eth info
-              });
+
+              pinFile = function pinFile() {
+                var pinEv = _this3.uploader.pinFile(hash, { author: _this3.config.account.address });
+                pinEv.on('pin:error', function (err) {
+                  console.warn('pin:error:', hash, ' : ', err);
+                  pinEv.removeAllListeners();
+                });
+                pinEv.on('pin:done', function (hash) {
+                  console.log('pin:done:', hash);
+                  pinEv.removeAllListeners();
+                });
+                return pinEv;
+              };
+
+              pinEv = pinFile();
 
 
               pinEv.on('pin:error', function (err) {
                 console.warn('pin:error:', hash, ' : ', err);
-              });
-
-              pinEv.on('pin:done', function (hash) {
-                // console.log('pin:done:', hash)
+                console.log('trying again');
+                pinEv = pinFile();
               });
 
               return _context4.abrupt('return', hash);
