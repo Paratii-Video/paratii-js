@@ -37,6 +37,7 @@
     "paratii-protocol": "github:Paratii-Video/paratii-protocol#4e6f4da9c0f0eb0e79cf1c1b2eafb788cc134888",
     "promisify-node": "^0.4.0",
     "pull-filereader": "^1.0.1",
+    "resumablejs": "^1.1.0",
     "stream-to-pull-stream": "^1.7.2",
     "web3": "^1.0.0-beta.29"
   },

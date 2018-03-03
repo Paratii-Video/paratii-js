@@ -38,6 +38,7 @@ var joi = require('joi');
 var pull = require('pull-stream');
 var pullFilereader = require('pull-filereader');
 var toPull = require('stream-to-pull-stream');
+// const toStream = require('pull-stream-to-stream')
 var fs = require('fs');
 var path = require('path');
 
@@ -47,6 +48,9 @@ var _require2 = require('async'),
 
 var once = require('once');
 var Multiaddr = require('multiaddr');
+// const request = require('request')
+// const fileReaderStream = require('filereader-stream')
+var Resumable = require('resumablejs');
 
 // const ytdl = require('ytdl-core')
 // const vidl = require('vimeo-downloader')
@@ -75,13 +79,105 @@ var Uploader = function (_EventEmitter) {
       //   throw new Error('IPFS Instance is required By Uploader.')
       // }
       this._node = opts.node; // this is the actual IPFS node.
-      this._chunkSize = opts.chunkSize || 100 * 1024;
+      this._chunkSize = opts.chunkSize || 128 * 1024;
       this._defaultTranscoder = opts.defaultTranscoder || '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'; // Address of transcoder '/ip4/127.0.0.1/tcp/4003/ws/ipfs/Qmbd5jx8YF1QLhvwfLbCTWXGyZLyEJHrPbtbpRESvYs4FS'
+      this._transcoderDropUrl = 'http://localhost:6565/api/v1/transcode';
       // '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW' // Address of transcoder
     }
   }, {
     key: 'onDrop',
     value: function onDrop(ev) {}
+  }, {
+    key: 'xhrUpload',
+    value: function xhrUpload(file, hashedFile, ev) {
+      var r = new Resumable({
+        target: this._transcoderDropUrl + '/' + hashedFile.hash,
+        chunkSize: 1 * 1024 * 1024,
+        simultaneousUploads: 4,
+        testChunks: false,
+        throttleProgressCallbacks: 1
+      });
+
+      r.on('fileAdded', function (file, ev) {
+        console.log('file ', file, 'added');
+      });
+
+      r.on('fileProgress', function (file) {
+        ev.emit('progress', r.progress() * 100);
+      });
+
+      r.on('complete', function () {
+        ev.emit('fileReady', hashedFile);
+        // ev.emit('done', [hashedFile])
+      });
+
+      r.on('error', function (err, file) {
+        console.error('file ', file, 'err ', err);
+      });
+
+      r.addFile(file._html5File);
+      setTimeout(function () {
+        r.upload();
+      }, 1);
+
+      // -------------------------------------------------------------------------
+      // let fileStream = fileReaderStream(file._html5File)
+      // fileStream.pipe(
+      //   request.post({
+      //     url: 'http://localhost:6565/api/v1/transcode/testHash'// + hashedFile.hash,
+      //     // headers: {
+      //     //   'Content-Type': 'multipart/form-data'
+      //     // },
+      //     // multipart: [{
+      //     //   'Content-Disposition': 'form-data; name="originVideo"',
+      //     //   'Content-Type': 'application/octet-stream'
+      //     // }]
+      //   },
+      //   (err, resp, body) => {
+      //     if (err) {
+      //       return console.error('request failed ', err)
+      //     }
+      //
+      //     console.log('upload complete! ', body)
+      //   })
+      // )
+      //
+      // let uploadProgress = 0
+      // fileStream.on('data', (chunk) => {
+      //   uploadProgress += chunk.length
+      //   console.log('uploaded ', uploadProgress / file.size)
+      // })
+      //
+      // fileStream.on('end', () => {
+      //   console.log('finished')
+      // })
+
+      // -------------------------------------------------------------------------
+      // let reader = new FileReader()
+      // reader.readAsArrayBuffer(file._html5File)
+      // console.log('xhrUpload: ', hashedFile.hash)
+      // reader.addEventListener('load', () => {
+      //   console.log('FileReader is done! ', reader.result.byteLength, hashedFile.hash)
+      //   request.post({
+      //     url: 'http://localhost:6565/api/v1/transcode/' + hashedFile.hash,
+      //     headers: {
+      //       'Content-Type': 'multipart/form-data'
+      //     },
+      //     multipart: [{
+      //       'Content-Disposition': 'form-data; name="originVideo"',
+      //       'Content-Type': 'application/octet-stream',
+      //       body: Buffer.from(reader.result)
+      //       // body: toStream(pull(pullFilereader(file._html5File)))
+      //     }]
+      //   }, (err, resp, body) => {
+      //     if (err) {
+      //       return console.error('request failed ', err)
+      //     }
+      //
+      //     console.log('upload complete! ', body)
+      //   })
+      // })
+    }
 
     /**
      * uploads a single file to *local* IPFS node
@@ -114,8 +210,8 @@ var Uploader = function (_EventEmitter) {
           result.push(this.fsFileToPull(files[i]));
         }
       }
-
       return this.upload(result);
+      // return this.xhrUpload(result[0])
     }
 
     /**
@@ -130,6 +226,8 @@ var Uploader = function (_EventEmitter) {
       return {
         name: file.name,
         size: file.size,
+        path: file.path,
+        _html5File: file,
         _pullStream: pullFilereader(file)
       };
     }
@@ -187,24 +285,31 @@ var Uploader = function (_EventEmitter) {
             path: file.name,
             // content: pullFilereader(file)
             content: pull(file._pullStream, pull.through(function (chunk) {
-              return ev.emit('progress', chunk.length, Math.floor((meta.total += chunk.length) * 1.0 / meta.fileSize * 100));
+              return ev.emit('progress2', chunk.length, Math.floor((meta.total += chunk.length) * 1.0 / meta.fileSize * 100));
             }))
           }]), _this2._node.files.addPullStream({ chunkerOptions: { maxChunkSize: _this2._chunkSize } }), // default size 262144
           pull.collect(function (err, res) {
             if (err) {
               return ev.emit('error', err);
             }
-            var file = res[0];
-            _this2._ipfs.log('Adding %s finished as %s, size: %s', file.path, file.hash, file.size);
-            ev.emit('fileReady', file);
-            cb(null, file);
+
+            var hashedFile = res[0];
+            _this2._ipfs.log('Adding %s finished as %s, size: %s', hashedFile.path, hashedFile.hash, hashedFile.size);
+
+            if (file._html5File) {
+              _this2.xhrUpload(file, hashedFile, ev);
+            } else {
+              ev.emit('fileReady', hashedFile);
+            }
+
+            cb(null, hashedFile);
           }));
-        }), pull.collect(function (err, files) {
+        }), pull.collect(function (err, hashedFiles) {
           if (err) {
             ev.emit('error', err);
           }
           _this2._ipfs.log('uploader is DONE');
-          ev.emit('done', files);
+          ev.emit('done', hashedFiles);
         }));
       });
 
