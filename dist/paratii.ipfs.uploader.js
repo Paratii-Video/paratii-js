@@ -38,7 +38,6 @@ var joi = require('joi');
 var pull = require('pull-stream');
 var pullFilereader = require('pull-filereader');
 var toPull = require('stream-to-pull-stream');
-// const toStream = require('pull-stream-to-stream')
 var fs = require('fs');
 var path = require('path');
 
@@ -48,13 +47,7 @@ var _require2 = require('async'),
 
 var once = require('once');
 var Multiaddr = require('multiaddr');
-// const request = require('request')
-// const fileReaderStream = require('filereader-stream')
 var Resumable = require('resumablejs');
-
-// const ytdl = require('ytdl-core')
-// const vidl = require('vimeo-downloader')
-// const readline = require('readline')
 
 var Uploader = function (_EventEmitter) {
   (0, _inherits3.default)(Uploader, _EventEmitter);
@@ -66,7 +59,6 @@ var Uploader = function (_EventEmitter) {
 
     _this.setOptions(opts);
     _this._ipfs = paratiiIPFS; // this is the paratii.ipfs.js
-    // this._ipfs.log('========================browser-uploader=====================')
     return _this;
   }
 
@@ -75,18 +67,21 @@ var Uploader = function (_EventEmitter) {
     value: function setOptions() {
       var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-      // if (!opts || !opts.node) {
-      //   throw new Error('IPFS Instance is required By Uploader.')
-      // }
       this._node = opts.node; // this is the actual IPFS node.
       this._chunkSize = opts.chunkSize || 128 * 1024;
+      // FIXME: add these settings to the contructor (and to the paratii.confg object) so they become configurable
       this._defaultTranscoder = opts.defaultTranscoder || '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'; // Address of transcoder '/ip4/127.0.0.1/tcp/4003/ws/ipfs/Qmbd5jx8YF1QLhvwfLbCTWXGyZLyEJHrPbtbpRESvYs4FS'
       this._transcoderDropUrl = 'https://uploader.paratii.video/api/v1/transcode';
-      // '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW' // Address of transcoder
     }
   }, {
     key: 'onDrop',
     value: function onDrop(ev) {}
+
+    /*
+     * Upload a file over XHR to the transcoder
+     * To be called with an event emitter as the last argument
+     */
+
   }, {
     key: 'xhrUpload',
     value: function xhrUpload(file, hashedFile, ev) {
@@ -98,12 +93,6 @@ var Uploader = function (_EventEmitter) {
         throttleProgressCallbacks: 1
       });
 
-      // let lastKnownPercent = 0
-      // let checkProgress = setInterval(() => {
-      //   lastKnownPercent = r.progress() * 100
-      //   console.log('lastKnownPercent = ', lastKnownPercent)
-      // }, 2000)
-
       r.on('fileAdded', function (file, ev) {
         console.log('file ', file, 'added');
       });
@@ -114,8 +103,6 @@ var Uploader = function (_EventEmitter) {
 
       r.on('complete', function () {
         ev.emit('fileReady', hashedFile);
-        // clearInterval(checkProgress)
-        // ev.emit('done', [hashedFile])
       });
 
       r.on('error', function (err, file) {
@@ -123,67 +110,10 @@ var Uploader = function (_EventEmitter) {
       });
 
       r.addFile(file._html5File);
+
       setTimeout(function () {
         r.upload();
       }, 1);
-
-      // -------------------------------------------------------------------------
-      // let fileStream = fileReaderStream(file._html5File)
-      // fileStream.pipe(
-      //   request.post({
-      //     url: 'http://localhost:6565/api/v1/transcode/testHash'// + hashedFile.hash,
-      //     // headers: {
-      //     //   'Content-Type': 'multipart/form-data'
-      //     // },
-      //     // multipart: [{
-      //     //   'Content-Disposition': 'form-data; name="originVideo"',
-      //     //   'Content-Type': 'application/octet-stream'
-      //     // }]
-      //   },
-      //   (err, resp, body) => {
-      //     if (err) {
-      //       return console.error('request failed ', err)
-      //     }
-      //
-      //     console.log('upload complete! ', body)
-      //   })
-      // )
-      //
-      // let uploadProgress = 0
-      // fileStream.on('data', (chunk) => {
-      //   uploadProgress += chunk.length
-      //   console.log('uploaded ', uploadProgress / file.size)
-      // })
-      //
-      // fileStream.on('end', () => {
-      //   console.log('finished')
-      // })
-
-      // -------------------------------------------------------------------------
-      // let reader = new FileReader()
-      // reader.readAsArrayBuffer(file._html5File)
-      // console.log('xhrUpload: ', hashedFile.hash)
-      // reader.addEventListener('load', () => {
-      //   console.log('FileReader is done! ', reader.result.byteLength, hashedFile.hash)
-      //   request.post({
-      //     url: 'http://localhost:6565/api/v1/transcode/' + hashedFile.hash,
-      //     headers: {
-      //       'Content-Type': 'multipart/form-data'
-      //     },
-      //     multipart: [{
-      //       'Content-Disposition': 'form-data; name="originVideo"',
-      //       'Content-Type': 'application/octet-stream',
-      //       body: Buffer.from(reader.result)
-      //       // body: toStream(pull(pullFilereader(file._html5File)))
-      //     }]
-      //   }, (err, resp, body) => {
-      //     if (err) {
-      //       return console.error('request failed ', err)
-      //     }
-      //
-      //     console.log('upload complete! ', body)
-      //   })
-      // })
     }
 
     /**
@@ -218,7 +148,6 @@ var Uploader = function (_EventEmitter) {
         }
       }
       return this.upload(result);
-      // return this.xhrUpload(result[0])
     }
 
     /**
@@ -242,7 +171,7 @@ var Uploader = function (_EventEmitter) {
     /**
      * returns a generic file Object from a file path
      * @param  {String} filePath Path to file.
-     * @return {Object}          generic file object.
+     * @return {Object} generic file object.
      */
 
   }, {
@@ -463,7 +392,6 @@ var Uploader = function (_EventEmitter) {
 
           // paratii transcoder signal.
           _this4._ipfs.on('protocol:incoming', _this4._transcoderRespHander(ev, fileHash));
-          // ev.emit('transcoder:progress', 0) // TODO : add an event for starting.
         });
       });
       return ev;
@@ -481,7 +409,7 @@ var Uploader = function (_EventEmitter) {
       var _this5 = this;
 
       return function (peerId, command) {
-        _this5._ipfs.log('paratii protocol: Got Command ', command.payload.toString(), 'args: ', command.args.toString());
+        _this5._ipfs.log('paratii protocol: Received command ', command.payload.toString(), 'args: ', command.args.toString());
         var commandStr = command.payload.toString();
         var argsObj = void 0;
         try {
@@ -524,7 +452,9 @@ var Uploader = function (_EventEmitter) {
             }
             break;
           default:
-            _this5._ipfs.log('unknown command : ', commandStr);
+            if (argsObj.hash === fileHash) {
+              _this5._ipfs.log('unknown command : ', commandStr);
+            }
         }
       };
     }
@@ -544,7 +474,6 @@ var Uploader = function (_EventEmitter) {
       ev.on('done', function (files) {
         _this6._signalTranscoder(files, ev);
       });
-      // return the EventEmitter
       return ev;
     }
   }, {
@@ -553,12 +482,10 @@ var Uploader = function (_EventEmitter) {
       var file = void 0;
       if (Array.isArray(files)) {
         if (files.length < 1) {
-          // this._ipfs.log('_signalTranscoder Got an empty Array. files: ', files)
-          // return
-          //
-          // FIXME THIS NEEDS TO BE REMOVED --------------------------------------
+          // FIXME THIS NEEDS TO BE REMOVED
           file = { hash: '' // testing something ...
-            // ---------------------------------------------------------------------
+            // this._ipfs.log('_signalTranscoder Got an empty Array. files: ', files)
+            // return
           };
         } else {
           file = files[0];
@@ -573,10 +500,6 @@ var Uploader = function (_EventEmitter) {
 
       this.transcode(file.hash, {
         author: '0x', // author address,
-        // onDone: (err, folderHash) => {
-        //   if (err) throw err
-        //   this._ipfs.log('transcoder done ', folderHash)
-        // },
         ev: ev
       });
     }
@@ -631,7 +554,7 @@ var Uploader = function (_EventEmitter) {
 
               // paratii getMetaData signal.
               _this7._ipfs.on('protocol:incoming', function (peerId, command) {
-                _this7._ipfs.log('paratii protocol: Got Command ', command.payload.toString(), 'args: ', command.args.toString());
+                _this7._ipfs.log('paratii protocol: Received command ', command.payload.toString(), 'args: ', command.args.toString());
                 var commandStr = command.payload.toString();
                 var argsObj = void 0;
                 try {
@@ -658,7 +581,6 @@ var Uploader = function (_EventEmitter) {
                     _this7._ipfs.log('unknown command : ', commandStr);
                 }
               });
-              // ev.emit('transcoder:progress', 0) // TODO : add an event for starting.
             });
           });
         });
@@ -678,7 +600,7 @@ var Uploader = function (_EventEmitter) {
         size: joi.number().default(0)
       }).unknown();
 
-      this._ipfs.log('Signaling transcoder...');
+      this._ipfs.log('Signaling transcoder to pin ' + fileHash);
 
       var result = joi.validate(options, schema);
       var error = result.error;
@@ -726,7 +648,7 @@ var Uploader = function (_EventEmitter) {
       var _this9 = this;
 
       return function (peerId, command) {
-        _this9._ipfs.log('paratii protocol: Got Command ', command.payload.toString(), 'args: ', command.args.toString());
+        _this9._ipfs.log('paratii protocol: Received command ', command.payload.toString(), 'args: ', command.args.toString());
         var commandStr = command.payload.toString();
         var argsObj = void 0;
         try {
@@ -873,7 +795,7 @@ var Uploader = function (_EventEmitter) {
     //   })
     //     // paratii transcoder signal.
     //   this._ipfs.protocol.notifications.on('command', (peerId, command) => {
-    //     this._ipfs.log('paratii protocol: Got Command ', command)
+    //     this._ipfs.log('paratii protocol: Received command ', command)
     //     if (command.payload.toString() === 'transcoding:done') {
     //       let args = JSON.parse(command.args.toString())
     //       let result = JSON.parse(args.result)
