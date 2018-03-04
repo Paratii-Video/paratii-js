@@ -81,7 +81,7 @@ var Uploader = function (_EventEmitter) {
       this._node = opts.node; // this is the actual IPFS node.
       this._chunkSize = opts.chunkSize || 128 * 1024;
       this._defaultTranscoder = opts.defaultTranscoder || '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'; // Address of transcoder '/ip4/127.0.0.1/tcp/4003/ws/ipfs/Qmbd5jx8YF1QLhvwfLbCTWXGyZLyEJHrPbtbpRESvYs4FS'
-      this._transcoderDropUrl = 'http://localhost:6565/api/v1/transcode';
+      this._transcoderDropUrl = 'https://uploader.paratii.video/api/v1/transcode';
       // '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW' // Address of transcoder
     }
   }, {
@@ -98,6 +98,12 @@ var Uploader = function (_EventEmitter) {
         throttleProgressCallbacks: 1
       });
 
+      // let lastKnownPercent = 0
+      // let checkProgress = setInterval(() => {
+      //   lastKnownPercent = r.progress() * 100
+      //   console.log('lastKnownPercent = ', lastKnownPercent)
+      // }, 2000)
+
       r.on('fileAdded', function (file, ev) {
         console.log('file ', file, 'added');
       });
@@ -108,6 +114,7 @@ var Uploader = function (_EventEmitter) {
 
       r.on('complete', function () {
         ev.emit('fileReady', hashedFile);
+        // clearInterval(checkProgress)
         // ev.emit('done', [hashedFile])
       });
 
