@@ -75,7 +75,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
       'ipfs.repo': joi.string().default('/tmp/paratii-alpha-' + String(Math.random())),
       'ipfs.bitswap.maxMessageSize': joi.number().default(128 * 1024),
       address: joi.string().default(null),
-      verbose: joi.bool().default(false)
+      verbose: joi.bool().default(true)
     }).unknown();
 
     var result = joi.validate(config, schema);
@@ -170,7 +170,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
           // there will be no joi in IPFS (pun indended)
           var ipfs = new Ipfs({
             bitswap: {
-              maxMessageSize: 128 * 1024
+              maxMessageSize: 256 * 1024
             },
             start: true,
             repo: config['ipfs.repo'] || '/tmp/test-repo-' + String(Math.random()),
