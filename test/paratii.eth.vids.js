@@ -64,4 +64,46 @@ describe('paratii.eth.vids:', function () {
     let vids = paratii.eth.vids
     await assert.isRejected(vids.create({}), Error, 'No id was given')
   })
+  let videoData1 = {
+    id: '1',
+    owner: address1
+  }
+  let videoData2 = {
+    id: '2',
+    owner: address1
+  }
+  let videoData3 = {
+    id: '3',
+    owner: address1
+  }
+
+  it('vids.create should not raise "Transaction hash was already imported"', async function () {
+    //  sending the same transaction twice gives a "Transaction hash was already imported"
+    // that should be caught
+    await Promise.all([
+      paratii.eth.vids.create(videoData1),
+      paratii.eth.vids.create(videoData1)
+    ])
+  })
+
+  it('vids.create should not raise "transaction nonce is too low" if we send two transactions', async function () {
+    // we expect an error if we call the fynction with retry set to 0
+    try {
+      await Promise.all([
+        paratii.eth.vids.create(videoData1, 0),
+        paratii.eth.vids.create(videoData2, 0),
+        paratii.eth.vids.create(videoData3, 0)
+      ])
+    } catch (err) {
+      //   // console.log(err.message)
+      // assert.isOk(/Transaction nonce is too low/.exec(err.message))
+    }
+
+    // but default behavior is that no error is thrown
+    await Promise.all([
+      paratii.eth.vids.create(videoData1),
+      paratii.eth.vids.create(videoData2)
+      // paratii.eth.vids.create(videoData3)
+    ])
+  })
 })

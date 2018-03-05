@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.add0x = add0x;
 exports.getInfoFromLogs = getInfoFromLogs;
 exports.makeId = makeId;
+exports.resendTransactionOnError = resendTransactionOnError;
 var assert = require('assert');
 var NULL_ADDRESS = exports.NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -59,3 +60,5 @@ function makeId() {
 
   return text;
 }
+
+function resendTransactionOnError(err) {}

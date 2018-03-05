@@ -132,8 +132,9 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
     }
   }, {
     key: 'create',
-    value: function create(options, type) {
-      var schema, result, error, msg, contract, tx, videoId;
+    value: function create(options) {
+      var retry = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+      var schema, result, validatedOptions, msg, contract, tx, videoId;
       return _regenerator2.default.async(function create$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
@@ -147,50 +148,81 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
                 ipfsData: joi.string().default('')
               });
               result = joi.validate(options, schema);
-              error = result.error;
 
-              if (!error) {
-                _context4.next = 5;
+              if (!result.error) {
+                _context4.next = 4;
                 break;
               }
 
-              throw error;
+              throw result.error;
 
-            case 5:
-              options = result.value;
+            case 4:
+              validatedOptions = result.value;
 
-              if (!options.id) {
-                options.id = this.makeId();
+
+              if (!validatedOptions.id) {
+                validatedOptions.id = this.makeId();
               }
 
-              if (this.eth.web3.utils.isAddress(options.owner)) {
-                _context4.next = 10;
+              if (this.eth.web3.utils.isAddress(validatedOptions.owner)) {
+                _context4.next = 9;
                 break;
               }
 
-              msg = 'The owner argument should be a valid address, not ' + options.owner;
+              msg = 'The owner argument should be a valid address, not ' + validatedOptions.owner;
               throw Error(msg);
 
-            case 10:
-              _context4.next = 12;
+            case 9:
+              _context4.next = 11;
               return _regenerator2.default.awrap(this.getVideoRegistry());
 
-            case 12:
+            case 11:
               contract = _context4.sent;
+              _context4.prev = 12;
               _context4.next = 15;
-              return _regenerator2.default.awrap(contract.methods.create(options.id, options.owner, options.price, options.ipfsHashOrig, options.ipfsHash, options.ipfsData).send());
+              return _regenerator2.default.awrap(contract.methods.create(validatedOptions.id, validatedOptions.owner, validatedOptions.price, validatedOptions.ipfsHashOrig, validatedOptions.ipfsHash, validatedOptions.ipfsData).send());
 
             case 15:
               tx = _context4.sent;
               videoId = (0, _utils.getInfoFromLogs)(tx, 'LogCreateVideo', 'videoId');
               return _context4.abrupt('return', videoId);
 
-            case 18:
+            case 20:
+              _context4.prev = 20;
+              _context4.t0 = _context4['catch'](12);
+
+              if (!(/Transaction nonce is too low./.exec(_context4.t0.message) && retry > 0)) {
+                _context4.next = 24;
+                break;
+              }
+
+              return _context4.abrupt('return', this.create(options, retry - 1));
+
+            case 24:
+              if (!(/There is another transaction with same nonce in the queue./.exec(_context4.t0.message) && retry > 0)) {
+                _context4.next = 26;
+                break;
+              }
+
+              return _context4.abrupt('return', this.create(options, retry - 1));
+
+            case 26:
+              if (!/Transaction with the same hash was already imported./.exec(_context4.t0.message)) {
+                _context4.next = 28;
+                break;
+              }
+
+              return _context4.abrupt('return', validatedOptions.id);
+
+            case 28:
+              throw _context4.t0;
+
+            case 29:
             case 'end':
               return _context4.stop();
           }
         }
-      }, null, this);
+      }, null, this, [[12, 20]]);
     }
   }, {
     key: 'get',
