@@ -69,6 +69,7 @@ var Uploader = function (_EventEmitter) {
 
       this._node = opts.node; // this is the actual IPFS node.
       this._chunkSize = opts.chunkSize || 128 * 1024;
+      this._maxFileSize = 300 * 1024 * 1024;
       // FIXME: add these settings to the contructor (and to the paratii.confg object) so they become configurable
       this._defaultTranscoder = opts.defaultTranscoder || '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'; // Address of transcoder '/ip4/127.0.0.1/tcp/4003/ws/ipfs/Qmbd5jx8YF1QLhvwfLbCTWXGyZLyEJHrPbtbpRESvYs4FS'
       this._transcoderDropUrl = 'https://uploader.paratii.video/api/v1/transcode';
@@ -90,7 +91,8 @@ var Uploader = function (_EventEmitter) {
         chunkSize: 1 * 1024 * 1024,
         simultaneousUploads: 4,
         testChunks: false,
-        throttleProgressCallbacks: 1
+        throttleProgressCallbacks: 1,
+        maxFileSize: this._maxFileSize
       });
 
       r.on('fileAdded', function (file, ev) {
@@ -211,6 +213,10 @@ var Uploader = function (_EventEmitter) {
       this._ipfs.start(function () {
         // trigger onStart callback
         ev.emit('start');
+        if (files && files[0] && files[0].size > _this2._maxFileSize) {
+          ev.emit('error', 'file size is larger than the allowed ' + _this2._maxFileSize / 1024 / 1024 + 'MB');
+          return;
+        }
 
         pull(pull.values(files), pull.through(function (file) {
           _this2._ipfs.log('Adding ', file);
