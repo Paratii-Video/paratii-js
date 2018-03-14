@@ -170,7 +170,8 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
           // there will be no joi in IPFS (pun indended)
           _promise2.default.resolve().then(function () {
             return require('ipfs');
-          }).then(function (Ipfs) {
+          }) // eslint-disable-line
+          .then(function (Ipfs) {
             var ipfs = new Ipfs({
               bitswap: {
                 maxMessageSize: 256 * 1024

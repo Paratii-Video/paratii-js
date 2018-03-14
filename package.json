@@ -45,6 +45,7 @@
     "async_hooks": "^1.0.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
+    "babel-eslint": "^8.2.2",
     "babel-loader": "^7.1.2",
     "babel-plugin-dynamic-import-node": "^1.2.0",
     "babel-plugin-syntax-async-functions": "^6.1.4",
@@ -85,6 +86,7 @@
     "envs": [
       "mocha"
     ],
+    "parser": "babel-eslint",
     "globals": [
       "artifacts",
       "assert",
