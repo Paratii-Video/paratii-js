@@ -167,4 +167,24 @@ describe('paratii.eth.wallet: :', function () {
     })
     assert.equal(paratii.eth.wallet.getMnemonic(), undefined)
   })
+  it('bip39 test vector', async function () {
+    
+    var fs = require('fs');
+    var vector = JSON.parse(fs.readFileSync('test/data/bip39-test-vector.json','utf8'))
+
+    for(var i = 0; i<vector.english.length; i++){
+      paratii = await new Paratii()
+      let wallet = paratii.eth.wallet
+
+      var p = wallet.setPassphrase('TREZOR')
+      assert.equal(p,'TREZOR')
+
+      wallet = await wallet.create(1, vector.english[i][1])
+
+      assert.equal(wallet._mnemonic, vector.english[i][1])
+      assert.equal(wallet._seedHex, vector.english[i][2])
+      assert.equal(wallet._xpriv, vector.english[i][3])
+    }
+
+  })
 })
