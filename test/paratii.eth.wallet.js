@@ -168,8 +168,7 @@ describe('paratii.eth.wallet: :', function () {
     assert.equal(paratii.eth.wallet.getMnemonic(), undefined)
   })
   it('eth.wallet.create() respect bip39 test vector', async function () {
-    var fs = require('fs')
-    var vector = JSON.parse(fs.readFileSync('test/testData/bip39-test-vector.json', 'utf8'))
+    var vector = require('./testData/bip39-test-vector.json')
 
     for (var i = 0; i < vector.english.length; i++) {
       paratii = await new Paratii()
