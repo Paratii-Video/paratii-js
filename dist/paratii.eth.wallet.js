@@ -14,12 +14,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // this code is lifted and adapted from ethereumjs-lightwallet
 
-var Mnemonic = require('bitcore-mnemonic');
-var bitcore = require('bitcore-lib');
+var bip39 = require('bip39');
+var hdkey = require('ethereumjs-wallet/hdkey');
 
 function patchWallet(wallet, config) {
   function create(numberOfAccounts, mnemonic) {
-    var hdRoot, i, hdprivkey, privkeyBuf, privkeyHex, privateKey;
+    var seed, masternode, i, generatedAddress, privkeyBuf, privkeyHex, privateKey;
     return _regenerator2.default.async(function create$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -39,50 +39,59 @@ function patchWallet(wallet, config) {
               if (this._mnemonic) {
                 mnemonic = this._mnemonic;
               } else {
-                mnemonic = newMnemonic();
+                mnemonic = bip39.generateMnemonic();
               }
             }
 
-            if (!isValidMnemonic(mnemonic)) {
-              _context.next = 27;
+            if (!bip39.validateMnemonic(mnemonic)) {
+              _context.next = 30;
               break;
             }
 
             this._mnemonic = mnemonic;
             this._hdIndex = 0;
-            // this code is lifted from eth-lightwallet
-            hdRoot = new Mnemonic(this._mnemonic).toHDPrivateKey().xprivkey;
+
+            seed = bip39.mnemonicToSeed(this._mnemonic, this._passphrase);
+            // saving for testing purpose
+
+            this._seedHex = bip39.mnemonicToSeedHex(this._mnemonic, this._passphrase);
+
+            // contains masternode extended priv key and extended pub key
+            masternode = hdkey.fromMasterSeed(seed);
+
+            // saving xtended private key for testing purpose
+
+            this._xpriv = masternode.privateExtendedKey();
 
             // var keys = []
-
             i = 0;
 
-          case 9:
+          case 12:
             if (!(i < numberOfAccounts)) {
-              _context.next = 25;
+              _context.next = 28;
               break;
             }
 
-            hdprivkey = new bitcore.HDPrivateKey(hdRoot).derive(this._hdIndex++);
-            privkeyBuf = hdprivkey.privateKey.toBuffer();
-            privkeyHex = privkeyBuf.toString('hex');
+            generatedAddress = masternode.deriveChild(i).getWallet();
+            privkeyBuf = generatedAddress.getPrivateKey();
+            privkeyHex = generatedAddress.getPrivateKey().toString('hex');
 
             if (!(privkeyBuf.length < 32)) {
-              _context.next = 17;
+              _context.next = 20;
               break;
             }
 
             throw new Error('Private key suspiciously small: < 16 bytes. Aborting!');
 
-          case 17:
+          case 20:
             if (!(privkeyBuf.length > 32)) {
-              _context.next = 19;
+              _context.next = 22;
               break;
             }
 
             throw new Error('Private key larger than 32 bytes. Aborting!');
 
-          case 19:
+          case 22:
             privateKey = this._accounts.privateKeyToAccount(privkeyHex).privateKey;
 
             this.add(privateKey);
@@ -90,22 +99,22 @@ function patchWallet(wallet, config) {
               config.paratii.eth.setAccount(this[0].address, privateKey);
             }
 
-          case 22:
-            ++i;
-            _context.next = 9;
-            break;
-
           case 25:
-            _context.next = 28;
+            ++i;
+            _context.next = 12;
             break;
-
-          case 27:
-            throw Error('Mnemonic was not valid: ' + mnemonic);
 
           case 28:
+            _context.next = 31;
+            break;
+
+          case 30:
+            throw Error('Mnemonic was not valid: ' + mnemonic);
+
+          case 31:
             return _context.abrupt('return', this);
 
-          case 29:
+          case 32:
           case 'end':
             return _context.stop();
         }
@@ -114,15 +123,20 @@ function patchWallet(wallet, config) {
   }
 
   function isValidMnemonic(mnemonic) {
-    return Mnemonic.isValid(mnemonic);
+    return bip39.validateMnemonic(mnemonic);
   }
 
   function newMnemonic() {
-    return new Mnemonic().toString();
+    return bip39.generateMnemonic();
   }
 
   function getMnemonic() {
     return this._mnemonic;
+  }
+
+  function setPassphrase(passphrase) {
+    this._passphrase = passphrase;
+    return this._passphrase;
   }
 
   var origDecrypt = wallet.decrypt.bind(wallet);
@@ -135,6 +149,9 @@ function patchWallet(wallet, config) {
   }
 
   wallet._mnemonic = undefined;
+  // testing purpose
+  wallet._passphrase = '';
+  wallet.setPassphrase = setPassphrase;
   wallet.create = create;
   wallet.decrypt = _decrypt;
   wallet.isValidMnemonic = isValidMnemonic;
