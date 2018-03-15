@@ -27,7 +27,7 @@
     "babel-preset-react": "^6.24.1",
     "bip39": "^2.5.0",
     "es6-promise": "^4.2.4",
-    "ethereumjs-wallet": "^0.6.0",
+    "hdkey": "^0.8.0",
     "ipfs": "github:Paratii-Video/js-ipfs#paratii/v0.27.1",
     "isomorphic-fetch": "^2.2.1",
     "joi": "^13.1.2",

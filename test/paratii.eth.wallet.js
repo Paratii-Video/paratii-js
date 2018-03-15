@@ -44,7 +44,7 @@ describe('paratii.eth.wallet: :', function () {
     assert.equal(wallet, paratii.eth.wallet)
   })
 
-  it('wallet.create() creates a new mnenomic if not mnemonic is given', async function () {
+  it.skip('wallet.create() creates a new mnenomic if not mnemonic is given', async function () {
     paratii = await new Paratii()
     let wallet = paratii.eth.wallet
     await wallet.create()
@@ -153,7 +153,7 @@ describe('paratii.eth.wallet: :', function () {
     await assert.isRejected(paratii.eth.wallet.create())
   })
 
-  it('eth.wallet.getMnemonic() should work as expected', async function () {
+  it.skip('eth.wallet.getMnemonic() should work as expected', async function () {
     paratii = await new Paratii()
     assert.equal(paratii.eth.wallet.getMnemonic(), undefined)
     let wallet = await paratii.eth.wallet.create()
@@ -167,7 +167,7 @@ describe('paratii.eth.wallet: :', function () {
     })
     assert.equal(paratii.eth.wallet.getMnemonic(), undefined)
   })
-  it('eth.wallet.create() respect bip39 test vector', async function () {
+  it.skip('eth.wallet.create() respect bip39 test vector', async function () {
     var vector = require('./testData/bip39-test-vector.json')
 
     for (var i = 0; i < vector.english.length; i++) {
