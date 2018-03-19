@@ -50,7 +50,7 @@ describe('paratii.eth.wallet: :', function () {
     await wallet.create()
     // if it creates an address, it means that it has generated a new mnmemonic
     assert.equal(wallet.length, 1)
-})
+  })
 
   it('wallet.create() sets config.account.address and privatekey', async function () {
     paratii = await new Paratii()
