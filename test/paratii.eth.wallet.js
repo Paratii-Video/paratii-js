@@ -44,12 +44,13 @@ describe('paratii.eth.wallet: :', function () {
     assert.equal(wallet, paratii.eth.wallet)
   })
 
-  it.skip('wallet.create() creates a new mnenomic if not mnemonic is given', async function () {
+  it('wallet.create() creates a new mnemonic if no mnemonic is given', async function () {
     paratii = await new Paratii()
     let wallet = paratii.eth.wallet
     await wallet.create()
-    wallet.isValidMnemonic(wallet.getMnemonic())
-  })
+    // if it creates an address, it means that it has generated a new mnmemonic
+    assert.equal(wallet.length, 1)
+})
 
   it('wallet.create() sets config.account.address and privatekey', async function () {
     paratii = await new Paratii()
