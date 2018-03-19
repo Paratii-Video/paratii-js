@@ -1,4 +1,4 @@
 {
   "presets": ["es2015"],
-  "plugins": ["syntax-async-functions","transform-regenerator", "transform-runtime"]
+  "plugins": ["dynamic-import-node", "syntax-async-functions","transform-regenerator", "transform-runtime"]
 }
