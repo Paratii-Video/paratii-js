@@ -83,7 +83,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   /**
    * Writes a like for the video on the blockchain (contract Likes), and negates a dislike for the video, if it exists.
    * @param  {String} videoId univocal video identifier
-   * @return {String}         hash of the transaction recording the like
+   * @return {Object}         information about the transaction recording the like
    */
 
 
@@ -95,7 +95,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
     /**
      * Writes a dislike for the video on the blockchain (contract Likes), and negates a like for the video, if it exists.
      * @param  {String} videoId univocal video identifier
-     * @return {String}         hash of the transaction recording the like
+     * @return {Object}         information about the transaction recording the dislike
      */
 
   }, {
@@ -104,9 +104,9 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
       return this.paratii.eth.vids.dislike(videoId);
     }
     /**
-     * [doesLike description]
-     * @param  {[type]} videoId [description]
-     * @return {[type]}         [description]
+     * Check if the current user has already liked the video
+     * @param  {String} videoId univocal video identifier
+     * @return {Boolean}         true if the current user already liked the video, false otherwise
      */
 
   }, {
@@ -114,11 +114,24 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
     value: function doesLike(videoId) {
       return this.paratii.eth.vids.doesLike(videoId);
     }
+    /**
+     * [hasViewedVideo description]
+     * @param  {String}  viewer  viewer address
+     * @param  {String}  videoId univocal video identifier
+     * @return {Boolean}         true if the current user already liked the video, false otherwise
+     */
+
   }, {
     key: 'hasViewedVideo',
     value: function hasViewedVideo(viewer, videoId) {
       return this.paratii.eth.vids.userViewedVideo({ viewer: viewer, videoId: videoId });
     }
+    /**
+     * Check if the current user has already disliked the video
+     * @param  {String} videoId univocal video identifier
+     * @return {Boolean}         true if the current user already disliked the video, false otherwise
+     */
+
   }, {
     key: 'doesDislike',
     value: function doesDislike(videoId) {
@@ -198,6 +211,15 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
         }
       }, null, this);
     }
+    /**
+     * Update the information on the video.
+    *  Only the account that has registered the video, or the owner of the contract, can update the information.
+     * @param  {String}  videoId      univocal video identifier
+     * @param  {Object}  options      key value pairs of properties and new values e.g. ({title: 'another-title'})
+     * @param  {Object}  dataToUpdate optional. old data of the video. If not passed to the method, it will fetch the data itself using the videoId
+     * @return {Promise}              Updated video informations
+     */
+
   }, {
     key: 'update',
     value: function update(videoId, options, dataToUpdate) {
@@ -261,6 +283,12 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
         }
       }, null, this);
     }
+    /**
+     * Update the information of the video the video already exists, otherwise it creates it
+     * @param  {Object}  options video informations
+     * @return {Promise}         updated/new video informations
+     */
+
   }, {
     key: 'upsert',
     value: function upsert(options) {
