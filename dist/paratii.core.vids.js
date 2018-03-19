@@ -25,11 +25,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var joi = require('joi');
 
-/**
- * ParatiiCoreVids
- *
- */
-
 var schema = joi.object({
   id: joi.string().default(null),
   author: joi.string().empty('').default('').allow(null),
@@ -60,7 +55,16 @@ var schema = joi.object({
   }).allow(null).default({})
 });
 
+/**
+ * ParatiiCoreVids
+ * Utilities to create and manipulate information on the blockchain.
+ */
+
 var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
+  /**
+   * validates the config file
+   * @param {Object} config configuration object to initialize Paratii object
+   */
   function ParatiiCoreVids(config) {
     (0, _classCallCheck3.default)(this, ParatiiCoreVids);
 
@@ -76,17 +80,35 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
     this.config = options;
     this.paratii = this.config.paratii;
   }
+  /**
+   * Writes a like for the video on the blockchain (contract Likes), and negates a dislike for the video, if it exists.
+   * @param  {String} videoId univocal video identifier
+   * @return {String}         hash of the transaction recording the like
+   */
+
 
   (0, _createClass3.default)(ParatiiCoreVids, [{
     key: 'like',
     value: function like(videoId) {
       return this.paratii.eth.vids.like(videoId);
     }
+    /**
+     * Writes a dislike for the video on the blockchain (contract Likes), and negates a like for the video, if it exists.
+     * @param  {String} videoId univocal video identifier
+     * @return {String}         hash of the transaction recording the like
+     */
+
   }, {
     key: 'dislike',
     value: function dislike(videoId) {
       return this.paratii.eth.vids.dislike(videoId);
     }
+    /**
+     * [doesLike description]
+     * @param  {[type]} videoId [description]
+     * @return {[type]}         [description]
+     */
+
   }, {
     key: 'doesLike',
     value: function doesLike(videoId) {
@@ -102,6 +124,12 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
     value: function doesDislike(videoId) {
       return this.paratii.eth.vids.doesDislike(videoId);
     }
+    /**
+     * This call will register the video on the blockchain, add its metadata to IPFS, upload file to IPFS, and transcode it
+     * @param  {Object}  options information about the video ( videoId, title, FilePath ... )
+     * @return {Promise}         information about the video ( VideoId, owner, ipfsHash ... )
+     */
+
   }, {
     key: 'create',
     value: function create(options) {
