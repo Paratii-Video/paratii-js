@@ -46,13 +46,15 @@ describe('Paratii configuration:', function () {
       address: address,
       privateKey: privateKey,
       registryAddress: paratii.config.registryAddress,
-      provider: 'http://localhost:8545',
-      'ipfs.repo': paratii.config.repo
+      provider: 'http://localhost:8545'
     })
 
     // the two config's are equal, except for the reference to the Paratii object itself
+    // and the paratii-repo.
     delete paratii.config.paratii
     delete paratii2.config.paratii
+    delete paratii.config['ipfs.repo']
+    delete paratii2.config['ipfs.repo']
     assert.deepEqual(paratii.config, paratii2.config)
   })
 
