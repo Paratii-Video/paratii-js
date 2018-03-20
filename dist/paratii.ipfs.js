@@ -59,6 +59,9 @@ var _require = require('events'),
 // var pull = require('pull-stream')
 // var pullFilereader = require('pull-filereader')
 
+
+var REPO_PATH = '/tmp/paratii-ipfs-repo';
+
 var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   (0, _inherits3.default)(ParatiiIPFS, _EventEmitter);
 
@@ -72,7 +75,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
       onReadyHook: joi.array().ordered().default([]),
       'config.addresses.swarm': joi.array().ordered(joi.string().default('/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star'), joi.string().default('/dns/ws.star.paratii.video/wss/p2p-websocket-star/')),
       'ipfs.config.Bootstrap': joi.array().ordered(joi.string().default('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW')),
-      'ipfs.repo': joi.string().default('/tmp/paratii-alpha-' + String(Math.random())),
+      'ipfs.repo': joi.string().default(REPO_PATH),
       'ipfs.bitswap.maxMessageSize': joi.number().default(128 * 1024),
       address: joi.string().default(null),
       verbose: joi.bool().default(true)
