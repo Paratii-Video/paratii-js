@@ -66,7 +66,7 @@ Returns **[Promise][36]** [description]
 
 ## ParatiiCoreVids
 
-validates the config file MODIFIED4
+validates the config file MODIFIED5
 
 **Parameters**
 
