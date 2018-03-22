@@ -56,7 +56,7 @@ var schema = joi.object({
 });
 
 /**
- * validates the config file MODIFIED5
+ * validates the config file
  * @param {Object} config configuration object to initialize Paratii object
  */
 
