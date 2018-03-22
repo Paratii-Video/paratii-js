@@ -32,7 +32,7 @@
     "bitcore-lib": "^0.15.0",
     "bitcore-mnemonic": "^1.5.0",
     "es6-promise": "^4.2.4",
-    "ipfs": "github:Paratii-Video/js-ipfs#paratii/v0.27.1",
+    "ipfs": "github:Paratii-Video/js-ipfs#paratii/v0.28.2",
     "isomorphic-fetch": "^2.2.1",
     "joi": "^13.1.2",
     "multiaddr": "^3.0.2",

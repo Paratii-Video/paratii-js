@@ -630,14 +630,18 @@ var Uploader = function (_EventEmitter) {
           _this8._ipfs.log('peers: ', peers);
           if (err) return ev.emit('pin:error', err);
           peers.map(function (peer) {
-            if (peer.peer.id.toB58String() === opts.transcoderId) {
-              _this8._ipfs.log('sending pin msg to ' + peer.peer.id.toB58String() + ' with request to pin ' + fileHash);
-              _this8._ipfs.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
-                if (err) {
-                  ev.emit('pin:error', err);
-                  return ev;
-                }
-              });
+            try {
+              if (peer.peer._idB58String === opts.transcoderId) {
+                _this8._ipfs.log('sending pin msg to ' + peer.peer._idB58String + ' with request to pin ' + fileHash);
+                _this8._ipfs.protocol.network.sendMessage(peer.peer, msg, function (err) {
+                  if (err) {
+                    ev.emit('pin:error', err);
+                    return ev;
+                  }
+                });
+              }
+            } catch (e) {
+              console.log('PEER ERROR :', e, peer);
             }
           });
 
