@@ -38,7 +38,7 @@ var schema = joi.object({
   ipfsHash: joi.string().empty('').default(''),
   owner: joi.string().required(),
   price: joi.any().default(0),
-  published: joi.any().default(false).allow(null),
+  // published: joi.any().default(false).allow(null),
   title: joi.string().empty('').default(''),
   thumbnails: joi.array(),
   storageStatus: joi.object({
@@ -177,7 +177,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 filename: options.filename,
                 filesize: options.filesize,
                 free: options.fee,
-                published: options.published,
+                // published: options.published,
                 storageStatus: options.storageStatus,
                 title: options.title,
                 transcodingStatus: options.transcodingStatus,

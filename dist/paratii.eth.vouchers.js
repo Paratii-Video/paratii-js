@@ -214,7 +214,7 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
   }, {
     key: 'redeem',
     value: function redeem(voucherCode) {
-      var contract, voucherBytes, thisVoucher, thisVoucherClaimant, thisVoucherAmount, vouchersContractBalance, tx, claimant;
+      var contract, voucherBytes, thisVoucher, thisVoucherClaimant, thisVoucherAmount, vouchersContractBalance, tx, claimant, amount;
       return _regenerator2.default.async(function redeem$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
@@ -275,32 +275,33 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
             case 25:
               tx = _context5.sent;
               claimant = (0, _utils.getInfoFromLogs)(tx, 'LogRedeemVoucher', '_claimant', 1);
+              amount = (0, _utils.getInfoFromLogs)(tx, 'LogRedeemVoucher', '_amount', 1);
 
               if (!(claimant === this.eth.config.account.address)) {
-                _context5.next = 31;
+                _context5.next = 32;
                 break;
               }
 
-              return _context5.abrupt('return', true);
-
-            case 31:
-              return _context5.abrupt('return', false);
+              return _context5.abrupt('return', amount);
 
             case 32:
-              _context5.next = 37;
+              return _context5.abrupt('return', false);
+
+            case 33:
+              _context5.next = 38;
               break;
 
-            case 34:
-              _context5.prev = 34;
+            case 35:
+              _context5.prev = 35;
               _context5.t2 = _context5['catch'](22);
               throw Error('An unknown error occurred');
 
-            case 37:
+            case 38:
             case 'end':
               return _context5.stop();
           }
         }
-      }, null, this, [[22, 34]]);
+      }, null, this, [[22, 35]]);
     }
   }]);
   return ParatiiEthVouchers;

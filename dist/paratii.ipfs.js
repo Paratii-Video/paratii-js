@@ -47,10 +47,10 @@ var _paratiiProtocol2 = _interopRequireDefault(_paratiiProtocol);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-global.Buffer = global.Buffer || require('buffer').Buffer; // import { paratiiIPFS } from './ipfs/index.js'
+global.Buffer = global.Buffer || require('buffer').Buffer;
 
-
-var Ipfs = require('ipfs');
+// const Ipfs = require('ipfs')
+// import { paratiiIPFS } from './ipfs/index.js'
 var joi = require('joi');
 var Uploader = require('./paratii.ipfs.uploader.js');
 
@@ -168,73 +168,78 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
         } else {
           var config = _this2.config;
           // there will be no joi in IPFS (pun indended)
-          var ipfs = new Ipfs({
-            bitswap: {
-              maxMessageSize: 256 * 1024
-            },
-            start: true,
-            repo: config['ipfs.repo'] || '/tmp/test-repo-' + String(Math.random()),
-            config: {
-              Addresses: {
-                Swarm: ['/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star', '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/']
+          _promise2.default.resolve().then(function () {
+            return require('ipfs');
+          }) // eslint-disable-line
+          .then(function (Ipfs) {
+            var ipfs = new Ipfs({
+              bitswap: {
+                maxMessageSize: 256 * 1024
               },
-              Bootstrap: ['/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW']
-            }
-          });
-
-          _this2.ipfs = ipfs;
-
-          ipfs.on('ready', function () {
-            _this2.log('[IPFS] node Ready.');
-
-            ipfs._bitswap.notifications.on('receivedNewBlock', function (peerId, block) {
-              _this2.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length);
-              _this2.log('---------[IPFS] bitswap LedgerMap ---------------------');
-              ipfs._bitswap.engine.ledgerMap.forEach(function (ledger, peerId, ledgerMap) {
-                _this2.log(peerId + ' : ' + (0, _stringify2.default)(ledger.accounting) + '\n');
-              });
-              _this2.log('-------------------------------------------------------');
+              start: true,
+              repo: config['ipfs.repo'] || '/tmp/test-repo-' + String(Math.random()),
+              config: {
+                Addresses: {
+                  Swarm: ['/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star', '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/']
+                },
+                Bootstrap: ['/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW']
+              }
             });
 
-            ipfs.id().then(function (id) {
-              var peerInfo = id;
-              _this2.id = id;
-              _this2.log('[IPFS] id:  ' + peerInfo);
-              var ptiAddress = _this2.config.address || 'no_address';
-              _this2.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
-              // add ETH Address here.
-              ptiAddress);
+            _this2.ipfs = ipfs;
 
-              // uploader
-              _this2.uploader.setOptions({
-                node: ipfs,
-                chunkSize: 128 * 1024
+            ipfs.on('ready', function () {
+              _this2.log('[IPFS] node Ready.');
+
+              ipfs._bitswap.notifications.on('receivedNewBlock', function (peerId, block) {
+                _this2.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length);
+                _this2.log('---------[IPFS] bitswap LedgerMap ---------------------');
+                ipfs._bitswap.engine.ledgerMap.forEach(function (ledger, peerId, ledgerMap) {
+                  _this2.log(peerId + ' : ' + (0, _stringify2.default)(ledger.accounting) + '\n');
+                });
+                _this2.log('-------------------------------------------------------');
               });
 
-              _this2.protocol.notifications.on('message:new', function (peerId, msg) {
-                _this2.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
-              });
-              // emit all commands.
-              // NOTE : this will be changed once protocol upgrades are ready.
-              _this2.protocol.notifications.on('command', function (peerId, command) {
-                _this2.emit('protocol:incoming', peerId, command);
-              });
+              ipfs.id().then(function (id) {
+                var peerInfo = id;
+                _this2.id = id;
+                _this2.log('[IPFS] id:  ' + peerInfo);
+                var ptiAddress = _this2.config.address || 'no_address';
+                _this2.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
+                // add ETH Address here.
+                ptiAddress);
 
-              _this2.ipfs = ipfs;
-              _this2.protocol.start(function () {
-                setTimeout(function () {
-                  resolve(ipfs);
-                }, 10);
+                // uploader
+                _this2.uploader.setOptions({
+                  node: ipfs,
+                  chunkSize: 128 * 1024
+                });
+
+                _this2.protocol.notifications.on('message:new', function (peerId, msg) {
+                  _this2.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
+                });
+                // emit all commands.
+                // NOTE : this will be changed once protocol upgrades are ready.
+                _this2.protocol.notifications.on('command', function (peerId, command) {
+                  _this2.emit('protocol:incoming', peerId, command);
+                });
+
+                _this2.ipfs = ipfs;
+                _this2.protocol.start(function () {
+                  setTimeout(function () {
+                    resolve(ipfs);
+                  }, 10);
+                });
               });
             });
-          });
 
-          ipfs.on('error', function (err) {
-            if (err) {
-              // this.log('IPFS node ', ipfs)
-              _this2.error('[IPFS] Error ', err);
-              reject(err);
-            }
+            ipfs.on('error', function (err) {
+              if (err) {
+                // this.log('IPFS node ', ipfs)
+                _this2.error('[IPFS] Error ', err);
+                reject(err);
+              }
+            });
           });
         }
       });
