@@ -44,6 +44,12 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
     this.config = result.value;
     this.paratii = this.config.paratii;
   }
+  /**
+   * [create description]
+   * @param  {[type]}  options [description]
+   * @return {Promise}         [description]
+   */
+
 
   (0, _createClass3.default)(ParatiiCoreUsers, [{
     key: 'create',

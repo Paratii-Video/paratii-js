@@ -56,15 +56,11 @@ var schema = joi.object({
 });
 
 /**
- * ParatiiCoreVids
- * Utilities to create and manipulate information on the blockchain.
+ * validates the config file MODIFIED4
+ * @param {Object} config configuration object to initialize Paratii object
  */
 
 var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
-  /**
-   * validates the config file
-   * @param {Object} config configuration object to initialize Paratii object
-   */
   function ParatiiCoreVids(config) {
     (0, _classCallCheck3.default)(this, ParatiiCoreVids);
 

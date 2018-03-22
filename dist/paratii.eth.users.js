@@ -20,6 +20,10 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var joi = require('joi');
+/**
+ * [eth description]
+ * @type {[type]}
+ */
 
 var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
   function ParatiiEthUsers(context) {
