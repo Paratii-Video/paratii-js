@@ -12,7 +12,7 @@ describe('ParatiiIPFS: :', function () {
   let paratiiIPFS
   this.timeout(30000)
 
-  beforeEach(function () {
+  beforeEach(() => {
     paratiiIPFS = new ParatiiIPFS({})
   })
 
@@ -24,6 +24,25 @@ describe('ParatiiIPFS: :', function () {
         done()
       })
     })
+  })
+
+  // skip till i fix underlying libp2p issue.
+  it.skip('should be able to getMetaData from Transcoder', (done) => {
+    let testHash = 'QmTkuJTcQhtQm8bPzF1hQmhrDPsdLs28soUZQEUx7t9pBJ'
+    paratiiIPFS.uploader.getMetaData(testHash, {}).then((data) => {
+      assert.isOk(data)
+      console.log(data)
+      done()
+    }).catch(done)
+    // ev.once('getMetaData:error', (err, hash) => {
+    //   if (err) {
+    //     console.log('getMetaData ERROR ', err)
+    //     return done(err)
+    //   }
+    // })
+    //
+    // ev.once('getMetaData:done', (hash, data) => {
+    // })
   })
 
   // after(() => {
@@ -78,7 +97,7 @@ describe('ParatiiIPFS: :', function () {
     let files = []
 
     let ev = paratiiIPFS.uploader.addAndTranscode(files)
-    ev.on('transcoding:done', (resp) => {
+    ev.once('transcoding:done', (resp) => {
       assert.isOk(resp)
       assert.isOk(resp.test)
       expect(resp.test).to.equal(1)

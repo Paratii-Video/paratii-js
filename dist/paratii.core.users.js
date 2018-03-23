@@ -23,7 +23,7 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var dopts = require('default-options');
+var joi = require('joi');
 
 /**
  * ParatiiCoreUsers
@@ -34,13 +34,22 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
   function ParatiiCoreUsers(config) {
     (0, _classCallCheck3.default)(this, ParatiiCoreUsers);
 
-    var defaults = {
-      'db.provider': null
-    };
-    var options = dopts(config, defaults, { allowUnknown: true });
-    this.config = options;
+    var schema = joi.object({
+      'db.provider': joi.string().default(null)
+    }).unknown();
+
+    var result = joi.validate(config, schema);
+    var error = result.error;
+    if (error) throw error;
+    this.config = result.value;
     this.paratii = this.config.paratii;
   }
+  /**
+   * [create description]
+   * @param  {[type]}  options [description]
+   * @return {Promise}         [description]
+   */
+
 
   (0, _createClass3.default)(ParatiiCoreUsers, [{
     key: 'create',
@@ -86,22 +95,32 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
   }, {
     key: 'update',
     value: function update(userId, options) {
-      var defaults, data, key;
+      var schema, result, error, data, key;
       return _regenerator2.default.async(function update$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              defaults = {
-                name: null, // must be a string, optional
-                email: null // must be a string, optional
-              };
+              schema = joi.object({
+                name: joi.string().default(null),
+                email: joi.string().default(null)
+              });
+              result = joi.validate(options, schema);
+              error = result.error;
 
-              options = dopts(options, defaults);
+              if (!error) {
+                _context2.next = 5;
+                break;
+              }
 
-              _context2.next = 4;
+              throw error;
+
+            case 5:
+              options = result.value;
+
+              _context2.next = 8;
               return _regenerator2.default.awrap(this.get(userId));
 
-            case 4:
+            case 8:
               data = _context2.sent;
 
               for (key in options) {
@@ -112,13 +131,13 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
 
               data['id'] = userId;
 
-              _context2.next = 9;
+              _context2.next = 13;
               return _regenerator2.default.awrap(this.create(data));
 
-            case 9:
+            case 13:
               return _context2.abrupt('return', data);
 
-            case 10:
+            case 14:
             case 'end':
               return _context2.stop();
           }

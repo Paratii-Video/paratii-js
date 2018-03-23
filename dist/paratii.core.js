@@ -15,21 +15,29 @@ var _paratiiCoreUsers = require('./paratii.core.users.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var dopts = require('default-options');
+var joi = require('joi');
 
 /**
  * ParatiiCore
- *
+ * Contains functions that operate transversally over several backend systems.
  */
 
-var ParatiiCore = exports.ParatiiCore = function ParatiiCore(config) {
+var ParatiiCore =
+/**
+ * validates the config file and istantiates ParatiiCoreVids and ParatiiCoreUsers
+ * @param {Object} config configuration object to initialize Paratii object
+ */
+exports.ParatiiCore = function ParatiiCore(config) {
   (0, _classCallCheck3.default)(this, ParatiiCore);
 
-  var defaults = {
-    'db.provider': null
-  };
-  var options = dopts(config, defaults, { allowUnknown: true });
-  this.config = options;
+  var schema = joi.object({
+    'db.provider': joi.string()
+  }).unknown();
+
+  var result = joi.validate(config, schema);
+  var error = result.error;
+  if (error) throw error;
+  this.config = result.value;
 
   this.vids = new _paratiiCoreVids.ParatiiCoreVids(this.config);
   this.users = new _paratiiCoreUsers.ParatiiCoreUsers(this.config);

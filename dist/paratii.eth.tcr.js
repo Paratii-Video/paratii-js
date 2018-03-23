@@ -177,6 +177,8 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
     /**
      * start the application process.
+     * NOTE that this require the client approves PTI amount first before actually
+     * running this function, use `checkEligiblityAndApply` instead.
      * @param  {string}  videoId       videoId
      * @param  {Float}  amountToStake number of tokens to stake. must >= minDeposit
      * @return {boolean}               returns true if all is good, plus _Application
@@ -186,7 +188,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'apply',
     value: function apply(videoId, amountToStake) {
-      var minDeposit, contract, tx, vId;
+      var minDeposit, contract, amountInHex, tx, vId;
       return _regenerator2.default.async(function apply$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
@@ -197,7 +199,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
             case 2:
               minDeposit = _context5.sent;
 
-              if (!(amountToStake < minDeposit)) {
+              if (!this.eth.web3.utils.toBN(amountToStake).lt(minDeposit)) {
                 _context5.next = 5;
                 break;
               }
@@ -210,26 +212,170 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 7:
               contract = _context5.sent;
-              _context5.next = 10;
-              return _regenerator2.default.awrap(contract.methods.apply(videoId, amountToStake).send());
 
-            case 10:
+              // let amountInWei = this.eth.web3.utils.toWei(amountToStake.toString())
+              amountInHex = this.eth.web3.utils.toHex(amountToStake.toString());
+
+              console.log('amountInHex: ', amountInHex);
+              tx = void 0;
+              _context5.prev = 11;
+              _context5.next = 14;
+              return _regenerator2.default.awrap(contract.methods.apply(videoId, amountInHex).send());
+
+            case 14:
               tx = _context5.sent;
+              _context5.next = 20;
+              break;
+
+            case 17:
+              _context5.prev = 17;
+              _context5.t0 = _context5['catch'](11);
+              throw _context5.t0;
+
+            case 20:
+              console.log('tx: ', tx);
+              vId = void 0;
+              _context5.prev = 22;
+
               vId = (0, _utils.getInfoFromLogs)(tx, '_Application', 'videoId', 1);
+              _context5.next = 30;
+              break;
+
+            case 26:
+              _context5.prev = 26;
+              _context5.t1 = _context5['catch'](22);
+
+              if (!_context5.t1) {
+                _context5.next = 30;
+                break;
+              }
+
+              return _context5.abrupt('return', false);
+
+            case 30:
+
+              console.log('vId: ', vId);
 
               if (!vId) {
-                _context5.next = 16;
+                _context5.next = 35;
                 break;
               }
 
               return _context5.abrupt('return', true);
 
-            case 16:
+            case 35:
               return _context5.abrupt('return', false);
 
-            case 17:
+            case 36:
             case 'end':
               return _context5.stop();
+          }
+        }
+      }, null, this, [[11, 17], [22, 26]]);
+    }
+
+    /**
+     * check whether the user has enough funds to stake.
+     * it also approves the TCR contract to amountToStake.
+     * @param  {[type]}  videoId       [description]
+     * @param  {[type]}  amountToStake [description]
+     * @return {Promise}               [description]
+     */
+
+  }, {
+    key: 'checkEligiblityAndApply',
+    value: function checkEligiblityAndApply(videoId, amountToStake) {
+      var minDeposit, isWhitelisted, appWasMade, token, tcrPlaceholder, tx2, allowance, result;
+      return _regenerator2.default.async(function checkEligiblityAndApply$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              _context6.next = 2;
+              return _regenerator2.default.awrap(this.getMinDeposit());
+
+            case 2:
+              minDeposit = _context6.sent;
+
+              if (!this.eth.web3.utils.toBN(amountToStake).lt(minDeposit)) {
+                _context6.next = 5;
+                break;
+              }
+
+              throw new Error('amount to stake ' + amountToStake + ' is less than minDeposit ' + minDeposit.toString());
+
+            case 5:
+              _context6.next = 7;
+              return _regenerator2.default.awrap(this.isWhitelisted(videoId));
+
+            case 7:
+              isWhitelisted = _context6.sent;
+
+              if (!isWhitelisted) {
+                _context6.next = 10;
+                break;
+              }
+
+              throw new Error('video ' + videoId + ' is already whitelisted');
+
+            case 10:
+              _context6.next = 12;
+              return _regenerator2.default.awrap(this.didVideoApply(videoId));
+
+            case 12:
+              appWasMade = _context6.sent;
+
+              if (!appWasMade) {
+                _context6.next = 15;
+                break;
+              }
+
+              throw new Error('video ' + videoId + ' already applied and awaiting decision');
+
+            case 15:
+              _context6.next = 17;
+              return _regenerator2.default.awrap(this.eth.getContract('ParatiiToken'));
+
+            case 17:
+              token = _context6.sent;
+              _context6.next = 20;
+              return _regenerator2.default.awrap(this.eth.getContract('TcrPlaceholder'));
+
+            case 20:
+              tcrPlaceholder = _context6.sent;
+              _context6.next = 23;
+              return _regenerator2.default.awrap(token.methods.approve(tcrPlaceholder.options.address, amountToStake).send());
+
+            case 23:
+              tx2 = _context6.sent;
+
+              if (tx2) {
+                _context6.next = 26;
+                break;
+              }
+
+              throw new Error('checkEligiblityAndApply Error ', tx2);
+
+            case 26:
+              _context6.next = 28;
+              return _regenerator2.default.awrap(token.methods.allowance(this.eth.config.account.address, tcrPlaceholder.options.address).call());
+
+            case 28:
+              allowance = _context6.sent;
+
+              if (allowance.toString() !== amountToStake.toString()) {
+                console.warn('allowance ' + allowance.toString() + ' != ' + amountToStake.toString());
+              }
+
+              _context6.next = 32;
+              return _regenerator2.default.awrap(this.apply(videoId, amountToStake));
+
+            case 32:
+              result = _context6.sent;
+              return _context6.abrupt('return', result);
+
+            case 34:
+            case 'end':
+              return _context6.stop();
           }
         }
       }, null, this);

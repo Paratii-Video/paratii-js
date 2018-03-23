@@ -67,6 +67,15 @@ describe('paratii.eth API: :', function () {
     assert.isOk(contract)
   })
 
+  it('getContract() should return set and update the from address on the contract', async function () {
+    let contract
+    contract = await paratii.eth.getContract('ParatiiToken')
+    assert.equal(contract.options.from, address)
+    await paratii.setAccount(address1)
+    contract = await paratii.eth.getContract('ParatiiToken')
+    assert.equal(contract.options.from, address1)
+  })
+
   it.skip('getcontract() should return a meaningful error if the address of the contract is not known', async function () {
     let registry = await paratii.eth.getContract('Registry')
     // the next line does not update the get contract address

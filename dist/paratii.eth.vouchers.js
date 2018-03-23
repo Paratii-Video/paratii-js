@@ -21,7 +21,7 @@ var _utils = require('./utils.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var dopts = require('default-options');
+var joi = require('joi');
 
 var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
   function ParatiiEthVouchers(context) {
@@ -65,74 +65,84 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
   }, {
     key: 'create',
     value: function create(options) {
-      var defaults, msg, _msg, _msg2, _msg3, contract, hashedVoucher, tx, voucherId;
+      var schema, result, error, msg, _msg, _msg2, _msg3, contract, hashedVoucher, tx, voucherId;
 
       return _regenerator2.default.async(function create$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              defaults = {
-                voucherCode: undefined,
-                amount: undefined
-              };
+              schema = joi.object({
+                voucherCode: joi.string(),
+                amount: joi.number()
+              });
+              result = joi.validate(options, schema);
+              error = result.error;
 
-              options = dopts(options, defaults);
+              if (!error) {
+                _context2.next = 5;
+                break;
+              }
+
+              throw error;
+
+            case 5:
+              options = result.value;
 
               if (!(options.voucherCode === null)) {
-                _context2.next = 5;
+                _context2.next = 9;
                 break;
               }
 
               msg = 'Voucher Code argument must not be null';
               throw Error(msg);
 
-            case 5:
+            case 9:
               if (!(typeof options.voucherCode !== 'string')) {
-                _context2.next = 8;
+                _context2.next = 12;
                 break;
               }
 
               _msg = 'Voucher Code argument needs to be a string';
               throw Error(_msg);
 
-            case 8:
+            case 12:
               if (!(typeof options.amount !== 'number')) {
-                _context2.next = 11;
+                _context2.next = 15;
                 break;
               }
 
               _msg2 = 'Amount argument needs to be a number';
               throw Error(_msg2);
 
-            case 11:
+            case 15:
               if (!(options.amount === 0)) {
-                _context2.next = 14;
+                _context2.next = 18;
                 break;
               }
 
               _msg3 = 'Amount needs to be greater than zero';
               throw Error(_msg3);
 
-            case 14:
-              _context2.next = 16;
+            case 18:
+              _context2.next = 20;
               return _regenerator2.default.awrap(this.getVouchersContract());
 
-            case 16:
+            case 20:
               contract = _context2.sent;
-              _context2.next = 19;
+              _context2.next = 23;
               return _regenerator2.default.awrap(contract.methods.hashVoucher(options.voucherCode).call());
 
-            case 19:
+            case 23:
               hashedVoucher = _context2.sent;
-              _context2.next = 22;
+              _context2.next = 26;
               return _regenerator2.default.awrap(contract.methods.create(hashedVoucher, options.amount).send());
 
-            case 22:
+            case 26:
               tx = _context2.sent;
               voucherId = (0, _utils.getInfoFromLogs)(tx, 'LogCreateVoucher', '_hashedVoucher');
               return _context2.abrupt('return', voucherId);
 
-            case 25:
+            case 29:
             case 'end':
               return _context2.stop();
           }
@@ -155,6 +165,11 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
         }
       }, null, this);
     }
+
+    /*
+     * A convenience function to generate new vouchers - does not change anything on the blockchain
+     */
+
   }, {
     key: 'createVouchers',
     value: function createVouchers(number, amount) {
@@ -199,7 +214,7 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
   }, {
     key: 'redeem',
     value: function redeem(voucherCode) {
-      var contract, voucherBytes, thisVoucher, thisVoucherClaimant, thisVoucherAmount, vouchersContractBalance, tx, claimant;
+      var contract, voucherBytes, thisVoucher, thisVoucherClaimant, thisVoucherAmount, vouchersContractBalance, tx, claimant, amount;
       return _regenerator2.default.async(function redeem$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
@@ -260,32 +275,33 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
             case 25:
               tx = _context5.sent;
               claimant = (0, _utils.getInfoFromLogs)(tx, 'LogRedeemVoucher', '_claimant', 1);
+              amount = (0, _utils.getInfoFromLogs)(tx, 'LogRedeemVoucher', '_amount', 1);
 
               if (!(claimant === this.eth.config.account.address)) {
-                _context5.next = 31;
+                _context5.next = 32;
                 break;
               }
 
-              return _context5.abrupt('return', true);
-
-            case 31:
-              return _context5.abrupt('return', false);
+              return _context5.abrupt('return', amount);
 
             case 32:
-              _context5.next = 37;
+              return _context5.abrupt('return', false);
+
+            case 33:
+              _context5.next = 38;
               break;
 
-            case 34:
-              _context5.prev = 34;
+            case 35:
+              _context5.prev = 35;
               _context5.t2 = _context5['catch'](22);
               throw Error('An unknown error occurred');
 
-            case 37:
+            case 38:
             case 'end':
               return _context5.stop();
           }
         }
-      }, null, this, [[22, 34]]);
+      }, null, this, [[22, 35]]);
     }
   }]);
   return ParatiiEthVouchers;

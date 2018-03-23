@@ -41,7 +41,7 @@ var config = {
       loader: 'babel-loader',
       options: {
         presets: ['es2015'],
-        plugins: ['syntax-async-functions', 'transform-regenerator']
+        plugins: ['syntax-dynamic-import', 'syntax-async-functions', 'transform-regenerator']
       }
     }]
   }

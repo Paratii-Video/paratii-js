@@ -47,11 +47,11 @@ var _paratiiProtocol2 = _interopRequireDefault(_paratiiProtocol);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-global.Buffer = global.Buffer || require('buffer').Buffer; // import { paratiiIPFS } from './ipfs/index.js'
+global.Buffer = global.Buffer || require('buffer').Buffer;
 
-
-var Ipfs = require('ipfs');
-var dopts = require('default-options');
+// const Ipfs = require('ipfs')
+// import { paratiiIPFS } from './ipfs/index.js'
+var joi = require('joi');
 var Uploader = require('./paratii.ipfs.uploader.js');
 
 var _require = require('events'),
@@ -67,20 +67,21 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
 
     var _this = (0, _possibleConstructorReturn3.default)(this, (ParatiiIPFS.__proto__ || (0, _getPrototypeOf2.default)(ParatiiIPFS)).call(this));
 
-    var defaults = {
-      protocol: null,
-      onReadyHook: [],
-      'config.addresses.swarm': ['/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star', '/dns/ws.star.paratii.video/wss/p2p-websocket-star/'],
-      'ipfs.config.Bootstrap': ['/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
-      // '/ip4/127.0.0.1/tcp/4003/ws/ipfs/Qmbd5jx8YF1QLhvwfLbCTWXGyZLyEJHrPbtbpRESvYs4FS'
-      ],
-      'ipfs.repo': '/tmp/paratii-alpha-' + String(Math.random()), // key where to save information
-      'ipfs.bitswap.maxMessageSize': 128 * 1024,
-      'address': null, // 'Ethereum address'
-      'verbose': false
-    };
-    _this.config = dopts(config, defaults, { allowUnknown: true });
+    var schema = joi.object({
+      protocol: joi.string().default(null),
+      onReadyHook: joi.array().ordered().default([]),
+      'config.addresses.swarm': joi.array().ordered(joi.string().default('/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star'), joi.string().default('/dns/ws.star.paratii.video/wss/p2p-websocket-star/')),
+      'ipfs.config.Bootstrap': joi.array().ordered(joi.string().default('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW')),
+      'ipfs.repo': joi.string().default('/tmp/paratii-alpha-' + String(Math.random())),
+      'ipfs.bitswap.maxMessageSize': joi.number().default(128 * 1024),
+      address: joi.string().default(null),
+      verbose: joi.bool().default(true)
+    }).unknown();
 
+    var result = joi.validate(config, schema);
+    var error = result.error;
+    if (error) throw error;
+    _this.config = result.value;
     _this.uploader = new Uploader(_this);
     return _this;
   }
@@ -166,71 +167,79 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
           resolve(_this2.ipfs);
         } else {
           var config = _this2.config;
-          var ipfs = new Ipfs({
-            bitswap: {
-              maxMessageSize: config['ipfs.bitswap.maxMessageSize']
-            },
-            start: true,
-            repo: config['repo'] || '/tmp/test-repo-' + String(Math.random()),
-            config: {
-              Addresses: {
-                Swarm: config['ipfs.config.addresses.swarm']
+          // there will be no joi in IPFS (pun indended)
+          _promise2.default.resolve().then(function () {
+            return require('ipfs');
+          }) // eslint-disable-line
+          .then(function (Ipfs) {
+            var ipfs = new Ipfs({
+              bitswap: {
+                maxMessageSize: 256 * 1024
               },
-              Bootstrap: config['ipfs.config.Bootstrap']
-            }
-          });
-
-          _this2.ipfs = ipfs;
-
-          ipfs.on('ready', function () {
-            _this2.log('[IPFS] node Ready.');
-
-            ipfs._bitswap.notifications.on('receivedNewBlock', function (peerId, block) {
-              _this2.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length);
-              _this2.log('---------[IPFS] bitswap LedgerMap ---------------------');
-              ipfs._bitswap.engine.ledgerMap.forEach(function (ledger, peerId, ledgerMap) {
-                _this2.log(peerId + ' : ' + (0, _stringify2.default)(ledger.accounting) + '\n');
-              });
-              _this2.log('-------------------------------------------------------');
+              start: true,
+              repo: config['ipfs.repo'] || '/tmp/test-repo-' + String(Math.random()),
+              config: {
+                Addresses: {
+                  Swarm: ['/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star', '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/']
+                },
+                Bootstrap: ['/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW']
+              }
             });
 
-            ipfs.id().then(function (id) {
-              var peerInfo = id;
-              _this2.id = id;
-              _this2.log('[IPFS] id:  ' + peerInfo);
-              var ptiAddress = _this2.config.address || 'no_address';
-              _this2.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
-              // add ETH Address here.
-              ptiAddress);
+            _this2.ipfs = ipfs;
 
-              // uploader
-              _this2.uploader.setOptions({
-                node: ipfs,
-                chunkSize: 128 * 1024
+            ipfs.on('ready', function () {
+              _this2.log('[IPFS] node Ready.');
+
+              ipfs._bitswap.notifications.on('receivedNewBlock', function (peerId, block) {
+                _this2.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length);
+                _this2.log('---------[IPFS] bitswap LedgerMap ---------------------');
+                ipfs._bitswap.engine.ledgerMap.forEach(function (ledger, peerId, ledgerMap) {
+                  _this2.log(peerId + ' : ' + (0, _stringify2.default)(ledger.accounting) + '\n');
+                });
+                _this2.log('-------------------------------------------------------');
               });
 
-              _this2.protocol.notifications.on('message:new', function (peerId, msg) {
-                _this2.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
-              });
-              // emit all commands.
-              // NOTE : this will be changed once protocol upgrades are ready.
-              _this2.protocol.notifications.on('command', function (peerId, command) {
-                _this2.emit('protocol:incoming', peerId, command);
-              });
+              ipfs.id().then(function (id) {
+                var peerInfo = id;
+                _this2.id = id;
+                _this2.log('[IPFS] id:  ' + peerInfo);
+                var ptiAddress = _this2.config.address || 'no_address';
+                _this2.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
+                // add ETH Address here.
+                ptiAddress);
 
-              _this2.ipfs = ipfs;
-              _this2.protocol.start(function () {
-                resolve(ipfs);
+                // uploader
+                _this2.uploader.setOptions({
+                  node: ipfs,
+                  chunkSize: 128 * 1024
+                });
+
+                _this2.protocol.notifications.on('message:new', function (peerId, msg) {
+                  _this2.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
+                });
+                // emit all commands.
+                // NOTE : this will be changed once protocol upgrades are ready.
+                _this2.protocol.notifications.on('command', function (peerId, command) {
+                  _this2.emit('protocol:incoming', peerId, command);
+                });
+
+                _this2.ipfs = ipfs;
+                _this2.protocol.start(function () {
+                  setTimeout(function () {
+                    resolve(ipfs);
+                  }, 10);
+                });
               });
             });
-          });
 
-          ipfs.on('error', function (err) {
-            if (err) {
-              // this.log('IPFS node ', ipfs)
-              _this2.error('[IPFS] Error ', err);
-              reject(err);
-            }
+            ipfs.on('error', function (err) {
+              if (err) {
+                // this.log('IPFS node ', ipfs)
+                _this2.error('[IPFS] Error ', err);
+                reject(err);
+              }
+            });
           });
         }
       });
@@ -287,51 +296,105 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
         }
       }, null, this, [[5, 11]]);
     }
+
+    /**
+     * convenient method to add JSON and send it for persistance storage.
+     * @param  {object}  data JSON object to store
+     * @return {string}      returns multihash of the stored object.
+     */
+
   }, {
-    key: 'getJSON',
-    value: function getJSON(multihash) {
-      var ipfs, node;
-      return _regenerator2.default.async(function getJSON$(_context4) {
+    key: 'addAndPinJSON',
+    value: function addAndPinJSON(data) {
+      var _this3 = this;
+
+      var hash, pinFile, pinEv;
+      return _regenerator2.default.async(function addAndPinJSON$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
               _context4.next = 2;
+              return _regenerator2.default.awrap(this.addJSON(data));
+
+            case 2:
+              hash = _context4.sent;
+
+              pinFile = function pinFile() {
+                var pinEv = _this3.uploader.pinFile(hash, { author: _this3.config.account.address });
+                pinEv.on('pin:error', function (err) {
+                  console.warn('pin:error:', hash, ' : ', err);
+                  pinEv.removeAllListeners();
+                });
+                pinEv.on('pin:done', function (hash) {
+                  console.log('pin:done:', hash);
+                  pinEv.removeAllListeners();
+                });
+                return pinEv;
+              };
+
+              pinEv = pinFile();
+
+
+              pinEv.on('pin:error', function (err) {
+                console.warn('pin:error:', hash, ' : ', err);
+                console.log('trying again');
+                pinEv = pinFile();
+              });
+
+              return _context4.abrupt('return', hash);
+
+            case 7:
+            case 'end':
+              return _context4.stop();
+          }
+        }
+      }, null, this);
+    }
+  }, {
+    key: 'getJSON',
+    value: function getJSON(multihash) {
+      var ipfs, node;
+      return _regenerator2.default.async(function getJSON$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              _context5.next = 2;
               return _regenerator2.default.awrap(this.getIPFSInstance());
 
             case 2:
-              ipfs = _context4.sent;
+              ipfs = _context5.sent;
 
               // if (!this.ipfs || !this.ipfs.isOnline()) {
               //   throw new Error('IPFS node is not ready, please trigger getIPFSInstance first')
               // }
 
               node = void 0;
-              _context4.prev = 4;
-              _context4.next = 7;
+              _context5.prev = 4;
+              _context5.next = 7;
               return _regenerator2.default.awrap(ipfs.files.cat(multihash));
 
             case 7:
-              node = _context4.sent;
-              _context4.next = 14;
+              node = _context5.sent;
+              _context5.next = 14;
               break;
 
             case 10:
-              _context4.prev = 10;
-              _context4.t0 = _context4['catch'](4);
+              _context5.prev = 10;
+              _context5.t0 = _context5['catch'](4);
 
-              if (!_context4.t0) {
-                _context4.next = 14;
+              if (!_context5.t0) {
+                _context5.next = 14;
                 break;
               }
 
-              throw _context4.t0;
+              throw _context5.t0;
 
             case 14:
-              return _context4.abrupt('return', JSON.parse(node.toString()));
+              return _context5.abrupt('return', JSON.parse(node.toString()));
 
             case 15:
             case 'end':
-              return _context4.stop();
+              return _context5.stop();
           }
         }
       }, null, this, [[4, 10]]);

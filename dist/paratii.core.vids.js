@@ -23,98 +23,171 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var dopts = require('default-options');
+var joi = require('joi');
+
+var schema = joi.object({
+  id: joi.string().default(null),
+  author: joi.string().empty('').default('').allow(null),
+  description: joi.string().empty('').default(''),
+  duration: joi.string().empty('').default('').allow(null),
+  filename: joi.string().empty('').default('').allow(null).allow(''),
+  filesize: joi.any(),
+  // .default(null).allow(null).empty(''),
+  free: joi.string().empty('').default(null).allow(null),
+  ipfsHashOrig: joi.string().empty('').default(''),
+  ipfsHash: joi.string().empty('').default(''),
+  owner: joi.string().required(),
+  price: joi.any().default(0),
+  // published: joi.any().default(false).allow(null),
+  title: joi.string().empty('').default(''),
+  thumbnails: joi.array(),
+  storageStatus: joi.object({
+    name: joi.string().required(),
+    data: joi.object().allow(null)
+  }).optional().default({}),
+  transcodingStatus: joi.object({
+    name: joi.string().required(),
+    data: joi.object().allow(null)
+  }).allow(null).default({}),
+  uploadStatus: joi.object({
+    name: joi.string().required(),
+    data: joi.object().allow(null)
+  }).allow(null).default({})
+});
 
 /**
- * ParatiiCoreVids
- *
+ * validates the config file
+ * @param {Object} config configuration object to initialize Paratii object
  */
 
 var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   function ParatiiCoreVids(config) {
     (0, _classCallCheck3.default)(this, ParatiiCoreVids);
 
-    var defaults = {
-      'db.provider': null
-    };
-    var options = dopts(config, defaults, { allowUnknown: true });
+    var schema = joi.object({
+      'db.provider': joi.string().default(null)
+    }).unknown();
+
+    var result = joi.validate(config, schema);
+    var error = result.error;
+    if (error) throw error;
+    var options = result.value;
+
     this.config = options;
     this.paratii = this.config.paratii;
-    //
-    // this._defaults = {
-    //   id: undefined, // must be a string
-    //   owner: String, // must be a string
-    //   price: 0, // must be a number, optional, default is 0
-    //   title: String, // must be a string
-    //   descripton: undefined, // must be a string, optional
-    //   file: null, // must be string, optional
-    //   ipfsHash: '' // must be a string, optional, default is ''
-    // }
   }
+  /**
+   * Writes a like for the video on the blockchain (contract Likes), and negates a dislike for the video, if it exists.
+   * @param  {String} videoId univocal video identifier
+   * @return {Object}         information about the transaction recording the like
+   */
+
 
   (0, _createClass3.default)(ParatiiCoreVids, [{
     key: 'like',
     value: function like(videoId) {
       return this.paratii.eth.vids.like(videoId);
     }
+    /**
+     * Writes a dislike for the video on the blockchain (contract Likes), and negates a like for the video, if it exists.
+     * @param  {String} videoId univocal video identifier
+     * @return {Object}         information about the transaction recording the dislike
+     */
+
   }, {
     key: 'dislike',
     value: function dislike(videoId) {
       return this.paratii.eth.vids.dislike(videoId);
     }
+    /**
+     * Check if the current user has already liked the video
+     * @param  {String} videoId univocal video identifier
+     * @return {Boolean}         true if the current user already liked the video, false otherwise
+     */
+
   }, {
     key: 'doesLike',
     value: function doesLike(videoId) {
       return this.paratii.eth.vids.doesLike(videoId);
     }
+    /**
+     * [hasViewedVideo description]
+     * @param  {String}  viewer  viewer address
+     * @param  {String}  videoId univocal video identifier
+     * @return {Boolean}         true if the current user already liked the video, false otherwise
+     */
+
   }, {
     key: 'hasViewedVideo',
     value: function hasViewedVideo(viewer, videoId) {
       return this.paratii.eth.vids.userViewedVideo({ viewer: viewer, videoId: videoId });
     }
+    /**
+     * Check if the current user has already disliked the video
+     * @param  {String} videoId univocal video identifier
+     * @return {Boolean}         true if the current user already disliked the video, false otherwise
+     */
+
   }, {
     key: 'doesDislike',
     value: function doesDislike(videoId) {
       return this.paratii.eth.vids.doesDislike(videoId);
     }
+    /**
+     * This call will register the video on the blockchain, add its metadata to IPFS, upload file to IPFS, and transcode it
+     * @param  {Object}  options information about the video ( videoId, title, FilePath ... )
+     * @return {Promise}         information about the video ( VideoId, owner, ipfsHash ... )
+     */
+
   }, {
     key: 'create',
     value: function create(options) {
-      var defaults, hash;
+      var result, error, hash;
       return _regenerator2.default.async(function create$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              defaults = {
-                id: null, // optional, a string
-                owner: undefined, // must be a string
-                price: 0, // must be a number, optional, default is 0
-                title: undefined, // must be a string
-                description: null, // must be a string, optional
-                file: null, // must be string, optional
-                ipfsHashOrig: '', // must be a string, optional, default is ''
-                ipfsHash: '' // must be a string, optional, default is ''
-              };
+              // FIXME: validate!!
+              result = joi.validate(options, schema);
+              error = result.error;
 
+              if (!error) {
+                _context.next = 4;
+                break;
+              }
 
-              options = dopts(options, defaults);
+              throw error;
+
+            case 4:
+              options = result.value;
 
               if (options.id === null) {
                 options.id = this.paratii.eth.vids.makeId();
               }
 
-              _context.next = 5;
-              return _regenerator2.default.awrap(this.paratii.ipfs.addJSON({
+              _context.next = 8;
+              return _regenerator2.default.awrap(this.paratii.ipfs.addAndPinJSON({
+                author: options.author,
+                description: options.description,
+                duration: options.duration,
+                filename: options.filename,
+                filesize: options.filesize,
+                free: options.fee,
+                // published: options.published,
+                storageStatus: options.storageStatus,
                 title: options.title,
-                description: options.description
+                transcodingStatus: options.transcodingStatus,
+                uploadStatus: options.uploadStatus,
+                thumbnails: options.thumbnails
               }));
 
-            case 5:
+            case 8:
               hash = _context.sent;
 
 
               options.ipfsData = hash;
-              _context.next = 9;
+
+              _context.next = 12;
               return _regenerator2.default.awrap(this.paratii.eth.vids.create({
                 id: options.id,
                 owner: options.owner,
@@ -124,58 +197,129 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 ipfsData: options.ipfsData
               }));
 
-            case 9:
+            case 12:
               return _context.abrupt('return', options);
 
-            case 10:
+            case 13:
             case 'end':
               return _context.stop();
           }
         }
       }, null, this);
     }
+    /**
+     * Update the information on the video.
+    *  Only the account that has registered the video, or the owner of the contract, can update the information.
+     * @param  {String}  videoId      univocal video identifier
+     * @param  {Object}  options      key value pairs of properties and new values e.g. ({title: 'another-title'})
+     * @param  {Object}  dataToUpdate optional. old data of the video. If not passed to the method, it will fetch the data itself using the videoId
+     * @return {Promise}              Updated video informations
+     */
+
   }, {
     key: 'update',
-    value: function update(videoId, options) {
-      var defaults, data, key;
+    value: function update(videoId, options, dataToUpdate) {
+      var data, elements, dataToSave;
       return _regenerator2.default.async(function update$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              defaults = {
-                description: null,
-                owner: null, // must be a string, optional
-                price: null, // must be a number, optional, default is 0
-                title: null, // must be a string, optional
-                file: null, // must be string, optional
-                ipfsHashOrig: '', // must be a string, optional, default is ''
-                ipfsHash: null // must be a string, optional, default is ''
-              };
+              data = void 0;
 
-              options = dopts(options, defaults);
-
-              _context2.next = 4;
-              return _regenerator2.default.awrap(this.get(videoId));
-
-            case 4:
-              data = _context2.sent;
-
-              delete data['ipfsData'];
-              for (key in options) {
-                if (options[key] !== null) {
-                  data[key] = options[key];
-                }
+              if (!dataToUpdate) {
+                _context2.next = 5;
+                break;
               }
 
-              _context2.next = 9;
-              return _regenerator2.default.awrap(this.create(data));
+              data = dataToUpdate;
+              _context2.next = 8;
+              break;
+
+            case 5:
+              _context2.next = 7;
+              return _regenerator2.default.awrap(this.get(videoId));
+
+            case 7:
+              data = _context2.sent;
+
+            case 8:
+              if (!(data === null)) {
+                _context2.next = 10;
+                break;
+              }
+
+              throw new Error('No video to update');
+
+            case 10:
+
+              // FIXME: missing the validate invociation
+
+              elements = schema._inner.children;
+              dataToSave = {};
+
+
+              elements.forEach(function (name) {
+                var key = name.key;
+                if (options[key] !== undefined) {
+                  dataToSave[key] = options[key];
+                } else {
+                  dataToSave[key] = data[key];
+                }
+              });
+              _context2.next = 15;
+              return _regenerator2.default.awrap(this.create(dataToSave));
+
+            case 15:
+              return _context2.abrupt('return', dataToSave);
+
+            case 16:
+            case 'end':
+              return _context2.stop();
+          }
+        }
+      }, null, this);
+    }
+    /**
+     * Update the information of the video the video already exists, otherwise it creates it
+     * @param  {Object}  options video informations
+     * @return {Promise}         updated/new video informations
+     */
+
+  }, {
+    key: 'upsert',
+    value: function upsert(options) {
+      var data;
+      return _regenerator2.default.async(function upsert$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              data = null;
+
+              if (!options.id) {
+                _context3.next = 5;
+                break;
+              }
+
+              _context3.next = 4;
+              return _regenerator2.default.awrap(this.get(options.id));
+
+            case 4:
+              data = _context3.sent;
+
+            case 5:
+              if (data) {
+                _context3.next = 9;
+                break;
+              }
+
+              return _context3.abrupt('return', this.create(options));
 
             case 9:
-              return _context2.abrupt('return', data);
+              return _context3.abrupt('return', this.update(options.id, options, data));
 
             case 10:
             case 'end':
-              return _context2.stop();
+              return _context3.stop();
           }
         }
       }, null, this);
@@ -184,9 +328,9 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
     key: 'view',
     value: function view(options) {
       var keysForBlockchain, optionsKeys, optionsBlockchain, optionsIpfs, hash;
-      return _regenerator2.default.async(function view$(_context3) {
+      return _regenerator2.default.async(function view$(_context4) {
         while (1) {
-          switch (_context3.prev = _context3.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
               keysForBlockchain = ['viewer', 'videoId'];
               optionsKeys = (0, _keys2.default)(options);
@@ -200,18 +344,18 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                   optionsIpfs[key] = options[key];
                 }
               });
-              _context3.next = 7;
+              _context4.next = 7;
               return _regenerator2.default.awrap(this.paratii.ipfs.addJSON(optionsIpfs));
 
             case 7:
-              hash = _context3.sent;
+              hash = _context4.sent;
 
               optionsBlockchain['ipfsData'] = hash;
-              return _context3.abrupt('return', this.paratii.eth.vids.view(optionsBlockchain));
+              return _context4.abrupt('return', this.paratii.eth.vids.view(optionsBlockchain));
 
             case 10:
             case 'end':
-              return _context3.stop();
+              return _context4.stop();
           }
         }
       }, null, this);
@@ -219,18 +363,23 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   }, {
     key: 'get',
     value: function get(videoId) {
-      return _regenerator2.default.async(function get$(_context4) {
+      return _regenerator2.default.async(function get$(_context5) {
         while (1) {
-          switch (_context4.prev = _context4.next) {
+          switch (_context5.prev = _context5.next) {
             case 0:
-              return _context4.abrupt('return', this.paratii.db.vids.get(videoId));
+              return _context5.abrupt('return', this.paratii.db.vids.get(videoId));
 
             case 1:
             case 'end':
-              return _context4.stop();
+              return _context5.stop();
           }
         }
       }, null, this);
+    }
+  }, {
+    key: 'search',
+    value: function search(options) {
+      return this.paratii.db.vids.search(options);
     }
   }]);
   return ParatiiCoreVids;

@@ -27,7 +27,7 @@ var _paratiiIpfs = require('./paratii.ipfs.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var dopts = require('default-options');
+var joi = require('joi');
 var utils = require('./utils.js');
 
 /**
@@ -41,21 +41,24 @@ var Paratii = function () {
     var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     (0, _classCallCheck3.default)(this, Paratii);
 
-    var defaults = {
-      // provider: 'http://localhost:8545',
-      provider: 'ws://localhost:8546',
-      registryAddress: null,
-      address: null, //  Ethereum address
-      privateKey: null,
-      mnemonic: null,
-      'repo': null,
-      'db.provider': String
-    };
-    var options = dopts(opts, defaults);
+    var schema = joi.object({
+      provider: joi.string().default('ws://localhost:8546'),
+      registryAddress: joi.string().default(null),
+      address: joi.string().default(null),
+      privateKey: joi.string().default(null),
+      mnemonic: joi.string().default(null),
+      'ipfs.repo': joi.string(),
+      'db.provider': joi.string()
+    });
+
+    var result = joi.validate(opts, schema);
+    var error = result.error;
+    if (error) throw error;
+    var options = result.value;
 
     this.config = {};
     this.config.provider = options.provider;
-    this.config.repo = options.repo;
+    this.config['ipfs.repo'] = options['ipfs.repo'];
     this.config['db.provider'] = options['db.provider'];
 
     if (this.config.provider.match(/(localhost|127\.0\.0\.1)/g)) {
