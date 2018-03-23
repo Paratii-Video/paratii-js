@@ -19,8 +19,8 @@
     "lint": "standard",
     "lint-fix": "standard --fix",
     "node": "node",
-    "docs": "documentation build lib/** -f html -o jsdoc && documentation build lib/** -f md -o jsdoc/jsdoc.md",
-    "docs-watch": "documentation build lib/** -f html -o jsdoc --watch"
+    "docs": "documentation build lib/** -f html -o docs && documentation build lib/** -f md -o docs/jsdoc.md",
+    "docs-watch": "documentation build lib/** -f html -o docs --watch"
   },
   "dependencies": {
     "async": "^2.6.0",
@@ -99,7 +99,7 @@
     ],
     "ignore": [
       "dist",
-      "jsdoc"
+      "docs"
     ]
   },
   "pre-commit": [
