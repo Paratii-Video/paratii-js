@@ -18,7 +18,11 @@
     "parity": "parity --config parity-config.toml",
     "lint": "standard",
     "lint-fix": "standard --fix",
-    "node": "node"
+    "node": "node",
+    "docs": "npm run docs-html && npm run docs-md",
+    "docs-html": "documentation build lib/** -f html -o docs",
+    "docs-md": "documentation build lib/** -f md -o docs/jsdoc.md",
+    "docs-watch": "documentation build lib/** -f html -o docs --watch"
   },
   "dependencies": {
     "async": "^2.6.0",
@@ -56,6 +60,7 @@
     "browserify-fs": "^1.0.0",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
+    "documentation": "^6.1.0",
     "file-api": "^0.10.4",
     "mocha": "^4.0.1",
     "nock": "^9.1.6",
@@ -95,11 +100,13 @@
       "web3"
     ],
     "ignore": [
-      "dist"
+      "dist",
+      "docs"
     ]
   },
   "pre-commit": [
     "lint",
-    "build"
+    "build",
+    "docs"
   ]
 }
