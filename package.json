@@ -38,7 +38,7 @@
     "multiaddr": "^3.0.2",
     "once": "^1.4.0",
     "paratii-contracts": "github:Paratii-Video/paratii-contracts#6651984d0bf7f2a905631087975c5a412d5e4cb7",
-    "paratii-protocol": "github:Paratii-Video/paratii-protocol#4e6f4da9c0f0eb0e79cf1c1b2eafb788cc134888",
+    "paratii-protocol": "github:Paratii-Video/paratii-protocol#dev",
     "promisify-node": "^0.4.0",
     "pull-filereader": "^1.0.1",
     "resumablejs": "^1.1.0",
