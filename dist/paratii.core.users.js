@@ -26,8 +26,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var joi = require('joi');
 
 /**
- * ParatiiCoreUsers
- *
+ * Utilities to create and manipulate information about the users on the blockchain.
+ * @param {Object} config configuration object to initialize Paratii object
  */
 
 var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
@@ -45,9 +45,16 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
     this.paratii = this.config.paratii;
   }
   /**
-   * [create description]
-   * @param  {[type]}  options [description]
-   * @return {Promise}         [description]
+   * Creates a user, fields id, name and email go to the smart contract Users, other fields are stored on IPFS.
+   * @param  {Object}  options information about the video ( id, name, email ... )
+   * @return {Promise}         the id of the newly created user
+   * @example
+   *            paratii.core.users.create({
+   *              id: 'some-user-id',
+   *              name: 'A user name',
+   *              email: 'some@email.com',
+   *              ...
+   *             })
    */
 
 
@@ -87,11 +94,27 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
         }
       }, null, this);
     }
+    /**
+     * retrieve data about the user
+     * @param  {String} id user univocal id
+     * @return {Object}    data about the user
+     * @example paratii.core.users.get('some-user-id')
+     *
+    */
+
   }, {
     key: 'get',
     value: function get(id) {
       return this.paratii.db.users.get(id);
     }
+    /**
+     * Updates a user's details. name and email are defined in the smart contract Users, other fields get written to IPFS.
+     * @param  {String}  userId  user univocal id
+     * @param  {Object}  options updated data i.e. { name: 'A new user name' }
+     * @return {Promise}         updated data about the user
+     * @example paratii.core.users.update('some-user-id', {name: 'A new user name'})
+     */
+
   }, {
     key: 'update',
     value: function update(userId, options) {

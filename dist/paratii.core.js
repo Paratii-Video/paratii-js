@@ -18,16 +18,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var joi = require('joi');
 
 /**
- * ParatiiCore
- * Contains functions that operate transversally over several backend systems.
- */
-
-var ParatiiCore =
-/**
- * validates the config file and istantiates ParatiiCoreVids and ParatiiCoreUsers
+ * Contains functions that operate transversally over several backend systems. <br />
+ * validates the config file and istantiates ParatiiCoreVids and ParatiiCoreUsers.
  * @param {Object} config configuration object to initialize Paratii object
  */
-exports.ParatiiCore = function ParatiiCore(config) {
+
+var ParatiiCore = exports.ParatiiCore = function ParatiiCore(config) {
   (0, _classCallCheck3.default)(this, ParatiiCore);
 
   var schema = joi.object({
