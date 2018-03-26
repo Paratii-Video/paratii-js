@@ -152,7 +152,7 @@ Update the information of the video the video already exists, otherwise it creat
 
 **Parameters**
 
--   `options` **[Object][35]** video informations
+-   `options` **[Object][35]** video information
 
 Returns **[Promise][36]** updated/new video informations
 

@@ -1,9 +1,8 @@
 # The Paratii Library
 
 
-
-
-The Paratii javascript library is the preferred way for clients to interact with the deployed contracts on the blockchain.  It offers access to the contracts, and convenience functions that provide more useful error handling that making direct calls to the blockchain can offer. It also offers wallet functionality.
+The Paratii javascript library is the place where developers can interact with the [Paratii platform](https://paratii.video/)
+It offers access to the contracts, and convenience functions that provide more useful error handling that making direct calls to the blockchain can offer. It also offers wallet functionality.
 
 It is still very much under development, and most of the things in this documentation are not implemented yet
 
