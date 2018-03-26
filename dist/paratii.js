@@ -33,7 +33,6 @@ var utils = require('./utils.js');
 /**
  * Paratii Library
  * for usage, see https://github.com/Paratii-Video/paratii-contracts/tree/master/docs
- *
  */
 
 var Paratii = function () {
@@ -200,6 +199,7 @@ var Paratii = function () {
   return Paratii;
 }();
 
+exports.default = Paratii;
 exports.Paratii = Paratii;
 exports.utils = utils;
 exports.ParatiiIPFS = _paratiiIpfs.ParatiiIPFS;

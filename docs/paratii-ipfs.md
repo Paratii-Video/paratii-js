@@ -11,7 +11,7 @@ Contains functions to interact with the IPFS instance.
 
 It is also available as `ipfs` in `Paratii` instances:
 
-    import { Paratii } from 'paratii-lib'
+    import Paratii from 'paratii-lib'
     paratii = new Paratii()
     paratii.ipfs // is a ParatiiIPFS instance
 

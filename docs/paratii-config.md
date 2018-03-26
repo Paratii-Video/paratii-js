@@ -5,11 +5,11 @@
 ## importing
 
 
-    import { Paratii } from 'paratii-contracts';
+    import Paratii from 'paratii-js';
 
 Or, if ES6 is not available:
 
-    Paratii = require('paratii-contracts').Paratii
+    Paratii = require('paratii-js').Paratii
 
 
 ## initialization
