@@ -20,7 +20,7 @@
     -   [get][16]
     -   [search][17]
 -   [ParatiiDb][18]
--   [fetch][19]
+-   [ParatiiDbUsers][19]
 -   [joi][20]
 -   [constructor][21]
 -   [getTcrContract][22]
@@ -322,16 +322,21 @@ Returns **[Promise][44]** data about the video
 
 ## ParatiiDb
 
-ParatiiDb contains a functionality to interact with the Paratii Blockchain Index
+ParatiiDb contains a functionality to interact with the Paratii Blockchain Index. <br>
 validates the config file and istantiates ParatiiDbVids and ParatiiDbUsers.
 
 **Parameters**
 
 -   `config` **[Object][43]** 
 
-## fetch
+## ParatiiDbUsers
 
-ParatiiDb contains a functionality to interact with the Paratii Blockchain Index
+ParatiiDbUsers contains functionalities regarding the users to interact with the Paratii Blockchain Index
+
+**Parameters**
+
+-   `config`  
+-   `configuration` **[Object][43]** object to initialize Paratii object
 
 ## joi
 
@@ -532,7 +537,7 @@ and utilities to interact with the Paratii index.
     -   `opts.registryAddress` **[String][45]** optional - the address where the Paratii Contract registry can be found
     -   `opts.address` **[String][45]** optional - address of the operator/user
     -   `opts.privateKey` **[String][45]** optional - private key of the user
-    -   `opts.mnemonic` **[String][45]** optional - mnemonic of the user
+    -   `opts.mnemonic` **[String][45]** optional - mnemonic of the user TEST
 
 **Examples**
 
@@ -617,7 +622,7 @@ Returns **[Promise][44]** array of strings with diagnostic info
 
 [18]: #paratiidb
 
-[19]: #fetch
+[19]: #paratiidbusers
 
 [20]: #joi
 

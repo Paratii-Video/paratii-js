@@ -173,11 +173,29 @@
               
                 
                 <li><a
-                  href='#fetch'
-                  class="">
-                  fetch
-                  
+                  href='#paratiidbusers'
+                  class=" toggle-sibling">
+                  ParatiiDbUsers
+                  <span class='icon'>▸</span>
                 </a>
+                
+                <div class='toggle-target display-none'>
+                  
+                  
+                    <ul class='list-reset py1-ul pl1'>
+                      <li class='h5'><span>Instance members</span></li>
+                      
+                      <li><a
+                        href='#paratiidbusersget'
+                        class='regular pre-open'>
+                        #get
+                      </a></li>
+                      
+                    </ul>
+                  
+                  
+                  
+                </div>
                 
                 </li>
               
@@ -1724,7 +1742,7 @@ the keyword value can be one <span class="hljs-keyword">from</span> the followin
   </div>
   
 
-  <p>ParatiiDb contains a functionality to interact with the Paratii Blockchain Index
+  <p>ParatiiDb contains a functionality to interact with the Paratii Blockchain Index. <br>
 validates the config file and istantiates ParatiiDbVids and ParatiiDbUsers.</p>
 
 
@@ -1777,30 +1795,42 @@ validates the config file and istantiates ParatiiDbVids and ParatiiDbUsers.</p>
   
   <div class='clearfix'>
     
-    <h3 class='fl m0' id='fetch'>
-      fetch
+    <h3 class='fl m0' id='paratiidbusers'>
+      ParatiiDbUsers
     </h3>
     
     
   </div>
   
 
-  <p>ParatiiDb contains a functionality to interact with the Paratii Blockchain Index</p>
+  <p>ParatiiDbUsers contains functionalities regarding the users to interact with the Paratii Blockchain Index</p>
 
 
-  <div class='pre p1 fill-light mt0'>fetch</div>
-  
-  
-
-  
-  
-  
-  
+  <div class='pre p1 fill-light mt0'>new ParatiiDbUsers(config: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</div>
   
   
 
   
+  
+  
+  
+  
+  
 
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>config</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    object to initialize Paratii object
+
+          </div>
+          
+        </div>
+      
+    </div>
   
 
   
@@ -1810,6 +1840,88 @@ validates the config file and istantiates ParatiiDbVids and ParatiiDbUsers.</p>
   
 
   
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Instance Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='paratiidbusersget'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>get(userId)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>retrieve data about the user</p>
+
+
+  <div class='pre p1 fill-light mt0'>get(userId: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>userId</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    user univocal id
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></code>:
+        data about the user
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>paratii.db.users.get(<span class="hljs-string">'some-user-id'</span>)</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
 
   
 
@@ -3196,6 +3308,46 @@ and utilities to interact with the Paratii index.</p>
   <td class='break-word'><span>optional - private key of the user
 </span></td>
 </tr>
+
+
+              
+                <tr>
+  <td class='break-word'><span class='code bold'>opts.ipfs</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code>
+  </td>
+  <td class='break-word'><span>TODO fix ipfs.repo --> ipfsrepo
+</span></td>
+</tr>
+
+  
+    <tr>
+  <td class='break-word'><span class='code bold'>opts.ipfs.repo</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+  </td>
+  <td class='break-word'><span>optional - namespace of the ipfs repository
+</span></td>
+</tr>
+
+
+  
+
+
+              
+                <tr>
+  <td class='break-word'><span class='code bold'>opts.db</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code>
+  </td>
+  <td class='break-word'><span>TODO fix db.provider --> dbprovider
+</span></td>
+</tr>
+
+  
+    <tr>
+  <td class='break-word'><span class='code bold'>opts.db.provider</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+  </td>
+  <td class='break-word'><span>optional - baseURL of the mongoDb mirror
+</span></td>
+</tr>
+
+
+  
 
 
               
