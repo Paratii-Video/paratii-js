@@ -191,6 +191,12 @@
                         #get
                       </a></li>
                       
+                      <li><a
+                        href='#paratiidbusersvideos'
+                        class='regular pre-open'>
+                        #videos
+                      </a></li>
+                      
                     </ul>
                   
                   
@@ -201,11 +207,35 @@
               
                 
                 <li><a
-                  href='#joi'
-                  class="">
-                  joi
-                  
+                  href='#paratiidbvids'
+                  class=" toggle-sibling">
+                  ParatiiDbVids
+                  <span class='icon'>▸</span>
                 </a>
+                
+                <div class='toggle-target display-none'>
+                  
+                  
+                    <ul class='list-reset py1-ul pl1'>
+                      <li class='h5'><span>Instance members</span></li>
+                      
+                      <li><a
+                        href='#paratiidbvidsget'
+                        class='regular pre-open'>
+                        #get
+                      </a></li>
+                      
+                      <li><a
+                        href='#paratiidbvidssearch'
+                        class='regular pre-open'>
+                        #search
+                      </a></li>
+                      
+                    </ul>
+                  
+                  
+                  
+                </div>
                 
                 </li>
               
@@ -301,91 +331,71 @@
               
                 
                 <li><a
-                  href='#require'
-                  class="">
-                  require
-                  
+                  href='#uploader'
+                  class=" toggle-sibling">
+                  Uploader
+                  <span class='icon'>▸</span>
                 </a>
                 
-                </li>
-              
-                
-                <li><a
-                  href='#add'
-                  class="">
-                  add
+                <div class='toggle-target display-none'>
                   
-                </a>
-                
-                </li>
-              
-                
-                <li><a
-                  href='#html5filetopull'
-                  class="">
-                  html5FileToPull
                   
-                </a>
-                
-                </li>
-              
-                
-                <li><a
-                  href='#fsfiletopull'
-                  class="">
-                  fsFileToPull
+                    <ul class='list-reset py1-ul pl1'>
+                      <li class='h5'><span>Instance members</span></li>
+                      
+                      <li><a
+                        href='#uploaderadd'
+                        class='regular pre-open'>
+                        #add
+                      </a></li>
+                      
+                      <li><a
+                        href='#uploaderhtml5filetopull'
+                        class='regular pre-open'>
+                        #html5FileToPull
+                      </a></li>
+                      
+                      <li><a
+                        href='#uploaderfsfiletopull'
+                        class='regular pre-open'>
+                        #fsFileToPull
+                      </a></li>
+                      
+                      <li><a
+                        href='#uploaderupload'
+                        class='regular pre-open'>
+                        #upload
+                      </a></li>
+                      
+                      <li><a
+                        href='#uploaderadddirectory'
+                        class='regular pre-open'>
+                        #addDirectory
+                      </a></li>
+                      
+                      <li><a
+                        href='#uploadertranscode'
+                        class='regular pre-open'>
+                        #transcode
+                      </a></li>
+                      
+                      <li><a
+                        href='#uploader_transcoderresphander'
+                        class='regular pre-open'>
+                        #_transcoderRespHander
+                      </a></li>
+                      
+                      <li><a
+                        href='#uploaderaddandtranscode'
+                        class='regular pre-open'>
+                        #addAndTranscode
+                      </a></li>
+                      
+                    </ul>
                   
-                </a>
-                
-                </li>
-              
-                
-                <li><a
-                  href='#upload'
-                  class="">
-                  upload
                   
-                </a>
-                
-                </li>
-              
-                
-                <li><a
-                  href='#adddirectory'
-                  class="">
-                  addDirectory
                   
-                </a>
-                
-                </li>
-              
-                
-                <li><a
-                  href='#transcode'
-                  class="">
-                  transcode
-                  
-                </a>
-                
-                </li>
-              
-                
-                <li><a
-                  href='#_transcoderresphander'
-                  class="">
-                  _transcoderRespHander
-                  
-                </a>
-                
-                </li>
-              
-                
-                <li><a
-                  href='#addandtranscode'
-                  class="">
-                  addAndTranscode
-                  
-                </a>
+                </div>
                 
                 </li>
               
@@ -1921,6 +1931,80 @@ validates the config file and istantiates ParatiiDbVids and ParatiiDbUsers.</p>
       </div>
     </div>
   
+    <div class='border-bottom' id='paratiidbusersvideos'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>videos(userId)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>get information about all the videos of the user</p>
+
+
+  <div class='pre p1 fill-light mt0'>videos(userId: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>userId</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    univocal user identifier
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></code>:
+        Collection of all the videos of the user
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>paratii.db.users.videos(<span class="hljs-string">'some-user-id'</span>)</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
 </div>
 
   
@@ -1936,30 +2020,42 @@ validates the config file and istantiates ParatiiDbVids and ParatiiDbUsers.</p>
   
   <div class='clearfix'>
     
-    <h3 class='fl m0' id='joi'>
-      joi
+    <h3 class='fl m0' id='paratiidbvids'>
+      ParatiiDbVids
     </h3>
     
     
   </div>
   
 
-  <p>ParatiiDb contains a functionality to interact with the Paratii Blockchain Index</p>
+  <p>ParatiiDbUsers contains functionalities regarding the videos to interact with the Paratii Blockchain Index</p>
 
 
-  <div class='pre p1 fill-light mt0'>joi</div>
-  
-  
-
-  
-  
-  
-  
+  <div class='pre p1 fill-light mt0'>new ParatiiDbVids(config: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</div>
   
   
 
   
+  
+  
+  
+  
+  
 
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>config</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    object to initialize Paratii object
+
+          </div>
+          
+        </div>
+      
+    </div>
   
 
   
@@ -1969,6 +2065,169 @@ validates the config file and istantiates ParatiiDbVids and ParatiiDbUsers.</p>
   
 
   
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Instance Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='paratiidbvidsget'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>get(videoId)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Get information about this video from the db</p>
+
+
+  <div class='pre p1 fill-light mt0'>get(videoId: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>videoId</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    univocal video identifier
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></code>:
+        data about the video
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>paratii.db.vids.get(<span class="hljs-string">'some-video-id'</span>)</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='paratiidbvidssearch'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>search(options)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Get the data of the video</p>
+
+
+  <div class='pre p1 fill-light mt0'>search(options: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>options</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    data about the video and (optional) owner i.e {'keyword':'titleOfTheVideo'}
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></code>:
+        data about the video
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>paratii.db.vids.search({<span class="hljs-attr">keyword</span> : <span class="hljs-string">'titleOftheVideo'</span>})
+the keyword value can be one <span class="hljs-keyword">from</span> the following list
+- video title
+- description
+- owner
+- uploader.name
+- uploader.address
+- tags</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
 
   
 
@@ -2602,58 +2861,83 @@ description
   
   <div class='clearfix'>
     
-    <h3 class='fl m0' id='require'>
-      require
+    <h3 class='fl m0' id='uploader'>
+      Uploader
     </h3>
     
     
   </div>
   
 
-  
+  <p>IPFS UPLOADER : Paratii IPFS uploader interface.
+Contains functions to interact with the IPFS instance.</p>
 
-  <div class='pre p1 fill-light mt0'>require</div>
-  
-  
 
+  <div class='pre p1 fill-light mt0'>new Uploader(paratiiIPFS: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, opts: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</div>
   
   
-  
-  
-  
-  
-
-  
-
+    <p>
+      Extends
+      
+        EventEmitter
+      
+    </p>
   
 
   
-
+  
+  
+  
+  
   
 
   
-
-  
-
-  
-
-  
-</section>
-
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>paratiiIPFS</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    
+          </div>
           
-        
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>opts</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    
+          </div>
           
-            <section class='p2 mb2 clearfix bg-white minishadow'>
+        </div>
+      
+    </div>
+  
 
   
-  <div class='clearfix'>
-    
-    <h3 class='fl m0' id='add'>
-      add
-    </h3>
-    
-    
-  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Instance Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='uploaderadd'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>add(file)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
   
 
   <p>uploads a single file to <em>local</em> IPFS node</p>
@@ -2709,20 +2993,19 @@ description
   
 </section>
 
-          
-        
-          
-            <section class='p2 mb2 clearfix bg-white minishadow'>
-
+      </div>
+    </div>
   
-  <div class='clearfix'>
-    
-    <h3 class='fl m0' id='html5filetopull'>
-      html5FileToPull
-    </h3>
-    
-    
-  </div>
+    <div class='border-bottom' id='uploaderhtml5filetopull'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>html5FileToPull(file)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
   
 
   <p>returns a generic File Object with a Pull Stream from an HTML5 File</p>
@@ -2778,20 +3061,19 @@ description
   
 </section>
 
-          
-        
-          
-            <section class='p2 mb2 clearfix bg-white minishadow'>
-
+      </div>
+    </div>
   
-  <div class='clearfix'>
-    
-    <h3 class='fl m0' id='fsfiletopull'>
-      fsFileToPull
-    </h3>
-    
-    
-  </div>
+    <div class='border-bottom' id='uploaderfsfiletopull'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>fsFileToPull(filePath)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
   
 
   <p>returns a generic file Object from a file path</p>
@@ -2847,20 +3129,19 @@ description
   
 </section>
 
-          
-        
-          
-            <section class='p2 mb2 clearfix bg-white minishadow'>
-
+      </div>
+    </div>
   
-  <div class='clearfix'>
-    
-    <h3 class='fl m0' id='upload'>
-      upload
-    </h3>
-    
-    
-  </div>
+    <div class='border-bottom' id='uploaderupload'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>upload(files)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
   
 
   <p>upload an Array of files as is to the local IPFS node</p>
@@ -2923,20 +3204,19 @@ description
   
 </section>
 
-          
-        
-          
-            <section class='p2 mb2 clearfix bg-white minishadow'>
-
+      </div>
+    </div>
   
-  <div class='clearfix'>
-    
-    <h3 class='fl m0' id='adddirectory'>
-      addDirectory
-    </h3>
-    
-    
-  </div>
+    <div class='border-bottom' id='uploaderadddirectory'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>addDirectory(dirPath)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
   
 
   <p>upload an entire directory to IPFS</p>
@@ -2992,20 +3272,19 @@ description
   
 </section>
 
-          
-        
-          
-            <section class='p2 mb2 clearfix bg-white minishadow'>
-
+      </div>
+    </div>
   
-  <div class='clearfix'>
-    
-    <h3 class='fl m0' id='transcode'>
-      transcode
-    </h3>
-    
-    
-  </div>
+    <div class='border-bottom' id='uploadertranscode'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>transcode(fileHash, options)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
   
 
   <p>signals transcoder(s) to transcode fileHash</p>
@@ -3079,20 +3358,19 @@ description
   
 </section>
 
-          
-        
-          
-            <section class='p2 mb2 clearfix bg-white minishadow'>
-
+      </div>
+    </div>
   
-  <div class='clearfix'>
-    
-    <h3 class='fl m0' id='_transcoderresphander'>
-      _transcoderRespHander
-    </h3>
-    
-    
-  </div>
+    <div class='border-bottom' id='uploader_transcoderresphander'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>_transcoderRespHander(ev, fileHash)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
   
 
   <p>handles responses from the paratii-protocol in case of transcoding.</p>
@@ -3156,20 +3434,19 @@ description
   
 </section>
 
-          
-        
-          
-            <section class='p2 mb2 clearfix bg-white minishadow'>
-
+      </div>
+    </div>
   
-  <div class='clearfix'>
-    
-    <h3 class='fl m0' id='addandtranscode'>
-      addAndTranscode
-    </h3>
-    
-    
-  </div>
+    <div class='border-bottom' id='uploaderaddandtranscode'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>addAndTranscode(files)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
   
 
   <p>convenience method for adding and transcoding files</p>
@@ -3211,6 +3488,16 @@ description
   
 
   
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
 
   
 
