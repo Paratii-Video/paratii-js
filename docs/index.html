@@ -321,11 +321,29 @@
               
                 
                 <li><a
-                  href='#addandpinjson'
-                  class="">
-                  addAndPinJSON
-                  
+                  href='#paratiiipfs'
+                  class=" toggle-sibling">
+                  ParatiiIPFS
+                  <span class='icon'>▸</span>
                 </a>
+                
+                <div class='toggle-target display-none'>
+                  
+                  
+                    <ul class='list-reset py1-ul pl1'>
+                      <li class='h5'><span>Instance members</span></li>
+                      
+                      <li><a
+                        href='#paratiiipfsaddandpinjson'
+                        class='regular pre-open'>
+                        #addAndPinJSON
+                      </a></li>
+                      
+                    </ul>
+                  
+                  
+                  
+                </div>
                 
                 </li>
               
@@ -2792,12 +2810,75 @@ description
   
   <div class='clearfix'>
     
-    <h3 class='fl m0' id='addandpinjson'>
-      addAndPinJSON
+    <h3 class='fl m0' id='paratiiipfs'>
+      ParatiiIPFS
     </h3>
     
     
   </div>
+  
+
+  <p>Contains functions to interact with the IPFS instance.</p>
+
+
+  <div class='pre p1 fill-light mt0'>new ParatiiIPFS(config: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</div>
+  
+  
+    <p>
+      Extends
+      
+        EventEmitter
+      
+    </p>
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>config</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    configuration object to initialize Paratii object
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Instance Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='paratiiipfsaddandpinjson'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>addAndPinJSON(data)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
   
 
   <p>convenient method to add JSON and send it for persistance storage.</p>
@@ -2853,6 +2934,16 @@ description
   
 </section>
 
+      </div>
+    </div>
+  
+</div>
+
+  
+
+  
+</section>
+
           
         
           
@@ -2869,8 +2960,7 @@ description
   </div>
   
 
-  <p>IPFS UPLOADER : Paratii IPFS uploader interface.
-Contains functions to interact with the IPFS instance.</p>
+  <p>IPFS UPLOADER : Paratii IPFS uploader interface.</p>
 
 
   <div class='pre p1 fill-light mt0'>new Uploader(paratiiIPFS: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, opts: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</div>
