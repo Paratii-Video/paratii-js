@@ -69,6 +69,13 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
         }
       }, null, this);
     }
+    /**
+     * get information about all the videos of the user
+     * @param  {String}  userId univocal user identifier
+     * @return {Promise}        Collection of all the videos of the user
+     * @example paratii.db.users.videos('some-user-id')
+     */
+
   }, {
     key: 'videos',
     value: function videos(userId) {
@@ -86,9 +93,11 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
 
             case 2:
               users = _context2.sent;
+
+              console.log(users);
               return _context2.abrupt('return', users);
 
-            case 4:
+            case 5:
             case 'end':
               return _context2.stop();
           }
