@@ -53,6 +53,18 @@
                         #create
                       </a></li>
                       
+                      <li><a
+                        href='#paratiicoreusersget'
+                        class='regular pre-open'>
+                        #get
+                      </a></li>
+                      
+                      <li><a
+                        href='#paratiicoreusersupdate'
+                        class='regular pre-open'>
+                        #update
+                      </a></li>
+                      
                     </ul>
                   
                   
@@ -121,6 +133,24 @@
                         href='#paratiicorevidsupsert'
                         class='regular pre-open'>
                         #upsert
+                      </a></li>
+                      
+                      <li><a
+                        href='#paratiicorevidsview'
+                        class='regular pre-open'>
+                        #view
+                      </a></li>
+                      
+                      <li><a
+                        href='#paratiicorevidsget'
+                        class='regular pre-open'>
+                        #get
+                      </a></li>
+                      
+                      <li><a
+                        href='#paratiicorevidssearch'
+                        class='regular pre-open'>
+                        #search
                       </a></li>
                       
                     </ul>
@@ -374,8 +404,8 @@
   </div>
   
 
-  <p>ParatiiCore
-Contains functions that operate transversally over several backend systems.</p>
+  <p>Contains functions that operate transversally over several backend systems. <br />
+validates the config file and istantiates ParatiiCoreVids and ParatiiCoreUsers.</p>
 
 
   <div class='pre p1 fill-light mt0'>new ParatiiCore(config: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</div>
@@ -436,10 +466,10 @@ Contains functions that operate transversally over several backend systems.</p>
   </div>
   
 
-  <p>ParatiiCoreUsers</p>
+  <p>Utilities to create and manipulate information about the users on the blockchain.</p>
 
 
-  <div class='pre p1 fill-light mt0'>new ParatiiCoreUsers(config: any)</div>
+  <div class='pre p1 fill-light mt0'>new ParatiiCoreUsers(config: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</div>
   
   
 
@@ -456,8 +486,9 @@ Contains functions that operate transversally over several backend systems.</p>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>config</span> <code class='quiet'>(any)</code>
-	    
+            <span class='code bold'>config</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    configuration object to initialize Paratii object
+
           </div>
           
         </div>
@@ -491,10 +522,10 @@ Contains functions that operate transversally over several backend systems.</p>
 
   
 
-  <p>[create description]</p>
+  <p>Creates a user, fields id, name and email go to the smart contract Users, other fields are stored on IPFS.</p>
 
 
-  <div class='pre p1 fill-light mt0'>create(options: [type]): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></div>
+  <div class='pre p1 fill-light mt0'>create(options: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></div>
   
   
 
@@ -511,10 +542,8 @@ Contains functions that operate transversally over several backend systems.</p>
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>options</span> <code class='quiet'>([type])</code>
-	    [
-description
-]
+            <span class='code bold'>options</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    information about the video ( id, name, email ... )
 
           </div>
           
@@ -529,9 +558,7 @@ description
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></code>:
-        [
-description
-]
+        the id of the newly created user
 
       
     
@@ -539,6 +566,174 @@ description
 
   
 
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>paratii.core.users.create({
+             <span class="hljs-attr">id</span>: <span class="hljs-string">'some-user-id'</span>,
+             <span class="hljs-attr">name</span>: <span class="hljs-string">'A user name'</span>,
+             <span class="hljs-attr">email</span>: <span class="hljs-string">'some@email.com'</span>,
+             ...
+            })</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='paratiicoreusersget'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>get(id)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>retrieve data about the user</p>
+
+
+  <div class='pre p1 fill-light mt0'>get(id: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>id</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    user univocal id
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></code>:
+        data about the user
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>paratii.core.users.get(<span class="hljs-string">'some-user-id'</span>)</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='paratiicoreusersupdate'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>update(userId, options)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Updates a user's details. name and email are defined in the smart contract Users, other fields get written to IPFS.</p>
+
+
+  <div class='pre p1 fill-light mt0'>update(userId: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>, options: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>userId</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    user univocal id
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>options</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    updated data i.e. { name: 'A new user name' }
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></code>:
+        updated data about the user
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>paratii.core.users.update(<span class="hljs-string">'some-user-id'</span>, {<span class="hljs-attr">name</span>: <span class="hljs-string">'A new user name'</span>})</pre>
+    
   
 
   
@@ -574,7 +769,7 @@ description
   </div>
   
 
-  <p>validates the config file</p>
+  <p>Utilities to create and manipulate information about the videos on the blockchain.</p>
 
 
   <div class='pre p1 fill-light mt0'>new ParatiiCoreVids(config: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</div>
@@ -675,6 +870,12 @@ description
   
 
   
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>paratii.core.vids.like(<span class="hljs-string">'some-video-id'</span>)</pre>
+    
+  
 
   
 
@@ -742,6 +943,12 @@ description
 
   
 
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>paratii.core.vids.dislike(<span class="hljs-string">'some-video-id'</span>)</pre>
+    
   
 
   
@@ -811,6 +1018,12 @@ description
   
 
   
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>paratii.core.vids.doesLike(<span class="hljs-string">'some-video-id'</span>)</pre>
+    
+  
 
   
 
@@ -834,7 +1047,7 @@ description
 
   
 
-  <p>[hasViewedVideo description]</p>
+  <p>Check if the viewer has already viewed the video</p>
 
 
   <div class='pre p1 fill-light mt0'>hasViewedVideo(viewer: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>, videoId: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></div>
@@ -879,7 +1092,7 @@ description
     
       <div class='py1 quiet mt1 prose-big'>Returns</div>
       <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></code>:
-        true if the current user already liked the video, false otherwise
+        true if the current user already viewed the video, false otherwise
 
       
     
@@ -887,6 +1100,12 @@ description
 
   
 
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>paratii.core.vids.hasViewedVideo(<span class="hljs-string">'some-user-id'</span>,<span class="hljs-string">'some-video-id'</span>)</pre>
+    
   
 
   
@@ -956,6 +1175,12 @@ description
   
 
   
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>paratii.core.vids.doesDislike(<span class="hljs-string">'some-video-id'</span>)</pre>
+    
+  
 
   
 
@@ -1023,6 +1248,21 @@ description
 
   
 
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>paratii.core.vids.create({
+ <span class="hljs-attr">id</span>: <span class="hljs-string">'some-video-id'</span>,
+ <span class="hljs-attr">owner</span>: <span class="hljs-string">'some-user-id'</span>,
+ <span class="hljs-attr">title</span>: <span class="hljs-string">'some Title'</span>,
+ <span class="hljs-attr">author</span>: <span class="hljs-string">'Steven Spielberg'</span>,
+ <span class="hljs-attr">duration</span>: <span class="hljs-string">'2h 32m'</span>,
+ <span class="hljs-attr">description</span>: <span class="hljs-string">'A long description'</span>,
+ <span class="hljs-attr">price</span>: <span class="hljs-number">0</span>,
+ <span class="hljs-attr">file</span>: <span class="hljs-string">'test/data/some-file.txt'</span>
+})</pre>
+    
   
 
   
@@ -1111,6 +1351,12 @@ Only the account that has registered the video, or the owner of the contract, ca
   
 
   
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>paratii.core.vids.update(<span class="hljs-string">'some-video-id'</span>, {<span class="hljs-attr">title</span>: <span class="hljs-string">'another-title'</span>})</pre>
+    
+  
 
   
 
@@ -1178,6 +1424,241 @@ Only the account that has registered the video, or the owner of the contract, ca
 
   
 
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>paratii.core.vids.upsert({ <span class="hljs-attr">id</span>: <span class="hljs-string">'some-video-id'</span>, <span class="hljs-attr">owner</span>: <span class="hljs-string">'some-user-id'</span>, <span class="hljs-attr">title</span>: <span class="hljs-string">'videoTitle'</span>}) <span class="hljs-comment">//insert a new video</span></pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='paratiicorevidsview'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>view(options)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Register a view on the blockchain</p>
+
+
+  <div class='pre p1 fill-light mt0'>view(options: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>options</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    should contain keys viewer (address of the viewer) and videoId (univocal video identifier)
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></code>:
+        information about the transaction recording the view
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>paratii.core.vids.view({<span class="hljs-attr">viewer</span>:<span class="hljs-string">'some-user-id'</span>,<span class="hljs-attr">videoId</span>: <span class="hljs-string">'some-video-id'</span>})</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='paratiicorevidsget'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>get(videoId)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Get the data of the video identified by videoId</p>
+
+
+  <div class='pre p1 fill-light mt0'>get(videoId: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>videoId</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    univocal video identifier
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></code>:
+        data about the video
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>paratii.core.vids.get(<span class="hljs-string">'some-video-id'</span>)</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='paratiicorevidssearch'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>search(options)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Get the data of the video</p>
+
+
+  <div class='pre p1 fill-light mt0'>search(options: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>options</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
+	    data about the video and (optional) owner i.e {'keyword':'titleOfTheVideo'}
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></code>:
+        data about the video
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>paratii.core.vids.search({<span class="hljs-attr">keyword</span> : <span class="hljs-string">'titleOftheVideo'</span>})
+the keyword value can be one <span class="hljs-keyword">from</span> the following list
+- video title
+- description
+- owner
+- uploader.name
+- uploader.address
+- tags</pre>
+    
   
 
   

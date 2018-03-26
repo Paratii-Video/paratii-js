@@ -39,12 +39,12 @@
 
 ## ParatiiCore
 
-ParatiiCore
-Contains functions that operate transversally over several backend systems.
+Contains functions that operate transversally over several backend systems.<br />
+validates the config file and istantiates ParatiiCoreVids and ParatiiCoreUsers.
 
 **Parameters**
 
--   `config` **[Object][35]** configuration object to initialize Paratii object
+-   `config` **{db.provider: [string][35]}** config configuration object to initialize Paratii object
 
 ## ParatiiCoreUsers
 
@@ -70,7 +70,7 @@ validates the config file
 
 **Parameters**
 
--   `config` **[Object][35]** configuration object to initialize Paratii object
+-   `config` **[Object][37]** configuration object to initialize Paratii object
 
 ### like
 
@@ -78,9 +78,9 @@ Writes a like for the video on the blockchain (contract Likes), and negates a di
 
 **Parameters**
 
--   `videoId` **[String][37]** univocal video identifier
+-   `videoId` **[String][35]** univocal video identifier
 
-Returns **[Object][35]** information about the transaction recording the like
+Returns **[Object][37]** information about the transaction recording the like
 
 ### dislike
 
@@ -88,9 +88,9 @@ Writes a dislike for the video on the blockchain (contract Likes), and negates a
 
 **Parameters**
 
--   `videoId` **[String][37]** univocal video identifier
+-   `videoId` **[String][35]** univocal video identifier
 
-Returns **[Object][35]** information about the transaction recording the dislike
+Returns **[Object][37]** information about the transaction recording the dislike
 
 ### doesLike
 
@@ -98,7 +98,7 @@ Check if the current user has already liked the video
 
 **Parameters**
 
--   `videoId` **[String][37]** univocal video identifier
+-   `videoId` **[String][35]** univocal video identifier
 
 Returns **[Boolean][38]** true if the current user already liked the video, false otherwise
 
@@ -108,8 +108,8 @@ Returns **[Boolean][38]** true if the current user already liked the video, fals
 
 **Parameters**
 
--   `viewer` **[String][37]** viewer address
--   `videoId` **[String][37]** univocal video identifier
+-   `viewer` **[String][35]** viewer address
+-   `videoId` **[String][35]** univocal video identifier
 
 Returns **[Boolean][38]** true if the current user already liked the video, false otherwise
 
@@ -119,7 +119,7 @@ Check if the current user has already disliked the video
 
 **Parameters**
 
--   `videoId` **[String][37]** univocal video identifier
+-   `videoId` **[String][35]** univocal video identifier
 
 Returns **[Boolean][38]** true if the current user already disliked the video, false otherwise
 
@@ -129,7 +129,7 @@ This call will register the video on the blockchain, add its metadata to IPFS, u
 
 **Parameters**
 
--   `options` **[Object][35]** information about the video ( videoId, title, FilePath ... )
+-   `options` **[Object][37]** information about the video ( videoId, title, FilePath ... )
 
 Returns **[Promise][36]** information about the video ( VideoId, owner, ipfsHash ... )
 
@@ -140,9 +140,9 @@ Update the information on the video.
 
 **Parameters**
 
--   `videoId` **[String][37]** univocal video identifier
--   `options` **[Object][35]** key value pairs of properties and new values e.g. ({title: 'another-title'})
--   `dataToUpdate` **[Object][35]** optional. old data of the video. If not passed to the method, it will fetch the data itself using the videoId
+-   `videoId` **[String][35]** univocal video identifier
+-   `options` **[Object][37]** key value pairs of properties and new values e.g. ({title: 'another-title'})
+-   `dataToUpdate` **[Object][37]** optional. old data of the video. If not passed to the method, it will fetch the data itself using the videoId
 
 Returns **[Promise][36]** Updated video informations
 
@@ -152,7 +152,7 @@ Update the information of the video the video already exists, otherwise it creat
 
 **Parameters**
 
--   `options` **[Object][35]** video informations
+-   `options` **[Object][37]** video informations
 
 Returns **[Promise][36]** updated/new video informations
 
@@ -178,7 +178,7 @@ TCR functionality
 
 **Parameters**
 
--   `context` **[object][35]** ParatiiEth Instance
+-   `context` **[object][37]** ParatiiEth Instance
 
 Returns **TCR** returns instances of Tcr
 
@@ -202,7 +202,7 @@ to check whether the video is in application process.
 
 **Parameters**
 
--   `videoId` **[string][37]** videoId
+-   `videoId` **[string][35]** videoId
 
 Returns **[boolean][38]** is video whitelisted or not.
 
@@ -212,7 +212,7 @@ check whether a video started the application process or not yet.
 
 **Parameters**
 
--   `videoId` **[string][37]** videoId
+-   `videoId` **[string][35]** videoId
 
 Returns **[boolean][38]** did the video start the TCR process.
 
@@ -224,7 +224,7 @@ running this function, use `checkEligiblityAndApply` instead.
 
 **Parameters**
 
--   `videoId` **[string][37]** videoId
+-   `videoId` **[string][35]** videoId
 -   `amountToStake` **Float** number of tokens to stake. must >= minDeposit
 
 Returns **[boolean][38]** returns true if all is good, plus \_Application
@@ -258,9 +258,9 @@ convenient method to add JSON and send it for persistance storage.
 
 **Parameters**
 
--   `data` **[object][35]** JSON object to store
+-   `data` **[object][37]** JSON object to store
 
-Returns **[string][37]** returns multihash of the stored object.
+Returns **[string][35]** returns multihash of the stored object.
 
 ## require
 
@@ -282,7 +282,7 @@ returns a generic File Object with a Pull Stream from an HTML5 File
 
 -   `file` **File** HTML5 File Object
 
-Returns **[Object][35]** generic file object.
+Returns **[Object][37]** generic file object.
 
 ## fsFileToPull
 
@@ -290,9 +290,9 @@ returns a generic file Object from a file path
 
 **Parameters**
 
--   `filePath` **[String][37]** Path to file.
+-   `filePath` **[String][35]** Path to file.
 
-Returns **[Object][35]** generic file object.
+Returns **[Object][37]** generic file object.
 
 ## upload
 
@@ -314,7 +314,7 @@ upload an entire directory to IPFS
 
 **Parameters**
 
--   `dirPath` **[String][37]** path to directory
+-   `dirPath` **[String][35]** path to directory
 
 Returns **[Promise][36]** returns the {hash, path, size} for the uploaded folder.
 
@@ -324,8 +324,8 @@ signals transcoder(s) to transcode fileHash
 
 **Parameters**
 
--   `fileHash` **[String][37]** IPFS file hash.
--   `options` **[Object][35]** ref: [https://github.com/Paratii-Video/paratii-lib/blob/master/docs/paratii-ipfs.md#ipfsuploadertranscodefilehash-options][40]
+-   `fileHash` **[String][35]** IPFS file hash.
+-   `options` **[Object][37]** ref: [https://github.com/Paratii-Video/paratii-lib/blob/master/docs/paratii-ipfs.md#ipfsuploadertranscodefilehash-options][40]
 
 Returns **EventEmitter** returns EventEmitter with the following events:-   'uploader:progress': (hash, chunkSize, percent) client to transcoder upload progress.
 -   'transcoding:started': (hash, author)
@@ -430,11 +430,11 @@ for usage, see [https://github.com/Paratii-Video/paratii-contracts/tree/master/d
 
 [34]: #paratii
 
-[35]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[35]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
 [36]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
-[37]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[37]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
 [38]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
