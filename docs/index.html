@@ -374,10 +374,40 @@
                 
                 <li><a
                   href='#paratii'
-                  class="">
+                  class=" toggle-sibling">
                   Paratii
-                  
+                  <span class='icon'>▸</span>
                 </a>
+                
+                <div class='toggle-target display-none'>
+                  
+                  
+                    <ul class='list-reset py1-ul pl1'>
+                      <li class='h5'><span>Instance members</span></li>
+                      
+                      <li><a
+                        href='#paratiisetaccount'
+                        class='regular pre-open'>
+                        #setAccount
+                      </a></li>
+                      
+                      <li><a
+                        href='#paratiisetregistryaddress'
+                        class='regular pre-open'>
+                        #setRegistryAddress
+                      </a></li>
+                      
+                      <li><a
+                        href='#paratiidiagnose'
+                        class='regular pre-open'>
+                        #diagnose
+                      </a></li>
+                      
+                    </ul>
+                  
+                  
+                  
+                </div>
                 
                 </li>
               
@@ -1694,10 +1724,11 @@ the keyword value can be one <span class="hljs-keyword">from</span> the followin
   </div>
   
 
-  <p>ParatiiDb contains a functionality to interact with the Paratii Blockchain Index</p>
+  <p>ParatiiDb contains a functionality to interact with the Paratii Blockchain Index
+validates the config file and istantiates ParatiiDbVids and ParatiiDbUsers.</p>
 
 
-  <div class='pre p1 fill-light mt0'>new ParatiiDb(config: any)</div>
+  <div class='pre p1 fill-light mt0'>new ParatiiDb(config: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</div>
   
   
 
@@ -1714,7 +1745,7 @@ the keyword value can be one <span class="hljs-keyword">from</span> the followin
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>config</span> <code class='quiet'>(any)</code>
+            <span class='code bold'>config</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
 	    
           </div>
           
@@ -3090,11 +3121,13 @@ description
   </div>
   
 
-  <p>Paratii Library
-for usage, see <a href="https://github.com/Paratii-Video/paratii-contracts/tree/master/docs">https://github.com/Paratii-Video/paratii-contracts/tree/master/docs</a></p>
+  <p>Paratii library main object
+The Paratii object serves as the general entry point for interacting with the family of Paratii
+contracts that are deployed on the blockchain, utilities to run and interact with a local IPFS node,
+and utilities to interact with the Paratii index.</p>
 
 
-  <div class='pre p1 fill-light mt0'>new Paratii(opts: any)</div>
+  <div class='pre p1 fill-light mt0'>new Paratii(opts: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</div>
   
   
 
@@ -3111,9 +3144,142 @@ for usage, see <a href="https://github.com/Paratii-Video/paratii-contracts/tree/
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>opts</span> <code class='quiet'>(any
+            <span class='code bold'>opts</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>
             = <code>{}</code>)</code>
-	    
+	    options object to configure paratii library
+
+          </div>
+          
+          <table class='mt1 mb2 fixed-table h5 col-12'>
+            <colgroup>
+              <col width='30%' />
+              <col width='70%' />
+            </colgroup>
+            <thead>
+              <tr class='bold fill-light'>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody class='mt1'>
+              
+                <tr>
+  <td class='break-word'><span class='code bold'>opts.provider</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+  </td>
+  <td class='break-word'><span>optional - the address of an ethereum node (defaults to localhost:8754)
+</span></td>
+</tr>
+
+
+              
+                <tr>
+  <td class='break-word'><span class='code bold'>opts.registryAddress</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+  </td>
+  <td class='break-word'><span>optional - the address where the Paratii Contract registry can be found
+</span></td>
+</tr>
+
+
+              
+                <tr>
+  <td class='break-word'><span class='code bold'>opts.address</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+  </td>
+  <td class='break-word'><span>optional - address of the operator/user
+</span></td>
+</tr>
+
+
+              
+                <tr>
+  <td class='break-word'><span class='code bold'>opts.privateKey</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+  </td>
+  <td class='break-word'><span>optional - private key of the user
+</span></td>
+</tr>
+
+
+              
+                <tr>
+  <td class='break-word'><span class='code bold'>opts.mnemonic</span> <code class='quiet'><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></code>
+  </td>
+  <td class='break-word'><span>optional - mnemonic of the user
+</span></td>
+</tr>
+
+
+              
+            </tbody>
+          </table>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>paratii = <span class="hljs-keyword">new</span> Paratii({ <span class="hljs-attr">provider</span>: <span class="hljs-string">'http://localhost:8545'</span>, <span class="hljs-attr">address</span>: <span class="hljs-string">'some-user-id'</span>, <span class="hljs-attr">privateKey</span>: <span class="hljs-string">'some-user-priv-key'</span>})</pre>
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Instance Members</div>
+    <div class="clearfix">
+  
+    <div class='border-bottom' id='paratiisetaccount'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>setAccount(address, privateKey)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Set the ethereum address what will be used to sign all transactions</p>
+
+
+  <div class='pre p1 fill-light mt0'>setAccount(address: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>, privateKey: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>address</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    address of the operator/user
+
+          </div>
+          
+        </div>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>privateKey</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    optional - private key of the operator/user
+
           </div>
           
         </div>
@@ -3128,8 +3294,150 @@ for usage, see <a href="https://github.com/Paratii-Video/paratii-contracts/tree/
   
 
   
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>paratii.setAccount(<span class="hljs-string">'some-user-id'</span>,<span class="hljs-string">'some-user-pub-key'</span>)</pre>
+    
+  
 
   
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='paratiisetregistryaddress'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>setRegistryAddress(address)</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>Set the address of the ParatiiRegistry contract</p>
+
+
+  <div class='pre p1 fill-light mt0'>setRegistryAddress(address: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Parameters</div>
+    <div class='prose'>
+      
+        <div class='space-bottom0'>
+          <div>
+            <span class='code bold'>address</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>)</code>
+	    address of the ParatiiRegistry contract
+
+          </div>
+          
+        </div>
+      
+    </div>
+  
+
+  
+
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>paratii.setRegistryAddress(<span class="hljs-string">'some-address'</span>)</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+    <div class='border-bottom' id='paratiidiagnose'>
+      <div class="clearfix small pointer toggle-sibling">
+        <div class="py1 contain">
+            <a class='icon pin-right py1 dark-link caret-right'>▸</a>
+            <span class='code strong strong truncate'>diagnose()</span>
+        </div>
+      </div>
+      <div class="clearfix display-none toggle-target">
+        <section class='p2 mb2 clearfix bg-white minishadow'>
+
+  
+
+  <p>return an array of strings with diagnostic info</p>
+
+
+  <div class='pre p1 fill-light mt0'>diagnose(): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></div>
+  
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+
+  
+    
+      <div class='py1 quiet mt1 prose-big'>Returns</div>
+      <code><a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></code>:
+        array of strings with diagnostic info
+
+      
+    
+  
+
+  
+
+  
+    <div class='py1 quiet mt1 prose-big'>Example</div>
+    
+      
+      <pre class='p1 overflow-auto round fill-light'>paratii.diagnose()</pre>
+    
+  
+
+  
+
+  
+
+  
+</section>
+
+      </div>
+    </div>
+  
+</div>
 
   
 
