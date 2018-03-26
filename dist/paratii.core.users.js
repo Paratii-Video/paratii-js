@@ -99,7 +99,6 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
      * @param  {String} id user univocal id
      * @return {Object}    data about the user
      * @example paratii.core.users.get('some-user-id')
-     *
     */
 
   }, {

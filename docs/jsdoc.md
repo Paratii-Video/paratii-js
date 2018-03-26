@@ -21,29 +21,30 @@
     -   [search][17]
 -   [ParatiiDb][18]
 -   [ParatiiDbUsers][19]
--   [joi][20]
--   [constructor][21]
--   [getTcrContract][22]
--   [getMinDeposit][23]
--   [isWhitelisted][24]
--   [didVideoApply][25]
--   [apply][26]
--   [checkEligiblityAndApply][27]
--   [ParatiiEthUsers][28]
--   [addAndPinJSON][29]
--   [require][30]
--   [add][31]
--   [html5FileToPull][32]
--   [fsFileToPull][33]
--   [upload][34]
--   [addDirectory][35]
--   [transcode][36]
--   [\_transcoderRespHander][37]
--   [addAndTranscode][38]
--   [Paratii][39]
-    -   [setAccount][40]
-    -   [setRegistryAddress][41]
-    -   [diagnose][42]
+    -   [get][20]
+-   [joi][21]
+-   [constructor][22]
+-   [getTcrContract][23]
+-   [getMinDeposit][24]
+-   [isWhitelisted][25]
+-   [didVideoApply][26]
+-   [apply][27]
+-   [checkEligiblityAndApply][28]
+-   [ParatiiEthUsers][29]
+-   [addAndPinJSON][30]
+-   [require][31]
+-   [add][32]
+-   [html5FileToPull][33]
+-   [fsFileToPull][34]
+-   [upload][35]
+-   [addDirectory][36]
+-   [transcode][37]
+-   [\_transcoderRespHander][38]
+-   [addAndTranscode][39]
+-   [Paratii][40]
+    -   [setAccount][41]
+    -   [setRegistryAddress][42]
+    -   [diagnose][43]
 
 ## ParatiiCore
 
@@ -52,7 +53,7 @@ validates the config file and istantiates ParatiiCoreVids and ParatiiCoreUsers.
 
 **Parameters**
 
--   `config` **[Object][43]** configuration object to initialize Paratii object
+-   `config` **[Object][44]** configuration object to initialize Paratii object
 
 ## ParatiiCoreUsers
 
@@ -60,7 +61,7 @@ Utilities to create and manipulate information about the users on the blockchain
 
 **Parameters**
 
--   `config` **[Object][43]** configuration object to initialize Paratii object
+-   `config` **[Object][44]** configuration object to initialize Paratii object
 
 ### create
 
@@ -68,7 +69,7 @@ Creates a user, fields id, name and email go to the smart contract Users, other 
 
 **Parameters**
 
--   `options` **[Object][43]** information about the video ( id, name, email ... )
+-   `options` **[Object][44]** information about the video ( id, name, email ... )
 
 **Examples**
 
@@ -81,7 +82,7 @@ paratii.core.users.create({
             })
 ```
 
-Returns **[Promise][44]** the id of the newly created user
+Returns **[Promise][45]** the id of the newly created user
 
 ### get
 
@@ -89,7 +90,7 @@ retrieve data about the user
 
 **Parameters**
 
--   `id` **[String][45]** user univocal id
+-   `id` **[String][46]** user univocal id
 
 **Examples**
 
@@ -97,7 +98,7 @@ retrieve data about the user
 paratii.core.users.get('some-user-id')
 ```
 
-Returns **[Object][43]** data about the user
+Returns **[Object][44]** data about the user
 
 ### update
 
@@ -105,8 +106,8 @@ Updates a user's details. name and email are defined in the smart contract Users
 
 **Parameters**
 
--   `userId` **[String][45]** user univocal id
--   `options` **[Object][43]** updated data i.e. { name: 'A new user name' }
+-   `userId` **[String][46]** user univocal id
+-   `options` **[Object][44]** updated data i.e. { name: 'A new user name' }
 
 **Examples**
 
@@ -114,7 +115,7 @@ Updates a user's details. name and email are defined in the smart contract Users
 paratii.core.users.update('some-user-id', {name: 'A new user name'})
 ```
 
-Returns **[Promise][44]** updated data about the user
+Returns **[Promise][45]** updated data about the user
 
 ## ParatiiCoreVids
 
@@ -122,7 +123,7 @@ Utilities to create and manipulate information about the videos on the blockchai
 
 **Parameters**
 
--   `config` **[Object][43]** configuration object to initialize Paratii object
+-   `config` **[Object][44]** configuration object to initialize Paratii object
 
 ### like
 
@@ -130,7 +131,7 @@ Writes a like for the video on the blockchain (contract Likes), and negates a di
 
 **Parameters**
 
--   `videoId` **[String][45]** univocal video identifier
+-   `videoId` **[String][46]** univocal video identifier
 
 **Examples**
 
@@ -138,7 +139,7 @@ Writes a like for the video on the blockchain (contract Likes), and negates a di
 paratii.core.vids.like('some-video-id')
 ```
 
-Returns **[Object][43]** information about the transaction recording the like
+Returns **[Object][44]** information about the transaction recording the like
 
 ### dislike
 
@@ -146,7 +147,7 @@ Writes a dislike for the video on the blockchain (contract Likes), and negates a
 
 **Parameters**
 
--   `videoId` **[String][45]** univocal video identifier
+-   `videoId` **[String][46]** univocal video identifier
 
 **Examples**
 
@@ -154,7 +155,7 @@ Writes a dislike for the video on the blockchain (contract Likes), and negates a
 paratii.core.vids.dislike('some-video-id')
 ```
 
-Returns **[Object][43]** information about the transaction recording the dislike
+Returns **[Object][44]** information about the transaction recording the dislike
 
 ### doesLike
 
@@ -162,7 +163,7 @@ Check if the current user has already liked the video
 
 **Parameters**
 
--   `videoId` **[String][45]** univocal video identifier
+-   `videoId` **[String][46]** univocal video identifier
 
 **Examples**
 
@@ -170,7 +171,7 @@ Check if the current user has already liked the video
 paratii.core.vids.doesLike('some-video-id')
 ```
 
-Returns **[Boolean][46]** true if the current user already liked the video, false otherwise
+Returns **[Boolean][47]** true if the current user already liked the video, false otherwise
 
 ### hasViewedVideo
 
@@ -178,8 +179,8 @@ Check if the viewer has already viewed the video
 
 **Parameters**
 
--   `viewer` **[String][45]** viewer address
--   `videoId` **[String][45]** univocal video identifier
+-   `viewer` **[String][46]** viewer address
+-   `videoId` **[String][46]** univocal video identifier
 
 **Examples**
 
@@ -187,7 +188,7 @@ Check if the viewer has already viewed the video
 paratii.core.vids.hasViewedVideo('some-user-id','some-video-id')
 ```
 
-Returns **[Boolean][46]** true if the current user already viewed the video, false otherwise
+Returns **[Boolean][47]** true if the current user already viewed the video, false otherwise
 
 ### doesDislike
 
@@ -195,7 +196,7 @@ Check if the current user has already disliked the video
 
 **Parameters**
 
--   `videoId` **[String][45]** univocal video identifier
+-   `videoId` **[String][46]** univocal video identifier
 
 **Examples**
 
@@ -203,7 +204,7 @@ Check if the current user has already disliked the video
 paratii.core.vids.doesDislike('some-video-id')
 ```
 
-Returns **[Boolean][46]** true if the current user already disliked the video, false otherwise
+Returns **[Boolean][47]** true if the current user already disliked the video, false otherwise
 
 ### create
 
@@ -211,7 +212,7 @@ This call will register the video on the blockchain, add its metadata to IPFS, u
 
 **Parameters**
 
--   `options` **[Object][43]** information about the video ( videoId, title, FilePath ... )
+-   `options` **[Object][44]** information about the video ( videoId, title, FilePath ... )
 
 **Examples**
 
@@ -228,7 +229,7 @@ paratii.core.vids.create({
 })
 ```
 
-Returns **[Promise][44]** information about the video ( VideoId, owner, ipfsHash ... )
+Returns **[Promise][45]** information about the video ( VideoId, owner, ipfsHash ... )
 
 ### update
 
@@ -237,9 +238,9 @@ Update the information on the video.
 
 **Parameters**
 
--   `videoId` **[String][45]** univocal video identifier
--   `options` **[Object][43]** key value pairs of properties and new values e.g. ({title: 'another-title'})
--   `dataToUpdate` **[Object][43]** optional. old data of the video. If not passed to the method, it will fetch the data itself using the videoId
+-   `videoId` **[String][46]** univocal video identifier
+-   `options` **[Object][44]** key value pairs of properties and new values e.g. ({title: 'another-title'})
+-   `dataToUpdate` **[Object][44]** optional. old data of the video. If not passed to the method, it will fetch the data itself using the videoId
 
 **Examples**
 
@@ -247,7 +248,7 @@ Update the information on the video.
 paratii.core.vids.update('some-video-id', {title: 'another-title'})
 ```
 
-Returns **[Promise][44]** Updated video informations
+Returns **[Promise][45]** Updated video informations
 
 ### upsert
 
@@ -255,7 +256,7 @@ Update the information of the video the video already exists, otherwise it creat
 
 **Parameters**
 
--   `options` **[Object][43]** video informations
+-   `options` **[Object][44]** video informations
 
 **Examples**
 
@@ -263,7 +264,7 @@ Update the information of the video the video already exists, otherwise it creat
 paratii.core.vids.upsert({ id: 'some-video-id', owner: 'some-user-id', title: 'videoTitle'}) //insert a new video
 ```
 
-Returns **[Promise][44]** updated/new video informations
+Returns **[Promise][45]** updated/new video informations
 
 ### view
 
@@ -271,7 +272,7 @@ Register a view on the blockchain
 
 **Parameters**
 
--   `options` **[Object][43]** should contain keys viewer (address of the viewer) and videoId (univocal video identifier)
+-   `options` **[Object][44]** should contain keys viewer (address of the viewer) and videoId (univocal video identifier)
 
 **Examples**
 
@@ -279,7 +280,7 @@ Register a view on the blockchain
 paratii.core.vids.view({viewer:'some-user-id',videoId: 'some-video-id'})
 ```
 
-Returns **[Promise][44]** information about the transaction recording the view
+Returns **[Promise][45]** information about the transaction recording the view
 
 ### get
 
@@ -287,7 +288,7 @@ Get the data of the video identified by videoId
 
 **Parameters**
 
--   `videoId` **[String][45]** univocal video identifier
+-   `videoId` **[String][46]** univocal video identifier
 
 **Examples**
 
@@ -295,7 +296,7 @@ Get the data of the video identified by videoId
 paratii.core.vids.get('some-video-id')
 ```
 
-Returns **[Promise][44]** data about the video
+Returns **[Promise][45]** data about the video
 
 ### search
 
@@ -303,7 +304,7 @@ Get the data of the video
 
 **Parameters**
 
--   `options` **[Object][43]** data about the video and (optional) owner i.e {'keyword':'titleOfTheVideo'}
+-   `options` **[Object][44]** data about the video and (optional) owner i.e {'keyword':'titleOfTheVideo'}
 
 **Examples**
 
@@ -318,7 +319,7 @@ the keyword value can be one from the following list
 - tags
 ```
 
-Returns **[Promise][44]** data about the video
+Returns **[Promise][45]** data about the video
 
 ## ParatiiDb
 
@@ -327,7 +328,7 @@ validates the config file and istantiates ParatiiDbVids and ParatiiDbUsers.
 
 **Parameters**
 
--   `config` **[Object][43]** 
+-   `config` **[Object][44]** 
 
 ## ParatiiDbUsers
 
@@ -335,8 +336,23 @@ ParatiiDbUsers contains functionalities regarding the users to interact with the
 
 **Parameters**
 
--   `config`  
--   `configuration` **[Object][43]** object to initialize Paratii object
+-   `config` **[Object][44]** object to initialize Paratii object
+
+### get
+
+retrieve data about the user
+
+**Parameters**
+
+-   `userId` **[String][46]** user univocal id
+
+**Examples**
+
+```javascript
+paratii.db.users.get('some-user-id')
+```
+
+Returns **[Promise][45]** data about the user
 
 ## joi
 
@@ -348,7 +364,7 @@ TCR functionality
 
 **Parameters**
 
--   `context` **[object][43]** ParatiiEth Instance
+-   `context` **[object][44]** ParatiiEth Instance
 
 Returns **TCR** returns instances of Tcr
 
@@ -356,7 +372,7 @@ Returns **TCR** returns instances of Tcr
 
 get TCR contract instance.
 
-Returns **[Promise][44]** Contract instance.
+Returns **[Promise][45]** Contract instance.
 
 ## getMinDeposit
 
@@ -372,9 +388,9 @@ to check whether the video is in application process.
 
 **Parameters**
 
--   `videoId` **[string][45]** videoId
+-   `videoId` **[string][46]** videoId
 
-Returns **[boolean][46]** is video whitelisted or not.
+Returns **[boolean][47]** is video whitelisted or not.
 
 ## didVideoApply
 
@@ -382,9 +398,9 @@ check whether a video started the application process or not yet.
 
 **Parameters**
 
--   `videoId` **[string][45]** videoId
+-   `videoId` **[string][46]** videoId
 
-Returns **[boolean][46]** did the video start the TCR process.
+Returns **[boolean][47]** did the video start the TCR process.
 
 ## apply
 
@@ -394,10 +410,10 @@ running this function, use `checkEligiblityAndApply` instead.
 
 **Parameters**
 
--   `videoId` **[string][45]** videoId
+-   `videoId` **[string][46]** videoId
 -   `amountToStake` **Float** number of tokens to stake. must >= minDeposit
 
-Returns **[boolean][46]** returns true if all is good, plus \_Application
+Returns **[boolean][47]** returns true if all is good, plus \_Application
 event.
 
 ## checkEligiblityAndApply
@@ -410,7 +426,7 @@ it also approves the TCR contract to amountToStake.
 -   `videoId` **\[type]** [description]
 -   `amountToStake` **\[type]** [description]
 
-Returns **[Promise][44]** [description]
+Returns **[Promise][45]** [description]
 
 ## ParatiiEthUsers
 
@@ -428,9 +444,9 @@ convenient method to add JSON and send it for persistance storage.
 
 **Parameters**
 
--   `data` **[object][43]** JSON object to store
+-   `data` **[object][44]** JSON object to store
 
-Returns **[string][45]** returns multihash of the stored object.
+Returns **[string][46]** returns multihash of the stored object.
 
 ## require
 
@@ -452,7 +468,7 @@ returns a generic File Object with a Pull Stream from an HTML5 File
 
 -   `file` **File** HTML5 File Object
 
-Returns **[Object][43]** generic file object.
+Returns **[Object][44]** generic file object.
 
 ## fsFileToPull
 
@@ -460,9 +476,9 @@ returns a generic file Object from a file path
 
 **Parameters**
 
--   `filePath` **[String][45]** Path to file.
+-   `filePath` **[String][46]** Path to file.
 
-Returns **[Object][43]** generic file object.
+Returns **[Object][44]** generic file object.
 
 ## upload
 
@@ -470,7 +486,7 @@ upload an Array of files as is to the local IPFS node
 
 **Parameters**
 
--   `files` **[Array][47]** HTML5 File Object Array.
+-   `files` **[Array][48]** HTML5 File Object Array.
 
 Returns **EventEmitter** returns EventEmitter with the following events:-   'start': uploader started.
 -   'progress': (chunkLength, progressPercent)
@@ -484,9 +500,9 @@ upload an entire directory to IPFS
 
 **Parameters**
 
--   `dirPath` **[String][45]** path to directory
+-   `dirPath` **[String][46]** path to directory
 
-Returns **[Promise][44]** returns the {hash, path, size} for the uploaded folder.
+Returns **[Promise][45]** returns the {hash, path, size} for the uploaded folder.
 
 ## transcode
 
@@ -494,8 +510,8 @@ signals transcoder(s) to transcode fileHash
 
 **Parameters**
 
--   `fileHash` **[String][45]** IPFS file hash.
--   `options` **[Object][43]** ref: [https://github.com/Paratii-Video/paratii-lib/blob/master/docs/paratii-ipfs.md#ipfsuploadertranscodefilehash-options][48]
+-   `fileHash` **[String][46]** IPFS file hash.
+-   `options` **[Object][44]** ref: [https://github.com/Paratii-Video/paratii-lib/blob/master/docs/paratii-ipfs.md#ipfsuploadertranscodefilehash-options][49]
 
 Returns **EventEmitter** returns EventEmitter with the following events:-   'uploader:progress': (hash, chunkSize, percent) client to transcoder upload progress.
 -   'transcoding:started': (hash, author)
@@ -513,7 +529,7 @@ handles responses from the paratii-protocol in case of transcoding.
 -   `ev` **EventEmitter** the transcoding job EventEmitter
 -   `fileHash`  
 
-Returns **[function][49]** returns various events based on transcoder response.
+Returns **[function][50]** returns various events based on transcoder response.
 
 ## addAndTranscode
 
@@ -521,7 +537,7 @@ convenience method for adding and transcoding files
 
 **Parameters**
 
--   `files` **[Array][47]** Array of HTML5 File Objects
+-   `files` **[Array][48]** Array of HTML5 File Objects
 
 ## Paratii
 
@@ -532,12 +548,16 @@ and utilities to interact with the Paratii index.
 
 **Parameters**
 
--   `opts` **[Object][43]** options object to configure paratii library (optional, default `{}`)
-    -   `opts.provider` **[String][45]** optional - the address of an ethereum node (defaults to localhost:8754)
-    -   `opts.registryAddress` **[String][45]** optional - the address where the Paratii Contract registry can be found
-    -   `opts.address` **[String][45]** optional - address of the operator/user
-    -   `opts.privateKey` **[String][45]** optional - private key of the user
-    -   `opts.mnemonic` **[String][45]** optional - mnemonic of the user TEST
+-   `opts` **[Object][44]** options object to configure paratii library (optional, default `{}`)
+    -   `opts.provider` **[String][46]** optional - the address of an ethereum node (defaults to localhost:8754)
+    -   `opts.registryAddress` **[String][46]** optional - the address where the Paratii Contract registry can be found
+    -   `opts.address` **[String][46]** optional - address of the operator/user
+    -   `opts.privateKey` **[String][46]** optional - private key of the user
+    -   `opts.ipfs` **[Object][44]** TODO fix ipfs.repo --> ipfsrepo
+        -   `opts.ipfs.repo` **[String][46]** optional - namespace of the ipfs repository
+    -   `opts.db` **[Object][44]** TODO fix db.provider --> dbprovider
+        -   `opts.db.provider` **[String][46]** optional - baseURL of the mongoDb mirror
+    -   `opts.mnemonic` **[String][46]** optional - mnemonic of the user
 
 **Examples**
 
@@ -551,8 +571,8 @@ Set the ethereum address what will be used to sign all transactions
 
 **Parameters**
 
--   `address` **[String][45]** address of the operator/user
--   `privateKey` **[String][45]** optional - private key of the operator/user
+-   `address` **[String][46]** address of the operator/user
+-   `privateKey` **[String][46]** optional - private key of the operator/user
 
 **Examples**
 
@@ -566,7 +586,7 @@ Set the address of the ParatiiRegistry contract
 
 **Parameters**
 
--   `address` **[String][45]** address of the ParatiiRegistry contract
+-   `address` **[String][46]** address of the ParatiiRegistry contract
 
 **Examples**
 
@@ -584,7 +604,7 @@ return an array of strings with diagnostic info
 paratii.diagnose()
 ```
 
-Returns **[Promise][44]** array of strings with diagnostic info
+Returns **[Promise][45]** array of strings with diagnostic info
 
 [1]: #paratiicore
 
@@ -624,62 +644,64 @@ Returns **[Promise][44]** array of strings with diagnostic info
 
 [19]: #paratiidbusers
 
-[20]: #joi
+[20]: #get-2
 
-[21]: #constructor
+[21]: #joi
 
-[22]: #gettcrcontract
+[22]: #constructor
 
-[23]: #getmindeposit
+[23]: #gettcrcontract
 
-[24]: #iswhitelisted
+[24]: #getmindeposit
 
-[25]: #didvideoapply
+[25]: #iswhitelisted
 
-[26]: #apply
+[26]: #didvideoapply
 
-[27]: #checkeligiblityandapply
+[27]: #apply
 
-[28]: #paratiiethusers
+[28]: #checkeligiblityandapply
 
-[29]: #addandpinjson
+[29]: #paratiiethusers
 
-[30]: #require
+[30]: #addandpinjson
 
-[31]: #add
+[31]: #require
 
-[32]: #html5filetopull
+[32]: #add
 
-[33]: #fsfiletopull
+[33]: #html5filetopull
 
-[34]: #upload
+[34]: #fsfiletopull
 
-[35]: #adddirectory
+[35]: #upload
 
-[36]: #transcode
+[36]: #adddirectory
 
-[37]: #_transcoderresphander
+[37]: #transcode
 
-[38]: #addandtranscode
+[38]: #_transcoderresphander
 
-[39]: #paratii
+[39]: #addandtranscode
 
-[40]: #setaccount
+[40]: #paratii
 
-[41]: #setregistryaddress
+[41]: #setaccount
 
-[42]: #diagnose
+[42]: #setregistryaddress
 
-[43]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
+[43]: #diagnose
 
-[44]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[44]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-[45]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
+[45]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
-[46]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[46]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String
 
-[47]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
+[47]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
-[48]: https://github.com/Paratii-Video/paratii-lib/blob/master/docs/paratii-ipfs.md#ipfsuploadertranscodefilehash-options
+[48]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
-[49]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+[49]: https://github.com/Paratii-Video/paratii-lib/blob/master/docs/paratii-ipfs.md#ipfsuploadertranscodefilehash-options
+
+[50]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function

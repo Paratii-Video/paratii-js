@@ -19,12 +19,11 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * ParatiiDb contains a functionality to interact with the Paratii Blockchain Index
- *
- */
-
 var fetch = require('isomorphic-fetch');
+/**
+ * ParatiiDbUsers contains functionalities regarding the users to interact with the Paratii Blockchain Index
+ * @param {Object} config object to initialize Paratii object
+ */
 
 var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
   function ParatiiDbUsers(config) {
@@ -35,6 +34,14 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
     this.apiUsers = 'users/';
     this.apiVideos = '/videos';
   }
+
+  /**
+   * retrieve data about the user
+   * @param  {String}  userId user univocal id
+   * @return {Promise}        data about the user
+   * @example paratii.db.users.get('some-user-id')
+   */
+
 
   (0, _createClass3.default)(ParatiiDbUsers, [{
     key: 'get',
