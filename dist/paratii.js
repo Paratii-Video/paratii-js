@@ -60,7 +60,7 @@ var Paratii = function () {
       address: joi.string().default(null),
       privateKey: joi.string().default(null),
       mnemonic: joi.string().default(null),
-      'ipfs.repo': joi.string(),
+      'ipfs.repo': joi.string().default('/tmp/paratii-alpha-' + String(Math.random())),
       'db.provider': joi.string()
     });
 

@@ -72,7 +72,9 @@ var Uploader = function (_EventEmitter) {
       this._maxFileSize = 300 * 1024 * 1024;
       // FIXME: add these settings to the contructor (and to the paratii.confg object) so they become configurable
       this._defaultTranscoder = opts.defaultTranscoder || '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'; // Address of transcoder '/ip4/127.0.0.1/tcp/4003/ws/ipfs/Qmbd5jx8YF1QLhvwfLbCTWXGyZLyEJHrPbtbpRESvYs4FS'
+      // this._defaultTranscoder = '/ip4/127.0.0.1/tcp/4003/ws/ipfs/Qmbd5jx8YF1QLhvwfLbCTWXGyZLyEJHrPbtbpRESvYs4FS'
       this._transcoderDropUrl = 'https://uploader.paratii.video/api/v1/transcode';
+      // this._transcoderDropUrl = 'http://localhost:6565/api/v1/transcode'
     }
   }, {
     key: 'onDrop',
@@ -384,15 +386,19 @@ var Uploader = function (_EventEmitter) {
           _this4._ipfs.log('peers: ', peers);
           if (err) return ev.emit('transcoding:error', err);
           peers.map(function (peer) {
-            _this4._ipfs.log('peerID : ', peer.peer.id.toB58String(), opts.transcoderId, peer.peer.id.toB58String() === opts.transcoder);
-            if (peer.peer.id.toB58String() === opts.transcoderId) {
-              _this4._ipfs.log('sending transcode msg to ' + peer.peer.id.toB58String() + ' with request to transcode ' + fileHash);
-              _this4._ipfs.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
-                if (err) {
-                  ev.emit('transcoding:error', err);
-                  return ev;
-                }
-              });
+            try {
+              _this4._ipfs.log('peerID : ', peer.peer.toB58String(), opts.transcoderId, peer.peer.toB58String() === opts.transcoder);
+              if (peer.peer.toB58String() === opts.transcoderId) {
+                _this4._ipfs.log('sending transcode msg to ' + peer.peer.toB58String() + ' with request to transcode ' + fileHash);
+                _this4._ipfs.protocol.network.sendMessage(peer.peer, msg, function (err) {
+                  if (err) {
+                    ev.emit('transcoding:error', err);
+                    return ev;
+                  }
+                });
+              }
+            } catch (e) {
+              console.log('PEER ERROR :', e, peer);
             }
           });
 
@@ -630,14 +636,19 @@ var Uploader = function (_EventEmitter) {
           _this8._ipfs.log('peers: ', peers);
           if (err) return ev.emit('pin:error', err);
           peers.map(function (peer) {
-            if (peer.peer.id.toB58String() === opts.transcoderId) {
-              _this8._ipfs.log('sending pin msg to ' + peer.peer.id.toB58String() + ' with request to pin ' + fileHash);
-              _this8._ipfs.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
-                if (err) {
-                  ev.emit('pin:error', err);
-                  return ev;
-                }
-              });
+            try {
+              console.log('peer.peer.toB58String(): ', peer.peer.toB58String());
+              if (peer.peer.toB58String() === opts.transcoderId) {
+                _this8._ipfs.log('sending pin msg to ' + peer.peer._idB58String + ' with request to pin ' + fileHash);
+                _this8._ipfs.protocol.network.sendMessage(peer.peer, msg, function (err) {
+                  if (err) {
+                    ev.emit('pin:error', err);
+                    return ev;
+                  }
+                });
+              }
+            } catch (e) {
+              console.log('PEER ERROR :', e, peer);
             }
           });
 

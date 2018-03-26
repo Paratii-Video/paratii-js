@@ -13,7 +13,9 @@ describe('ParatiiIPFS: :', function () {
   this.timeout(30000)
 
   beforeEach(() => {
-    paratiiIPFS = new ParatiiIPFS({})
+    paratiiIPFS = new ParatiiIPFS({
+      'ipfs.repo': '/tmp/paratii-alpha-' + String(Math.random())
+    })
   })
 
   afterEach((done) => {
