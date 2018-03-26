@@ -3,39 +3,46 @@
 
 Bug reports and pull requests very much welcomed.
 
-Please make sure test pass before submitting a PR.
 
 
-The development id done on unix based systems.  
+## Prerequisties:
 
+Make sure you have a recent version of [node.js](https://nodejs.org/) (8.10 and above) and [yarn](https://yarnpkg.com) package manager.
 
+* nodejs >= 8.9.0 ([nodejs.org](https://nodejs.org/))
+* [yarn](https://yarnpkg.com/lang/en/docs/install/)
+* Install [parity](https://github.com/paritytech/parity) (ethereum client):
+    * ```$ bash <(curl https://get.parity.io -Lk)```
+
+If you are on a Mac, you may need to set the path to parity:
+
+    * add the following to your `.bash_profile`: `export PATH=/Applications/Parity\ Ethereum.app/Contents/MacOS:$PATH`
+    * ``` $ source path/to/.bash_profile```
 
 ## Installation
 
-Make sure you have a recent version of [node.js](https://nodejs.org/) (7.6 and above) and [yarn](https://yarnpkg.com) package manager.
+    $ git clone https://github.com/Paratii-Video/paratii-lib
+    $ cd paratii-lib
+    $ yarn install
 
-Installation of dependencies. After cloning the repository run:
+## Running tests
 
-    yarn
+The package comes bundled with the `parity` ethereum client.
+To run the test locally, first  run:
 
-## Run the tests
+    yarn parity
 
-To run the test locally use a local blockchain using testrpc, just run:
-
-    yarn testrpc
-
-On a second terminal, run the tests:
+In a second terminal, you can now run the tests:
 
     yarn test
 
-
-# Style
+## Style
 
 Code should survive Javascript Standard linting:
 
     yarn lint
 
-# Breakpoints
+## Breakpoints
 
 if you run tests with:
 

@@ -32,7 +32,6 @@ var schema = joi.object({
   duration: joi.string().empty('').default('').allow(null),
   filename: joi.string().empty('').default('').allow(null).allow(''),
   filesize: joi.any(),
-  // .default(null).allow(null).empty(''),
   free: joi.string().empty('').default(null).allow(null),
   ipfsHashOrig: joi.string().empty('').default(''),
   ipfsHash: joi.string().empty('').default(''),

@@ -1,9 +1,7 @@
 
 # Paratii Library
 
-Work in progress.  
-
-The Paratii library is used for interacting with the PAratii ecosystem: it is used to read and write data to the Ethereum blockchain, starting and stopping a local IPFS node and interacting with other IPFS peers, query-ing the Paratii index, etc.
+The Paratii library is used for interacting with the Paratii ecosystem: it is used to read and write data to the Ethereum blockchain, starting and stopping a local IPFS node and interacting with other IPFS peers, query-ing the Paratii index, etc.
 
 The `paratii-lib` is meant to be usable both for developing browser clients (such as the `paratii-portal`) (we wil provide a webpacked'ed version for this purpose) as well is in nodejs-based applications (such as `paratii-db`)
 
