@@ -63,6 +63,11 @@ var _require = require('events'),
 var DEFAULT_REPO = '/tmp/paratii-ipfs-repo';
 // const REPO_PATH = 'paratii-ipfs-repo'
 
+/**
+ * Contains functions to interact with the IPFS instance.
+ * @param {Object} config configuration object to initialize Paratii object
+ */
+
 var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   (0, _inherits3.default)(ParatiiIPFS, _EventEmitter);
 

@@ -46,7 +46,6 @@ var Multiaddr = require('multiaddr');
 var Resumable = require('resumablejs');
 /**
  * IPFS UPLOADER : Paratii IPFS uploader interface.
- * Contains functions to interact with the IPFS instance.
  * @extends EventEmitter
  * @param {Object} paratiiIPFS
  * @param {Object} opts
