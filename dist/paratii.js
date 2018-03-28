@@ -69,7 +69,8 @@ var Paratii = function () {
 
     this.config.account = {
       address: options.address,
-      privateKey: options.privateKey
+      privateKey: options.privateKey,
+      mnemonic: options.mnemonic
     };
     this.config.registryAddress = options.registryAddress;
 

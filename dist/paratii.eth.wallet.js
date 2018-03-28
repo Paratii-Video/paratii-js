@@ -45,27 +45,16 @@ function patchWallet(wallet, config) {
             }
 
             seed = bip39.mnemonicToSeed(mnemonic);
-            // var seed = bip39.mnemonicToSeed(this._mnemonic, this._passphrase)
-            // saving for testing purpose
-            // this._seedHex = bip39.mnemonicToSeedHex(this._mnemonic, this._passphrase)
-
             // contains masternode extended priv key and extended pub key
 
             masternode = hdkey.fromMasterSeed(seed);
 
-            // saving xtended private key for testing purpose
-            // this._xpriv = masternode.privateExtendedKey()
-
-            // var keys = []
 
             for (i = 0; i < numberOfAccounts; ++i) {
               privkeyHex = masternode.deriveChild(i).privateKey.toString('hex');
               privateKey = this._accounts.privateKeyToAccount(privkeyHex).privateKey;
 
               this.add(privateKey);
-              if (i === 0) {
-                config.paratii.eth.setAccount(this[0].address, privateKey);
-              }
             }
             _context.next = 11;
             break;

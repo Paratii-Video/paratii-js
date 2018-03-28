@@ -49,7 +49,8 @@ var ParatiiEth = exports.ParatiiEth = function () {
       registryAddress: joi.string().allow(null).default(null),
       account: joi.object({
         address: joi.string().allow(null).default(null),
-        privateKey: joi.string().allow(null).default(null)
+        privateKey: joi.string().allow(null).default(null),
+        mnemonic: joi.string().allow(null).default(null)
       }),
       web3: joi.any().default(null),
       isTestNet: joi.bool().default(false)
@@ -74,7 +75,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
     }
 
     this.wallet = (0, _paratiiEthWallet.patchWallet)(this.web3.eth.accounts.wallet, this.config);
-    this.setAccount(this.config.account.address, this.config.account.privateKey);
+    this.setAccount(this.config.account.address, this.config.account.privateKey, this.config.account.mnemonic);
 
     this.contracts = {};
     this.contracts.ParatiiToken = this.requireContract('ParatiiToken');
@@ -98,14 +99,20 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
   (0, _createClass3.default)(ParatiiEth, [{
     key: 'setAccount',
-    value: function setAccount(address, privateKey) {
+    value: function setAccount(address, privateKey, mnemonic) {
+      var wallet = this.web3.eth.accounts.wallet;
       this.config.account.address = address;
       this.config.account.privateKey = privateKey;
       this.web3.eth.defaultAccount = address;
       if (privateKey) {
-        var account = this.web3.eth.accounts.wallet.add(privateKey);
+        var account = wallet.add(privateKey);
         if (account.address !== address) {
-          throw Error('Private Key and Account are not compatible!');
+          throw Error('Private Key and Account address are not compatible!');
+        }
+      } else if (mnemonic) {
+        wallet.create(1, mnemonic);
+        if (address && wallet[0].address !== address) {
+          throw Error('Mnemonic ' + mnemonic + ' and account address ' + address + ' are not compatible!');
         }
       }
     }
