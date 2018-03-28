@@ -94,6 +94,16 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     _this.uploader = new Uploader(_this);
     return _this;
   }
+  /**
+   * Adds the file to ipfs
+   * @param  {ReadStream}  fileStream ReadStream of the file. Can be created with fs.createReadStream(path)
+   * @return {Promise}            data about the added file (path,hash,size)
+   * @example
+   * let path = 'test/data/some-file.txt'
+   * let fileStream = fs.createReadStream(path)
+   * let result = await paratiiIPFS.add(fileStream)
+   */
+
 
   (0, _createClass3.default)(ParatiiIPFS, [{
     key: 'add',
@@ -117,6 +127,16 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
         }
       }, null, this);
     }
+    /**
+     * get file from ipfs
+     * @param  {String}  hash hash of the file
+     * @return {Promise}      the file (path,content)
+     * @example
+     * let result = await paratiiIPFS.add(fileStream)
+     * let hash = result[0].hash
+     * let fileContent = await paratiiIPFS.get(hash)
+     */
+
   }, {
     key: 'get',
     value: function get(hash) {
@@ -139,6 +159,13 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
         }
       }, null, this);
     }
+    /**
+     * log messages on the console if verbose is set
+     * @param  {String} msg text to log
+     * @example
+     * paratii.ipfs.log("some-text")
+     */
+
   }, {
     key: 'log',
     value: function log() {
@@ -148,6 +175,13 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
         (_console = console).log.apply(_console, arguments);
       }
     }
+    /**
+     * log warns on the console if verbose is set
+     * @param  {String} msg warn text
+     * @example
+     * paratii.ipfs.warn("some-text")
+     */
+
   }, {
     key: 'warn',
     value: function warn() {
@@ -157,6 +191,13 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
         (_console2 = console).warn.apply(_console2, arguments);
       }
     }
+    /**
+    * log errors on the console if verbose is set
+    * @param  {String} msg error message
+    * @example
+    * paratii.ipfs.error("some-text")
+    */
+
   }, {
     key: 'error',
     value: function error() {
@@ -166,6 +207,12 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
         (_console3 = console).error.apply(_console3, arguments);
       }
     }
+    /**
+     * get an ipfs instance of jsipfs. Singleton pattern
+     * @return {Object} Ipfs instance
+     * @example ipfs = await paratii.ipfs.getIPFSInstance()
+     */
+
   }, {
     key: 'getIPFSInstance',
     value: function getIPFSInstance() {
@@ -253,6 +300,13 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
         }
       });
     }
+    /**
+     * adds a data Object to the IPFS local instance
+     * @param  {Object}  data JSON object to store
+     * @return {Promise}      promise with the ipfs hash
+     * @example let result = await paratiiIPFS.addJSON(data)
+     */
+
   }, {
     key: 'addJSON',
     value: function addJSON(data) {
@@ -310,6 +364,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
      * convenient method to add JSON and send it for persistance storage.
      * @param  {object}  data JSON object to store
      * @return {string}      returns multihash of the stored object.
+     * @example let result = await paratiiIPFS.addAndPinJSON(data)
      */
 
   }, {
@@ -359,6 +414,13 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
         }
       }, null, this);
     }
+    /**
+    * gets a JSON object stored in IPFS
+    * @param  {String}  multihash ipfs hash of the object
+    * @return {Promise}           requested Object
+    * @example let jsonObj = await paratiiIPFS.getJSON('some-hash')
+    */
+
   }, {
     key: 'getJSON',
     value: function getJSON(multihash) {
@@ -408,7 +470,12 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
         }
       }, null, this, [[4, 10]]);
     }
-
+    /**
+     * Starts the IPFS node
+     * @param  {Function} callback callback function
+     * @return {?}            DON'T KNOW?
+     * @example ?
+     */
     // TODO: return a promise
 
   }, {
@@ -427,6 +494,13 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
         callback();
       });
     }
+    /**
+     * Stops the IPFS node.
+     * @param  {Function} callback callback function
+     * @return {?}            DON'T KNOW?
+     * @example ?
+     */
+
   }, {
     key: 'stop',
     value: function stop(callback) {
