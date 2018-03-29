@@ -16,19 +16,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var bip39 = require('bip39'); // this code is lifted and adapted from ethereumjs-lightwallet
 
-<<<<<<< HEAD
-var Mnemonic = require('bitcore-mnemonic');
-var bitcore = require('bitcore-lib');
-/**
- * [patchWallet description]
- * @param  {[type]} wallet [description]
- * @param  {[type]} config [description]
- * @return {[type]}        [description]
- */
-=======
 var hdkey = require('hdkey');
 
->>>>>>> dev
 function patchWallet(wallet, config) {
   function create(numberOfAccounts, mnemonic) {
     var seed, masternode, i, child, privkeyHex, privateKey;
