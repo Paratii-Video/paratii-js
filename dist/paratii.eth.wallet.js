@@ -16,7 +16,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Mnemonic = require('bitcore-mnemonic');
 var bitcore = require('bitcore-lib');
-
+/**
+ * [patchWallet description]
+ * @param  {[type]} wallet [description]
+ * @param  {[type]} config [description]
+ * @return {[type]}        [description]
+ */
 function patchWallet(wallet, config) {
   function create(numberOfAccounts, mnemonic) {
     var hdRoot, i, hdprivkey, privkeyBuf, privkeyHex, privateKey;

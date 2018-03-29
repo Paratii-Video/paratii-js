@@ -97,7 +97,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   /**
    * Adds the file to ipfs
    * @param  {ReadStream}  fileStream ReadStream of the file. Can be created with fs.createReadStream(path)
-   * @return {Promise}            data about the added file (path,hash,size)
+   * @return {Promise}            data about the added file (path,multihash,size)
    * @example
    * let path = 'test/data/some-file.txt'
    * let fileStream = fs.createReadStream(path)
@@ -129,7 +129,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     }
     /**
      * get file from ipfs
-     * @param  {String}  hash hash of the file
+     * @param  {String}  hash multihash of the file
      * @return {Promise}      the file (path,content)
      * @example
      * let result = await paratiiIPFS.add(fileStream)
@@ -303,7 +303,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     /**
      * adds a data Object to the IPFS local instance
      * @param  {Object}  data JSON object to store
-     * @return {Promise}      promise with the ipfs hash
+     * @return {Promise}      promise with the ipfs multihash
      * @example let result = await paratiiIPFS.addJSON(data)
      */
 
@@ -416,9 +416,9 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     }
     /**
     * gets a JSON object stored in IPFS
-    * @param  {String}  multihash ipfs hash of the object
+    * @param  {String}  multihash ipfs multihash of the object
     * @return {Promise}           requested Object
-    * @example let jsonObj = await paratiiIPFS.getJSON('some-hash')
+    * @example let jsonObj = await paratiiIPFS.getJSON('some-multihash')
     */
 
   }, {

@@ -39,6 +39,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Web3 = require('web3');
 var joi = require('joi');
+/**
+ * [schema description]
+ * @type {[type]}
+ */
 
 var ParatiiEth = exports.ParatiiEth = function () {
   function ParatiiEth(config) {

@@ -21,6 +21,10 @@ var _utils = require('./utils.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+/**
+ * [eth description]
+ * @type {[type]}
+ */
 var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   /**
    * TCR functionality

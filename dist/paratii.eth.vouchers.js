@@ -22,6 +22,10 @@ var _utils = require('./utils.js');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var joi = require('joi');
+/**
+ * [eth description]
+ * @type {[type]}
+ */
 
 var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
   function ParatiiEthVouchers(context) {

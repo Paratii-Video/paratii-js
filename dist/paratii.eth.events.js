@@ -19,6 +19,10 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+/**
+ * [config description]
+ * @type {[type]}
+ */
 var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
   function ParatiiEthEvents(config) {
     (0, _classCallCheck3.default)(this, ParatiiEthEvents);

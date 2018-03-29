@@ -47,8 +47,8 @@ var Resumable = require('resumablejs');
 /**
  * IPFS UPLOADER : Paratii IPFS uploader interface.
  * @extends EventEmitter
- * @param {Object} paratiiIPFS
- * @param {Object} opts
+ * @param {Object} paratiiIPFS ipfs instance
+ * @param {Object} opts optional - configuration options
  */
 
 var Uploader = function (_EventEmitter) {
@@ -63,6 +63,12 @@ var Uploader = function (_EventEmitter) {
     _this._ipfs = paratiiIPFS; // this is the paratii.ipfs.js
     return _this;
   }
+  /**
+   * set the options from the passed array
+   * @param {Object} [opts={}] array of options
+   * @example ?
+   */
+
 
   (0, _createClass3.default)(Uploader, [{
     key: 'setOptions',
@@ -78,13 +84,27 @@ var Uploader = function (_EventEmitter) {
       this._transcoderDropUrl = 'https://uploader.paratii.video/api/v1/transcode';
       // this._transcoderDropUrl = 'http://localhost:6565/api/v1/transcode'
     }
+
+    /**
+     * ????
+     * @param  {?} ev ?
+     * @return {?}    ?
+     */
+
   }, {
     key: 'onDrop',
     value: function onDrop(ev) {}
 
     /*
-     * Upload a file over XHR to the transcoder
-     * To be called with an event emitter as the last argument
+     *
+     *
+     */
+    /**
+     * Upload a file over XHR to the transcoder. To be called with an event emitter as the last argument
+     * @param  {Object} file       file to upload
+     * @param  {String} hashedFile hash of the file ??
+     * @param  {EventEmitter} ev         event emitter
+     * @example this.xhrUpload(file, hashedFile, ev)
      */
 
   }, {
@@ -126,6 +146,7 @@ var Uploader = function (_EventEmitter) {
      * uploads a single file to *local* IPFS node
      * @param {File} file HTML5 File Object.
      * @returns {EventEmitter} checkout the upload function below for details.
+     * @example let uploaderEv = paratiiIPFS.uploader.add(files)
      */
 
   }, {
@@ -158,8 +179,9 @@ var Uploader = function (_EventEmitter) {
 
     /**
      * returns a generic File Object with a Pull Stream from an HTML5 File
-     * @param  {File} file HTML5 File Object
+     * @param  {File} file  HTML5 File Object
      * @return {Object}      generic file object.
+     * @example ?
      */
 
   }, {
@@ -178,6 +200,7 @@ var Uploader = function (_EventEmitter) {
      * returns a generic file Object from a file path
      * @param  {String} filePath Path to file.
      * @return {Object} generic file object.
+     * @example ?
      */
 
   }, {
@@ -204,6 +227,7 @@ var Uploader = function (_EventEmitter) {
      *    - 'fileReady': (file) triggered when a file is uploaded locally.
      *    - 'done': (files) triggered when the uploader is done locally.
      *    - 'error': (err) triggered whenever an error occurs.
+     * @example ?
      */
 
   }, {
@@ -265,7 +289,8 @@ var Uploader = function (_EventEmitter) {
     /**
      * upload an entire directory to IPFS
      * @param  {String}   dirPath path to directory
-     * @return {Promise}           returns the {hash, path, size} for the uploaded folder.
+     * @return {Promise}           returns the {multihash, path, size} for the uploaded folder.
+     * @example ?
      */
 
   }, {
@@ -344,6 +369,7 @@ var Uploader = function (_EventEmitter) {
      *    - 'transcoding:downsample:ready' (hash, size)
      *    - 'transcoding:done': (hash, transcoderResult) triggered when the transcoder is done - returns the hash of the transcoded file
      *    - 'transcoder:error': (err) triggered whenever an error occurs.
+     * @example ?
      */
 
   }, {
@@ -415,6 +441,7 @@ var Uploader = function (_EventEmitter) {
      * handles responses from the paratii-protocol in case of transcoding.
      * @param  {EventEmitter} ev the transcoding job EventEmitter
      * @return {function}    returns various events based on transcoder response.
+     * @example ?
      */
 
   }, {
@@ -472,7 +499,6 @@ var Uploader = function (_EventEmitter) {
         }
       };
     }
-
     /**
      * convenience method for adding and transcoding files
      * @param {Array} files Array of HTML5 File Objects
@@ -490,6 +516,13 @@ var Uploader = function (_EventEmitter) {
       });
       return ev;
     }
+    /**
+     * [_signalTranscoder description]
+     * @param  {[type]} files [description]
+     * @param  {[type]} ev    [description]
+     * @return {[type]}       [description]
+     */
+
   }, {
     key: '_signalTranscoder',
     value: function _signalTranscoder(files, ev) {
@@ -517,6 +550,13 @@ var Uploader = function (_EventEmitter) {
         ev: ev
       });
     }
+    /**
+     * [getMetaData description]
+     * @param  {[type]} fileHash [description]
+     * @param  {[type]} options  [description]
+     * @return {[type]}          [description]
+     */
+
   }, {
     key: 'getMetaData',
     value: function getMetaData(fileHash, options) {
@@ -600,6 +640,13 @@ var Uploader = function (_EventEmitter) {
         });
       });
     }
+    /**
+     * [pinFile description]
+     * @param  {[type]} fileHash [description]
+     * @param  {[type]} options  [description]
+     * @return {[type]}          [description]
+     */
+
   }, {
     key: 'pinFile',
     value: function pinFile(fileHash, options) {
@@ -661,6 +708,12 @@ var Uploader = function (_EventEmitter) {
 
       return ev;
     }
+    /**
+     * [_pinResponseHandler description]
+     * @param  {[type]} ev [description]
+     * @return {[type]}    [description]
+     */
+
   }, {
     key: '_pinResponseHandler',
     value: function _pinResponseHandler(ev) {
