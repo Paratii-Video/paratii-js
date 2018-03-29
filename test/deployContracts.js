@@ -21,6 +21,6 @@ describe('deployContracts:', function () {
     let paratii = new Paratii({address, privateKey})
     await paratii.eth.deployContracts()
     await paratii.eth.deployContracts()
-    assert.equal(paratii.config.registryAddress, (await paratii.eth.getContract('Registry')).options.address)
+    assert.equal(paratii.config['eth.registryAddress'], (await paratii.eth.getContract('Registry')).options.address)
   })
 })

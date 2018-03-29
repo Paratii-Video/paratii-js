@@ -46,7 +46,7 @@ var utils = require('./utils.js');
  * @param {String} opts.db.provider optional - baseURL of the mongoDb mirror
  * @param {String} opts.mnemonic optional - mnemonic of the user
  *
- * @example     paratii = new Paratii({ provider: 'http://localhost:8545', address: 'some-user-id', privateKey: 'some-user-priv-key'})
+ * @example     paratii = new Paratii({ 'eth.provider': 'http://localhost:8545', address: 'some-user-id', privateKey: 'some-user-priv-key'})
  */
 
 var Paratii = function () {
@@ -55,8 +55,8 @@ var Paratii = function () {
     (0, _classCallCheck3.default)(this, Paratii);
 
     var schema = joi.object({
-      provider: joi.string().default('ws://localhost:8546'),
-      registryAddress: joi.string().default(null),
+      'eth.provider': joi.string().default('ws://localhost:8546'),
+      'eth.registryAddress': joi.string().default(null),
       address: joi.string().default(null),
       privateKey: joi.string().default(null),
       mnemonic: joi.string().default(null),
@@ -70,11 +70,11 @@ var Paratii = function () {
     var options = result.value;
 
     this.config = {};
-    this.config.provider = options.provider;
+    this.config['eth.provider'] = options['eth.provider'];
     this.config['ipfs.repo'] = options['ipfs.repo'];
     this.config['db.provider'] = options['db.provider'];
 
-    if (this.config.provider.match(/(localhost|127\.0\.0\.1)/g)) {
+    if (this.config['eth.provider'].match(/(localhost|127\.0\.0\.1)/g)) {
       this.config.isTestNet = true;
     } else {
       this.config.isTestNet = false;
@@ -84,7 +84,7 @@ var Paratii = function () {
       address: options.address,
       privateKey: options.privateKey
     };
-    this.config.registryAddress = options.registryAddress;
+    this.config['eth.registryAddress'] = options['eth.registryAddress'];
 
     this.config.paratii = this;
     this.core = new _paratiiCore.ParatiiCore(this.config);
@@ -156,7 +156,7 @@ var Paratii = function () {
               }
 
               log('*** No registry address found!');
-              log('Value of this.config.registryAddress: ' + this.config.registryAddress);
+              log('Value of this.config[\'eth.registryAddress\']: ' + this.config['eth.registryAddress']);
               isOk = false;
               _context.next = 35;
               break;

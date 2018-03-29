@@ -13,7 +13,7 @@ describe('paratii.eth.wallet: :', function () {
 
   it('init account is added to wallet', async function () {
     paratii = new Paratii({
-      provider: 'http://localhost:8545',
+      'eth.provider': 'http://localhost:8545',
       address: address,
       privateKey: privateKey
     })
@@ -113,9 +113,9 @@ describe('paratii.eth.wallet: :', function () {
 
     // instantiate paratii with an unlocked account
     paratii = new Paratii({
-      provider: 'http://localhost:8545',
+      'eth.provider': 'http://localhost:8545',
       address: address17,
-      registryAddress: paratii.config.registryAddress
+      registryAddress: paratii.config['eth.registryAddress']
     })
     // set the account but not the private key
     // paratii.setAccount(address17)
@@ -124,7 +124,7 @@ describe('paratii.eth.wallet: :', function () {
 
   it('send() should succeed if a  private key is passed to the constructor', async function () {
     paratii = new Paratii({
-      provider: 'http://localhost:8545',
+      'eth.provider': 'http://localhost:8545',
       address: address,
       privateKey: privateKey
     })

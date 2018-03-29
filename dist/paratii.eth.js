@@ -45,8 +45,8 @@ var ParatiiEth = exports.ParatiiEth = function () {
     (0, _classCallCheck3.default)(this, ParatiiEth);
 
     var schema = joi.object({
-      provider: joi.string().default('ws://localhost:8546'),
-      registryAddress: joi.string().allow(null).default(null),
+      'eth.provider': joi.string().default('ws://localhost:8546'),
+      'eth.registryAddress': joi.string().allow(null).default(null),
       account: joi.object({
         address: joi.string().allow(null).default(null),
         privateKey: joi.string().allow(null).default(null)
@@ -65,12 +65,11 @@ var ParatiiEth = exports.ParatiiEth = function () {
       this.web3 = options.web3;
     } else {
       this.web3 = new Web3();
-      if (options.provider.substring(0, 2) === 'ws') {
-        this.web3.setProvider(new this.web3.providers.WebsocketProvider(options.provider));
+      if (options['eth.provider'].substring(0, 2) === 'ws') {
+        this.web3.setProvider(new this.web3.providers.WebsocketProvider(options['eth.provider']));
       } else {
-        this.web3.setProvider(new this.web3.providers.HttpProvider(options.provider));
+        this.web3.setProvider(new this.web3.providers.HttpProvider(options['eth.provider']));
       }
-      // this.web3.setProvider(options.provider)
     }
 
     this.wallet = (0, _paratiiEthWallet.patchWallet)(this.web3.eth.accounts.wallet, this.config);
@@ -378,7 +377,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
                 // await this.setContractsProvider()
 
-              };this.config.registryAddress = paratiiRegistryAddress;
+              };this.config['eth.registryAddress'] = paratiiRegistryAddress;
 
               return _context4.abrupt('return', this.contracts);
 
@@ -519,12 +518,12 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: 'getRegistryAddress',
     value: function getRegistryAddress() {
-      return this.config.registryAddress;
+      return this.config['eth.registryAddress'];
     }
   }, {
     key: 'setRegistryAddress',
     value: function setRegistryAddress(registryAddress) {
-      this.config.registryAddress = registryAddress;
+      this.config['eth.registryAddress'] = registryAddress;
       for (var name in this.contracts) {
         var contract = this.contracts[name];
         contract.options.address = undefined;

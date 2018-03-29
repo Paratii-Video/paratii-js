@@ -23,7 +23,7 @@ describe('paratii.core.users: ', function () {
   })
   beforeEach(async function () {
     paratii = new Paratii({
-      provider: 'http://localhost:8545/rpc/',
+      'eth.provider': 'http://localhost:8545/rpc/',
       address: address,
       privateKey: privateKey,
       'db.provider': dbProvider

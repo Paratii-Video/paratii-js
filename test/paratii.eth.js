@@ -32,7 +32,7 @@ describe('paratii.eth API: :', function () {
 
     // If Paratii was created with a registeryAddress, addresses of other contracts should be known
     paratii = new Paratii({
-      registryAddress: registryAddress
+      'eth.registryAddress': registryAddress
     })
 
     contract = await paratii.eth.getContract('Registry')
@@ -44,7 +44,7 @@ describe('paratii.eth API: :', function () {
 
     // if the reigstryAddress was set at a later stage, using parati.eth.setRegistryAddress
     paratii = new Paratii({
-      provider: 'http://localhost:8545'
+      'eth.provider': 'http://localhost:8545'
     })
 
     contract = await paratii.eth.getContract('Registry')

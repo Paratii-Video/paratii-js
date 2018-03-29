@@ -1,12 +1,5 @@
-// const whyIsNodeRunning = require('why-is-node-running')
-
-// import { Paratii } from '../lib/paratii.js'
-// import { address, privateKey } from './utils.js'
 import { ParatiiIPFS } from '../lib/paratii.ipfs.js'
 import { assert, expect } from 'chai'
-// const FileApi = require('file-api')
-// const fs = require('fs')
-// global.FileReader = FileApi.FileReader
 
 describe('ParatiiIPFS: :', function () {
   let paratiiIPFS
@@ -47,15 +40,6 @@ describe('ParatiiIPFS: :', function () {
     // })
   })
 
-  // after(() => {
-  //   // console.log('why is node running??')
-  //   // whyIsNodeRunning()
-  //   // setImmediate(() => {
-  //   //   done()
-  //   // })
-  //   // console.log('paratiiIPFS: ', paratiiIPFS)
-  //   // global.asyncDump()
-  // })
   // FIXME : this requires a browser to run.
   // I'm trying to mock the FileReader but it's glitchy so far :(
   it('should allow for file upload', (done) => {
@@ -178,7 +162,7 @@ describe('ParatiiIPFS: :', function () {
 //
 //   beforeEach(async function () {
 //     paratii = new Paratii({
-//       provider: 'http://localhost:8545',
+//       'eth.provider': 'http://localhost:8545',
 //       address: address,
 //       privateKey: privateKey
 //     })

@@ -13,7 +13,7 @@ Typically, the Paratii library will be used for interacting with contracts that 
 For this purpose, the paratii library must be initialized with the URL of an Ethereum node (the `provider`) and the address of the `ParatiiRegistry` contract (the `registry` parameter). The registry contract identifies addresses of all the other contracts on the Paratii blockchain (and sets some other parameters).
 
     Paratii({
-      provider: 'http://chain.paratii.video/rpc',
+      'eth.provider': 'http://chain.paratii.video/rpc',
       registry: '0x123455',
     })
 

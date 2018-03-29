@@ -16,17 +16,17 @@ describe('Paratii configuration:', function () {
         address: address,
         privateKey: privateKey
       },
-      provider: 'ws://localhost:8546',
-      registryAddress: null,
+      'eth.provider': 'ws://localhost:8546',
+      'eth.registryAddress': null,
       isTestNet: true
     }
     assert.deepInclude(paratii.config, expected)
   })
 
   it('testnet configuration should be recognized', async function () {
-    paratii = new Paratii({provider: 'http://127.0.0.1:8545'})
+    paratii = new Paratii({'eth.provider': 'http://127.0.0.1:8545'})
     assert.isOk(paratii.config.isTestNet)
-    paratii = new Paratii({provider: 'http://localhost:8545'})
+    paratii = new Paratii({'eth.provider': 'http://localhost:8545'})
     assert.isOk(paratii.config.isTestNet)
   })
 
@@ -34,19 +34,19 @@ describe('Paratii configuration:', function () {
     // deploy the contracts so we have a registry address
     paratii = new Paratii({
       // this address and key are the first accounts on testrpc when started with the --deterministic flag
-      provider: 'http://localhost:8545',
+      'eth.provider': 'http://localhost:8545',
       address: address,
       privateKey: privateKey
     })
 
     await paratii.eth.deployContracts()
-    assert.isOk(paratii.eth.config.registryAddress)
+    assert.isOk(paratii.config['eth.registryAddress'])
 
     let paratii2 = new Paratii({
       address: address,
       privateKey: privateKey,
-      registryAddress: paratii.config.registryAddress,
-      provider: 'http://localhost:8545'
+      'eth.registryAddress': paratii.config['eth.registryAddress'],
+      'eth.provider': 'http://localhost:8545'
     })
 
     // the two config's are equal, except for the reference to the Paratii object itself
@@ -60,20 +60,19 @@ describe('Paratii configuration:', function () {
 
   it('should be possible to create a Paratii instance without an address or registryAddress', async function () {
     let paratii = new Paratii({
-      provider: 'http://chain.paratii.video/'
+      'eth.provider': 'http://chain.paratii.video/'
     })
     let expected = {
       account: {
         address: null,
         privateKey: null
       },
-      provider: 'http://chain.paratii.video/',
+      'eth.provider': 'http://chain.paratii.video/',
       isTestNet: false,
-      registryAddress: null
+      'eth.registryAddress': null
     }
     assert.deepInclude(paratii.config, expected)
 
-    // functions should still work
     let promise = paratii.eth.getContract('ParatiiToken')
     await assert.isRejected(promise, /No registry/)
   })
@@ -82,14 +81,14 @@ describe('Paratii configuration:', function () {
     let paratii = new Paratii({
       address: address,
       privateKey: privateKey,
-      provider: 'http://localhost:8545'
+      'eth.provider': 'http://localhost:8545'
     })
     assert.equal(paratii.eth.web3.eth.accounts.wallet[0].address, address)
   })
 
   it('setAccount should set the account', async function () {
     let paratii = new Paratii({
-      provider: 'http://127.0.0.1:8545'
+      'eth.provider': 'http://127.0.0.1:8545'
     })
     // let beneficiary = account1
     // let amount = 0.3 * 10 ** 18
@@ -112,21 +111,21 @@ describe('Paratii configuration:', function () {
   it('sending transactions should work both with http as with ws providers', async function () {
     let paratii
     paratii = new Paratii({
-      provider: 'http://localhost:8545',
+      'eth.provider': 'http://localhost:8545',
       address: address,
       privateKey: privateKey
     })
     await paratii.eth.deployContract('Registry')
 
     paratii = new Paratii({
-      provider: 'http://localhost:8545/rpc',
+      'eth.provider': 'http://localhost:8545/rpc',
       address: address,
       privateKey: privateKey
     })
     await paratii.eth.deployContract('Registry')
 
     paratii = new Paratii({
-      provider: 'ws://localhost:8546',
+      'eth.provider': 'ws://localhost:8546',
       address: address,
       privateKey: privateKey
     })

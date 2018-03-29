@@ -640,7 +640,7 @@ var Uploader = function (_EventEmitter) {
           if (err) return ev.emit('pin:error', err);
           peers.map(function (peer) {
             try {
-              console.log('peer.peer.toB58String(): ', peer.peer.toB58String());
+              _this8._ipfs.log('peer.peer.toB58String(): ', peer.peer.toB58String());
               if (peer.peer.toB58String() === opts.transcoderId) {
                 _this8._ipfs.log('sending pin msg to ' + peer.peer._idB58String + ' with request to pin ' + fileHash);
                 _this8._ipfs.protocol.network.sendMessage(peer.peer, msg, function (err) {

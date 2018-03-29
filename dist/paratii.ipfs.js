@@ -79,7 +79,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
       'ipfs.repo': joi.string().default(DEFAULT_REPO),
       'ipfs.bitswap.maxMessageSize': joi.number().default(128 * 1024),
       address: joi.string().default(null),
-      verbose: joi.bool().default(true)
+      verbose: joi.bool().default(false)
     }).unknown();
 
     var result = joi.validate(config, schema);
@@ -330,7 +330,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
                   pinEv.removeAllListeners();
                 });
                 pinEv.on('pin:done', function (hash) {
-                  console.log('pin:done:', hash);
+                  _this3.log('pin:done:', hash);
                   pinEv.removeAllListeners();
                 });
                 return pinEv;
