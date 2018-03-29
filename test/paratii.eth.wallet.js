@@ -171,19 +171,22 @@ describe('paratii.eth.wallet: :', function () {
     assert.equal(paratii.eth.wallet.getMnemonic(), undefined)
   })
   it('eth.wallet.create() generates key from mnemoninc correctly', async function () {
-    // const vector = require('./testData/bip39-test-vector.json')
     const vector = [{
       mnemonic: 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
       address: '0x9858EfFD232B4033E47d90003D41EC34EcaEda94'
+    },
+    {
+      mnemonic: 'jelly better achieve collect unaware mountain thought cargo oxygen act hood bridge',
+      address: '0x627ac4c2d731E12fB386BD649114a08ebCc0C33f'
+    },
+    {
+      mnemonic: 'planet warfare clay laptop aware junk decrease salute artwork barrel fabric pond',
+      address: '0xff28EA918a9C29eA169BAA5b82F5587f19E6ba40'
     }]
 
     for (var i = 0; i < vector.length; i++) {
       paratii = await new Paratii()
       let wallet = paratii.eth.wallet
-
-      // var p = wallet.setPassphrase('TREZOR')
-      // assert.equal(p, 'TREZOR')
-
       wallet = await wallet.create(1, vector[i].mnemonic)
       assert.equal(wallet[0].address, vector[i].address)
     }
