@@ -10,16 +10,17 @@ var _regenerator2 = _interopRequireDefault(_regenerator);
 
 exports.patchWallet = patchWallet;
 
+var _utils = require('./utils.js');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// this code is lifted and adapted from ethereumjs-lightwallet
+var bip39 = require('bip39'); // this code is lifted and adapted from ethereumjs-lightwallet
 
-var bip39 = require('bip39');
 var hdkey = require('hdkey');
 
 function patchWallet(wallet, config) {
   function create(numberOfAccounts, mnemonic) {
-    var seed, masternode, i, privkeyHex, privateKey;
+    var seed, masternode, i, child, privkeyHex, privateKey;
     return _regenerator2.default.async(function create$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
@@ -51,11 +52,10 @@ function patchWallet(wallet, config) {
 
 
             for (i = 0; i < numberOfAccounts; ++i) {
-              privkeyHex = masternode.derive('m/' + i).privateKey.toString('hex');
-              // equivalent to
-              // var privkeyHex = masternode.deriveChild(i).privateKey.toString('hex')
-
-              privateKey = this._accounts.privateKeyToAccount(privkeyHex).privateKey;
+              // m / purpose' / coin_type' / account' / change / address_index
+              child = masternode.derive('m/44\'/60\'/0\'/0/' + i);
+              privkeyHex = child.privateKey.toString('hex');
+              privateKey = this._accounts.privateKeyToAccount((0, _utils.add0x)(privkeyHex)).privateKey;
 
               this.add(privateKey);
             }
