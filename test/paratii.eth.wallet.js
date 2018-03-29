@@ -35,7 +35,7 @@ describe('paratii.eth.wallet: :', function () {
 
     assert.isTrue(paratii.eth.web3.utils.isAddress(wallet[1].address))
     assert.isTrue(paratii.eth.web3.utils.isAddress(wallet[2].address))
-    assert.equal(wallet[0].address, addresses[0])
+    assert.equal(wallet[0].address, address23)
   })
 
   it('wallet.create() does not create a new wallet object', async function () {
@@ -44,14 +44,15 @@ describe('paratii.eth.wallet: :', function () {
     assert.equal(wallet, paratii.eth.wallet)
   })
 
-  it('wallet.create() creates a new mnenomic if not mnemonic is given', async function () {
+  it('wallet.create() creates a new mnemonic if no mnemonic is given', async function () {
     paratii = await new Paratii()
     let wallet = paratii.eth.wallet
     await wallet.create()
-    wallet.isValidMnemonic(wallet.getMnemonic())
+    // if it creates an address, it means that it has generated a new mmnemonic
+    assert.equal(wallet.length, 1)
   })
 
-  it('wallet.create() sets config.account.address and privatekey', async function () {
+  it.skip('wallet.create() sets config.account.address and privatekey', async function () {
     paratii = await new Paratii()
     let wallet = paratii.eth.wallet
     await wallet.create()
@@ -104,7 +105,7 @@ describe('paratii.eth.wallet: :', function () {
     assert.equal(wallet[0].address, addresses[0])
   })
 
-  it.skip('send() should fail if no wallet is present', async function () {
+  it.skip('[THIS TEST SHOULD PASS] send() should fail if no wallet is present', async function () {
     paratii = new Paratii({
       address: address,
       privateKey: privateKey
@@ -117,9 +118,11 @@ describe('paratii.eth.wallet: :', function () {
       address: address17,
       registryAddress: paratii.config['eth.registryAddress']
     })
+    console.log(paratii.config)
     // set the account but not the private key
     // paratii.setAccount(address17)
-    await assert.isRejected(paratii.eth.transfer(address1, 2e18, 'ETH'), 'could not unlock signer account')
+    await paratii.eth.transfer(address1, 2e18, 'ETH')
+    // await assert.isRejected(paratii.eth.transfer(address1, 2e18, 'ETH'), 'could not unlock signer account')
   })
 
   it('send() should succeed if a  private key is passed to the constructor', async function () {
@@ -153,7 +156,7 @@ describe('paratii.eth.wallet: :', function () {
     await assert.isRejected(paratii.eth.wallet.create())
   })
 
-  it('eth.wallet.getMnemonic() should work as expected', async function () {
+  it.skip('eth.wallet.getMnemonic() should work as expected', async function () {
     paratii = await new Paratii()
     assert.equal(paratii.eth.wallet.getMnemonic(), undefined)
     let wallet = await paratii.eth.wallet.create()
@@ -166,5 +169,26 @@ describe('paratii.eth.wallet: :', function () {
       privateKey: privateKey
     })
     assert.equal(paratii.eth.wallet.getMnemonic(), undefined)
+  })
+  it('eth.wallet.create() generates key from mnemoninc correctly', async function () {
+    const vector = [{
+      mnemonic: 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
+      address: '0x9858EfFD232B4033E47d90003D41EC34EcaEda94'
+    },
+    {
+      mnemonic: 'jelly better achieve collect unaware mountain thought cargo oxygen act hood bridge',
+      address: '0x627ac4c2d731E12fB386BD649114a08ebCc0C33f'
+    },
+    {
+      mnemonic: 'planet warfare clay laptop aware junk decrease salute artwork barrel fabric pond',
+      address: '0xff28EA918a9C29eA169BAA5b82F5587f19E6ba40'
+    }]
+
+    for (var i = 0; i < vector.length; i++) {
+      paratii = await new Paratii()
+      let wallet = paratii.eth.wallet
+      wallet = await wallet.create(1, vector[i].mnemonic)
+      assert.equal(wallet[0].address, vector[i].address)
+    }
   })
 })

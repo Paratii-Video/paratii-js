@@ -1,5 +1,5 @@
 import { Paratii } from '../lib/paratii.js'
-import { address, privateKey } from './utils.js'
+import { address, privateKey, mnemonic23, address23 } from './utils.js'
 import { assert } from 'chai'
 
 describe('Paratii configuration:', function () {
@@ -14,7 +14,8 @@ describe('Paratii configuration:', function () {
     let expected = {
       account: {
         address: address,
-        privateKey: privateKey
+        privateKey: privateKey,
+        mnemonic: null
       },
       'eth.provider': 'ws://localhost:8546',
       'eth.registryAddress': null,
@@ -65,7 +66,8 @@ describe('Paratii configuration:', function () {
     let expected = {
       account: {
         address: null,
-        privateKey: null
+        privateKey: null,
+        mnemonic: null
       },
       'eth.provider': 'http://chain.paratii.video/',
       isTestNet: false,
@@ -84,6 +86,23 @@ describe('Paratii configuration:', function () {
       'eth.provider': 'http://localhost:8545'
     })
     assert.equal(paratii.eth.web3.eth.accounts.wallet[0].address, address)
+  })
+
+  it('the account should be added to the wallet if mnenomic is given', async function () {
+    let paratii = new Paratii({
+      address: address23,
+      mnemonic: mnemonic23,
+      provider: 'http://localhost:8545'
+    })
+    assert.equal(paratii.eth.web3.eth.accounts.wallet[0].address, address23)
+  })
+
+  it('the account address can be generated from the mnenomic', async function () {
+    let paratii = new Paratii({
+      mnemonic: mnemonic23,
+      provider: 'http://localhost:8545'
+    })
+    assert.equal(paratii.eth.web3.eth.accounts.wallet[0].address, address23)
   })
 
   it('setAccount should set the account', async function () {

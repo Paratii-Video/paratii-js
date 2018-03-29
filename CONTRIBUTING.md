@@ -42,15 +42,7 @@ Code should survive Javascript Standard linting:
 
     yarn lint
 
-## Breakpoints
-
-if you run tests with:
-
-    node debug ./node_modules/truffle/build/cli.bundled.js test
-
-it is possible to use `debugger` statements and inspect the state
-
-# Contribute
+    # Contribute
 
 Look at the issues https://github.com/Paratii-Video/paratii-lib/issues
 
