@@ -1,10 +1,6 @@
 /* global File, ArrayBuffer */
 'use strict';
 
-/**
- * @module IPFS UPLOADER : Paratii IPFS uploader interface.
- */
-
 var _promise = require('babel-runtime/core-js/promise');
 
 var _promise2 = _interopRequireDefault(_promise);
@@ -48,6 +44,13 @@ var _require2 = require('async'),
 var once = require('once');
 var Multiaddr = require('multiaddr');
 var Resumable = require('resumablejs');
+/**
+ * IPFS UPLOADER : Paratii IPFS uploader interface.
+ * Contains functions to interact with the IPFS instance.
+ * @extends EventEmitter
+ * @param {Object} paratiiIPFS
+ * @param {Object} opts
+ */
 
 var Uploader = function (_EventEmitter) {
   (0, _inherits3.default)(Uploader, _EventEmitter);

@@ -16,9 +16,11 @@ var _paratiiDbUsers = require('./paratii.db.users.js');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var joi = require('joi');
+
 /**
- * ParatiiDb contains a functionality to interact with the Paratii Blockchain Index
- *
+ * ParatiiDb contains a functionality to interact with the Paratii Blockchain Index. <br>
+ * validates the config file and istantiates ParatiiDbVids and ParatiiDbUsers.
+ * @param {Object} config
  */
 
 var ParatiiDb = exports.ParatiiDb = function ParatiiDb(config) {

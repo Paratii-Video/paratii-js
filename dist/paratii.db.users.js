@@ -19,12 +19,11 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * ParatiiDb contains a functionality to interact with the Paratii Blockchain Index
- *
- */
-
 var fetch = require('isomorphic-fetch');
+/**
+ * ParatiiDbUsers contains functionalities regarding the users to interact with the Paratii Blockchain Index
+ * @param {Object} config object to initialize Paratii object
+ */
 
 var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
   function ParatiiDbUsers(config) {
@@ -35,6 +34,14 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
     this.apiUsers = 'users/';
     this.apiVideos = '/videos';
   }
+
+  /**
+   * retrieve data about the user
+   * @param  {String}  userId user univocal id
+   * @return {Promise}        data about the user
+   * @example paratii.db.users.get('some-user-id')
+   */
+
 
   (0, _createClass3.default)(ParatiiDbUsers, [{
     key: 'get',
@@ -62,6 +69,13 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
         }
       }, null, this);
     }
+    /**
+     * get information about all the videos of the user
+     * @param  {String}  userId univocal user identifier
+     * @return {Promise}        Collection of all the videos of the user
+     * @example paratii.db.users.videos('some-user-id')
+     */
+
   }, {
     key: 'videos',
     value: function videos(userId) {
@@ -79,9 +93,11 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
 
             case 2:
               users = _context2.sent;
+
+              console.log(users);
               return _context2.abrupt('return', users);
 
-            case 4:
+            case 5:
             case 'end':
               return _context2.stop();
           }
