@@ -51,7 +51,10 @@ function patchWallet(wallet, config) {
 
 
             for (i = 0; i < numberOfAccounts; ++i) {
-              privkeyHex = masternode.deriveChild(i).privateKey.toString('hex');
+              privkeyHex = masternode.derive('m/' + i).privateKey.toString('hex');
+              // equivalent to
+              // var privkeyHex = masternode.deriveChild(i).privateKey.toString('hex')
+
               privateKey = this._accounts.privateKeyToAccount(privkeyHex).privateKey;
 
               this.add(privateKey);
