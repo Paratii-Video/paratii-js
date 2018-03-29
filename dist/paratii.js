@@ -31,9 +31,22 @@ var joi = require('joi');
 var utils = require('./utils.js');
 
 /**
- * Paratii Library
- * for usage, see https://github.com/Paratii-Video/paratii-contracts/tree/master/docs
+ * Paratii library main object
+ * The Paratii object serves as the general entry point for interacting with the family of Paratii
+ * contracts that are deployed on the blockchain, utilities to run and interact with a local IPFS node,
+ * and utilities to interact with the Paratii index.
+ * @param {Object} opts options object to configure paratii library
+ * @param {String} opts.provider optional - the address of an ethereum node (defaults to localhost:8754)
+ * @param {String} opts.registryAddress optional - the address where the Paratii Contract registry can be found
+ * @param {String} opts.address optional - address of the operator/user
+ * @param {String} opts.privateKey optional - private key of the user
+ * @param {Object} opts.ipfs TODO fix ipfs.repo --> ipfsrepo
+ * @param {String} opts.ipfs.repo optional - namespace of the ipfs repository
+ * @param {Object} opts.db TODO fix db.provider --> dbprovider
+ * @param {String} opts.db.provider optional - baseURL of the mongoDb mirror
+ * @param {String} opts.mnemonic optional - mnemonic of the user
  *
+ * @example     paratii = new Paratii({ provider: 'http://localhost:8545', address: 'some-user-id', privateKey: 'some-user-priv-key'})
  */
 
 var Paratii = function () {
@@ -79,17 +92,37 @@ var Paratii = function () {
     this.eth = new _paratiiEth.ParatiiEth(this.config);
     this.ipfs = new _paratiiIpfs.ParatiiIPFS(this.config);
   }
+  /**
+   * Set the ethereum address what will be used to sign all transactions
+   * @param {String} address address of the operator/user
+   * @param {String} privateKey optional - private key of the operator/user
+   * @example paratii.setAccount('some-user-id','some-user-pub-key')
+   */
+
 
   (0, _createClass3.default)(Paratii, [{
     key: 'setAccount',
     value: function setAccount(address, privateKey) {
       this.eth.setAccount(address, privateKey);
     }
+    /**
+     * Set the address of the ParatiiRegistry contract
+     * @param {String} address address of the ParatiiRegistry contract
+     * @example paratii.setRegistryAddress('some-address')
+    */
+
   }, {
     key: 'setRegistryAddress',
     value: function setRegistryAddress(address) {
       return this.eth.setRegistryAddress(address);
     }
+
+    /**
+     * return an array of strings with diagnostic info
+     * @return {Promise} array of strings with diagnostic info
+     * @example paratii.diagnose()
+     */
+
   }, {
     key: 'diagnose',
     value: function diagnose() {
@@ -101,8 +134,6 @@ var Paratii = function () {
               log = function log(msg) {
                 msgs.push(msg);
               };
-
-              // return an array of strings with diagnostic info
 
               msg = void 0, address = void 0, msgs = void 0;
               isOk = true;

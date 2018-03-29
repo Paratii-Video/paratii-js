@@ -19,13 +19,14 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * ParatiiDb contains a functionality to interact with the Paratii Blockchain Index
- *
- */
 var joi = require('joi');
 
 var fetch = require('isomorphic-fetch');
+
+/**
+ * ParatiiDbUsers contains functionalities regarding the videos to interact with the Paratii Blockchain Index
+ * @param {Object} config object to initialize Paratii object
+ */
 
 var ParatiiDbVids = exports.ParatiiDbVids = function () {
   function ParatiiDbVids(config) {
@@ -35,6 +36,13 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
     this.apiVersion = '/api/v1/';
     this.apiVideos = 'videos/';
   }
+  /**
+   * Get information about this video from the db
+   * @param  {String}  videoId univocal video identifier
+   * @return {Promise}         data about the video
+   * @example paratii.db.vids.get('some-video-id')
+   */
+
 
   (0, _createClass3.default)(ParatiiDbVids, [{
     key: 'get',
@@ -62,6 +70,21 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
         }
       }, null, this);
     }
+
+    /**
+     * Get the data of the video
+     * @param  {Object} options data about the video and (optional) owner i.e {'keyword':'titleOfTheVideo'}
+     * @return {Promise}        data about the video
+     * @example paratii.db.vids.search({keyword : 'titleOftheVideo'})
+     * the keyword value can be one from the following list
+     * - video title
+     * - description
+     * - owner
+     * - uploader.name
+     * - uploader.address
+     * - tags
+     */
+
   }, {
     key: 'search',
     value: function search(options) {
