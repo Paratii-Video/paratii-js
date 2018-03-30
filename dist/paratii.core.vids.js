@@ -63,16 +63,16 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   function ParatiiCoreVids(config) {
     (0, _classCallCheck3.default)(this, ParatiiCoreVids);
 
-    var schema = joi.object({
-      'db.provider': joi.string().default(null)
-    }).unknown();
+    // const schema = joi.object({
+    //   'db.provider': joi.string().default(null)
+    // }).unknown()
+    //
+    // const result = joi.validate(config, schema)
+    // const error = result.error
+    // if (error) throw error
+    // let options = result.value
 
-    var result = joi.validate(config, schema);
-    var error = result.error;
-    if (error) throw error;
-    var options = result.value;
-
-    this.config = options;
+    this.config = config;
     this.paratii = this.config.paratii;
   }
   /**

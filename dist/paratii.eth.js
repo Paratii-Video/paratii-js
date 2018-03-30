@@ -37,39 +37,40 @@ var _paratiiEthWallet = require('./paratii.eth.wallet.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// import { ethSchema, accountSchema } from './schemas.js'
 var Web3 = require('web3');
-var joi = require('joi');
+// const joi = require('joi')
 
 var ParatiiEth = exports.ParatiiEth = function () {
   function ParatiiEth(config) {
     (0, _classCallCheck3.default)(this, ParatiiEth);
 
-    var schema = joi.object({
-      'eth.provider': joi.string().default('ws://localhost:8546'),
-      'eth.registryAddress': joi.string().allow(null).default(null),
-      account: joi.object({
-        address: joi.string().allow(null).default(null),
-        privateKey: joi.string().allow(null).default(null),
-        mnemonic: joi.string().allow(null).default(null)
-      }),
-      web3: joi.any().default(null),
-      isTestNet: joi.bool().default(false)
-    }).unknown();
+    // const schema = joi.object({
+    //   account: accountSchema,
+    //   eth: ethSchema,
+    //   web3: joi.any().default(null)
+    // })
+    // const result = joi.validate(config, schema)
+    // const error = result.error
+    // if (error) throw error
+    // let options = result.value
+    var options = config;
+    if (this.config.eth.provider.match(/(localhost|127\.0\.0\.1)/g)) {
+      this.config.eth.isTestNet = true;
+    } else {
+      this.config.eth.isTestNet = false;
+    }
 
-    var result = joi.validate(config, schema);
-    var error = result.error;
-    if (error) throw error;
-    var options = result.value;
     this.config = config;
 
     if (options.web3) {
       this.web3 = options.web3;
     } else {
       this.web3 = new Web3();
-      if (options['eth.provider'].substring(0, 2) === 'ws') {
-        this.web3.setProvider(new this.web3.providers.WebsocketProvider(options['eth.provider']));
+      if (options.eth.provider.substring(0, 2) === 'ws') {
+        this.web3.setProvider(new this.web3.providers.WebsocketProvider(options.eth.provider));
       } else {
-        this.web3.setProvider(new this.web3.providers.HttpProvider(options['eth.provider']));
+        this.web3.setProvider(new this.web3.providers.HttpProvider(options.eth.provider));
       }
     }
 
@@ -102,7 +103,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
       var wallet = this.web3.eth.accounts.wallet;
       this.config.account.address = address;
       this.config.account.privateKey = privateKey;
-      this.web3.eth.defaultAccount = address;
+      this.web3.eth.testAccount = address;
       if (privateKey) {
         var account = wallet.add(privateKey);
         if (account.address !== address) {
@@ -384,7 +385,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
                 // await this.setContractsProvider()
 
-              };this.config['eth.registryAddress'] = paratiiRegistryAddress;
+              };this.setRegistryAddress(paratiiRegistryAddress);
 
               return _context4.abrupt('return', this.contracts);
 
@@ -525,12 +526,12 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: 'getRegistryAddress',
     value: function getRegistryAddress() {
-      return this.config['eth.registryAddress'];
+      return this.config.eth.registryAddress;
     }
   }, {
     key: 'setRegistryAddress',
     value: function setRegistryAddress(registryAddress) {
-      this.config['eth.registryAddress'] = registryAddress;
+      this.config.eth.registryAddress = registryAddress;
       for (var name in this.contracts) {
         var contract = this.contracts[name];
         contract.options.address = undefined;

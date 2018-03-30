@@ -49,19 +49,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 global.Buffer = global.Buffer || require('buffer').Buffer;
 
-// const Ipfs = require('ipfs')
-// import { paratiiIPFS } from './ipfs/index.js'
 var joi = require('joi');
 var Uploader = require('./paratii.ipfs.uploader.js');
 
 var _require = require('events'),
     EventEmitter = _require.EventEmitter;
-// var pull = require('pull-stream')
-// var pullFilereader = require('pull-filereader')
-
-
-var DEFAULT_REPO = '/tmp/paratii-ipfs-repo';
-// const REPO_PATH = 'paratii-ipfs-repo'
+// const DEFAULT_REPO = '/tmp/paratii-ipfs-repo'
 
 var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   (0, _inherits3.default)(ParatiiIPFS, _EventEmitter);
@@ -76,7 +69,6 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
       onReadyHook: joi.array().ordered().default([]),
       'config.addresses.swarm': joi.array().ordered(joi.string().default('/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star'), joi.string().default('/dns/ws.star.paratii.video/wss/p2p-websocket-star/')),
       'ipfs.config.Bootstrap': joi.array().ordered(joi.string().default('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW')),
-      'ipfs.repo': joi.string().default(DEFAULT_REPO),
       'ipfs.bitswap.maxMessageSize': joi.number().default(128 * 1024),
       address: joi.string().default(null),
       verbose: joi.bool().default(false)
@@ -181,7 +173,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
                 maxMessageSize: 256 * 1024
               },
               start: true,
-              repo: config['ipfs.repo'] || '/tmp/test-repo-' + String(Math.random()),
+              repo: config.ipfs.repo || '/tmp/test-repo-' + String(Math.random()),
               config: {
                 Addresses: {
                   Swarm: ['/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star', '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/']

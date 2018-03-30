@@ -25,6 +25,8 @@ var _paratiiEth = require('./paratii.eth.js');
 
 var _paratiiIpfs = require('./paratii.ipfs.js');
 
+var _schemas = require('./schemas.js');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var joi = require('joi');
@@ -55,42 +57,24 @@ var Paratii = function () {
     (0, _classCallCheck3.default)(this, Paratii);
 
     var schema = joi.object({
-      'eth.provider': joi.string().default('ws://localhost:8546'),
-      'eth.registryAddress': joi.string().default(null),
-      address: joi.string().default(null),
-      privateKey: joi.string().default(null),
-      mnemonic: joi.string().default(null),
-      'ipfs.repo': joi.string().default('/tmp/paratii-alpha-' + String(Math.random())),
-      'db.provider': joi.string()
+      account: _schemas.accountSchema,
+      eth: _schemas.ethSchema,
+      db: _schemas.dbSchema,
+      ipfs: _schemas.ipfsSchema
     });
 
     var result = joi.validate(opts, schema);
     var error = result.error;
     if (error) throw error;
-    var options = result.value;
-
-    this.config = {};
-    this.config['eth.provider'] = options['eth.provider'];
-    this.config['ipfs.repo'] = options['ipfs.repo'];
-    this.config['db.provider'] = options['db.provider'];
-
-    if (this.config['eth.provider'].match(/(localhost|127\.0\.0\.1)/g)) {
-      this.config.isTestNet = true;
-    } else {
-      this.config.isTestNet = false;
-    }
-
-    this.config.account = {
-      address: options.address,
-      privateKey: options.privateKey,
-      mnemonic: options.mnemonic
-    };
-    this.config['eth.registryAddress'] = options['eth.registryAddress'];
-
+    this.config = result.value;
     this.config.paratii = this;
+    this.eth = new _paratiiEth.ParatiiEth(this.config);
+    // this.eth = new ParatiiEth({
+    //   eth: this.config.eth,
+    //   account: this.config.account
+    // })
     this.core = new _paratiiCore.ParatiiCore(this.config);
     this.db = new _paratiiDb.ParatiiDb(this.config);
-    this.eth = new _paratiiEth.ParatiiEth(this.config);
     this.ipfs = new _paratiiIpfs.ParatiiIPFS(this.config);
   }
   /**
