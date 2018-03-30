@@ -68,11 +68,11 @@ var Paratii = function () {
     if (error) throw error;
     this.config = result.value;
     this.config.paratii = this;
-    this.eth = new _paratiiEth.ParatiiEth(this.config);
     // this.eth = new ParatiiEth({
-    //   eth: this.config.eth,
-    //   account: this.config.account
+    //   account: this.config.account,
+    //   eth: this.config.eth
     // })
+    this.eth = new _paratiiEth.ParatiiEth(this.config);
     this.core = new _paratiiCore.ParatiiCore(this.config);
     this.db = new _paratiiDb.ParatiiDb(this.config);
     this.ipfs = new _paratiiIpfs.ParatiiIPFS(this.config);

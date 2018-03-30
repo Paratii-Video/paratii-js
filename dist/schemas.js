@@ -6,14 +6,14 @@ Object.defineProperty(exports, "__esModule", {
 var joi = require('joi');
 
 var accountSchema = joi.object({
-  address: joi.string().default(null),
-  privateKey: joi.string().default(null),
-  mnemonic: joi.string().default(null)
+  address: joi.string().default(null).allow(null),
+  privateKey: joi.string().default(null).allow(null),
+  mnemonic: joi.string().default(null).allow(null)
 }).default();
 
 var ethSchema = joi.object({
   provider: joi.string().default('ws://localhost:8546'),
-  registryAddress: joi.string().default(null)
+  registryAddress: joi.string().default(null).allow(null)
 }).default();
 
 var ipfsSchema = joi.object({

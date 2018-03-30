@@ -35,43 +35,46 @@ var _paratiiEthTcr = require('./paratii.eth.tcr.js');
 
 var _paratiiEthWallet = require('./paratii.eth.wallet.js');
 
+var _schemas = require('./schemas.js');
+
+var _joi = require('joi');
+
+var _joi2 = _interopRequireDefault(_joi);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import { ethSchema, accountSchema } from './schemas.js'
 var Web3 = require('web3');
-// const joi = require('joi')
 
 var ParatiiEth = exports.ParatiiEth = function () {
   function ParatiiEth(config) {
     (0, _classCallCheck3.default)(this, ParatiiEth);
 
-    // const schema = joi.object({
-    //   account: accountSchema,
-    //   eth: ethSchema,
-    //   web3: joi.any().default(null)
-    // })
-    // const result = joi.validate(config, schema)
-    // const error = result.error
-    // if (error) throw error
-    // let options = result.value
-    var options = config;
-    this.config = config;
-    if (this.config.eth.provider.match(/(localhost|127\.0\.0\.1)/g)) {
-      this.config.eth.isTestNet = true;
+    var schema = _joi2.default.object({
+      account: _schemas.accountSchema,
+      eth: _schemas.ethSchema
+      //   web3: joi.any().default(null)
+    });
+    var result = _joi2.default.validate(config, schema, { allowUnknown: true });
+    if (result.error) throw result.error;
+    config.eth = result.value.eth;
+    config.acount = result.value.account;
+    if (config.eth.provider.match(/(localhost|127\.0\.0\.1)/g)) {
+      config.eth.isTestNet = true;
     } else {
-      this.config.eth.isTestNet = false;
+      config.eth.isTestNet = false;
     }
 
-    if (options.web3) {
-      this.web3 = options.web3;
+    if (config.web3) {
+      this.web3 = config.web3;
     } else {
       this.web3 = new Web3();
-      if (options.eth.provider.substring(0, 2) === 'ws') {
-        this.web3.setProvider(new this.web3.providers.WebsocketProvider(options.eth.provider));
+      if (config.eth.provider.substring(0, 2) === 'ws') {
+        this.web3.setProvider(new this.web3.providers.WebsocketProvider(config.eth.provider));
       } else {
-        this.web3.setProvider(new this.web3.providers.HttpProvider(options.eth.provider));
+        this.web3.setProvider(new this.web3.providers.HttpProvider(config.eth.provider));
       }
     }
+    this.config = config;
 
     this.wallet = (0, _paratiiEthWallet.patchWallet)(this.web3.eth.accounts.wallet, this.config);
     this.setAccount(this.config.account.address, this.config.account.privateKey, this.config.account.mnemonic);
