@@ -104,6 +104,7 @@ describe('Paratii configuration:', function () {
       provider: 'http://localhost:8545'
     })
     assert.equal(paratii.eth.web3.eth.accounts.wallet[0].address, address23)
+    assert.equal(paratii.config.address, address23)
   })
 
   it('setAccount should set the account', async function () {
