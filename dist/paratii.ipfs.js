@@ -45,16 +45,19 @@ var _paratiiProtocol = require('paratii-protocol');
 
 var _paratiiProtocol2 = _interopRequireDefault(_paratiiProtocol);
 
+var _schemas = require('./schemas.js');
+
+var _joi = require('joi');
+
+var _joi2 = _interopRequireDefault(_joi);
+
+var _events = require('events');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 global.Buffer = global.Buffer || require('buffer').Buffer;
 
-// const joi = require('joi')
 var Uploader = require('./paratii.ipfs.uploader.js');
-
-var _require = require('events'),
-    EventEmitter = _require.EventEmitter;
-// const DEFAULT_REPO = '/tmp/paratii-ipfs-repo'
 
 var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   (0, _inherits3.default)(ParatiiIPFS, _EventEmitter);
@@ -62,7 +65,12 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   function ParatiiIPFS(config) {
     (0, _classCallCheck3.default)(this, ParatiiIPFS);
 
-    // const schema = joi.object({
+    var _this = (0, _possibleConstructorReturn3.default)(this, (ParatiiIPFS.__proto__ || (0, _getPrototypeOf2.default)(ParatiiIPFS)).call(this));
+
+    var schema = _joi2.default.object({
+      ipfs: _schemas.ipfsSchema,
+      account: _schemas.accountSchema
+    });
     //   protocol: joi.string().default(null),
     //   onReadyHook: joi.array().ordered().default([]),
     //   'config.addresses.swarm': joi
@@ -80,13 +88,10 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     //   address: joi.string().default(null),
     //   verbose: joi.bool().default(false)
     // }).unknown()
-    //
-    // const result = joi.validate(config, schema)
-    // const error = result.error
-    // if (error) throw error
-    // this.config = result.value
-    var _this = (0, _possibleConstructorReturn3.default)(this, (ParatiiIPFS.__proto__ || (0, _getPrototypeOf2.default)(ParatiiIPFS)).call(this));
 
+    var result = _joi2.default.validate(config, schema, { allowUnknown: true });
+    if (result.error) throw result.error;
+    config.ipfs = result.value.ipfs;
     _this.config = config;
     _this.uploader = new Uploader(_this);
     return _this;
@@ -180,15 +185,23 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
           .then(function (Ipfs) {
             var ipfs = new Ipfs({
               bitswap: {
-                maxMessageSize: 256 * 1024
+                // maxMessageSize: 256 * 1024
+                maxMessageSize: _this2.config['bitswap.maxMessageSize']
               },
               start: true,
               repo: config.ipfs.repo || '/tmp/test-repo-' + String(Math.random()),
               config: {
                 Addresses: {
-                  Swarm: ['/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star', '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/']
+                  Swarm: _this2.config.ipfs.swarm
+                  // [
+                  //   '/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star',
+                  //   '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/'
+                  // ]
                 },
-                Bootstrap: ['/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW']
+                Bootstrap: _this2.config.ipfs.bootstrap
+                // [
+                //   '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
+                // ]
               }
             });
 
@@ -442,4 +455,4 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     }
   }]);
   return ParatiiIPFS;
-}(EventEmitter);
+}(_events.EventEmitter);
