@@ -1,5 +1,5 @@
 import { Paratii } from '../lib/paratii.js'
-import { address, address1, privateKey, address17, mnemonic23, address23 } from './utils.js'
+import { testAccount, testConfig, address, address1, privateKey, address17, mnemonic23, address23 } from './utils.js'
 import { add0x } from '../lib/utils.js'
 import { assert } from 'chai'
 
@@ -12,13 +12,10 @@ describe('paratii.eth.wallet: :', function () {
   let password = 'some-password'
 
   it('init account is added to wallet', async function () {
-    paratii = new Paratii({
-      'eth.provider': 'http://localhost:8545',
-      address: address,
-      privateKey: privateKey
-    })
+    paratii = new Paratii(testConfig)
     assert.equal(paratii.eth.wallet.length, 1)
   })
+
   it('if no account is given, the wallet accounts are empty', async function () {
     paratii = await new Paratii()
     assert.equal(paratii.eth.wallet.length, 0)
@@ -106,10 +103,7 @@ describe('paratii.eth.wallet: :', function () {
   })
 
   it.skip('[THIS TEST SHOULD PASS] send() should fail if no wallet is present', async function () {
-    paratii = new Paratii({
-      address: address,
-      privateKey: privateKey
-    })
+    paratii = new Paratii({ account: testAccount })
     await paratii.eth.deployContracts()
 
     // instantiate paratii with an unlocked account
@@ -126,11 +120,14 @@ describe('paratii.eth.wallet: :', function () {
   })
 
   it('send() should succeed if a  private key is passed to the constructor', async function () {
-    paratii = new Paratii({
-      'eth.provider': 'http://localhost:8545',
-      address: address,
-      privateKey: privateKey
-    })
+    paratii = new Paratii(
+      {
+        eth: {provider: 'http://localhost:8545'},
+        account: {
+          address: address,
+          privateKey: privateKey
+        }
+      })
     await paratii.eth.deployContracts()
     await paratii.eth.transfer(address1, 2e10, 'ETH', 'thanks for all the fish')
   })
@@ -149,10 +146,10 @@ describe('paratii.eth.wallet: :', function () {
     assert.isOk(paratii.eth.wallet.isValidMnemonic(m1))
   })
   it('eth.wallet.create() should throw if a wallet already has an account', async function () {
-    paratii = new Paratii({
+    paratii = new Paratii({account: {
       address: address,
       privateKey: privateKey
-    })
+    }})
     await assert.isRejected(paratii.eth.wallet.create())
   })
 

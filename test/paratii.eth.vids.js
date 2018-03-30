@@ -1,16 +1,12 @@
 import { Paratii } from '../lib/paratii.js'
-import { address, address1, privateKey } from './utils.js'
+import { address1, testConfig } from './utils.js'
 import { assert } from 'chai'
 
 describe('paratii.eth.vids:', function () {
   let paratii
 
   beforeEach(async function () {
-    paratii = new Paratii({
-      'eth.provider': 'http://localhost:8545',
-      address: address,
-      privateKey: privateKey
-    })
+    paratii = new Paratii(testConfig)
     await paratii.eth.deployContracts()
   })
 

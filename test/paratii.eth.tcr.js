@@ -1,16 +1,12 @@
 import { Paratii } from '../lib/paratii.js'
-import { address, privateKey } from './utils.js'
+import { address, testConfig } from './utils.js'
 import { assert } from 'chai'
 
 describe('paratii.eth.tcr:', function () {
   let paratii
 
   before(async function () {
-    paratii = new Paratii({
-      'eth.provider': 'http://localhost:8545',
-      address: address,
-      privateKey: privateKey
-    })
+    paratii = new Paratii(testConfig)
     await paratii.eth.deployContracts()
   })
 
@@ -36,7 +32,7 @@ describe('paratii.eth.tcr:', function () {
     let tx = await token.methods.transfer(address, 1000).send()
     assert.isOk(tx)
     let balanceBefore = await token.methods.balanceOf(address).call()
-    console.log('balanceBefore: ', balanceBefore)
+    // console.log('balanceBefore: ', balanceBefore)
     // let balance = await token.methods.balanceOf(address).call()
     // assert.equal(balance, 1000)
     let amountToAllowWei = paratii.eth.web3.utils.toWei('100')
@@ -52,7 +48,7 @@ describe('paratii.eth.tcr:', function () {
     let allowanceAfter = await token.methods.allowance(address, tcrPlaceholder.options.address).call()
     assert.equal(paratii.eth.web3.utils.toWei('95'), allowanceAfter)
     let balanceAfter = await token.methods.balanceOf(address).call()
-    console.log('balanceAfter: ', balanceAfter.toString())
+    // console.log('balanceAfter: ', balanceAfter.toString())
     assert.equal(
       paratii.eth.web3.utils.toBN(balanceBefore.toString())
       .sub(paratii.eth.web3.utils.toBN(balanceAfter.toString())).toString()
@@ -72,8 +68,5 @@ describe('paratii.eth.tcr:', function () {
       Error,
        /already applied/g
      )
-
-    // let result = await paratii.eth.tcr.checkEligiblityAndApply(videoId, paratii.eth.web3.utils.toWei(amount.toString()))
-    // assert.isFalse(result)
   })
 })

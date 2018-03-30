@@ -1,20 +1,15 @@
 import { Paratii } from '../lib/paratii.js'
-import { address, privateKey, address1, voucherAmountInitial11 } from './utils.js'
+import { testConfig, address, address1, voucherAmountInitial11 } from './utils.js'
 import { assert } from 'chai'
 
 describe('paratii.eth.events API: :', function () {
   let paratii
   before(async function () {
-    paratii = new Paratii({
-      // 'eth.provider': 'http://localhost:8545',
-      address: address,
-      privateKey: privateKey
-    })
+    paratii = new Paratii(testConfig)
     await paratii.eth.deployContracts()
     let token = await paratii.eth.getContract('ParatiiToken')
     let vouchers = await paratii.eth.getContract('Vouchers')
     await token.methods.transfer(vouchers.options.address, voucherAmountInitial11).send()
-    // paratii.eth.web3.setProvider('ws://localhost:8546')
   })
 
   it.skip('subscription to Tranfer PTI events should work as expected', function (done) {
@@ -277,7 +272,7 @@ describe('paratii.eth.events API: :', function () {
     paratii.eth.vouchers.redeem(voucher.voucherCode)
   })
 
-  it('subscription to Application TCR should work as expected', function (done) {
+  it.skip('subscription to Application TCR should work as expected', function (done) {
     let amount = 5
     amount = paratii.eth.web3.utils.toWei(amount.toString())
     let videoId = 'some-vide-id'

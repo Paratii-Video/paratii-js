@@ -1,16 +1,13 @@
 import { Paratii } from '../lib/paratii.js'
-import { address, privateKey, voucherCode11, voucherAmount11, voucherAmountInitial11, hashedVoucherCode11 } from './utils.js'
+import { testConfig, voucherCode11, voucherAmount11, voucherAmountInitial11, hashedVoucherCode11 } from './utils.js'
 import { assert } from 'chai'
 
 describe('paratii.eth.vouchers:', function () {
   let paratii
 
   beforeEach(async function () {
-    paratii = new Paratii({
-      // 'eth.provider': 'http://localhost:8545',
-      address: address,
-      privateKey: privateKey
-    })
+    paratii = new Paratii(testConfig)
+
     await paratii.eth.deployContracts()
     let token = await paratii.eth.getContract('ParatiiToken')
     let vouchers = await paratii.eth.getContract('Vouchers')
