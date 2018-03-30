@@ -1,14 +1,9 @@
 import { Paratii } from '../lib/paratii.js'
-import { address, privateKey } from './utils.js'
+import { testAccount } from './utils.js'
 
 describe('Paratii API:', function () {
   it('diagnose() should run without errors', async function () {
-    let paratii = new Paratii({
-      // this address and key are the first accounts on testrpc when started with the --deterministic flag
-      address,
-      privateKey
-    })
-
+    let paratii = new Paratii({account: testAccount})
     await paratii.eth.deployContracts()
     await paratii.diagnose()
   })

@@ -13,16 +13,20 @@ Typically, the Paratii library will be used for interacting with contracts that 
 For this purpose, the paratii library must be initialized with the URL of an Ethereum node (the `provider`) and the address of the `ParatiiRegistry` contract (the `registry` parameter). The registry contract identifies addresses of all the other contracts on the Paratii blockchain (and sets some other parameters).
 
     Paratii({
-      'eth.provider': 'http://chain.paratii.video/rpc',
-      registry: '0x123455',
+      eth: {
+        provider': 'http://chain.paratii.video/rpc',
+        registry: '0x123455',
+      }
     })
 
 This is enough info to _read_ information from the blockchain.
 To also write information (for example, to register views), the library needs to know which ethereum address will be used to send the transactions, and how to cryptographically sign those transactions. The library can either sign transactions directly with an optionally provided `privateKey`, or it can use a wallet file to sign those transactions:
 
     Paratii({
-      address: '0x12yourEthereumAddress',
-      privateKey: 'privateKeyAssociatedwiththisADdress'
+      account: {
+        address: '0x12yourEthereumAddress',
+        privateKey: 'privateKeyAssociatedwiththisADdress'
+      }
     })
 
 Providing the private Key is optional - for example, typically, when used in a browser, the library will use a wallet file from `localStorage` to sign the transactions.

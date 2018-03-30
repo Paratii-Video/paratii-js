@@ -49,7 +49,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 global.Buffer = global.Buffer || require('buffer').Buffer;
 
-var joi = require('joi');
+// const joi = require('joi')
 var Uploader = require('./paratii.ipfs.uploader.js');
 
 var _require = require('events'),
@@ -62,22 +62,32 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   function ParatiiIPFS(config) {
     (0, _classCallCheck3.default)(this, ParatiiIPFS);
 
+    // const schema = joi.object({
+    //   protocol: joi.string().default(null),
+    //   onReadyHook: joi.array().ordered().default([]),
+    //   'config.addresses.swarm': joi
+    //     .array()
+    //     .ordered(
+    //         joi.string().default('/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star'),
+    //         joi.string().default('/dns/ws.star.paratii.video/wss/p2p-websocket-star/')
+    //     ),
+    //   'ipfs.config.Bootstrap': joi
+    //   .array()
+    //   .ordered(
+    //       joi.string().default('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW')
+    //   ),
+    //   'ipfs.bitswap.maxMessageSize': joi.number().default(128 * 1024),
+    //   address: joi.string().default(null),
+    //   verbose: joi.bool().default(false)
+    // }).unknown()
+    //
+    // const result = joi.validate(config, schema)
+    // const error = result.error
+    // if (error) throw error
+    // this.config = result.value
     var _this = (0, _possibleConstructorReturn3.default)(this, (ParatiiIPFS.__proto__ || (0, _getPrototypeOf2.default)(ParatiiIPFS)).call(this));
 
-    var schema = joi.object({
-      protocol: joi.string().default(null),
-      onReadyHook: joi.array().ordered().default([]),
-      'config.addresses.swarm': joi.array().ordered(joi.string().default('/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star'), joi.string().default('/dns/ws.star.paratii.video/wss/p2p-websocket-star/')),
-      'ipfs.config.Bootstrap': joi.array().ordered(joi.string().default('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW')),
-      'ipfs.bitswap.maxMessageSize': joi.number().default(128 * 1024),
-      address: joi.string().default(null),
-      verbose: joi.bool().default(false)
-    }).unknown();
-
-    var result = joi.validate(config, schema);
-    var error = result.error;
-    if (error) throw error;
-    _this.config = result.value;
+    _this.config = config;
     _this.uploader = new Uploader(_this);
     return _this;
   }

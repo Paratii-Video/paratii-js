@@ -108,9 +108,11 @@ describe('paratii.eth.wallet: :', function () {
 
     // instantiate paratii with an unlocked account
     paratii = new Paratii({
-      'eth.provider': 'http://localhost:8545',
-      address: address17,
-      registryAddress: paratii.config['eth.registryAddress']
+      eth: {
+        provider: 'http://localhost:8545',
+        registryAddress: paratii.config['eth.registryAddress']
+      },
+      account: {address: address17}
     })
     console.log(paratii.config)
     // set the account but not the private key

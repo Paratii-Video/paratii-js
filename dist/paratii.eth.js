@@ -55,13 +55,12 @@ var ParatiiEth = exports.ParatiiEth = function () {
     // if (error) throw error
     // let options = result.value
     var options = config;
+    this.config = config;
     if (this.config.eth.provider.match(/(localhost|127\.0\.0\.1)/g)) {
       this.config.eth.isTestNet = true;
     } else {
       this.config.eth.isTestNet = false;
     }
-
-    this.config = config;
 
     if (options.web3) {
       this.web3 = options.web3;

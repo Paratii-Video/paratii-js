@@ -25,10 +25,14 @@ It can be initialized in several ways. Here is an example:
   Or with particular options, such as the following:
 
     paratii = new Paratii({
-      'eth.provider': 'http://chain.paratii.video', // optional - the address of an ethereum node (defaults to localhost:8754)
-      registryAddress: '0x23445abcdefg', // optional - the address where the Paratii Contract registry can be found
-      address: '0x12455', // address of the operator/user
-      privatekey: '...', // optional - private key of the user,
+      account: { 
+        address: '0x12455', // address of the operator/user
+        privatekey: '...', // optional - private key of the user,
+      }
+      eth: {
+        provider': 'http://chain.paratii.video', // optional - the address of an ethereum node (defaults to localhost:8754)
+        registryAddress: '0x23445abcdefg', // optional - the address where the Paratii Contract registry can be found
+      },
       ... // other options to be documented
     })
 

@@ -1,16 +1,10 @@
 import { Paratii } from '../lib/paratii.js'
-import { address, privateKey } from './utils.js'
+import { address, testConfig } from './utils.js'
 import { assert } from 'chai'
 
 describe('Paratii API:', function () {
   it('example session from ../docs/example-session.md should work', async function () {
-    let paratii = new Paratii({
-      // this address and key are the first accounts on testrpc when started with the --deterministic flag
-      // 'eth.provider': 'http://127.0.0.1:8545/rpc/',
-      'eth.provider': 'ws://localhost:8546',
-      address,
-      privateKey
-    })
+    let paratii = new Paratii(testConfig)
 
     let contracts = await paratii.eth.deployContracts()
     let paratiiToken = await paratii.eth.getContract('ParatiiToken')
