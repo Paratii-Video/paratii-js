@@ -108,11 +108,15 @@ var ParatiiEth = exports.ParatiiEth = function () {
         if (account.address !== address) {
           throw Error('Private Key and Account address are not compatible!');
         }
+        this.config.address = address;
+        this.config.privateKey = privateKey;
       } else if (mnemonic) {
         wallet.create(1, mnemonic);
         if (address && wallet[0].address !== address) {
           throw Error('Mnemonic ' + mnemonic + ' and account address ' + address + ' are not compatible!');
         }
+        this.config.address = wallet[0].address;
+        this.config.privateKey = wallet[0].privateKey;
       }
     }
 
