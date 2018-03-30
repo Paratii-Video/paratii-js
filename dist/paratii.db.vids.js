@@ -118,7 +118,7 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
                 k = '?' + k;
               }
               _context2.next = 10;
-              return _regenerator2.default.awrap(fetch(this.config['db.provider'] + this.apiVersion + this.apiVideos + k, {
+              return _regenerator2.default.awrap(fetch(this.config.db.provider + this.apiVersion + this.apiVideos + k, {
                 method: 'get'
               }).then(function (response) {
                 return response.json();
