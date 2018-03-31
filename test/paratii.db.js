@@ -21,14 +21,15 @@ describe('paratii.db API: :', function () {
     .get('/videos/QmNZS5J3LS1tMEVEP3tz3jyd2LXUEjkYJHyWSuwUvHDaRJ')
     .reply(200, videos[0])
   })
+
   beforeEach(async function () {
     paratii = new Paratii({
-      'db.provider': dbProvider
+      db: {provider: dbProvider}
     })
   })
 
   it('should be configured', async function () {
-    assert.equal(paratii.config['db.provider'], dbProvider)
+    assert.equal(paratii.config.db.provider, dbProvider)
   })
 
   it('db.vids.search("keyword") should work as expected', async function () {
@@ -58,7 +59,7 @@ describe('paratii.db API: :', function () {
 
   it('should be available as an attribute on Paratii instances', async function () {
     let paratii = new Paratii({
-      'db.provider': dbProvider
+      db: {provider: dbProvider}
     })
     assert.isOk(paratii.db)
   })

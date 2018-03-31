@@ -13,7 +13,7 @@ describe('ParatiiIPFS: :', function () {
 
   beforeEach(function () {
     paratiiIPFS = new ParatiiIPFS({
-      'ipfs.repo': '/tmp/paratii-alpha-' + String(Math.random())
+      ipfs: {repo: '/tmp/paratii-alpha-' + String(Math.random())}
     })
   })
 

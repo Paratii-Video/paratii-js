@@ -2873,7 +2873,7 @@ description
 Contains functions to interact with the IPFS instance.</p>
 
 
-  <div class='pre p1 fill-light mt0'>new Uploader(paratiiIPFS: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>, opts: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</div>
+  <div class='pre p1 fill-light mt0'>new Uploader(opts: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</div>
   
   
     <p>
@@ -2894,14 +2894,6 @@ Contains functions to interact with the IPFS instance.</p>
   
     <div class='py1 quiet mt1 prose-big'>Parameters</div>
     <div class='prose'>
-      
-        <div class='space-bottom0'>
-          <div>
-            <span class='code bold'>paratiiIPFS</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a>)</code>
-	    
-          </div>
-          
-        </div>
       
         <div class='space-bottom0'>
           <div>
@@ -3665,7 +3657,7 @@ and utilities to interact with the Paratii index.</p>
     <div class='py1 quiet mt1 prose-big'>Example</div>
     
       
-      <pre class='p1 overflow-auto round fill-light'>paratii = <span class="hljs-keyword">new</span> Paratii({ <span class="hljs-attr">provider</span>: <span class="hljs-string">'http://localhost:8545'</span>, <span class="hljs-attr">address</span>: <span class="hljs-string">'some-user-id'</span>, <span class="hljs-attr">privateKey</span>: <span class="hljs-string">'some-user-priv-key'</span>})</pre>
+      <pre class='p1 overflow-auto round fill-light'>paratii = <span class="hljs-keyword">new</span> Paratii({ <span class="hljs-string">'eth.provider'</span>: <span class="hljs-string">'http://localhost:8545'</span>, <span class="hljs-attr">address</span>: <span class="hljs-string">'some-user-id'</span>, <span class="hljs-attr">privateKey</span>: <span class="hljs-string">'some-user-priv-key'</span>})</pre>
     
   
 

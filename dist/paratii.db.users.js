@@ -52,7 +52,7 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
           switch (_context.prev = _context.next) {
             case 0:
               _context.next = 2;
-              return _regenerator2.default.awrap(fetch(this.config['db.provider'] + this.apiVersion + this.apiUsers + userId, {
+              return _regenerator2.default.awrap(fetch(this.config.db.provider + this.apiVersion + this.apiUsers + userId, {
                 method: 'get'
               }).then(function (response) {
                 return response.json();
@@ -85,7 +85,7 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.next = 2;
-              return _regenerator2.default.awrap(fetch(this.config['db.provider'] + this.apiVersion + this.apiUsers + userId + this.apiVideos, {
+              return _regenerator2.default.awrap(fetch(this.config.db.provider + this.apiVersion + this.apiUsers + userId + this.apiVideos, {
                 method: 'get'
               }).then(function (response) {
                 return response.json();

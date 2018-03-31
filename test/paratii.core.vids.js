@@ -1,57 +1,57 @@
 import { Paratii } from '../lib/paratii.js'
 import { assert } from 'chai'
-import { address, address1, address99, privateKey } from './utils.js'
+import { testAccount, address1, address99 } from './utils.js'
 import nock from 'nock'
 
 nock.enableNetConnect()
 nock('https://db.paratii.video/api/v1')
-.persist()
-.get('/videos/some-id')
-.reply(200, {
-  id: 'some-id',
-  author: 'Steven Spielberg',
-  file: 'test/data/some-file.txt',
-  filesize: '',
-  free: null,
-  title: 'some Title',
-  description: 'A long description',
-  published: false,
-  price: 0,
-  ipfsData: 'QmVyzgSknYjcWBMX6LXYEixDa634sthqNNJpYN6eGERp7W',
-  ipfsHash: '',
-  ipfsHashOrig: '',
-  duration: '2h 32m',
-  storageStatus: {},
-  // thumbnails: [],
-  transcodingStatus: {},
-  uploadStatus: {},
-  owner: address1
-  // published: false
+  .persist()
+  .get('/videos/some-id')
+  .reply(200, {
+    id: 'some-id',
+    author: 'Steven Spielberg',
+    file: 'test/data/some-file.txt',
+    filesize: '',
+    free: null,
+    title: 'some Title',
+    description: 'A long description',
+    published: false,
+    price: 0,
+    ipfsData: 'QmVyzgSknYjcWBMX6LXYEixDa634sthqNNJpYN6eGERp7W',
+    ipfsHash: '',
+    ipfsHashOrig: '',
+    duration: '2h 32m',
+    storageStatus: {},
+    // thumbnails: [],
+    transcodingStatus: {},
+    uploadStatus: {},
+    owner: address1
+    // published: false
 
-})
-.get('/videos/some-id2')
-.reply(200, {
-  id: 'some-id2',
-  owner: address1,
-  title: 'some title 2',
-  description: 'A long description',
-  price: 0,
-  ipfsData: 'QmUUMpwyWBbJKeNCbwDySXJCay5TBBuur3c59m1ajQufmn',
-  ipfsHash: 'some-hash',
-  ipfsHashOrig: ''
-})
-.get('/videos/some-id3')
-.reply(200, {
-  id: 'some-id3',
-  owner: address1,
-  title: 'another-title',
-  description: 'A long description',
-  price: 0,
-  ipfsData: 'QmUUMpwyWBbJKeNCbwDySXJCay5TBBuur3c59m1ajQufmn',
-  ipfsHash: 'some-hash',
-  ipfsHashOrig: ''
+  })
+  .get('/videos/some-id2')
+  .reply(200, {
+    id: 'some-id2',
+    owner: address1,
+    title: 'some title 2',
+    description: 'A long description',
+    price: 0,
+    ipfsData: 'QmUUMpwyWBbJKeNCbwDySXJCay5TBBuur3c59m1ajQufmn',
+    ipfsHash: 'some-hash',
+    ipfsHashOrig: ''
+  })
+  .get('/videos/some-id3')
+  .reply(200, {
+    id: 'some-id3',
+    owner: address1,
+    title: 'another-title',
+    description: 'A long description',
+    price: 0,
+    ipfsData: 'QmUUMpwyWBbJKeNCbwDySXJCay5TBBuur3c59m1ajQufmn',
+    ipfsHash: 'some-hash',
+    ipfsHashOrig: ''
 
-})
+  })
 
 describe('paratii.core.vids:', function () {
   let paratii
@@ -63,11 +63,12 @@ describe('paratii.core.vids:', function () {
   let videoTitle = 'some title'
   let videoTitle2 = 'some title 2'
   let dbProvider = 'https://db.paratii.video'
+
   beforeEach(async function () {
     paratii = new Paratii({
-      address: address,
-      privateKey: privateKey,
-      'db.provider': dbProvider
+      eth: {provider: 'http://localhost:8545/rpc/'},
+      account: testAccount,
+      db: {provider: dbProvider}
     })
     await paratii.eth.deployContracts()
   })

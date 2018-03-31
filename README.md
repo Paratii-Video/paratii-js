@@ -27,7 +27,6 @@ Here is a code snippet which will upload a video to Paratii and transcode it:
 
 We have more extensive documentation here: [documentation.md](./docs/README.md)
 
-
 ## Contributing to `paratii.js`
 
 Contributions are most welcome! Please read [CONTRIBUTING.md](./CONTRIBUTING.md)

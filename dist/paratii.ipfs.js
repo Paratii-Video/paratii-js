@@ -45,23 +45,23 @@ var _paratiiProtocol = require('paratii-protocol');
 
 var _paratiiProtocol2 = _interopRequireDefault(_paratiiProtocol);
 
+var _schemas = require('./schemas.js');
+
+var _joi = require('joi');
+
+var _joi2 = _interopRequireDefault(_joi);
+
+var _events = require('events');
+
+var _paratiiIpfsUploader = require('./paratii.ipfs.uploader.js');
+
+var _paratiiIpfsUploader2 = _interopRequireDefault(_paratiiIpfsUploader);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// const Uploader = require('./paratii.ipfs.uploader.js')
+
 global.Buffer = global.Buffer || require('buffer').Buffer;
-
-// const Ipfs = require('ipfs')
-// import { paratiiIPFS } from './ipfs/index.js'
-var joi = require('joi');
-var Uploader = require('./paratii.ipfs.uploader.js');
-
-var _require = require('events'),
-    EventEmitter = _require.EventEmitter;
-// var pull = require('pull-stream')
-// var pullFilereader = require('pull-filereader')
-
-
-var DEFAULT_REPO = '/tmp/paratii-ipfs-repo';
-// const REPO_PATH = 'paratii-ipfs-repo'
 
 var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   (0, _inherits3.default)(ParatiiIPFS, _EventEmitter);
@@ -71,22 +71,20 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
 
     var _this = (0, _possibleConstructorReturn3.default)(this, (ParatiiIPFS.__proto__ || (0, _getPrototypeOf2.default)(ParatiiIPFS)).call(this));
 
-    var schema = joi.object({
-      protocol: joi.string().default(null),
-      onReadyHook: joi.array().ordered().default([]),
-      'config.addresses.swarm': joi.array().ordered(joi.string().default('/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star'), joi.string().default('/dns/ws.star.paratii.video/wss/p2p-websocket-star/')),
-      'ipfs.config.Bootstrap': joi.array().ordered(joi.string().default('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW')),
-      'ipfs.repo': joi.string().default(DEFAULT_REPO),
-      'ipfs.bitswap.maxMessageSize': joi.number().default(128 * 1024),
-      address: joi.string().default(null),
-      verbose: joi.bool().default(true)
-    }).unknown();
+    var schema = _joi2.default.object({
+      ipfs: _schemas.ipfsSchema,
+      account: _schemas.accountSchema,
+      verbose: _joi2.default.bool().default(false)
+      //   onReadyHook: joi.array().ordered().default([]),
+      //   protocol: joi.string().default(null),
+    });
 
-    var result = joi.validate(config, schema);
-    var error = result.error;
-    if (error) throw error;
-    _this.config = result.value;
-    _this.uploader = new Uploader(_this);
+    var result = _joi2.default.validate(config, schema, { allowUnknown: true });
+    if (result.error) throw result.error;
+    _this.config = config;
+    _this.config.ipfs = result.value.ipfs;
+    _this.config.account = result.value.account;
+    _this.uploader = new _paratiiIpfsUploader2.default({ ipfs: _this.config.ipfs, paratiiIPFS: _this });
     return _this;
   }
 
@@ -178,15 +176,23 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
           .then(function (Ipfs) {
             var ipfs = new Ipfs({
               bitswap: {
-                maxMessageSize: 256 * 1024
+                // maxMessageSize: 256 * 1024
+                maxMessageSize: _this2.config.ipfs['bitswap.maxMessageSize']
               },
               start: true,
-              repo: config['ipfs.repo'] || '/tmp/test-repo-' + String(Math.random()),
+              repo: config.ipfs.repo || '/tmp/test-repo-' + String(Math.random()),
               config: {
                 Addresses: {
-                  Swarm: ['/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star', '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/']
+                  Swarm: _this2.config.ipfs.swarm
+                  // [
+                  //   '/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star',
+                  //   '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/'
+                  // ]
                 },
-                Bootstrap: ['/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW']
+                Bootstrap: _this2.config.ipfs.bootstrap
+                // [
+                //   '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
+                // ]
               }
             });
 
@@ -208,16 +214,16 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
                 var peerInfo = id;
                 _this2.id = id;
                 _this2.log('[IPFS] id:  ' + peerInfo);
-                var ptiAddress = _this2.config.address || 'no_address';
+                var ptiAddress = _this2.config.account.address || 'no_address';
                 _this2.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
                 // add ETH Address here.
                 ptiAddress);
 
-                // uploader
-                _this2.uploader.setOptions({
-                  node: ipfs,
-                  chunkSize: 128 * 1024
-                });
+                _this2.uploader._node = ipfs;
+                // this.uploader.setOptions({
+                //   node: ipfs,
+                //   chunkSize: 128 * 1024
+                // })
 
                 _this2.protocol.notifications.on('message:new', function (peerId, msg) {
                   _this2.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
@@ -330,7 +336,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
                   pinEv.removeAllListeners();
                 });
                 pinEv.on('pin:done', function (hash) {
-                  console.log('pin:done:', hash);
+                  _this3.log('pin:done:', hash);
                   pinEv.removeAllListeners();
                 });
                 return pinEv;
@@ -367,11 +373,6 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
 
             case 2:
               ipfs = _context5.sent;
-
-              // if (!this.ipfs || !this.ipfs.isOnline()) {
-              //   throw new Error('IPFS node is not ready, please trigger getIPFSInstance first')
-              // }
-
               node = void 0;
               _context5.prev = 4;
               _context5.next = 7;
@@ -409,10 +410,6 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   }, {
     key: 'start',
     value: function start(callback) {
-      // if (!window.Ipfs) {
-      //   return callback(new Error('window.Ipfs is not available, call initIPFS first'))
-      // }
-
       if (this.ipfs && this.ipfs.isOnline()) {
         console.log('IPFS is already running');
         return callback();
@@ -440,4 +437,4 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     }
   }]);
   return ParatiiIPFS;
-}(EventEmitter);
+}(_events.EventEmitter);

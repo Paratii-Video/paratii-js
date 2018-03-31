@@ -26,4 +26,18 @@ let voucherAmount11 = 0.3141 * 10 ** 18
 let voucherAmountInitial11 = 2 * 10 ** 18
 let hashedVoucherCode11 = '0x182b41b125c1c14efaf188d95b6a7e2074d8b746237fc47b48beb63551d742f9'
 
-export { address, address1, address99, privateKey, address17, privateKey17, mnemonic23, address23, voucherAmountInitial11, voucherAmount11, hashedVoucherCode11, voucherCode11 }
+const testAccount = {
+  address,
+  privateKey
+}
+
+const testConfig = {
+  eth: { provider: 'http://localhost:8545' },
+  account: {
+    address: address,
+    privateKey: privateKey
+  }
+}
+
+export { address, address1, address99, privateKey, address17, privateKey17, mnemonic23, address23, voucherAmountInitial11, voucherAmount11, hashedVoucherCode11, voucherCode11,
+  testConfig, testAccount }

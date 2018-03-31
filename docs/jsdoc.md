@@ -519,7 +519,6 @@ Contains functions to interact with the IPFS instance.
 
 **Parameters**
 
--   `paratiiIPFS` **[Object][47]** 
 -   `opts` **[Object][47]** 
 
 ### add
@@ -634,7 +633,7 @@ and utilities to interact with the Paratii index.
 **Examples**
 
 ```javascript
-paratii = new Paratii({ provider: 'http://localhost:8545', address: 'some-user-id', privateKey: 'some-user-priv-key'})
+paratii = new Paratii({ 'eth.provider': 'http://localhost:8545', address: 'some-user-id', privateKey: 'some-user-priv-key'})
 ```
 
 ### setAccount
