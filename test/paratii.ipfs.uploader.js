@@ -49,7 +49,7 @@ describe('ParatiiIPFS: :', function () {
     let uploaderEv = paratiiIPFS.uploader.add(files)
 
     uploaderEv.once('start', () => {
-      console.log('uploader started')
+      // console.log('uploader started')
     })
 
     uploaderEv.on('progress', (chunkLength, percent) => {
