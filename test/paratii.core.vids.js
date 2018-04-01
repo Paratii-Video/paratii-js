@@ -1,64 +1,14 @@
 import { Paratii } from '../lib/paratii.js'
 import { assert } from 'chai'
-import { testAccount, address1, address99 } from './utils.js'
-import nock from 'nock'
+import { mockDb, testAccount, address1, address99 } from './utils.js'
 
-nock.enableNetConnect()
-nock('https://db.paratii.video/api/v1')
-  .persist()
-  .get('/videos/some-id')
-  .reply(200, {
-    id: 'some-id',
-    author: 'Steven Spielberg',
-    file: 'test/data/some-file.txt',
-    filesize: '',
-    free: null,
-    title: 'some Title',
-    description: 'A long description',
-    published: false,
-    price: 0,
-    ipfsData: 'QmVyzgSknYjcWBMX6LXYEixDa634sthqNNJpYN6eGERp7W',
-    ipfsHash: '',
-    ipfsHashOrig: '',
-    duration: '2h 32m',
-    storageStatus: {},
-    // thumbnails: [],
-    transcodingStatus: {},
-    uploadStatus: {},
-    owner: address1
-    // published: false
-
-  })
-  .get('/videos/some-id2')
-  .reply(200, {
-    id: 'some-id2',
-    owner: address1,
-    title: 'some title 2',
-    description: 'A long description',
-    price: 0,
-    ipfsData: 'QmUUMpwyWBbJKeNCbwDySXJCay5TBBuur3c59m1ajQufmn',
-    ipfsHash: 'some-hash',
-    ipfsHashOrig: ''
-  })
-  .get('/videos/some-id3')
-  .reply(200, {
-    id: 'some-id3',
-    owner: address1,
-    title: 'another-title',
-    description: 'A long description',
-    price: 0,
-    ipfsData: 'QmUUMpwyWBbJKeNCbwDySXJCay5TBBuur3c59m1ajQufmn',
-    ipfsHash: 'some-hash',
-    ipfsHashOrig: ''
-
-  })
-
+mockDb()
 describe('paratii.core.vids:', function () {
   let paratii
   let videoFile = 'test/data/some-file.txt'
   let videoId = 'some-id'
-  let videoId2 = 'some-id2'
-  let videoId3 = 'some-id3'
+  let videoId2 = 'id-2'
+  let videoId3 = 'id-3'
   let ipfsHash = 'some-hash'
   let videoTitle = 'some title'
   let videoTitle2 = 'some title 2'

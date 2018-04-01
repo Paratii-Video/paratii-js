@@ -4,6 +4,7 @@ import { assert } from 'chai'
 
 describe('paratii.eth API: :', function () {
   let paratii
+
   beforeEach(async function () {
     paratii = new Paratii({account: testAccount})
     await paratii.eth.deployContracts()
@@ -79,6 +80,7 @@ describe('paratii.eth API: :', function () {
 
     await paratii.eth.vids.get('some-id')
   })
+
   it('balanceOf() should return the right balances', async function () {
     let balance
 

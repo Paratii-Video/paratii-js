@@ -30,7 +30,6 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
     (0, _classCallCheck3.default)(this, ParatiiDbUsers);
 
     this.config = config;
-    this.apiVersion = '/api/v1/';
     this.apiUsers = 'users/';
     this.apiVideos = '/videos';
   }
@@ -52,7 +51,7 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
           switch (_context.prev = _context.next) {
             case 0:
               _context.next = 2;
-              return _regenerator2.default.awrap(fetch(this.config.db.provider + this.apiVersion + this.apiUsers + userId, {
+              return _regenerator2.default.awrap(fetch(this.config.db.provider + this.apiUsers + userId, {
                 method: 'get'
               }).then(function (response) {
                 return response.json();

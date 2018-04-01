@@ -64,14 +64,9 @@ var Paratii = function () {
     });
 
     var result = joi.validate(opts, schema);
-    var error = result.error;
-    if (error) throw error;
+    if (result.error) throw result.error;
     this.config = result.value;
     this.config.paratii = this;
-    // this.eth = new ParatiiEth({
-    //   account: this.config.account,
-    //   eth: this.config.eth
-    // })
     this.eth = new _paratiiEth.ParatiiEth(this.config);
     this.core = new _paratiiCore.ParatiiCore(this.config);
     this.db = new _paratiiDb.ParatiiDb(this.config);

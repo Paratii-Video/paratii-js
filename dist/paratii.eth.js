@@ -57,7 +57,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
     var result = _joi2.default.validate(config, schema, { allowUnknown: true });
     if (result.error) throw result.error;
     config.eth = result.value.eth;
-    config.acount = result.value.account;
+    config.account = result.value.account;
     if (config.eth.provider.match(/(localhost|127\.0\.0\.1)/g)) {
       config.eth.isTestNet = true;
     } else {
@@ -111,15 +111,15 @@ var ParatiiEth = exports.ParatiiEth = function () {
         if (account.address !== address) {
           throw Error('Private Key and Account address are not compatible!');
         }
-        this.config.address = address;
-        this.config.privateKey = privateKey;
+        this.config.account.address = address;
+        this.config.account.privateKey = privateKey;
       } else if (mnemonic) {
         wallet.create(1, mnemonic);
         if (address && wallet[0].address !== address) {
           throw Error('Mnemonic ' + mnemonic + ' and account address ' + address + ' are not compatible!');
         }
-        this.config.account.address = this.config.address = wallet[0].address;
-        this.config.account.privateKey = this.config.privateKey = wallet[0].privateKey;
+        this.config.account.address = wallet[0].address;
+        this.config.account.privateKey = wallet[0].privateKey;
       }
     }
 
@@ -612,30 +612,6 @@ var ParatiiEth = exports.ParatiiEth = function () {
         }
       }, null, this);
     }
-    // async _transferETH (beneficiary, amount) {
-    //   // @args amount is in Wei
-    //   // TODO: use the SendEther contract
-    //   // TODO: this will only work on testrpc with unlocked accounts..
-    //   let from = this.config.account.address
-    //   if (!from) {
-    //     throw Error('No account set! Cannot send transactions')
-    //   }
-    //   if (!beneficiary) {
-    //     throw Error('No beneficiary given.')
-    //   }
-    //   from = add0x(from)
-    //   beneficiary = add0x(beneficiary)
-    //
-    //   let result = await this.web3.eth.sendTransaction({
-    //     from: from,
-    //     to: beneficiary,
-    //     value: amount,
-    //     gasPrice: 20000000000,
-    //     gas: 21000
-    //   })
-    //   return result
-    // }
-
   }, {
     key: '_transferETH',
     value: function _transferETH(beneficiary, amount, description) {

@@ -169,6 +169,7 @@ describe('paratii.eth.wallet: :', function () {
     })
     assert.equal(paratii.eth.wallet.getMnemonic(), undefined)
   })
+
   it('eth.wallet.create() generates key from mnemoninc correctly', async function () {
     const vector = [{
       mnemonic: 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',

@@ -13,7 +13,8 @@ var accountSchema = joi.object({
 
 var ethSchema = joi.object({
   provider: joi.string().default('ws://localhost:8546'),
-  registryAddress: joi.string().default(null).allow(null)
+  registryAddress: joi.string().default(null).allow(null),
+  isTestNet: joi.boolean().optional()
 }).default();
 
 var ipfsSchema = joi.object({
@@ -31,10 +32,41 @@ var ipfsSchema = joi.object({
 }).default();
 
 var dbSchema = joi.object({
-  provider: joi.string()
+  provider: joi.string().default('https://db.paratii.video/api/v1/')
 }).default();
+
+// this is the data structure of a video
+var videoSchema = joi.object({
+  id: joi.string().default(null),
+  author: joi.string().empty('').default('').allow(null),
+  description: joi.string().empty('').default(''),
+  duration: joi.string().empty('').default('').allow(null),
+  filename: joi.string().empty('').default('').allow(null).allow(''),
+  filesize: joi.any(),
+  free: joi.string().empty('').default(null).allow(null),
+  ipfsHashOrig: joi.string().empty('').default(''),
+  ipfsHash: joi.string().empty('').default(''),
+  owner: joi.string().required(),
+  price: joi.any().default(0),
+  // published: joi.any().default(false).allow(null),
+  title: joi.string().empty('').default(''),
+  thumbnails: joi.array(),
+  storageStatus: joi.object({
+    name: joi.string().required(),
+    data: joi.object().allow(null)
+  }).optional().default({}),
+  transcodingStatus: joi.object({
+    name: joi.string().required(),
+    data: joi.object().allow(null)
+  }).allow(null).default({}),
+  uploadStatus: joi.object({
+    name: joi.string().required(),
+    data: joi.object().allow(null)
+  }).allow(null).default({})
+});
 
 exports.accountSchema = accountSchema;
 exports.ethSchema = ethSchema;
 exports.ipfsSchema = ipfsSchema;
 exports.dbSchema = dbSchema;
+exports.videoSchema = videoSchema;

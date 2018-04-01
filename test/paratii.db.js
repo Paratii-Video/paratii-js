@@ -9,7 +9,6 @@ describe('paratii.db API: :', function () {
 
   before(function () {
     nock.cleanAll()
-
     nock('https://db.paratii.video/api/v1')
     .persist()
     .get('/videos/?keyword=keyword')

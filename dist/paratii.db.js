@@ -13,9 +13,13 @@ var _paratiiDbVids = require('./paratii.db.vids.js');
 
 var _paratiiDbUsers = require('./paratii.db.users.js');
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _schemas = require('./schemas.js');
 
-// const joi = require('joi')
+var _joi = require('joi');
+
+var _joi2 = _interopRequireDefault(_joi);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * ParatiiDb contains a functionality to interact with the Paratii Blockchain Index. <br>
@@ -25,14 +29,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var ParatiiDb = exports.ParatiiDb = function ParatiiDb(config) {
   (0, _classCallCheck3.default)(this, ParatiiDb);
 
-  // const schema = joi.object({
-  //   'db.provider': joi.string()
-  // }).unknown()
-  // const result = joi.validate(config, schema)
-  // const error = result.error
-  // if (error) throw error
-  // this.config = result.value
+  var schema = {
+    db: _schemas.dbSchema,
+    account: _schemas.accountSchema
+  };
+  var result = _joi2.default.validate(config, schema, { allowUnknown: true });
+  var error = result.error;
+  if (error) throw error;
   this.config = config;
+  this.config.db = result.value.db;
   this.vids = new _paratiiDbVids.ParatiiDbVids(this.config);
   this.users = new _paratiiDbUsers.ParatiiDbUsers(this.config);
 };

@@ -21,44 +21,18 @@ var _createClass2 = require('babel-runtime/helpers/createClass');
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
+var _schemas = require('./schemas.js');
+
+var _joi = require('joi');
+
+var _joi2 = _interopRequireDefault(_joi);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var joi = require('joi');
-
-var schema = joi.object({
-  id: joi.string().default(null),
-  author: joi.string().empty('').default('').allow(null),
-  description: joi.string().empty('').default(''),
-  duration: joi.string().empty('').default('').allow(null),
-  filename: joi.string().empty('').default('').allow(null).allow(''),
-  filesize: joi.any(),
-  free: joi.string().empty('').default(null).allow(null),
-  ipfsHashOrig: joi.string().empty('').default(''),
-  ipfsHash: joi.string().empty('').default(''),
-  owner: joi.string().required(),
-  price: joi.any().default(0),
-  // published: joi.any().default(false).allow(null),
-  title: joi.string().empty('').default(''),
-  thumbnails: joi.array(),
-  storageStatus: joi.object({
-    name: joi.string().required(),
-    data: joi.object().allow(null)
-  }).optional().default({}),
-  transcodingStatus: joi.object({
-    name: joi.string().required(),
-    data: joi.object().allow(null)
-  }).allow(null).default({}),
-  uploadStatus: joi.object({
-    name: joi.string().required(),
-    data: joi.object().allow(null)
-  }).allow(null).default({})
-});
 
 /**
  * Utilities to create and manipulate information about the videos on the blockchain.
  * @param {Object} config configuration object to initialize Paratii object
  */
-
 var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   function ParatiiCoreVids(config) {
     (0, _classCallCheck3.default)(this, ParatiiCoreVids);
@@ -139,8 +113,8 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
     }
     /**
      * This call will register the video on the blockchain, add its metadata to IPFS, upload file to IPFS, and transcode it
-     * @param  {Object}  options information about the video ( videoId, title, FilePath ... )
-     * @return {Promise}         information about the video ( VideoId, owner, ipfsHash ... )
+     * @param  {Object}  options information about the video ( id, title, FilePath ... )
+     * @return {Promise}         information about the video ( id, owner, ipfsHash ... )
      * @example paratii.core.vids.create({
      *  id: 'some-video-id',
      *  owner: 'some-user-id',
@@ -155,14 +129,14 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
 
   }, {
     key: 'create',
-    value: function create(options) {
+    value: function create() {
+      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
       var result, error, hash;
       return _regenerator2.default.async(function create$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              // FIXME: validate!!
-              result = joi.validate(options, schema);
+              result = _joi2.default.validate(options, _schemas.videoSchema);
               error = result.error;
 
               if (!error) {
@@ -186,8 +160,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 duration: options.duration,
                 filename: options.filename,
                 filesize: options.filesize,
-                free: options.fee,
-                // published: options.published,
+                free: options.free,
                 storageStatus: options.storageStatus,
                 title: options.title,
                 transcodingStatus: options.transcodingStatus,
@@ -269,7 +242,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
 
               // FIXME: missing the validate invociation
 
-              elements = schema._inner.children;
+              elements = _schemas.videoSchema._inner.children;
               dataToSave = {};
 
 

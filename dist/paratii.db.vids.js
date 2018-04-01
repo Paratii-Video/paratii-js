@@ -33,7 +33,6 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
     (0, _classCallCheck3.default)(this, ParatiiDbVids);
 
     this.config = config;
-    this.apiVersion = '/api/v1/';
     this.apiVideos = 'videos/';
   }
   /**
@@ -53,7 +52,7 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
           switch (_context.prev = _context.next) {
             case 0:
               _context.next = 2;
-              return _regenerator2.default.awrap(fetch(this.config.db.provider + this.apiVersion + this.apiVideos + videoId, {
+              return _regenerator2.default.awrap(fetch(this.config.db.provider + this.apiVideos + videoId, {
                 method: 'get'
               }).then(function (response) {
                 return response.json();
@@ -118,7 +117,7 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
                 k = '?' + k;
               }
               _context2.next = 10;
-              return _regenerator2.default.awrap(fetch(this.config.db.provider + this.apiVersion + this.apiVideos + k, {
+              return _regenerator2.default.awrap(fetch(this.config.db.provider + this.apiVideos + k, {
                 method: 'get'
               }).then(function (response) {
                 return response.json();
