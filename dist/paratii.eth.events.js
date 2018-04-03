@@ -114,10 +114,10 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
       return structuredEvent;
     }
     /**
-     * [addListener description]
+     * subscribe to the specified event
      * @param  {String}  eventType type of the event
-     * @param  {[type]}  options   [description]
-     * @param  {[type]}  listener  [description]
+     * @param  {Function}  options   function called when the events occurs
+     * @param  {?}  listener  optional ?
      * @return {Promise}           [description]
      */
 

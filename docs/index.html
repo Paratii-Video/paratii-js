@@ -2913,10 +2913,10 @@ the keyword value can be one <span class="hljs-keyword">from</span> the followin
 
   
 
-  <p>[addListener description]</p>
+  <p>subscribe to the specified event</p>
 
 
-  <div class='pre p1 fill-light mt0'>addListener(eventType: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>, options: [type], listener: [type]): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></div>
+  <div class='pre p1 fill-light mt0'>addListener(eventType: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String">String</a>, options: <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">Function</a>, listener: ?): <a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></div>
   
   
 
@@ -2942,10 +2942,8 @@ the keyword value can be one <span class="hljs-keyword">from</span> the followin
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>options</span> <code class='quiet'>([type])</code>
-	    [
-description
-]
+            <span class='code bold'>options</span> <code class='quiet'>(<a href="https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function">Function</a>)</code>
+	    function called when the events occurs
 
           </div>
           
@@ -2953,10 +2951,8 @@ description
       
         <div class='space-bottom0'>
           <div>
-            <span class='code bold'>listener</span> <code class='quiet'>([type])</code>
-	    [
-description
-]
+            <span class='code bold'>listener</span> <code class='quiet'>(?)</code>
+	    optional ?
 
           </div>
           

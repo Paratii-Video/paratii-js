@@ -519,13 +519,13 @@ Returns **[Object][120]** Event Object
 
 ### addListener
 
-[addListener description]
+subscribe to the specified event
 
 **Parameters**
 
 -   `eventType` **[String][122]** type of the event
--   `options` **\[type]** [description]
--   `listener` **\[type]** [description]
+-   `options` **[Function][124]** function called when the events occurs
+-   `listener` **?** optional ?
 
 Returns **[Promise][121]** [description]
 
@@ -776,7 +776,7 @@ send ETH from current account to beneficiary
 **Parameters**
 
 -   `beneficiary` **[String][122]** ETH address
--   `amount` **[Number][124]** amount of ETH to be sent
+-   `amount` **[Number][125]** amount of ETH to be sent
 -   `description` **[String][122]** optional - description of the transaction (will be written in the blockchain)
 
 **Examples**
@@ -794,7 +794,7 @@ send PTI from current account to beneficiary
 **Parameters**
 
 -   `beneficiary` **[String][122]** ETH address
--   `amount` **[Number][124]** amount of PTI to be sent
+-   `amount` **[Number][125]** amount of PTI to be sent
 
 **Examples**
 
@@ -811,7 +811,7 @@ Use this to send ETH or PTI from paratii.config.address
 **Parameters**
 
 -   `beneficiary` **[String][122]** ETH address
--   `amount` **[Number][124]** amount of ETH/PTI to be sent
+-   `amount` **[Number][125]** amount of ETH/PTI to be sent
 -   `symbol` **[String][122]** symbol of the token to send (ETH,PTI)
 -   `description` **\[type]** optional - description to be inserted in the blockchain
 
@@ -1045,7 +1045,7 @@ Record the video on the blockchain
 **Parameters**
 
 -   `options` **[Object][120]** data about the video
--   `retry` **[Number][124]** optional, default = 1 (optional, default `1`)
+-   `retry` **[Number][125]** optional, default = 1 (optional, default `1`)
 
 **Examples**
 
@@ -1262,7 +1262,7 @@ Function for creating a voucher. Can only be called by the owner of the contract
 
 -   `options` **[Object][120]** data about the voucher
     -   `options.voucherCode` **[String][122]** unique string associated to this voucher
-    -   `options.amount` **[Number][124]** amount of PTI in wei of this voucher
+    -   `options.amount` **[Number][125]** amount of PTI in wei of this voucher
 
 **Examples**
 
@@ -1282,7 +1282,7 @@ Generates a given number of vouchers with unique IDs, and the given amount, and 
 
 **Parameters**
 
--   `number` **[Number][124]** number of voucher to create
+-   `number` **[Number][125]** number of voucher to create
 -   `amount` **\[type]** amount of every voucher
 
 **Examples**
@@ -1326,7 +1326,7 @@ Create a wallet with a given number of accounts from a BIP39 mnemonic
 
 **Parameters**
 
--   `numberOfAccounts` **[Number][124]** number of accounts to be created
+-   `numberOfAccounts` **[Number][125]** number of accounts to be created
 -   `mnemonic` **[String][122]** optional - mnemonic of the wallet, if not specified a random one is generated
 
 **Examples**
@@ -1536,7 +1536,7 @@ Starts the IPFS node
 
 **Parameters**
 
--   `callback` **[Function][125]** callback function
+-   `callback` **[Function][124]** callback function
 
 **Examples**
 
@@ -1552,7 +1552,7 @@ Stops the IPFS node.
 
 **Parameters**
 
--   `callback` **[Function][125]** callback function
+-   `callback` **[Function][124]** callback function
 
 **Examples**
 
@@ -1734,7 +1734,7 @@ handles responses from the paratii-protocol in case of transcoding.
 ?
 ```
 
-Returns **[function][125]** returns various events based on transcoder response.
+Returns **[function][124]** returns various events based on transcoder response.
 
 ### addAndTranscode
 
@@ -2100,9 +2100,9 @@ Returns **[Promise][121]** array of strings with diagnostic info
 
 [123]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 
-[124]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
+[124]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
 
-[125]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function
+[125]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number
 
 [126]: https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array
 
