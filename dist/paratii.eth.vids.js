@@ -23,8 +23,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var joi = require('joi');
 /**
- * [eth description]
- * @type {[type]}
+ * The eth.vids namespace contains functions to interact with the video registration on the blockchain.
  */
 
 var ParatiiEthVids = exports.ParatiiEthVids = function () {
@@ -34,6 +33,12 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
     // context is a ParatiiEth instance
     this.eth = context;
   }
+  /**
+   * Get the contract instance of the videos contract
+   * @return {Promise} Object representing the contract
+   * @example let contract = await paratii.eth.vids.getVideoRegistry()
+   */
+
 
   (0, _createClass3.default)(ParatiiEthVids, [{
     key: 'getVideoRegistry',
@@ -66,6 +71,12 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
         }
       }, null, this);
     }
+    /**
+     * Get the contract instance of the likes contract
+     * @return {Promise} Object representing the contract
+     * @example let contract = await paratii.eth.vids.getLikesContract()
+     */
+
   }, {
     key: 'getLikesContract',
     value: function getLikesContract() {
@@ -97,6 +108,12 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
         }
       }, null, this);
     }
+    /**
+     * Get the contract instance of the views contract
+     * @return {Promise} Object representing the contract
+     * @example let contract = await paratii.eth.vids.getViewsContract()
+     */
+
   }, {
     key: 'getViewsContract',
     value: function getViewsContract() {
@@ -128,12 +145,31 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
         }
       }, null, this);
     }
+    /**
+     * Creates a random id
+     * @return {String} id created
+     * @example let id = paratii.eth.vids.makeId()
+     */
+
   }, {
     key: 'makeId',
     value: function makeId() {
       // create a fresh ID
       return (0, _utils.makeId)();
     }
+    /**
+     * Record the video on the blockchain
+     * @param  {Object}  options   data about the video
+     * @param  {Number}  [retry=1] optional, default = 1
+     * @return {Promise}           the video id
+     * @example let videoId = await paratii.eth.vids.create({
+     *                                    id: 'some-id',
+     *                                    price: 20,
+     *                                    owner: 'some-address',
+     *                                    ipfsHash: 'some-hash'
+     *                          })
+     */
+
   }, {
     key: 'create',
     value: function create(options) {
@@ -228,6 +264,13 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
         }
       }, null, this, [[12, 20]]);
     }
+    /**
+     * get data about the video
+     * @param  {String}  videoId univocal video id
+     * @return {Promise}         data about the video
+     * @example let video = eth.vids.get('0x12345')
+     */
+
   }, {
     key: 'get',
     value: function get(videoId) {
@@ -272,6 +315,17 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
         }
       }, null, this);
     }
+    /**
+     * record a like/dislike to the video on the blockchain
+     * @param  {Object}  options data about the video to like
+     * @param {String} options.videoId univocal video id
+     * @param {Boolean} options.liked true/false
+     * @param  {[type]}  type    REMOVE ???? NOT USED
+     * @return {Promise}         transaction recording the like
+     * @example await paratii.eth.vids.sendLike({ videoId: 'some-id', liked: true })
+     * @example await paratii.eth.vids.sendLike({ videoId: 'some-id', liked: false })
+     */
+
   }, {
     key: 'sendLike',
     value: function sendLike(options, type) {
@@ -346,6 +400,16 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
         }
       }, null, this);
     }
+    /**
+     * record a views to the video on the blockchain
+     * @param  {Object}  options data about the video and the viewer
+     * @param {String} options.viewer address of the viewer
+     * @param {String} options.videoId univocal video identifier
+     * @param {String} options.ipfsData ipfs multihash
+     * @return {Promise}         transaction recording the view
+     * @example await paratii.eth.vids.view({viewer:'some-user-id',videoId: 'some-video-id'})
+     */
+
   }, {
     key: 'view',
     value: function view(options) {
@@ -391,6 +455,15 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
         }
       }, null, this);
     }
+    /**
+     * Check if the viewer has already viewed the video
+     * @param  {Object}  options data about the video and the viewer
+     * @param {String} options.viewer viewer address
+     * @param {String} options.videoId  univocal video identifier
+     * @return {Promise}         true if the current user already viewed the video, false otherwise
+     * @example let result = await paratii.eth.vids.userViewedVideo({viewer:'some-user-id',videoId: 'some-video-id'})
+      */
+
   }, {
     key: 'userViewedVideo',
     value: function userViewedVideo(options) {
@@ -430,6 +503,13 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
         }
       }, null, this);
     }
+    /**
+     * Writes a like for the video on the blockchain (contract Likes), and negates a dislike for the video, if it exists.
+     * @param  {String}  videoId univocal video identifier
+     * @return {Promise}          transaction recording the like
+     * @example let result = paratii.eth.vids.like('some-id')
+     */
+
   }, {
     key: 'like',
     value: function like(videoId) {
@@ -447,6 +527,13 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
         }
       }, null, this);
     }
+    /**
+     * Writes a dislike for the video on the blockchain (contract Likes), and negates a like for the video, if it exists.
+     * @param  {String}  videoId univocal video identifier
+     * @return {Promise}          transaction recording the dislike
+     * @example let result = paratii.eth.vids.dislike('some-id')
+      */
+
   }, {
     key: 'dislike',
     value: function dislike(videoId) {
@@ -464,6 +551,13 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
         }
       }, null, this);
     }
+    /**
+     * Check if the current user has already liked the video
+     * @param  {String}  videoId univocal video identifier
+     * @return {Promise}          true if the current user already liked the video, false otherwise
+     * @example let result = paratii.eth.vids.doesLike('some-id')
+     */
+
   }, {
     key: 'doesLike',
     value: function doesLike(videoId) {
@@ -492,6 +586,13 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
         }
       }, null, this);
     }
+    /**
+     * Check if the current user has already disliked the video.
+     * @param  {String}  videoId univocal video identifier
+     * @return {Promise}          true if the current user already disliked the video, false otherwise
+     * @example let result = paratii.eth.vids.doesDislike('some-id')
+     */
+
   }, {
     key: 'doesDislike',
     value: function doesDislike(videoId) {
@@ -520,6 +621,15 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
         }
       }, null, this);
     }
+    /**
+     * Update the information on the video.
+     *  Only the account that has registered the video, or the owner of the contract, can update the information.
+     * @param  {String}  videoId      univocal video identifier
+     * @param  {Object}  options      key value pairs of properties and new values e.g. ({title: 'another-title'})
+     * @return {Promise}              Updated video informations
+     * @example paratii.eth.vids.update('some-video-id', {title: 'another-title'})
+     */
+
   }, {
     key: 'update',
     value: function update(videoId, options) {
@@ -551,6 +661,13 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
         }
       }, null, this);
     }
+    /**
+     * delete the video from the blockchain
+     * @param  {String}  videoId univocal video identifier
+     * @return {Promise}         transaction recording the remove action
+     * @example let tx = paratii.eth.vids.delete('some-id')
+     */
+
   }, {
     key: 'delete',
     value: function _delete(videoId) {

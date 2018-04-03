@@ -223,7 +223,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
     }
     /**
      * Update the information on the video.
-    *  Only the account that has registered the video, or the owner of the contract, can update the information.
+     *  Only the account that has registered the video, or the owner of the contract, can update the information.
      * @param  {String}  videoId      univocal video identifier
      * @param  {Object}  options      key value pairs of properties and new values e.g. ({title: 'another-title'})
      * @param  {Object}  dataToUpdate optional. old data of the video. If not passed to the method, it will fetch the data itself using the videoId

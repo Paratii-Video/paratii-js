@@ -40,8 +40,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var Web3 = require('web3');
 var joi = require('joi');
 /**
- * [schema description]
- * @type {[type]}
+ * contains functions to interact with the Ethereum blockchain and the Paratii contracts deployed there.
+ * @param {Object} config configuration object to initialize Paratii object
  */
 
 var ParatiiEth = exports.ParatiiEth = function () {
@@ -100,6 +100,15 @@ var ParatiiEth = exports.ParatiiEth = function () {
     this.vouchers = new _paratiiEthVouchers.ParatiiEthVouchers(this);
     this.tcr = new _paratiiEthTcr.ParatiiEthTcr(this);
   }
+  /**
+   * creates an account using the private key or, if not present, using the mnemonic
+   * @param {String} address    public address
+   * @param {String} privateKey private key related to the previous public address
+   * @param {String} mnemonic   mnemonic related to the previous public address
+   * @example paratii.eth.setAccount('some-address','some-private-key')
+   * @example paratii.eth.setAccount('some-address','some-mnemonic')
+   */
+
 
   (0, _createClass3.default)(ParatiiEth, [{
     key: 'setAccount',
@@ -121,10 +130,11 @@ var ParatiiEth = exports.ParatiiEth = function () {
       }
     }
 
-    /*
+    /**
      * Get the contract instance specified
-     * Usage: paratii.eth.getContract('ParatiiToken')
-     * @param name the name of the token
+     * @param {String} name the name of the token
+     * @return {Promise} Object representing the contract
+     * @example paratii.eth.getContract('ParatiiToken')
      */
 
   }, {
@@ -175,6 +185,13 @@ var ParatiiEth = exports.ParatiiEth = function () {
         }
       }, null, this);
     }
+    /**
+     * creates the javascript contract object from the json file
+     * @param  {String} contractName name of the contract
+     * @return {String}              Contract Object
+     * @example paratii.eth.requireContract('ParatiiToken')
+     */
+
   }, {
     key: 'requireContract',
     value: function requireContract(contractName) {
@@ -189,6 +206,14 @@ var ParatiiEth = exports.ParatiiEth = function () {
       // contract.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
       return contract;
     }
+    /**
+     * deploys contract on the blockchain
+     * @param  {String}  name name of the contract
+     * @param  {Object}  args configuration for the contract (strings or numbers). It is allowed to pass more than one parameter
+     * @return {Promise}      the deployed contract
+     * @example paratii.eth.deployContract('ParatiiToken')
+     */
+
   }, {
     key: 'deployContract',
     value: function deployContract(name) {
@@ -232,7 +257,13 @@ var ParatiiEth = exports.ParatiiEth = function () {
         }
       }, null, this);
     }
-    // TODO: this is for testing - remove this
+
+    /**
+     * TODO: this is for testing - remove this
+     * @param  {[type]}  ms millisec
+     * @return {Promise}    ?
+     * @example ?
+     */
 
   }, {
     key: 'sleep',
@@ -252,6 +283,14 @@ var ParatiiEth = exports.ParatiiEth = function () {
         }
       }, null, this);
     }
+
+    /**
+     * deploy all the contracts on the blockchain
+     * @return {Promise} all the paratii contracts
+     * @example let contracts = await paratii.eth.deployContracts()
+     * @example let likes = await this.deployContract('Likes', paratiiRegistryAddress)
+     */
+
   }, {
     key: 'deployContracts',
     value: function deployContracts() {
@@ -400,6 +439,12 @@ var ParatiiEth = exports.ParatiiEth = function () {
         }
       }, null, this);
     }
+
+    /**
+     * Set the provider on all the contracts
+     * @example paratii.eth.setContractsProvider()
+     */
+
   }, {
     key: 'setContractsProvider',
     value: function setContractsProvider() {
@@ -419,6 +464,12 @@ var ParatiiEth = exports.ParatiiEth = function () {
         }
       }, null, this);
     }
+    /**
+     * return all the contracts
+     * @return {Promise} all the contracts
+     * @example let contracts = await paratii.eth.getContracts()
+     */
+
   }, {
     key: 'getContracts',
     value: function getContracts() {
@@ -467,6 +518,13 @@ var ParatiiEth = exports.ParatiiEth = function () {
         }
       }, null, this);
     }
+    /**
+     * get the address of the contract on the blockchain
+     * @param  {String}  name name of the contract
+     * @return {Promise}      Contract address on the blockchain (String)
+     * @example paratii.eth.getContractAddress('ParatiiToken')
+     */
+
   }, {
     key: 'getContractAddress',
     value: function getContractAddress(name) {
@@ -527,11 +585,24 @@ var ParatiiEth = exports.ParatiiEth = function () {
         }
       }, null, this, [[5, 17]]);
     }
+
+    /**
+     * get the address of the Registry contract on the blockchain
+     * @return {String} address on the blockchain
+     * @example let registryAddress = paratii.eth.getRegistryAddress()
+     */
+
   }, {
     key: 'getRegistryAddress',
     value: function getRegistryAddress() {
       return this.config.registryAddress;
     }
+    /**
+     * set the address of the Registry contract on the blockchain
+     * @param {String} registryAddress new address
+     * @example await paratii.eth.setRegistryAddress('some-address')
+     */
+
   }, {
     key: 'setRegistryAddress',
     value: function setRegistryAddress(registryAddress) {
@@ -541,6 +612,17 @@ var ParatiiEth = exports.ParatiiEth = function () {
         contract.options.address = undefined;
       }
     }
+    /**
+    * When called with a second argument, returns the balance of that Token.<br>
+    * When called without a second argument, returns information about all relevant balances.
+    * @param  {String}  address ethereum address
+    * @param  {String}  symbol  optional - symbol of the token (ETH,PTI)
+    * @return {Promise}         information about balances of that address
+    * @example paratii.eth.balanceOf('some-address', 'ETH') // returns the ETH balance of the given address
+    * @example paratii.eth.balanceOf('some-address', 'PTI') // returns the PTI balance of the given address
+    * @example paratii.eth.balanceOf('some-address') // returns both the PTI and the ETH balance of the given address
+    */
+
   }, {
     key: 'balanceOf',
     value: function balanceOf(address, symbol) {
@@ -633,6 +715,14 @@ var ParatiiEth = exports.ParatiiEth = function () {
     //   })
     //   return result
     // }
+    /**
+     * send ETH from current account to beneficiary
+     * @param  {String}  beneficiary ETH address
+     * @param  {Number}  amount      amount of ETH to be sent
+     * @param  {String}  description optional - description of the transaction (will be written in the blockchain)
+     * @return {Promise}             information about the transaction recording the transfer
+     * @example return paratii.eth._transferETH('some-address', 20, 'an-optional-description')
+     */
 
   }, {
     key: '_transferETH',
@@ -692,6 +782,14 @@ var ParatiiEth = exports.ParatiiEth = function () {
         }
       }, null, this, [[11, 17]]);
     }
+    /**
+     * send PTI from current account to beneficiary
+     * @param  {String}  beneficiary ETH address
+     * @param  {Number}  amount      amount of PTI to be sent
+     * @return {Promise}             information about the transaction recording the transfer
+     * @example return paratii.eth._transferPTI('some-address', 20)
+     */
+
   }, {
     key: '_transferPTI',
     value: function _transferPTI(beneficiary, amount) {
@@ -741,6 +839,16 @@ var ParatiiEth = exports.ParatiiEth = function () {
         }
       }, null, this);
     }
+    /**
+     * Use this to send ETH or PTI from paratii.config.address
+     * @param  {String}  beneficiary ETH address
+     * @param  {Number}  amount      amount of ETH/PTI to be sent
+     * @param  {String}  symbol      symbol of the token to send (ETH,PTI)
+     * @param  {[type]}  description optional - description to be inserted in the blockchain
+     * @return {Promise}             information about the transaction recording the transfer
+     * @example let result = await paratii.eth.transfer('some-address', 20, 'ETH', 'thanks for all the fish')
+     */
+
   }, {
     key: 'transfer',
     value: function transfer(beneficiary, amount, symbol, description) {

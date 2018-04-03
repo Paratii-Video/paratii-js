@@ -20,8 +20,7 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * [config description]
- * @type {[type]}
+ * eth.events implements a part of the API of the EventEmitter, that can be used to manage subscriptions to Ethereum events.
  */
 var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
   function ParatiiEthEvents(config) {
@@ -86,6 +85,13 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
       }
     };
   }
+  /**
+   * parse event from simple string to an object
+   * @param  {String} eventType Event type
+   * @return {Object}           Event Object
+   * @example let structuredEvent = this._getStructuredEvent('some-event')
+   */
+
 
   (0, _createClass3.default)(ParatiiEthEvents, [{
     key: '_getStructuredEvent',
@@ -105,9 +111,16 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
         structuredEvent.event = eventType;
         structuredEvent.emit = 'data';
       }
-
       return structuredEvent;
     }
+    /**
+     * [addListener description]
+     * @param  {String}  eventType type of the event
+     * @param  {[type]}  options   [description]
+     * @param  {[type]}  listener  [description]
+     * @return {Promise}           [description]
+     */
+
   }, {
     key: 'addListener',
     value: function addListener(eventType, options, listener) {
@@ -132,6 +145,14 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
         }
       }, null, this);
     }
+    /**
+     * [_addListener description]
+     * @param  {[type]}  eventType [description]
+     * @param  {[type]}  listener  [description]
+     * @param  {[type]}  options   [description]
+     * @return {Promise}           [description]
+     */
+
   }, {
     key: '_addListener',
     value: function _addListener(eventType, listener, options) {
@@ -193,12 +214,24 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
         }
       }, null, this);
     }
+    /**
+     * [_isFunction description]
+     * @param  {[type]}  functionToCheck [description]
+     * @return {Boolean}                 [description]
+     */
+
   }, {
     key: '_isFunction',
     value: function _isFunction(functionToCheck) {
       var getType = {};
       return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
     }
+    /**
+     * [addSubscription description]
+     * @param {[type]} eventType    [description]
+     * @param {[type]} subscription [description]
+     */
+
   }, {
     key: 'addSubscription',
     value: function addSubscription(eventType, subscription) {
@@ -214,6 +247,12 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
 
       return subscription;
     }
+    /**
+     * [removeAllSubscriptions description]
+     * @param  {[type]} eventType [description]
+     * @return {[type]}           [description]
+     */
+
   }, {
     key: 'removeAllSubscriptions',
     value: function removeAllSubscriptions(eventType) {

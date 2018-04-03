@@ -21,8 +21,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var joi = require('joi');
 /**
- * [eth description]
- * @type {[type]}
+ * The eth.user namespace contains functions to interact with the video registration on the blockchain.
  */
 
 var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
@@ -32,6 +31,11 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
     // context is a ParatiiEth instance
     this.eth = context;
   }
+  /**
+   * Get the contract instance of the user contract
+   * @return {Promise}  Object representing the contract
+   */
+
 
   (0, _createClass3.default)(ParatiiEthUsers, [{
     key: 'getRegistry',
@@ -49,6 +53,23 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
         }
       }, null, this);
     }
+    /**
+     * Creates a user
+     * @param  {Object}  options information about the user
+     * @param {String} options.id valid address
+     * @param {String} options.name name of the user
+     * @param {String} options.email email of the user
+     * @param {String} options.ipfsData ipfs hash
+     * @return {Promise}         the id of the newly created user
+     * @example let userData = {
+     *                    id: 'some-id',
+     *                    name: 'Humbert Humbert',
+     *                    email: 'humbert@humbert.ru',
+     *                    ipfsData: 'some-hash'
+     *              }
+     *         let result = await paratii.eth.users.create(userData)
+     */
+
   }, {
     key: 'create',
     value: function create(options) {
@@ -104,6 +125,13 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
         }
       }, null, this);
     }
+    /**
+     * Get a users details from the blockchain
+     * @param  {String}  userId valid address
+     * @return {Promise}        information about the user
+     * @example user = await paratii.eth.users.get('some-id')
+     */
+
   }, {
     key: 'get',
     value: function get(userId) {
@@ -137,6 +165,14 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
         }
       }, null, this);
     }
+    /**
+     * Updates a user details on the blockchain.
+     * @param  {String}  userId  valid address
+     * @param  {Object}  options information to update. Left-out data is kept the same.
+     * @return {Promise}         updated data
+     * @example await paratii.eth.users.update('some-id', {ipfsData: 'new-hash'})
+     */
+
   }, {
     key: 'update',
     value: function update(userId, options) {
@@ -168,6 +204,13 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
         }
       }, null, this);
     }
+    /**
+     * Deletes a user from the blockchain. Can only be called by the contract owner or the user him/her-self
+     * @param  {String}  userId valid address
+     * @return {Promise}        blockchain transaction
+     * @example await paratii.eth.users.delete('some-id')
+     */
+
   }, {
     key: 'delete',
     value: function _delete(userId) {

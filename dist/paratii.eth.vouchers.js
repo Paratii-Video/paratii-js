@@ -23,8 +23,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var joi = require('joi');
 /**
- * [eth description]
- * @type {[type]}
+ * Functions for redeeming vouchers
  */
 
 var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
@@ -34,6 +33,13 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
     // context is a ParatiiEth instance
     this.eth = context;
   }
+  /**
+   * Get the contract instance of the vouchers contract
+   * @return {Promise} Object representing the contract
+   * @example let contract = await paratii.eth.vids.getVouchersContract()
+   *
+  */
+
 
   (0, _createClass3.default)(ParatiiEthVouchers, [{
     key: 'getVouchersContract',
@@ -66,6 +72,15 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
         }
       }, null, this);
     }
+    /**
+     * Function for creating a voucher. Can only be called by the owner of the contract.
+     * @param  {Object}  options data about the voucher
+     * @param {String} options.voucherCode unique string associated to this voucher
+     * @param {Number} options.amount amount of PTI in wei of this voucher
+     * @return {Promise}         the voucher id
+     * @example await paratii.eth.vouchers.create({ voucherCode: 'some-id', amount: 10 })
+     */
+
   }, {
     key: 'create',
     value: function create(options) {
@@ -153,6 +168,10 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
         }
       }, null, this);
     }
+    /**
+     * throws a test error
+     */
+
   }, {
     key: 'test',
     value: function test() {
@@ -170,8 +189,12 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
       }, null, this);
     }
 
-    /*
-     * A convenience function to generate new vouchers - does not change anything on the blockchain
+    /**
+     * Generates a given number of vouchers with unique IDs, and the given amount, and returns an array of objects.
+     * @param  {Number}  number number of voucher to create
+     * @param  {[type]}  amount amount of every voucher
+     * @return {Promise}        Object containing every voucher created
+     * @example let vouchers = await paratii.eth.vouchers.createVouchers(10, 10)
      */
 
   }, {
@@ -215,6 +238,13 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
         }
       }, null, this);
     }
+    /**
+     * Function for redeeming a voucher to the current account's address.
+     * @param  {String}  voucherCode univocal voucher code
+     * @return {Promise}             true if everything goes well, otherwise throws an error
+     * @example await paratii.eth.vouchers.redeem('some-code')
+     */
+
   }, {
     key: 'redeem',
     value: function redeem(voucherCode) {
