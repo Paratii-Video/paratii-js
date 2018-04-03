@@ -75,7 +75,6 @@ var ParatiiEth = exports.ParatiiEth = function () {
       } else {
         this.web3.setProvider(new this.web3.providers.HttpProvider(options.provider));
       }
-      // this.web3.setProvider(options.provider)
     }
 
     this.wallet = (0, _paratiiEthWallet.patchWallet)(this.web3.eth.accounts.wallet, this.config);
@@ -122,11 +121,15 @@ var ParatiiEth = exports.ParatiiEth = function () {
         if (account.address !== address) {
           throw Error('Private Key and Account address are not compatible!');
         }
+        this.config.address = address;
+        this.config.privateKey = privateKey;
       } else if (mnemonic) {
         wallet.create(1, mnemonic);
         if (address && wallet[0].address !== address) {
           throw Error('Mnemonic ' + mnemonic + ' and account address ' + address + ' are not compatible!');
         }
+        this.config.account.address = this.config.address = wallet[0].address;
+        this.config.account.privateKey = this.config.privateKey = wallet[0].privateKey;
       }
     }
 
