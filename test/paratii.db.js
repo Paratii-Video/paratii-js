@@ -1,11 +1,11 @@
-import { Paratii } from '../lib/paratii.js'
 import { assert } from 'chai'
+import { Paratii } from '../lib/paratii.js'
+import { DB_PROVIDER } from './utils.js'
 import nock from 'nock'
 const videos = require('./data/fixtures')
 
 describe('paratii.db API: :', function () {
   let paratii
-  let dbProvider = 'https://db.paratii.video'
 
   before(function () {
     nock.cleanAll()
@@ -23,12 +23,8 @@ describe('paratii.db API: :', function () {
 
   beforeEach(async function () {
     paratii = new Paratii({
-      db: {provider: dbProvider}
+      db: {provider: DB_PROVIDER}
     })
-  })
-
-  it('should be configured', async function () {
-    assert.equal(paratii.config.db.provider, dbProvider)
   })
 
   it('db.vids.search("keyword") should work as expected', async function () {
@@ -58,7 +54,7 @@ describe('paratii.db API: :', function () {
 
   it('should be available as an attribute on Paratii instances', async function () {
     let paratii = new Paratii({
-      db: {provider: dbProvider}
+      db: {provider: DB_PROVIDER}
     })
     assert.isOk(paratii.db)
   })

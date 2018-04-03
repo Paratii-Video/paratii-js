@@ -22,7 +22,7 @@ It is also available as `db` in `Paratii` instances:
 Here is an example with default options:
 
     paratiiDb = new ParatiiDb({
-      db: {provider': 'https://db.paratii.video'},
+      db: {provider': 'https://db.paratii.video/api/v1'},
       account: { address: '0x12345'}, // your address is used as an access token
     })
 

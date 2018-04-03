@@ -85,9 +85,10 @@ const vidsFixture = [
 ]
 const mockDb = function () {
   const vids = vidsFixture
+  nock.cleanAll()
   nock.enableNetConnect()
   nock('https://db.paratii.video')
-    // .persist()
+    .persist()
     .get('/api/v1/videos/some-id')
     .reply(200, vids[0])
     .get('/api/v1/videos/id-2')

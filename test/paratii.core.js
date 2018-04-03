@@ -5,9 +5,6 @@ import { assert } from 'chai'
 describe('paratii.core API: :', function () {
   let paratii, paratiiCore
 
-  before(async function () {
-  })
-
   beforeEach(async function () {
     paratii = new Paratii({account: testAccount})
     await paratii.eth.deployContracts()
@@ -21,7 +18,7 @@ describe('paratii.core API: :', function () {
     assert.isOk(paratiiCore.vids)
   })
 
-  it('migrateAccount should work @watch', async function () {
+  it.skip('migrateAccount should work @watch', async function () {
     // migrate all assets from default account address to address23
     let id1 = vidsFixture[1].id
     let id2 = vidsFixture[2].id
@@ -43,6 +40,6 @@ describe('paratii.core API: :', function () {
     assert.equal(vid.owner, address23)
     // the balance in PTI should be transfered to the new address
     assert.equal(await paratii.eth.balanceOf(address23, 'PTI'), oldBalance)
-    // assert.isOk(false, 'any stakes made should be transfered to the new account')
+    assert.isOk(false, 'any stakes made should be transfered to the new account')
   })
 })

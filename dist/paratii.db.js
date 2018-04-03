@@ -34,10 +34,11 @@ var ParatiiDb = exports.ParatiiDb = function ParatiiDb(config) {
     account: _schemas.accountSchema
   };
   var result = _joi2.default.validate(config, schema, { allowUnknown: true });
-  var error = result.error;
-  if (error) throw error;
+  if (result.error) throw result.error;
+
   this.config = config;
   this.config.db = result.value.db;
+  this.config.account = result.value.account;
   this.vids = new _paratiiDbVids.ParatiiDbVids(this.config);
   this.users = new _paratiiDbUsers.ParatiiDbUsers(this.config);
 };

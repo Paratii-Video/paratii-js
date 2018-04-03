@@ -1,8 +1,7 @@
 import { Paratii } from '../lib/paratii.js'
 import { assert } from 'chai'
-import { mockDb, testAccount, address1, address99 } from './utils.js'
+import { DB_PROVIDER, mockDb, testAccount, address1, address99 } from './utils.js'
 
-mockDb()
 describe('paratii.core.vids:', function () {
   let paratii
   let videoFile = 'test/data/some-file.txt'
@@ -12,13 +11,16 @@ describe('paratii.core.vids:', function () {
   let ipfsHash = 'some-hash'
   let videoTitle = 'some title'
   let videoTitle2 = 'some title 2'
-  let dbProvider = 'https://db.paratii.video'
+
+  before(function () {
+    mockDb()
+  })
 
   beforeEach(async function () {
     paratii = new Paratii({
       eth: {provider: 'http://localhost:8545/rpc/'},
       account: testAccount,
-      db: {provider: dbProvider}
+      db: {provider: DB_PROVIDER}
     })
     await paratii.eth.deployContracts()
   })
@@ -100,6 +102,7 @@ describe('paratii.core.vids:', function () {
       duration: '2h 32m'
     })
     let data
+    data = await paratii.core.vids.get(videoId3)
     data = await paratii.core.vids.get(videoId2)
     assert.equal(data.title, videoTitle2)
 
