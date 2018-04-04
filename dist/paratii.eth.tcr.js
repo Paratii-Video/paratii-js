@@ -219,72 +219,73 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
               // let amountInWei = this.eth.web3.utils.toWei(amountToStake.toString())
               amountInHex = this.eth.web3.utils.toHex(amountToStake.toString());
+              // console.log('amountInHex: ', amountInHex)
 
-              console.log('amountInHex: ', amountInHex);
               tx = void 0;
-              _context5.prev = 11;
-              _context5.next = 14;
+              _context5.prev = 10;
+              _context5.next = 13;
               return _regenerator2.default.awrap(contract.methods.apply(videoId, amountInHex).send());
 
-            case 14:
+            case 13:
               tx = _context5.sent;
-              _context5.next = 20;
+              _context5.next = 19;
               break;
 
-            case 17:
-              _context5.prev = 17;
-              _context5.t0 = _context5['catch'](11);
+            case 16:
+              _context5.prev = 16;
+              _context5.t0 = _context5['catch'](10);
               throw _context5.t0;
 
-            case 20:
-              console.log('tx: ', tx);
+            case 19:
+              // console.log('tx: ', tx)
               vId = void 0;
-              _context5.prev = 22;
+              _context5.prev = 20;
 
               vId = (0, _utils.getInfoFromLogs)(tx, '_Application', 'videoId', 1);
-              _context5.next = 30;
+              _context5.next = 28;
               break;
 
-            case 26:
-              _context5.prev = 26;
-              _context5.t1 = _context5['catch'](22);
+            case 24:
+              _context5.prev = 24;
+              _context5.t1 = _context5['catch'](20);
 
               if (!_context5.t1) {
-                _context5.next = 30;
+                _context5.next = 28;
                 break;
               }
 
               return _context5.abrupt('return', false);
 
-            case 30:
-
-              console.log('vId: ', vId);
-
+            case 28:
               if (!vId) {
-                _context5.next = 35;
+                _context5.next = 32;
                 break;
               }
 
               return _context5.abrupt('return', true);
 
-            case 35:
+            case 32:
               return _context5.abrupt('return', false);
 
-            case 36:
+            case 33:
             case 'end':
               return _context5.stop();
           }
         }
-      }, null, this, [[11, 17], [22, 26]]);
+      }, null, this, [[10, 16], [20, 24]]);
     }
 
     /**
-     * check whether the user has enough funds to stake.
-     * it also approves the TCR contract to amountToStake.
-     * @param  {[type]}  videoId       [description]
-     * @param  {[type]}  amountToStake [description]
+     * Stake amountToStake on video with id videoId
+     * does a number of separate steps:
+     * - check preconditions for staking
+     * - approve that the TCR contract can transfer amountToStake tokens
+     * - apply to the TCR
+     * @param  {strin}  videoId       [description]
+     * @param  {number}  amountToStake [description]
      * @return {Promise}               [description]
      */
+    // FIXME: better naming
 
   }, {
     key: 'checkEligiblityAndApply',
@@ -380,6 +381,33 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
             case 34:
             case 'end':
               return _context6.stop();
+          }
+        }
+      }, null, this);
+    }
+
+    /**
+     * remove the video given by videoId from the listing
+     */
+
+  }, {
+    key: 'exit',
+    value: function exit(videoId) {
+      var contract;
+      return _regenerator2.default.async(function exit$(_context7) {
+        while (1) {
+          switch (_context7.prev = _context7.next) {
+            case 0:
+              _context7.next = 2;
+              return _regenerator2.default.awrap(this.getTcrContract());
+
+            case 2:
+              contract = _context7.sent;
+              return _context7.abrupt('return', contract.methods.exit(videoId).send());
+
+            case 4:
+            case 'end':
+              return _context7.stop();
           }
         }
       }, null, this);

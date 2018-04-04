@@ -1,73 +1,26 @@
 import { Paratii } from '../lib/paratii.js'
 import { assert } from 'chai'
-import { address, address1, address99, privateKey } from './utils.js'
-import nock from 'nock'
-
-nock.enableNetConnect()
-nock('https://db.paratii.video/api/v1')
-.persist()
-.get('/videos/some-id')
-.reply(200, {
-  id: 'some-id',
-  author: 'Steven Spielberg',
-  file: 'test/data/some-file.txt',
-  filesize: '',
-  free: null,
-  title: 'some Title',
-  description: 'A long description',
-  published: false,
-  price: 0,
-  ipfsData: 'QmVyzgSknYjcWBMX6LXYEixDa634sthqNNJpYN6eGERp7W',
-  ipfsHash: '',
-  ipfsHashOrig: '',
-  duration: '2h 32m',
-  storageStatus: {},
-  // thumbnails: [],
-  transcodingStatus: {},
-  uploadStatus: {},
-  owner: address1
-  // published: false
-
-})
-.get('/videos/some-id2')
-.reply(200, {
-  id: 'some-id2',
-  owner: address1,
-  title: 'some title 2',
-  description: 'A long description',
-  price: 0,
-  ipfsData: 'QmUUMpwyWBbJKeNCbwDySXJCay5TBBuur3c59m1ajQufmn',
-  ipfsHash: 'some-hash',
-  ipfsHashOrig: ''
-})
-.get('/videos/some-id3')
-.reply(200, {
-  id: 'some-id3',
-  owner: address1,
-  title: 'another-title',
-  description: 'A long description',
-  price: 0,
-  ipfsData: 'QmUUMpwyWBbJKeNCbwDySXJCay5TBBuur3c59m1ajQufmn',
-  ipfsHash: 'some-hash',
-  ipfsHashOrig: ''
-
-})
+import { DB_PROVIDER, mockDb, testAccount, address1, address99 } from './utils.js'
 
 describe('paratii.core.vids:', function () {
   let paratii
   let videoFile = 'test/data/some-file.txt'
   let videoId = 'some-id'
-  let videoId2 = 'some-id2'
-  let videoId3 = 'some-id3'
+  let videoId2 = 'id-2'
+  let videoId3 = 'id-3'
   let ipfsHash = 'some-hash'
   let videoTitle = 'some title'
   let videoTitle2 = 'some title 2'
-  let dbProvider = 'https://db.paratii.video'
+
+  before(function () {
+    mockDb()
+  })
+
   beforeEach(async function () {
     paratii = new Paratii({
-      address: address,
-      privateKey: privateKey,
-      'db.provider': dbProvider
+      eth: {provider: 'http://localhost:8545/rpc/'},
+      account: testAccount,
+      db: {provider: DB_PROVIDER}
     })
     await paratii.eth.deployContracts()
   })
@@ -149,6 +102,7 @@ describe('paratii.core.vids:', function () {
       duration: '2h 32m'
     })
     let data
+    data = await paratii.core.vids.get(videoId3)
     data = await paratii.core.vids.get(videoId2)
     assert.equal(data.title, videoTitle2)
 

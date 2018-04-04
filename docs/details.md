@@ -22,8 +22,10 @@ The Paratii object serves as the general entry point for interacting with the fa
   Or with particular options, such as the following:
 
     paratii = Paratii({
-      provider: 'chain.paratii.video', // optional - the address of an ethereum node (defaults to localhost:8754)
-      registry: '0x23445abcdefg', // optional - the address where the Paratii Contract registry can be found
+      eth: {
+        provider': 'chain.paratii.video', // optional - the address of an ethereum node (defaults to localhost:8754)
+        registry: '0x23445abcdefg', // optional - the address where the Paratii Contract registry can be found
+      }
     })
 
 ### `deployAllContracts()`

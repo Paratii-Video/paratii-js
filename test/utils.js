@@ -1,5 +1,6 @@
-var chai = require('chai')
-var chaiAsPromised = require('chai-as-promised')
+import nock from 'nock'
+import chai from 'chai'
+import chaiAsPromised from 'chai-as-promised'
 
 chai.use(chaiAsPromised)
 
@@ -26,4 +27,93 @@ let voucherAmount11 = 0.3141 * 10 ** 18
 let voucherAmountInitial11 = 2 * 10 ** 18
 let hashedVoucherCode11 = '0x182b41b125c1c14efaf188d95b6a7e2074d8b746237fc47b48beb63551d742f9'
 
-export { address, address1, address99, privateKey, address17, privateKey17, mnemonic23, address23, voucherAmountInitial11, voucherAmount11, hashedVoucherCode11, voucherCode11 }
+const testAccount = {
+  address,
+  privateKey
+}
+
+const testConfig = {
+  eth: { provider: 'http://localhost:8545' },
+  account: {
+    address: address,
+    privateKey: privateKey
+  }
+}
+
+const vidsFixture = [
+  {
+    id: 'some-id',
+    author: 'Steven Spielberg',
+    file: 'test/data/some-file.txt',
+    filesize: '',
+    free: null,
+    title: 'some Title',
+    description: 'A long description',
+    published: false,
+    price: 0,
+    ipfsData: 'QmVyzgSknYjcWBMX6LXYEixDa634sthqNNJpYN6eGERp7W',
+    ipfsHash: '',
+    ipfsHashOrig: '',
+    duration: '2h 32m',
+    storageStatus: {},
+        // thumbnails: [],
+    transcodingStatus: {},
+    uploadStatus: {},
+    owner: address1
+        // published: false
+  },
+  {
+    id: 'id-2',
+    owner: address1,
+    title: 'some title 2',
+    description: 'A long description',
+    price: 0,
+    ipfsData: 'QmUUMpwyWBbJKeNCbwDySXJCay5TBBuur3c59m1ajQufmn',
+    ipfsHash: 'some-hash',
+    ipfsHashOrig: ''
+  },
+  {
+    id: 'id-3',
+    owner: address1,
+    title: 'another-title',
+    description: 'A long description',
+    price: 0,
+    ipfsData: 'QmUUMpwyWBbJKeNCbwDySXJCay5TBBuur3c59m1ajQufmn',
+    ipfsHash: 'some-hash',
+    ipfsHashOrig: ''
+  }
+]
+const mockDb = function () {
+  const vids = vidsFixture
+  nock.cleanAll()
+  nock.enableNetConnect()
+  nock('https://db.paratii.video')
+    .persist()
+    .get('/api/v1/videos/some-id')
+    .reply(200, vids[0])
+    .get('/api/v1/videos/id-2')
+    .reply(200, vids[1])
+    .get('/api/v1/videos/id-3')
+    .reply(200, vids[2])
+    .get('/api/v1/videos/?owner=0xCbe4f07b343171ac37055B25a5266f48f6945b7d')
+    .reply(200, [vids[1], vids[2]])
+}
+
+export {
+  address,
+  address1,
+  address17,
+  address23,
+  address99,
+  privateKey,
+  privateKey17,
+  mnemonic23,
+  mockDb,
+  vidsFixture,
+  voucherAmount11,
+  voucherAmountInitial11,
+  voucherCode11,
+  hashedVoucherCode11,
+  testConfig,
+  testAccount
+}

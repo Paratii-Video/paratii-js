@@ -187,7 +187,7 @@ Possible errors:
  - This voucher was already used
  - The Vouchers contract doesn't have enough PTI to redeem the voucher
  - An unknown error occurred
- 
+
 ### `eth.vouchers.create(data)`
 
 Function for creating a voucher. Can only be called by the owner of the contract. Takes a single parameter, data, which is an object containing `voucherCode`, which is a unique string that is the actual voucher's code, and amount, which is the amount of PTI in Wei that the voucher will net the redeeming user.
@@ -211,9 +211,9 @@ This function will deploy are contracts and link them to the
 Generates a given number of vouchers with unique IDs, and the given amount, and returns an array of objects. Takes two parameters, the number of vouchers to create, and the amount of PTI to value each voucher at.
 
 i.e.
-	
+
 	[{ voucherCode: 'aaaa', amount: 1 }, { voucherCode: 'bbbb', amount: 1 }]
-	
+
 ## `eth.events`
 
 `eth.events` implements a part of the API of the EventEmitter, that can be used to manage subscriptions to Ethereum events.

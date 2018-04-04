@@ -1,6 +1,6 @@
 import { Paratii } from '../lib/paratii.js'
 import { assert } from 'chai'
-import { address, privateKey } from './utils.js'
+import { DB_PROVIDER, testAccount } from './utils.js'
 import nock from 'nock'
 const users = require('./users-fixtures')
 
@@ -13,7 +13,6 @@ describe('paratii.core.users: ', function () {
     name: 'Humbert Humbert'
   }
   let newUserId = '0xa99dBd162ad5E1601E8d8B20703e5A3bA5c00Be7'
-  let dbProvider = 'https://db.paratii.video'
 
   before(function () {
     nock('https://db.paratii.video/api/v1')
@@ -21,18 +20,14 @@ describe('paratii.core.users: ', function () {
     .get('/users/' + users[0]['_id'])
     .reply(200, users[0])
   })
+
   beforeEach(async function () {
     paratii = new Paratii({
-      provider: 'http://localhost:8545/rpc/',
-      address: address,
-      privateKey: privateKey,
-      'db.provider': dbProvider
+      eth: {provider: 'http://localhost:8545/rpc/'},
+      account: testAccount,
+      db: {provider: DB_PROVIDER}
     })
     await paratii.eth.deployContracts()
-  })
-
-  it('should be configured', async function () {
-    assert.equal(paratii.config['db.provider'], dbProvider)
   })
 
   it('core.users.create() should work as expected', async function () {
