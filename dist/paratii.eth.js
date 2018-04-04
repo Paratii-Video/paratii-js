@@ -35,10 +35,16 @@ var _paratiiEthTcr = require('./paratii.eth.tcr.js');
 
 var _paratiiEthWallet = require('./paratii.eth.wallet.js');
 
+var _schemas = require('./schemas.js');
+
+var _joi = require('joi');
+
+var _joi2 = _interopRequireDefault(_joi);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Web3 = require('web3');
-var joi = require('joi');
+// const joi = require('joi')
 /**
  * contains functions to interact with the Ethereum blockchain and the Paratii contracts deployed there.
  * @param {Object} config configuration object to initialize Paratii object
@@ -48,34 +54,32 @@ var ParatiiEth = exports.ParatiiEth = function () {
   function ParatiiEth(config) {
     (0, _classCallCheck3.default)(this, ParatiiEth);
 
-    var schema = joi.object({
-      provider: joi.string().default('ws://localhost:8546'),
-      registryAddress: joi.string().allow(null).default(null),
-      account: joi.object({
-        address: joi.string().allow(null).default(null),
-        privateKey: joi.string().allow(null).default(null),
-        mnemonic: joi.string().allow(null).default(null)
-      }),
-      web3: joi.any().default(null),
-      isTestNet: joi.bool().default(false)
-    }).unknown();
+    var schema = _joi2.default.object({
+      account: _schemas.accountSchema,
+      eth: _schemas.ethSchema
+      //   web3: joi.any().default(null)
+    });
+    var result = _joi2.default.validate(config, schema, { allowUnknown: true });
+    if (result.error) throw result.error;
+    config.eth = result.value.eth;
+    config.account = result.value.account;
+    if (config.eth.provider.match(/(localhost|127\.0\.0\.1)/g)) {
+      config.eth.isTestNet = true;
+    } else {
+      config.eth.isTestNet = false;
+    }
 
-    var result = joi.validate(config, schema);
-    var error = result.error;
-    if (error) throw error;
-    var options = result.value;
-    this.config = config;
-
-    if (options.web3) {
-      this.web3 = options.web3;
+    if (config.web3) {
+      this.web3 = config.web3;
     } else {
       this.web3 = new Web3();
-      if (options.provider.substring(0, 2) === 'ws') {
-        this.web3.setProvider(new this.web3.providers.WebsocketProvider(options.provider));
+      if (config.eth.provider.substring(0, 2) === 'ws') {
+        this.web3.setProvider(new this.web3.providers.WebsocketProvider(config.eth.provider));
       } else {
-        this.web3.setProvider(new this.web3.providers.HttpProvider(options.provider));
+        this.web3.setProvider(new this.web3.providers.HttpProvider(config.eth.provider));
       }
     }
+    this.config = config;
 
     this.wallet = (0, _paratiiEthWallet.patchWallet)(this.web3.eth.accounts.wallet, this.config);
     this.setAccount(this.config.account.address, this.config.account.privateKey, this.config.account.mnemonic);
@@ -115,21 +119,21 @@ var ParatiiEth = exports.ParatiiEth = function () {
       var wallet = this.web3.eth.accounts.wallet;
       this.config.account.address = address;
       this.config.account.privateKey = privateKey;
-      this.web3.eth.defaultAccount = address;
+      this.web3.eth.testAccount = address;
       if (privateKey) {
         var account = wallet.add(privateKey);
         if (account.address !== address) {
           throw Error('Private Key and Account address are not compatible!');
         }
-        this.config.address = address;
-        this.config.privateKey = privateKey;
+        this.config.account.address = address;
+        this.config.account.privateKey = privateKey;
       } else if (mnemonic) {
         wallet.create(1, mnemonic);
         if (address && wallet[0].address !== address) {
           throw Error('Mnemonic ' + mnemonic + ' and account address ' + address + ' are not compatible!');
         }
-        this.config.account.address = this.config.address = wallet[0].address;
-        this.config.account.privateKey = this.config.privateKey = wallet[0].privateKey;
+        this.config.account.address = wallet[0].address;
+        this.config.account.privateKey = wallet[0].privateKey;
       }
     }
 
@@ -431,7 +435,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
                 // await this.setContractsProvider()
 
-              };this.config.registryAddress = paratiiRegistryAddress;
+              };this.setRegistryAddress(paratiiRegistryAddress);
 
               return _context4.abrupt('return', this.contracts);
 
@@ -598,7 +602,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: 'getRegistryAddress',
     value: function getRegistryAddress() {
-      return this.config.registryAddress;
+      return this.config.eth.registryAddress;
     }
     /**
      * set the address of the Registry contract on the blockchain
@@ -609,7 +613,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: 'setRegistryAddress',
     value: function setRegistryAddress(registryAddress) {
-      this.config.registryAddress = registryAddress;
+      this.config.eth.registryAddress = registryAddress;
       for (var name in this.contracts) {
         var contract = this.contracts[name];
         contract.options.address = undefined;
@@ -695,29 +699,6 @@ var ParatiiEth = exports.ParatiiEth = function () {
         }
       }, null, this);
     }
-    // async _transferETH (beneficiary, amount) {
-    //   // @args amount is in Wei
-    //   // TODO: use the SendEther contract
-    //   // TODO: this will only work on testrpc with unlocked accounts..
-    //   let from = this.config.account.address
-    //   if (!from) {
-    //     throw Error('No account set! Cannot send transactions')
-    //   }
-    //   if (!beneficiary) {
-    //     throw Error('No beneficiary given.')
-    //   }
-    //   from = add0x(from)
-    //   beneficiary = add0x(beneficiary)
-    //
-    //   let result = await this.web3.eth.sendTransaction({
-    //     from: from,
-    //     to: beneficiary,
-    //     value: amount,
-    //     gasPrice: 20000000000,
-    //     gas: 21000
-    //   })
-    //   return result
-    // }
     /**
      * send ETH from current account to beneficiary
      * @param  {String}  beneficiary ETH address
