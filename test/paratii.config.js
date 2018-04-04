@@ -1,4 +1,4 @@
-import { Paratii } from '../lib/paratii.js'
+import Paratii from '../lib/paratii.js'
 import { address, privateKey, mnemonic23, address23 } from './utils.js'
 import { assert } from 'chai'
 
