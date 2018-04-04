@@ -88,7 +88,7 @@ function patchWallet(wallet, config) {
     }, null, this);
   }
   /**
-   * check if the passed mnemonic is bip39 valid
+   * checorigDecryptk if the passed mnemonic is bip39 valid
    * @param  {[type]}  mnemonic mnemonic to check
    * @return {Boolean}          true if the mnemonic is valid, false otherwise
    * @example paratii.eth.wallet.isValidMnemonic('some long mnemonic phrase')

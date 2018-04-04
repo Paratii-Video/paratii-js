@@ -1,6 +1,11 @@
 /* global File, ArrayBuffer */
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Uploader = undefined;
+
 var _promise = require('babel-runtime/core-js/promise');
 
 var _promise2 = _interopRequireDefault(_promise);
@@ -55,7 +60,7 @@ var Resumable = require('resumablejs');
  * @param {Object} opts
  */
 
-var Uploader = function (_EventEmitter) {
+var Uploader = exports.Uploader = function (_EventEmitter) {
   (0, _inherits3.default)(Uploader, _EventEmitter);
 
   function Uploader(opts) {
@@ -824,5 +829,3 @@ var Uploader = function (_EventEmitter) {
   }]);
   return Uploader;
 }(_events.EventEmitter);
-
-module.exports = Uploader;

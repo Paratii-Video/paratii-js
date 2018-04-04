@@ -32,12 +32,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var joi = require('joi');
 var utils = require('./utils.js');
 
+//
 /**
  * Paratii library main object
  * The Paratii object serves as the general entry point for interacting with the family of Paratii
  * contracts that are deployed on the blockchain, utilities to run and interact with a local IPFS node,
  * and utilities to interact with the Paratii index.
- * @param {Object} opts options object to configure paratii library
+ * @class Paratii
+ * @param {accountSchema} opts options object to configure paratii library
  * @param {String} opts.provider optional - the address of an ethereum node (defaults to localhost:8754)
  * @param {String} opts.registryAddress optional - the address where the Paratii Contract registry can be found
  * @param {String} opts.address optional - address of the operator/user
