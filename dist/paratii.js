@@ -31,7 +31,6 @@ var joi = require('joi');
 var utils = require('./utils.js');
 
 /**
-<<<<<<< HEAD
  * Paratii library main object
  * The Paratii object serves as the general entry point for interacting with the family of Paratii
  * contracts that are deployed on the blockchain, utilities to run and interact with a local IPFS node,
@@ -48,10 +47,6 @@ var utils = require('./utils.js');
  * @param {String} opts.mnemonic optional - mnemonic of the user
  *
  * @example     paratii = new Paratii({ provider: 'http://localhost:8545', address: 'some-user-id', privateKey: 'some-user-priv-key'})
-=======
- * Paratii Library
- * for usage, see https://github.com/Paratii-Video/paratii-contracts/tree/master/docs
->>>>>>> 173-feat/default-export
  */
 
 var Paratii = function () {
