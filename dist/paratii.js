@@ -215,6 +215,7 @@ var Paratii = function () {
   return Paratii;
 }();
 
+exports.default = Paratii;
 exports.Paratii = Paratii;
 exports.utils = utils;
 exports.ParatiiIPFS = _paratiiIpfs.ParatiiIPFS;

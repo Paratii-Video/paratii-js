@@ -11,7 +11,7 @@ The `ParatiiDb` is used for reading data from the Paratii Blockchain Index.
 
 It is also available as `db` in `Paratii` instances:
 
-    import { Paratii } from 'paratii-lib'
+    import Paratii from 'paratii-lib'
     paratii = new Paratii()
     paratii.db // is a ParatiiDb instance
 

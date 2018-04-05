@@ -23,7 +23,8 @@
     "docs-html": "documentation build lib/** -f html -o docs",
     "docs-md": "documentation build lib/** -f md -o docs/jsdoc.md",
     "docs-watch": "documentation build lib/** -f html -o docs --watch",
-    "jsdoc-gen": "jsdoc --configure .jsdoc.json && jsdoc2md lib/*.js > newdoc.md"
+    "jsdoc-gen": "jsdoc --configure .jsdoc.json && jsdoc2md lib/*.js > newdoc.md",
+    "git-add-docs-and-build": "git add docs dist"
   },
   "dependencies": {
     "async": "^2.6.0",
@@ -116,6 +117,7 @@
   "pre-commit": [
     "lint",
     "build",
-    "docs"
+    "docs",
+    "git-add-docs-and-build"
   ]
 }

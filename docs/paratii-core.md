@@ -6,7 +6,7 @@ Contains functions that operate transversally over several backend systems.
 
 It is available as a `core` attribute in `Paratii` instances:
 
-    import { Paratii } from 'paratii-lib'
+    import Paratii from 'paratii-lib'
     paratii = new Paratii()
     paratii.core // is a ParatiiCore instance
 
@@ -78,7 +78,7 @@ Writes a dislike for the video on the blockchain (contract `Likes`), and negates
 
 ## core.vids.view(data)
 
-Register a view on the blockchain. 
+Register a view on the blockchain.
 
 Accepts parameter data that contains keys `viewer`, which is an address of the viewer, and `videoId`, which is the ID of the video for which the view will be registered.
 
@@ -103,7 +103,7 @@ _not implemented yet_
 Remarks:
 
   * The `id` of a user is his/her public Ethereum address
-  
+
 ## `core.users.create`
 
     core.users.create({
@@ -112,13 +112,13 @@ Remarks:
       email: 'some@email.com',
       // ... (other fields to be defined)
     })
-	
+
 Creates a user, fields `id`, `name` and `email` go to the smart contract `Users`, other fields are stored on IPFS.
 
 ## `core.users.get`
 
     core.users.get(0x1234)
-	
+
 Calls paratii-db and returns user's details for a given ID.
 
 Sample output:
@@ -131,9 +131,9 @@ Sample output:
     }
 
 ## `core.users.update`
-	
+
 Updates a user's details. `name` and `email` are defined in the smart contract `Users`, other fields get written to IPFS.
-	
+
     core.users.update(0x1234, {
       name: 'A new user name',
     })
