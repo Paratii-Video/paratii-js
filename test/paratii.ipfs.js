@@ -17,15 +17,21 @@ describe('ParatiiIPFS: :', function () {
     })
   })
 
-  afterEach((done) => {
-    paratiiIPFS.stop(() => {
-      delete paratiiIPFS.ipfs
-      setImmediate(() => {
-        assert.isNotOk(paratiiIPFS.ipfs)
-        done()
-      })
-    })
-  })
+  // afterEach((done) => {
+  //   paratiiIPFS.stop(() => {
+  //     delete paratiiIPFS.ipfs
+  //     setImmediate(() => {
+  //       assert.isNotOk(paratiiIPFS.ipfs)
+  //       done()
+  //     })
+  //   })
+  //})
+
+  afterEach(async () => {
+    await paratiiIPFS.stop()
+    delete paratiiIPFS.ipfs
+    assert.isNotOk(paratiiIPFS.ipfs)
+ })
 
   it('should exist', (done) => {
     assert.isOk(paratiiIPFS)

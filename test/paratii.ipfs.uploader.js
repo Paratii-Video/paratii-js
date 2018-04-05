@@ -5,7 +5,7 @@
 import { ParatiiIPFS } from '../lib/paratii.ipfs.js'
 import { assert, expect } from 'chai'
 
-describe('ParatiiIPFS: :', function () {
+describe('ParatiiIPFS Uploader :', function () {
   let paratiiIPFS
   this.timeout(30000)
 
@@ -15,14 +15,20 @@ describe('ParatiiIPFS: :', function () {
     })
   })
 
-  afterEach((done) => {
-    paratiiIPFS.stop(() => {
-      delete paratiiIPFS.ipfs
-      setImmediate(() => {
-        assert.isNotOk(paratiiIPFS.ipfs)
-        done()
-      })
-    })
+  // afterEach((done) => {
+  //   paratiiIPFS.stop(() => {
+  //     delete paratiiIPFS.ipfs
+  //     setImmediate(() => {
+  //       assert.isNotOk(paratiiIPFS.ipfs)
+  //       done()
+  //     })
+  //   })
+  // })
+
+  afterEach(async () => {
+    await paratiiIPFS.stop()
+    delete paratiiIPFS.ipfs
+    assert.isNotOk(paratiiIPFS.ipfs)
   })
 
   // skip till i fix underlying libp2p issue.
@@ -85,7 +91,6 @@ describe('ParatiiIPFS: :', function () {
 
   it('addAndTranscode() should work as expected', (done) => {
     let files = []
-
     let ev = paratiiIPFS.uploader.addAndTranscode(files)
     ev.once('transcoding:done', (resp) => {
       assert.isOk(resp)
