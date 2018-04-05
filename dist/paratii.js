@@ -49,6 +49,7 @@ var utils = require('./utils.js');
  * @param {String} opts.mnemonic optional - mnemonic of the user
  *
  * @example     paratii = new Paratii({ 'eth.provider': 'http://localhost:8545', address: 'some-user-id', privateKey: 'some-user-priv-key'})
+ * @class paratii
  */
 
 var Paratii = function () {
@@ -77,6 +78,7 @@ var Paratii = function () {
    * @param {String} address address of the operator/user
    * @param {String} privateKey optional - private key of the operator/user
    * @example paratii.setAccount('some-user-id','some-user-pub-key')
+   * @memberof paratii
    */
 
 
@@ -89,6 +91,7 @@ var Paratii = function () {
      * Set the address of the ParatiiRegistry contract
      * @param {String} address address of the ParatiiRegistry contract
      * @example paratii.setRegistryAddress('some-address')
+     * @memberof paratii
     */
 
   }, {
@@ -101,6 +104,7 @@ var Paratii = function () {
      * return an array of strings with diagnostic info
      * @return {Promise} array of strings with diagnostic info
      * @example paratii.diagnose()
+     * @memberof paratii
      */
 
   }, {
