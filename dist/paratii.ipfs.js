@@ -55,11 +55,7 @@ var _events = require('events');
 
 var _paratiiIpfsUploader = require('./paratii.ipfs.uploader.js');
 
-var _paratiiIpfsUploader2 = _interopRequireDefault(_paratiiIpfsUploader);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// const Uploader = require('./paratii.ipfs.uploader.js')
 
 global.Buffer = global.Buffer || require('buffer').Buffer;
 
@@ -91,7 +87,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     _this.config = config;
     _this.config.ipfs = result.value.ipfs;
     _this.config.account = result.value.account;
-    _this.uploader = new _paratiiIpfsUploader2.default({ ipfs: _this.config.ipfs, paratiiIPFS: _this });
+    _this.uploader = new _paratiiIpfsUploader.Uploader({ ipfs: _this.config.ipfs, paratiiIPFS: _this });
     return _this;
   }
   /**
