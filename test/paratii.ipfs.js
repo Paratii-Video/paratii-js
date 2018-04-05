@@ -25,13 +25,13 @@ describe('ParatiiIPFS: :', function () {
   //       done()
   //     })
   //   })
-  //})
+  // })
 
   afterEach(async () => {
     await paratiiIPFS.stop()
     delete paratiiIPFS.ipfs
     assert.isNotOk(paratiiIPFS.ipfs)
- })
+  })
 
   it('should exist', (done) => {
     assert.isOk(paratiiIPFS)
