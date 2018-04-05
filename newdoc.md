@@ -1,3 +1,17 @@
+## Classes
+
+<dl>
+<dt><a href="#paratii">paratii</a></dt>
+<dd></dd>
+</dl>
+
+## Typedefs
+
+<dl>
+<dt><a href="#accountSchema">accountSchema</a> : <code>Array</code></dt>
+<dd></dd>
+</dl>
+
 <a name="paratii"></a>
 
 ## paratii
@@ -149,7 +163,7 @@ and utilities to interact with the Paratii index.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| opts | <code>Object</code> | options object to configure paratii library |
+| opts | [<code>accountSchema</code>](#accountSchema) | options object to configure paratii library |
 | opts.provider | <code>String</code> | optional - the address of an ethereum node (defaults to localhost:8754) |
 | opts.registryAddress | <code>String</code> | optional - the address where the Paratii Contract registry can be found |
 | opts.address | <code>String</code> | optional - address of the operator/user |
@@ -2202,3 +2216,15 @@ return an array of strings with diagnostic info
 ```js
 paratii.diagnose()
 ```
+<a name="accountSchema"></a>
+
+## accountSchema : <code>Array</code>
+**Kind**: global typedef  
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| address | <code>string</code> | 
+| privateKey | <code>string</code> | 
+| mnemonic | <code>string</code> | 
+
