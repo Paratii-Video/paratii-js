@@ -231,7 +231,7 @@ var Uploader = exports.Uploader = function (_EventEmitter) {
       var meta = {}; // holds File metadata.
       var ev = new _events.EventEmitter();
 
-      this._ipfs.start(function () {
+      this._ipfs.start().then(function () {
         // trigger onStart callback
         ev.emit('start');
         if (files && files[0] && files[0].size > _this2.config.ipfs.maxFileSize) {
@@ -573,7 +573,7 @@ var Uploader = exports.Uploader = function (_EventEmitter) {
         } else {
           ev = new _events.EventEmitter();
         }
-        _this7._ipfs.start(function () {
+        _this7._ipfs.start().then(function () {
           var msg = _this7._ipfs.protocol.createCommand('getMetaData', { hash: fileHash });
           // FIXME : This is for dev, so we just signal our transcoder node.
           // This needs to be dynamic later on.
