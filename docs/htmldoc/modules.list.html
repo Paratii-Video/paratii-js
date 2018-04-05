@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Paratii Source: paratii.core.users.js</title>
+	<title>Paratii Modules</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -31,16 +31,16 @@
 		<ul class="nav navbar-nav">
 			
 			<li class="dropdown">
-				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="paratii.html">paratii</a></li><li><a href="paratii.core.html">paratii.core</a></li><li><a href="paratii.core.users.html">paratii.core.users</a></li><li><a href="paratii.core.vids.html">paratii.core.vids</a></li><li><a href="paratii.db.html">paratii.db</a></li><li><a href="paratii.db.users.html">paratii.db.users</a></li><li><a href="paratii.db.vids.html">paratii.db.vids</a></li><li><a href="paratii.eth.html">paratii.eth</a></li><li><a href="paratii.eth.events.html">paratii.eth.events</a></li><li><a href="paratii.eth.tcr.html">paratii.eth.tcr</a></li><li><a href="paratii.eth.users.html">paratii.eth.users</a></li><li><a href="paratii.eth.vids.html">paratii.eth.vids</a></li><li><a href="paratii.eth.vouchers.html">paratii.eth.vouchers</a></li><li><a href="paratii.eth.wallet.html">paratii.eth.wallet</a></li><li><a href="paratii.ipfs.html">paratii.ipfs</a></li><li><a href="paratii.ipfs.uploader.html">paratii.ipfs.uploader</a></li>
+					<li><a href="module-schemas.html">schemas</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
-				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html">Global</a></li>
+					<li><a href="paratii.html">paratii</a></li><li><a href="paratii.core.html">paratii.core</a></li><li><a href="paratii.core.users.html">paratii.core.users</a></li><li><a href="paratii.core.vids.html">paratii.core.vids</a></li><li><a href="paratii.db.html">paratii.db</a></li><li><a href="paratii.db.users.html">paratii.db.users</a></li><li><a href="paratii.db.vids.html">paratii.db.vids</a></li><li><a href="paratii.eth.html">paratii.eth</a></li><li><a href="paratii.eth.events.html">paratii.eth.events</a></li><li><a href="paratii.eth.tcr.html">paratii.eth.tcr</a></li><li><a href="paratii.eth.users.html">paratii.eth.users</a></li><li><a href="paratii.eth.vids.html">paratii.eth.vids</a></li><li><a href="paratii.eth.vouchers.html">paratii.eth.vouchers</a></li><li><a href="paratii.eth.wallet.html">paratii.eth.wallet</a></li><li><a href="paratii.ipfs.html">paratii.ipfs</a></li><li><a href="paratii.ipfs.uploader.html">paratii.ipfs.uploader</a></li>
 				</ul>
 			</li>
 			
@@ -67,111 +67,145 @@
 <div class="row">
 
 	
-	<div class="col-md-12">
+	<div class="col-md-8">
 	
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: paratii.core.users.js</h1>
-    
+	<h1 class="page-title">Modules</h1>
 <section>
-    <article>
-        <pre
-            class="sunlight-highlight-javascript ">const joi = require('joi')
 
-/**
- * Utilities to create and manipulate information about the users on the blockchain.
- * @param {Object} config configuration object to initialize Paratii object
- * @class paratii.core.users
- */
-export class ParatiiCoreUsers {
-  constructor (config) {
-    const schema = joi.object({
-      'db.provider': joi.string().default(null)
-    }).unknown()
+<header>
+    
+        <h2>
+        
+        </h2>
+        
+    
+</header>
 
-    const result = joi.validate(config, schema)
-    const error = result.error
-    if (error) throw error
-    this.config = result.value
-    this.paratii = this.config.paratii
-  }
-/**
- * Creates a user, fields id, name and email go to the smart contract Users, other fields are stored on IPFS.
- * @param  {Object}  options information about the video ( id, name, email ... )
- * @return {Promise}         the id of the newly created user
- * @example
- *            paratii.core.users.create({
- *              id: 'some-user-id',
- *              name: 'A user name',
- *              email: 'some@email.com',
- *              ...
- *             })
- * @memberof paratii.core.users
- */
-  async create (options) {
-    let keysForBlockchain = ['id', 'name', 'email']
-    let optionsKeys = Object.keys(options)
-    let optionsBlockchain = {}
-    let optionsIpfs = {}
-    optionsKeys.forEach(function (key) {
-      if (keysForBlockchain.includes(key)) {
-        optionsBlockchain[key] = options[key]
-      } else {
-        optionsIpfs[key] = options[key]
-      }
-    })
-    let hash = await this.paratii.ipfs.addJSON(optionsIpfs)
-    optionsBlockchain['ipfsData'] = hash
-    return this.paratii.eth.users.create(optionsBlockchain)
-  }
-  /**
-   * retrieve data about the user
-   * @param  {String} id user univocal id
-   * @return {Object}    data about the user
-   * @example paratii.core.users.get('some-user-id')
-   * @memberof paratii.core.users
-  */
-  get (id) {
-    return this.paratii.db.users.get(id)
-  }
-  /**
-   * Updates a user's details. name and email are defined in the smart contract Users, other fields get written to IPFS.
-   * @param  {String}  userId  user univocal id
-   * @param  {Object}  options updated data i.e. { name: 'A new user name' }
-   * @return {Promise}         updated data about the user
-   * @example paratii.core.users.update('some-user-id', {name: 'A new user name'})
-   * @memberof paratii.core.users
-   */
-  async update (userId, options) {
-    const schema = joi.object({
-      name: joi.string().default(null),
-      email: joi.string().default(null)
-    })
 
-    const result = joi.validate(options, schema)
-    const error = result.error
-    if (error) throw error
-    options = result.value
+<article>
+    <div class="container-overview">
+    
+        
 
-    let data = await this.get(userId)
-    for (let key in options) {
-      if (options[key] !== null) {
-        data[key] = options[key]
-      }
-    }
+        
+<dl class="details">
+    
 
-    data['id'] = userId
+	
 
-    await this.create(data)
+	
 
-    return data
-  }
-}
-</pre>
-    </article>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Classes</h3>
+
+        <dl>
+            <dt><a href="paratii.html">paratii</a></dt>
+            <dd></dd>
+        
+            <dt><a href="paratii.core.html">core</a></dt>
+            <dd></dd>
+        
+            <dt><a href="paratii.core.users.html">users</a></dt>
+            <dd></dd>
+        
+            <dt><a href="paratii.core.vids.html">vids</a></dt>
+            <dd></dd>
+        
+            <dt><a href="paratii.db.html">db</a></dt>
+            <dd></dd>
+        
+            <dt><a href="paratii.db.users.html">users</a></dt>
+            <dd></dd>
+        
+            <dt><a href="paratii.db.vids.html">vids</a></dt>
+            <dd></dd>
+        
+            <dt><a href="paratii.eth.html">eth</a></dt>
+            <dd></dd>
+        
+            <dt><a href="paratii.eth.events.html">events</a></dt>
+            <dd></dd>
+        
+            <dt><a href="paratii.eth.tcr.html">tcr</a></dt>
+            <dd></dd>
+        
+            <dt><a href="paratii.eth.users.html">users</a></dt>
+            <dd></dd>
+        
+            <dt><a href="paratii.eth.vids.html">vids</a></dt>
+            <dd></dd>
+        
+            <dt><a href="paratii.eth.vouchers.html">vouchers</a></dt>
+            <dd></dd>
+        
+            <dt><a href="paratii.eth.wallet.html">wallet</a></dt>
+            <dd></dd>
+        
+            <dt><a href="paratii.ipfs.html">ipfs</a></dt>
+            <dd></dd>
+        
+            <dt><a href="paratii.ipfs.uploader.html">uploader</a></dt>
+            <dd></dd>
+        </dl>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
 </section>
-
 
 
 
@@ -181,6 +215,10 @@ export class ParatiiCoreUsers {
 
 	<div class="clearfix"></div>
 
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
 	
 
 </div>
@@ -209,7 +247,7 @@ export class ParatiiCoreUsers {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2018-04-05T18:24:26+02:00
+		on 2018-04-05T18:14:54+02:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

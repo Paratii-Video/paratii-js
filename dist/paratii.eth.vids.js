@@ -328,7 +328,6 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
      * @param  {Object}  options data about the video to like
      * @param {String} options.videoId univocal video id
      * @param {Boolean} options.liked true/false
-     * @param  {Object}  type    REMOVE ???? NOT USED
      * @return {Promise}         transaction recording the like
      * @example await paratii.eth.vids.sendLike({ videoId: 'some-id', liked: true })
      * @example await paratii.eth.vids.sendLike({ videoId: 'some-id', liked: false })
@@ -337,7 +336,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
 
   }, {
     key: 'sendLike',
-    value: function sendLike(options, type) {
+    value: function sendLike(options) {
       var schema, result, error, msg, contract, contract2, videoInfo, _msg, tx;
 
       return _regenerator2.default.async(function sendLike$(_context6) {
