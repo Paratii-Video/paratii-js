@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Paratii Source: paratii.ipfs.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.simplex.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top ">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Paratii</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="paratii.html">paratii</a></li><li><a href="paratii.core.html">paratii.core</a></li><li><a href="paratii.core.users.html">paratii.core.users</a></li><li><a href="paratii.core.vids.html">paratii.core.vids</a></li><li><a href="paratii.db.html">paratii.db</a></li><li><a href="paratii.db.users.html">paratii.db.users</a></li><li><a href="paratii.db.vids.html">paratii.db.vids</a></li><li><a href="paratii.eth.html">paratii.eth</a></li><li><a href="paratii.eth.events.html">paratii.eth.events</a></li><li><a href="paratii.eth.tcr.html">paratii.eth.tcr</a></li><li><a href="paratii.eth.users.html">paratii.eth.users</a></li><li><a href="paratii.eth.vids.html">paratii.eth.vids</a></li><li><a href="paratii.eth.vouchers.html">paratii.eth.vouchers</a></li><li><a href="paratii.eth.wallet.html">paratii.eth.wallet</a></li><li><a href="paratii.ipfs.html">paratii.ipfs</a></li><li><a href="paratii.ipfs.uploader.html">paratii.ipfs.uploader</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: paratii.ipfs.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript ">import Protocol from 'paratii-protocol'
+import { ipfsSchema, accountSchema } from './schemas.js'
+import joi from 'joi'
+import { EventEmitter } from 'events'
+import Uploader from './paratii.ipfs.uploader.js'
+// const Uploader = require('./paratii.ipfs.uploader.js')
+
+global.Buffer = global.Buffer || require('buffer').Buffer
+
+/**
+ * Contains functions to interact with the IPFS instance.
+ * @param {Object} config configuration object to initialize Paratii object
+ * @class paratii.ipfs
+ * @memberof paratii
+ */
+export class ParatiiIPFS extends EventEmitter {
+  constructor (config) {
+    super()
+    const schema = joi.object({
+      ipfs: ipfsSchema,
+      account: accountSchema,
+      verbose: joi.bool().default(false)
+    //   onReadyHook: joi.array().ordered().default([]),
+    //   protocol: joi.string().default(null),
+    })
+
+    const result = joi.validate(config, schema, {allowUnknown: true})
+    if (result.error) throw result.error
+    this.config = config
+    this.config.ipfs = result.value.ipfs
+    this.config.account = result.value.account
+    this.uploader = new Uploader({ipfs: this.config.ipfs, paratiiIPFS: this})
+  }
+  /**
+   * Adds the file to ipfs
+   * @param  {ReadStream}  fileStream ReadStream of the file. Can be created with fs.createReadStream(path)
+   * @return {Promise}            data about the added file (path,multihash,size)
+   * @example
+   * let path = 'test/data/some-file.txt'
+   * let fileStream = fs.createReadStream(path)
+   * let result = await paratiiIPFS.add(fileStream)
+   * @memberof paratii.ipfs
+   */
+  async add (fileStream) {
+    let ipfs = await this.getIPFSInstance()
+    return ipfs.files.add(fileStream)
+  }
+  /**
+   * get file from ipfs
+   * @param  {String}  hash multihash of the file
+   * @return {Promise}      the file (path,content)
+   * @example
+   * let result = await paratiiIPFS.add(fileStream)
+   * let hash = result[0].hash
+   * let fileContent = await paratiiIPFS.get(hash)
+   * @memberof paratii.ipfs
+   */
+  async get (hash) {
+    let ipfs = await this.getIPFSInstance()
+    return ipfs.files.get(hash)
+  }
+  /**
+   * log messages on the console if verbose is set
+   * @param  {String} msg text to log
+   * @example
+   * paratii.ipfs.log("some-text")
+   * @memberof paratii.ipfs
+   */
+  log (...msg) {
+    if (this.config.verbose) {
+      console.log(...msg)
+    }
+  }
+  /**
+   * log warns on the console if verbose is set
+   * @param  {String} msg warn text
+   * @example
+   * paratii.ipfs.warn("some-text")
+   * @memberof paratii.ipfs
+   */
+  warn (...msg) {
+    if (this.config.verbose) {
+      console.warn(...msg)
+    }
+  }
+  /**
+  * log errors on the console if verbose is set
+  * @param  {String} msg error message
+  * @example
+  * paratii.ipfs.error("some-text")
+  * @memberof paratii.ipfs
+  */
+  error (...msg) {
+    if (this.config.verbose) {
+      console.error(...msg)
+    }
+  }
+  /**
+   * get an ipfs instance of jsipfs. Singleton pattern
+   * @return {Object} Ipfs instance
+   * @example ipfs = await paratii.ipfs.getIPFSInstance()
+   * @memberof paratii.ipfs
+   */
+  getIPFSInstance () {
+    return new Promise((resolve, reject) => {
+      if (this.ipfs) {
+        resolve(this.ipfs)
+      } else {
+        let config = this.config
+        // there will be no joi in IPFS (pun indended)
+        import(/* webpackChunkName: 'ipfs' */ 'ipfs') // eslint-disable-line
+        .then((Ipfs) => {
+          let ipfs = new Ipfs({
+            bitswap: {
+              // maxMessageSize: 256 * 1024
+              maxMessageSize: this.config.ipfs['bitswap.maxMessageSize']
+            },
+            start: true,
+            repo: config.ipfs.repo || '/tmp/test-repo-' + String(Math.random()),
+            config: {
+              Addresses: {
+                Swarm: this.config.ipfs.swarm
+                // [
+                //   '/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star',
+                //   '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/'
+                // ]
+              },
+              Bootstrap: this.config.ipfs.bootstrap
+              // [
+              //   '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
+              // ]
+            }
+          })
+
+          this.ipfs = ipfs
+
+          ipfs.on('ready', () => {
+            this.log('[IPFS] node Ready.')
+
+            ipfs._bitswap.notifications.on('receivedNewBlock', (peerId, block) => {
+              this.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length)
+              this.log('---------[IPFS] bitswap LedgerMap ---------------------')
+              ipfs._bitswap.engine.ledgerMap.forEach((ledger, peerId, ledgerMap) => {
+                this.log(`${peerId} : ${JSON.stringify(ledger.accounting)}\n`)
+              })
+              this.log('-------------------------------------------------------')
+            })
+
+            ipfs.id().then((id) => {
+              let peerInfo = id
+              this.id = id
+              this.log(`[IPFS] id:  ${peerInfo}`)
+              let ptiAddress = this.config.account.address || 'no_address'
+              this.protocol = new Protocol(
+                ipfs._libp2pNode,
+                ipfs._repo.blocks,
+                // add ETH Address here.
+                ptiAddress
+              )
+
+              this.uploader._node = ipfs
+              // this.uploader.setOptions({
+              //   node: ipfs,
+              //   chunkSize: 128 * 1024
+              // })
+
+              this.protocol.notifications.on('message:new', (peerId, msg) => {
+                this.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg)
+              })
+              // emit all commands.
+              // NOTE : this will be changed once protocol upgrades are ready.
+              this.protocol.notifications.on('command', (peerId, command) => {
+                this.emit('protocol:incoming', peerId, command)
+              })
+
+              this.ipfs = ipfs
+              this.protocol.start(() => {
+                setTimeout(() => {
+                  resolve(ipfs)
+                }, 10)
+              })
+            })
+          })
+
+          ipfs.on('error', (err) => {
+            if (err) {
+              // this.log('IPFS node ', ipfs)
+              this.error('[IPFS] Error ', err)
+              reject(err)
+            }
+          })
+        })
+      }
+    })
+  }
+  /**
+   * adds a data Object to the IPFS local instance
+   * @param  {Object}  data JSON object to store
+   * @return {Promise}      promise with the ipfs multihash
+   * @example let result = await paratiiIPFS.addJSON(data)
+   * @memberof paratii.ipfs
+   */
+  async addJSON (data) {
+    let ipfs = await this.getIPFSInstance()
+    // if (!this.ipfs || !this.ipfs.isOnline()) {
+    //   throw new Error('IPFS node is not ready, please trigger getIPFSInstance first')
+    // }
+    const obj = {
+      Data: Buffer.from(JSON.stringify(data)),
+      Links: []
+    }
+    let node
+    try {
+      // node = await ipfs.object.put(obj)
+      node = await ipfs.files.add(obj.Data)
+    } catch (e) {
+      if (e) throw e
+    }
+
+    return node[0].hash
+  }
+
+  /**
+   * convenient method to add JSON and send it for persistance storage.
+   * @param  {object}  data JSON object to store
+   * @return {string}      returns multihash of the stored object.
+   * @example let result = await paratiiIPFS.addAndPinJSON(data)
+   * @memberof paratii.ipfs
+   */
+  async addAndPinJSON (data) {
+    let hash = await this.addJSON(data)
+    let pinFile = () => {
+      let pinEv = this.uploader.pinFile(hash,
+        { author: this.config.account.address }
+      )
+      pinEv.on('pin:error', (err) => {
+        console.warn('pin:error:', hash, ' : ', err)
+        pinEv.removeAllListeners()
+      })
+      pinEv.on('pin:done', (hash) => {
+        this.log('pin:done:', hash)
+        pinEv.removeAllListeners()
+      })
+      return pinEv
+    }
+
+    let pinEv = pinFile()
+
+    pinEv.on('pin:error', (err) => {
+      console.warn('pin:error:', hash, ' : ', err)
+      console.log('trying again')
+      pinEv = pinFile()
+    })
+
+    return hash
+  }
+  /**
+  * gets a JSON object stored in IPFS
+  * @param  {String}  multihash ipfs multihash of the object
+  * @return {Promise}           requested Object
+  * @example let jsonObj = await paratiiIPFS.getJSON('some-multihash')
+  * @memberof paratii.ipfs
+  */
+  async getJSON (multihash) {
+    let ipfs = await this.getIPFSInstance()
+    let node
+    try {
+      node = await ipfs.files.cat(multihash)
+    } catch (e) {
+      if (e) throw e
+    }
+
+    return JSON.parse(node.toString())
+  }
+  /**
+   * Starts the IPFS node
+   * @param  {Function} callback callback function
+   * @return {?}            DON'T KNOW?
+   * @example ?
+   */
+  // TODO: return a promise
+  start (callback) {
+    if (this.ipfs &amp;&amp; this.ipfs.isOnline()) {
+      console.log('IPFS is already running')
+      return callback()
+    }
+
+    this.getIPFSInstance().then(function (ipfs) { callback() })
+  }
+  /**
+   * Stops the IPFS node.
+   * @param  {Function} callback callback function
+   * @return {?}            DON'T KNOW?
+   * @example ?
+   * @memberof paratii.ipfs
+   */
+  stop (callback) {
+    if (!this.ipfs || !this.ipfs.isOnline()) {
+      if (callback) { return callback() }
+    }
+    if (this.ipfs) {
+      this.ipfs.stop(() => {
+        setImmediate(() => {
+          callback()
+        })
+      })
+    }
+  }
+}
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	
+		on 2018-04-05T11:41:50+02:00
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : false,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

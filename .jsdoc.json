@@ -1,0 +1,16 @@
+{
+  "source": {
+    "include": ["./lib/"]
+  },
+  "templates": {
+    "default": {
+      "useLongnameInNav": true
+    },
+    "systemName": "Paratii",
+    "outputSourceFiles": true,
+    "search": true
+  },
+  "opts": {
+    "template": "node_modules/ink-docstrap/template"
+  }
+}

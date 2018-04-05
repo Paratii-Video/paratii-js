@@ -22,7 +22,8 @@
     "docs": "npm run docs-html && npm run docs-md",
     "docs-html": "documentation build lib/** -f html -o docs",
     "docs-md": "documentation build lib/** -f md -o docs/jsdoc.md",
-    "docs-watch": "documentation build lib/** -f html -o docs --watch"
+    "docs-watch": "documentation build lib/** -f html -o docs --watch",
+    "jsdoc-gen": "jsdoc --configure .jsdoc.json && jsdoc2md lib/*.js > newdoc.md"
   },
   "dependencies": {
     "async": "^2.6.0",
@@ -32,6 +33,7 @@
     "bip39": "^2.5.0",
     "es6-promise": "^4.2.4",
     "hdkey": "^0.8.0",
+    "ink-docstrap": "^1.3.2",
     "ipfs": "github:Paratii-Video/js-ipfs#paratii/v0.28.2",
     "isomorphic-fetch": "^2.2.1",
     "joi": "^13.1.2",
@@ -62,11 +64,17 @@
     "chai-as-promised": "^7.1.1",
     "documentation": "^6.1.0",
     "file-api": "^0.10.4",
+    "jsdoc": "^3.5.5",
+    "jsdoc-memberof-namespace": "^2.2.0",
+    "jsdoc-to-markdown": "^4.0.1",
+    "marked": "^0.3.19",
+    "minami": "^1.2.3",
     "mocha": "^4.1.0",
     "nock": "^9.1.6",
     "postinstall-prepare": "^1.0.1",
     "pre-commit": "^1.2.2",
     "standard": "^10.0.3",
+    "tui-jsdoc-template": "^1.2.2",
     "webpack": "^3.10.0",
     "why-is-node-running": "^1.2.3"
   },
@@ -101,7 +109,8 @@
     ],
     "ignore": [
       "dist",
-      "docs"
+      "docs",
+      "out"
     ]
   },
   "pre-commit": [
