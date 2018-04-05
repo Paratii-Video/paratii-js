@@ -31,7 +31,12 @@ describe('ParatiiIPFS: :', function () {
     assert.isOk(paratiiIPFS)
     done()
   })
-
+  it('ipfs.start() should return a promise', () => {
+    assert.isOk(paratiiIPFS.start() instanceof Promise)
+  })
+  it('ipfs.stop() should return a promise', () => {
+    assert.isOk(paratiiIPFS.stop() instanceof Promise)
+  })
   it('should create an instance without trouble', (done) => {
     paratiiIPFS.getIPFSInstance().then((ipfs) => {
       assert.isOk(paratiiIPFS)

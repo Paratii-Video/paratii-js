@@ -477,14 +477,18 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
 
   }, {
     key: 'start',
-    value: function start(callback) {
-      if (this.ipfs && this.ipfs.isOnline()) {
-        console.log('IPFS is already running');
-        return callback();
-      }
+    value: function start() {
+      var _this4 = this;
 
-      this.getIPFSInstance().then(function (ipfs) {
-        callback();
+      return new _promise2.default(function (resolve, reject) {
+        if (_this4.ipfs && _this4.ipfs.isOnline()) {
+          console.log('IPFS is already running');
+          return resolve();
+        }
+
+        _this4.getIPFSInstance().then(function (ipfs) {
+          resolve();
+        });
       });
     }
     /**
