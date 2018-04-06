@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Paratii Source: paratii.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.simplex.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top ">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Paratii</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="paratii.html">paratii</a></li><li><a href="paratii.core.html">paratii.core</a></li><li><a href="paratii.core.users.html">paratii.core.users</a></li><li><a href="paratii.core.vids.html">paratii.core.vids</a></li><li><a href="paratii.db.html">paratii.db</a></li><li><a href="paratii.db.users.html">paratii.db.users</a></li><li><a href="paratii.db.vids.html">paratii.db.vids</a></li><li><a href="paratii.eth.html">paratii.eth</a></li><li><a href="paratii.eth.events.html">paratii.eth.events</a></li><li><a href="paratii.eth.tcr.html">paratii.eth.tcr</a></li><li><a href="paratii.eth.users.html">paratii.eth.users</a></li><li><a href="paratii.eth.vids.html">paratii.eth.vids</a></li><li><a href="paratii.eth.vouchers.html">paratii.eth.vouchers</a></li><li><a href="paratii.eth.wallet.html">paratii.eth.wallet</a></li><li><a href="paratii.ipfs.uploader.html">paratii.ipfs.uploader</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="global.html">Global</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: paratii.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript ">import { ParatiiCore } from './paratii.core.js'
+import { ParatiiDb } from './paratii.db.js'
+import { ParatiiEth } from './paratii.eth.js'
+import { ParatiiIPFS } from './paratii.ipfs.js'
+import { ipfsSchema, ethSchema, accountSchema, dbSchema } from './schemas.js'
+
+const joi = require('joi')
+const utils = require('./utils.js')
+
+//
+/**
+ * Paratii library main object
+ * The Paratii object serves as the general entry point for interacting with the family of Paratii
+ * contracts that are deployed on the blockchain, utilities to run and interact with a local IPFS node,
+ * and utilities to interact with the Paratii index.
+ * @class Paratii
+ * @param {accountSchema} opts options object to configure paratii library
+ * @param {String} opts.provider optional - the address of an ethereum node (defaults to localhost:8754)
+ * @param {String} opts.registryAddress optional - the address where the Paratii Contract registry can be found
+ * @param {String} opts.address optional - address of the operator/user
+ * @param {String} opts.privateKey optional - private key of the user
+ * @param {Object} opts.ipfs TODO fix ipfs.repo --> ipfsrepo
+ * @param {String} opts.ipfs.repo optional - namespace of the ipfs repository
+ * @param {Object} opts.db TODO fix db.provider --> dbprovider
+ * @param {String} opts.db.provider optional - baseURL of the mongoDb mirror
+ * @param {String} opts.mnemonic optional - mnemonic of the user
+ *
+ * @example     paratii = new Paratii({ 'eth.provider': 'http://localhost:8545', address: 'some-user-id', privateKey: 'some-user-priv-key'})
+ * @class paratii
+ */
+
+class Paratii {
+  constructor (opts = {}) {
+    const schema = joi.object({
+      account: accountSchema,
+      eth: ethSchema,
+      db: dbSchema,
+      ipfs: ipfsSchema
+    })
+
+    const result = joi.validate(opts, schema)
+    if (result.error) throw result.error
+    this.config = result.value
+    this.config.paratii = this
+    this.eth = new ParatiiEth(this.config)
+    this.core = new ParatiiCore(this.config)
+    this.db = new ParatiiDb(this.config)
+    this.ipfs = new ParatiiIPFS(this.config)
+  }
+  /**
+   * Set the ethereum address what will be used to sign all transactions
+   * @param {String} address address of the operator/user
+   * @param {String} privateKey optional - private key of the operator/user
+   * @example paratii.setAccount('some-user-id','some-user-pub-key')
+   * @memberof paratii
+   */
+  setAccount (address, privateKey) {
+    this.eth.setAccount(address, privateKey)
+  }
+  /**
+   * Set the address of the ParatiiRegistry contract
+   * @param {String} address address of the ParatiiRegistry contract
+   * @example paratii.setRegistryAddress('some-address')
+   * @memberof paratii
+  */
+  setRegistryAddress (address) {
+    return this.eth.setRegistryAddress(address)
+  }
+
+  /**
+   * return an array of strings with diagnostic info
+   * @return {Promise} array of strings with diagnostic info
+   * @example paratii.diagnose()
+   * @memberof paratii
+   */
+  async diagnose () {
+    let msg, address, msgs
+    let isOk = true
+    msgs = []
+    function log (msg) {
+      msgs.push(msg)
+    }
+    log('Paratii was initialized with the following options:')
+    log(this.config)
+    log('Checking main account')
+    if (this.config.account.address &amp;&amp; this.config.account.privateKey) {
+      log(`Your private key: ${this.config.account.privateKey}`)
+      log(`Your private key: ${this.config.account.privateKey}`)
+      log(`First wallet account: ${this.eth.web3.eth.accounts.wallet[0].address}`)
+    }
+    address = this.eth.getRegistryAddress()
+    if (!address) {
+      log('*** No registry address found!')
+      log(`Value of this.config['eth.registryAddress']: ${this.config['eth.registryAddress']}`)
+      isOk = false
+    } else {
+      log('checking deployed code of Registry...')
+      msg = await this.eth.web3.eth.getCode(address)
+      if (msg === '0x') {
+        log(`ERROR: no code was found on the registry address ${address}`)
+        log(msg)
+      } else {
+        log('... seems ok...')
+        // log(`We found the following code on the registry address ${address}`)
+        // log(msg)
+      }
+      log(`checking for addresses on registry@${address}`)
+      let registry = await this.eth.getContract('Registry')
+      log(`(registry address is ${registry.options.address})`)
+      for (var name in this.eth.contracts) {
+        if (name !== 'Registry') {
+          address = await registry.methods.getContract(name).call()
+          log(`address of ${name}: ${address}`)
+        }
+      }
+    }
+    if (isOk) {
+      log('---- everything seems fine -----')
+    } else {
+      log('***** Something is wrong *****')
+    }
+    return msgs
+  }
+}
+
+export default Paratii
+export { Paratii, utils, ParatiiIPFS, ParatiiDb, ParatiiEth }
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	
+		on 2018-04-06T12:36:38+02:00
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : false,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

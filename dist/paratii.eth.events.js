@@ -21,6 +21,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 /**
  * eth.events implements a part of the API of the EventEmitter, that can be used to manage subscriptions to Ethereum events.
+ * @class paratii.eth.events
  */
 var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
   function ParatiiEthEvents(config) {
@@ -90,6 +91,7 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
    * @param  {String} eventType Event type
    * @return {Object}           Event Object
    * @example let structuredEvent = this._getStructuredEvent('some-event')
+   * @memberof paratii.eth.events
    */
 
 
@@ -119,6 +121,7 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
      * @param  {Function}  options   function called when the events occurs
      * @param  {?}  listener  optional ?
      * @return {Promise}           [description]
+     * @memberof paratii.eth.events
      */
 
   }, {
@@ -147,10 +150,12 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
     }
     /**
      * [_addListener description]
-     * @param  {[type]}  eventType [description]
-     * @param  {[type]}  listener  [description]
-     * @param  {[type]}  options   [description]
+     * TODO RIVEDI I TIPI
+     * @param  {Object}  eventType [description]
+     * @param  {Object}  listener  [description]
+     * @param  {Object}  options   [description]
      * @return {Promise}           [description]
+     * @memberof paratii.eth.events
      */
 
   }, {
@@ -216,8 +221,10 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
     }
     /**
      * [_isFunction description]
-     * @param  {[type]}  functionToCheck [description]
+     * TODO RIVEDI I TIPI
+     * @param  {Object}  functionToCheck [description]
      * @return {Boolean}                 [description]
+     * @memberof paratii.eth.events
      */
 
   }, {
@@ -228,8 +235,10 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
     }
     /**
      * [addSubscription description]
-     * @param {[type]} eventType    [description]
-     * @param {[type]} subscription [description]
+     * TODO RIVEDI I TIPI
+     * @param {Object} eventType    [description]
+     * @param {Object} subscription [description]
+     * @memberof paratii.eth.events
      */
 
   }, {
@@ -249,8 +258,10 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
     }
     /**
      * [removeAllSubscriptions description]
-     * @param  {[type]} eventType [description]
-     * @return {[type]}           [description]
+     * TODO RIVEDI I TIPI
+     * @param  {Object} eventType [description]
+     * @return {Object}           [description]
+     * @memberof paratii.eth.events
      */
 
   }, {

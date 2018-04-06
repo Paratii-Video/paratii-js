@@ -24,6 +24,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var joi = require('joi');
 /**
  * Functions for redeeming vouchers
+ * @class paratii.eth.vouchers
  */
 
 var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
@@ -37,7 +38,7 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
    * Get the contract instance of the vouchers contract
    * @return {Promise} Object representing the contract
    * @example let contract = await paratii.eth.vids.getVouchersContract()
-   *
+   * @memberof paratii.eth.vouchers
   */
 
 
@@ -79,6 +80,7 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
      * @param {Number} options.amount amount of PTI in wei of this voucher
      * @return {Promise}         the voucher id
      * @example await paratii.eth.vouchers.create({ voucherCode: 'some-id', amount: 10 })
+     * @memberof paratii.eth.vouchers
      */
 
   }, {
@@ -170,6 +172,7 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
     }
     /**
      * throws a test error
+     * @memberof paratii.eth.vouchers
      */
 
   }, {
@@ -192,9 +195,10 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
     /**
      * Generates a given number of vouchers with unique IDs, and the given amount, and returns an array of objects.
      * @param  {Number}  number number of voucher to create
-     * @param  {[type]}  amount amount of every voucher
+     * @param  {Number}  amount amount of every voucher
      * @return {Promise}        Object containing every voucher created
      * @example let vouchers = await paratii.eth.vouchers.createVouchers(10, 10)
+     * @memberof paratii.eth.vouchers
      */
 
   }, {
@@ -243,6 +247,7 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
      * @param  {String}  voucherCode univocal voucher code
      * @return {Promise}             true if everything goes well, otherwise throws an error
      * @example await paratii.eth.vouchers.redeem('some-code')
+     * @memberof paratii.eth.vouchers
      */
 
   }, {
