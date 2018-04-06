@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Paratii Class: uploader</title>
+	<title>Paratii Class: ParatiiIPFS</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="paratii.html">paratii</a></li><li><a href="paratii.core.html">paratii.core</a></li><li><a href="paratii.core.users.html">paratii.core.users</a></li><li><a href="paratii.core.vids.html">paratii.core.vids</a></li><li><a href="paratii.db.html">paratii.db</a></li><li><a href="paratii.db.users.html">paratii.db.users</a></li><li><a href="paratii.db.vids.html">paratii.db.vids</a></li><li><a href="paratii.eth.html">paratii.eth</a></li><li><a href="paratii.eth.events.html">paratii.eth.events</a></li><li><a href="paratii.eth.tcr.html">paratii.eth.tcr</a></li><li><a href="paratii.eth.users.html">paratii.eth.users</a></li><li><a href="paratii.eth.vids.html">paratii.eth.vids</a></li><li><a href="paratii.eth.vouchers.html">paratii.eth.vouchers</a></li><li><a href="paratii.eth.wallet.html">paratii.eth.wallet</a></li><li><a href="paratii.ipfs.html">paratii.ipfs</a></li><li><a href="paratii.ipfs.uploader.html">paratii.ipfs.uploader</a></li>
+					<li><a href="paratii.html">paratii</a></li><li><a href="paratii.core.html">paratii.core</a></li><li><a href="paratii.core.users.html">paratii.core.users</a></li><li><a href="paratii.core.vids.html">paratii.core.vids</a></li><li><a href="paratii.db.html">paratii.db</a></li><li><a href="paratii.db.users.html">paratii.db.users</a></li><li><a href="paratii.db.vids.html">paratii.db.vids</a></li><li><a href="paratii.eth.html">paratii.eth</a></li><li><a href="paratii.eth.events.html">paratii.eth.events</a></li><li><a href="paratii.eth.tcr.html">paratii.eth.tcr</a></li><li><a href="paratii.eth.users.html">paratii.eth.users</a></li><li><a href="paratii.eth.vids.html">paratii.eth.vids</a></li><li><a href="paratii.eth.vouchers.html">paratii.eth.vouchers</a></li><li><a href="paratii.eth.wallet.html">paratii.eth.wallet</a></li><li><a href="paratii.ipfs.uploader.html">paratii.ipfs.uploader</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li>
 				</ul>
 			</li>
 			
@@ -72,16 +72,16 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: uploader</h1>
+	<h1 class="page-title">Class: ParatiiIPFS</h1>
 <section>
 
 <header>
     
         <h2>
-            <span class="ancestors"><a href="paratii.html">paratii</a><a href="paratii.ipfs.html">.ipfs</a>.</span>
-        
-        uploader
+        ParatiiIPFS
         </h2>
+        
+            <div class="class-description">Contains functions to interact with the IPFS instance.</div>
         
     
 </header>
@@ -93,16 +93,12 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="uploader"><span class="type-signature"></span>new uploader(opts)</h4>
+    <h4 class="name" id="ParatiiIPFS"><span class="type-signature"></span>new ParatiiIPFS(config)</h4>
     
     
 </dt>
 <dd>
 
-    
-    <div class="description">
-        IPFS UPLOADER : Paratii IPFS uploader interface.
-    </div>
     
 
     
@@ -136,7 +132,7 @@
 
         <tr>
             
-                <td class="name"><code>opts</code></td>
+                <td class="name"><code>config</code></td>
             
 
             <td class="type">
@@ -153,7 +149,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">configuration object to initialize Paratii object</td>
         </tr>
 
     
@@ -197,7 +193,7 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.ipfs.uploader.js.html">paratii.ipfs.uploader.js</a>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -228,17 +224,6 @@
 
     
     </div>
-
-    
-        <h3 class="subsection-title">Extends</h3>
-
-        
-
-
-    <ul>
-        <li>EventEmitter</li>
-    </ul>
-
 
     
 
@@ -259,7 +244,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="_pinResponseHandler"><span class="type-signature">&lt;static> </span>Uploader#_pinResponseHandler(ev)</h4>
+    <h4 class="name" id="add"><span class="type-signature">&lt;async> </span>add(fileStream)</h4>
     
     
 </dt>
@@ -267,7 +252,7 @@
 
     
     <div class="description">
-        [_pinResponseHandler description]
+        Adds the file to ipfs
     </div>
     
 
@@ -302,13 +287,13 @@
 
         <tr>
             
-                <td class="name"><code>ev</code></td>
+                <td class="name"><code>fileStream</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">ReadStream</span>
 
 
 
@@ -319,7 +304,7 @@
 
             
 
-            <td class="description last">[description]</td>
+            <td class="description last">ReadStream of the file. Can be created with fs.createReadStream(path)</td>
         </tr>
 
     
@@ -363,7 +348,7 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.ipfs.uploader.js.html">paratii.ipfs.uploader.js</a>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -392,825 +377,7 @@
     
             
 <div class="param-desc">
-    [description]
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="_signalTranscoder"><span class="type-signature">&lt;static> </span>Uploader#_signalTranscoder(files, ev)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        [_signalTranscoder description]
-TODO RIVEDI I TIPI
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>files</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">[description]</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>ev</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">[description]</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.ipfs.uploader.js.html">paratii.ipfs.uploader.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    [description]
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="_transcoderRespHander"><span class="type-signature">&lt;static> </span>Uploader#_transcoderRespHander(ev)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        handles responses from the paratii-protocol in case of transcoding.
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>ev</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">EventEmitter</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the transcoding job EventEmitter</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.ipfs.uploader.js.html">paratii.ipfs.uploader.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    returns various events based on transcoder response.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">function</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">?</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="add"><span class="type-signature">&lt;static> </span>Uploader#add(file)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        uploads a single file to *local* IPFS node
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>file</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">File</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">HTML5 File Object.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.ipfs.uploader.js.html">paratii.ipfs.uploader.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    checkout the upload function below for details.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">EventEmitter</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">let uploaderEv = paratiiIPFS.uploader.add(files)</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="addAndTranscode"><span class="type-signature">&lt;static> </span>Uploader#addAndTranscode(files)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        convenience method for adding and transcoding files
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>files</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Array of HTML5 File Objects</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.ipfs.uploader.js.html">paratii.ipfs.uploader.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="addDirectory"><span class="type-signature">&lt;static> </span>Uploader#addDirectory(dirPath)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        upload an entire directory to IPFS
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>dirPath</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">path to directory</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.ipfs.uploader.js.html">paratii.ipfs.uploader.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    returns the {multihash, path, size} for the uploaded folder.
+    data about the added file (path,multihash,size)
 </div>
 
 
@@ -1234,7 +401,9 @@ TODO RIVEDI I TIPI
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">?</pre>
+    <pre class="sunlight-highlight-javascript">let path = &#x27;test/data/some-file.txt&#x27;
+let fileStream = fs.createReadStream(path)
+let result = await paratiiIPFS.add(fileStream)</pre>
 
 
     
@@ -1244,7 +413,7 @@ TODO RIVEDI I TIPI
             
 <hr>
 <dt>
-    <h4 class="name" id="fsFileToPull"><span class="type-signature">&lt;static> </span>Uploader#fsFileToPull(filePath)</h4>
+    <h4 class="name" id="addAndPinJSON"><span class="type-signature">&lt;async> </span>addAndPinJSON(data)</h4>
     
     
 </dt>
@@ -1252,7 +421,7 @@ TODO RIVEDI I TIPI
 
     
     <div class="description">
-        returns a generic file Object from a file path
+        convenient method to add JSON and send it for persistance storage.
     </div>
     
 
@@ -1287,7 +456,496 @@ TODO RIVEDI I TIPI
 
         <tr>
             
-                <td class="name"><code>filePath</code></td>
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">JSON object to store</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    returns multihash of the stored object.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let result = await paratiiIPFS.addAndPinJSON(data)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="addJSON"><span class="type-signature">&lt;async> </span>addJSON(data)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        adds a data Object to the IPFS local instance
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">JSON object to store</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    promise with the ipfs multihash
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let result = await paratiiIPFS.addJSON(data)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="error"><span class="type-signature"></span>error(msg)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        log errors on the console if verbose is set
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>msg</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                    &lt;repeatable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last">error message</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">paratii.ipfs.error(&quot;some-text&quot;)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="get"><span class="type-signature">&lt;async> </span>get(hash)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        get file from ipfs
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>hash</code></td>
             
 
             <td class="type">
@@ -1304,7 +962,7 @@ TODO RIVEDI I TIPI
 
             
 
-            <td class="description last">Path to file.</td>
+            <td class="description last">multihash of the file</td>
         </tr>
 
     
@@ -1348,7 +1006,7 @@ TODO RIVEDI I TIPI
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.ipfs.uploader.js.html">paratii.ipfs.uploader.js</a>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -1377,7 +1035,126 @@ TODO RIVEDI I TIPI
     
             
 <div class="param-desc">
-    generic file object.
+    the file (path,content)
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let result = await paratiiIPFS.add(fileStream)
+let hash = result[0].hash
+let fileContent = await paratiiIPFS.get(hash)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getIPFSInstance"><span class="type-signature"></span>getIPFSInstance()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        get an ipfs instance of jsipfs. Singleton pattern
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Ipfs instance
 </div>
 
 
@@ -1401,7 +1178,7 @@ TODO RIVEDI I TIPI
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">?</pre>
+    <pre class="sunlight-highlight-javascript">ipfs = await paratii.ipfs.getIPFSInstance()</pre>
 
 
     
@@ -1411,7 +1188,7 @@ TODO RIVEDI I TIPI
             
 <hr>
 <dt>
-    <h4 class="name" id="getMetaData"><span class="type-signature">&lt;static> </span>Uploader#getMetaData(fileHash, options)</h4>
+    <h4 class="name" id="getJSON"><span class="type-signature">&lt;async> </span>getJSON(multihash)</h4>
     
     
 </dt>
@@ -1419,7 +1196,7 @@ TODO RIVEDI I TIPI
 
     
     <div class="description">
-        [getMetaData description]
+        gets a JSON object stored in IPFS
     </div>
     
 
@@ -1454,13 +1231,13 @@ TODO RIVEDI I TIPI
 
         <tr>
             
-                <td class="name"><code>fileHash</code></td>
+                <td class="name"><code>multihash</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">String</span>
 
 
 
@@ -1471,31 +1248,7 @@ TODO RIVEDI I TIPI
 
             
 
-            <td class="description last">[description]</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">[description]</td>
+            <td class="description last">ipfs multihash of the object</td>
         </tr>
 
     
@@ -1539,7 +1292,7 @@ TODO RIVEDI I TIPI
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.ipfs.uploader.js.html">paratii.ipfs.uploader.js</a>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -1568,7 +1321,7 @@ TODO RIVEDI I TIPI
     
             
 <div class="param-desc">
-    [description]
+    requested Object
 </div>
 
 
@@ -1579,168 +1332,7 @@ TODO RIVEDI I TIPI
     </dt>
     <dd>
         
-<span class="param-type">Object</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="html5FileToPull"><span class="type-signature">&lt;static> </span>Uploader#html5FileToPull(file)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        returns a generic File Object with a Pull Stream from an HTML5 File
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>file</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">File</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">HTML5 File Object</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.ipfs.uploader.js.html">paratii.ipfs.uploader.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    generic file object.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
+<span class="param-type">Promise</span>
 
 
 
@@ -1753,7 +1345,7 @@ TODO RIVEDI I TIPI
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">?</pre>
+    <pre class="sunlight-highlight-javascript">let jsonObj = await paratiiIPFS.getJSON(&#x27;some-multihash&#x27;)</pre>
 
 
     
@@ -1763,7 +1355,7 @@ TODO RIVEDI I TIPI
             
 <hr>
 <dt>
-    <h4 class="name" id="onDrop"><span class="type-signature">&lt;static> </span>Uploader#onDrop(ev)</h4>
+    <h4 class="name" id="log"><span class="type-signature"></span>log(msg)</h4>
     
     
 </dt>
@@ -1771,7 +1363,162 @@ TODO RIVEDI I TIPI
 
     
     <div class="description">
-        ????
+        log messages on the console if verbose is set
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>msg</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                    &lt;repeatable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last">text to log</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">paratii.ipfs.log(&quot;some-text&quot;)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="start"><span class="type-signature"></span>start(callback)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Starts the IPFS node
     </div>
     
 
@@ -1806,16 +1553,183 @@ TODO RIVEDI I TIPI
 
         <tr>
             
-                <td class="name"><code>ev</code></td>
+                <td class="name"><code>callback</code></td>
             
 
             <td class="type">
             
                 
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">callback function</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    DON'T KNOW?
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
 <span class="param-type">?</span>
 
 
 
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">?</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="stop"><span class="type-signature"></span>stop(callback)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Stops the IPFS node.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
             
             </td>
 
@@ -1823,7 +1737,7 @@ TODO RIVEDI I TIPI
 
             
 
-            <td class="description last">?</td>
+            <td class="description last">callback function</td>
         </tr>
 
     
@@ -1867,7 +1781,7 @@ TODO RIVEDI I TIPI
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.ipfs.uploader.js.html">paratii.ipfs.uploader.js</a>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -1896,7 +1810,7 @@ TODO RIVEDI I TIPI
     
             
 <div class="param-desc">
-    ?
+    DON'T KNOW?
 </div>
 
 
@@ -1918,13 +1832,19 @@ TODO RIVEDI I TIPI
         
 
     
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">?</pre>
+
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="pinFile"><span class="type-signature">&lt;static> </span>Uploader#pinFile(fileHash, options)</h4>
+    <h4 class="name" id="warn"><span class="type-signature"></span>warn(msg)</h4>
     
     
 </dt>
@@ -1932,7 +1852,7 @@ TODO RIVEDI I TIPI
 
     
     <div class="description">
-        [pinFile description]
+        log warns on the console if verbose is set
     </div>
     
 
@@ -1955,190 +1875,7 @@ TODO RIVEDI I TIPI
         <th>Type</th>
 
         
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>fileHash</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">[description]</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">[description]</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.ipfs.uploader.js.html">paratii.ipfs.uploader.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    [description]
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="transcode"><span class="type-signature">&lt;static> </span>Uploader#transcode(fileHash, options)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        signals transcoder(s) to transcode fileHash
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
+        <th>Argument</th>
         
 
         
@@ -2152,7 +1889,7 @@ TODO RIVEDI I TIPI
 
         <tr>
             
-                <td class="name"><code>fileHash</code></td>
+                <td class="name"><code>msg</code></td>
             
 
             <td class="type">
@@ -2166,34 +1903,20 @@ TODO RIVEDI I TIPI
             </td>
 
             
-
-            
-
-            <td class="description last">IPFS file hash.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-
-            <td class="type">
-            
+                <td class="attributes">
                 
-<span class="param-type">Object</span>
 
+                
 
-
-            
-            </td>
-
-            
-
+                
+                    &lt;repeatable><br>
+                
+                </td>
             
 
-            <td class="description last">ref: https://github.com/Paratii-Video/paratii-lib/blob/master/docs/paratii-ipfs.md#ipfsuploadertranscodefilehash-options</td>
+            
+
+            <td class="description last">warn text</td>
         </tr>
 
     
@@ -2237,400 +1960,7 @@ TODO RIVEDI I TIPI
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.ipfs.uploader.js.html">paratii.ipfs.uploader.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    returns EventEmitter with the following events:
-   - 'uploader:progress': (hash, chunkSize, percent) client to transcoder upload progress.
-   - 'transcoding:started': (hash, author)
-   - 'transcoding:progress': (hash, size, percent)
-   - 'transcoding:downsample:ready' (hash, size)
-   - 'transcoding:done': (hash, transcoderResult) triggered when the transcoder is done - returns the hash of the transcoded file
-   - 'transcoder:error': (err) triggered whenever an error occurs.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">EventEmitter</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">?</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="upload"><span class="type-signature">&lt;static> </span>Uploader#upload(files)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        upload an Array of files as is to the local IPFS node
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>files</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">HTML5 File Object Array.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.ipfs.uploader.js.html">paratii.ipfs.uploader.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    returns EventEmitter with the following events:
-   - 'start': uploader started.
-   - 'progress': (chunkLength, progressPercent)
-   - 'fileReady': (file) triggered when a file is uploaded locally.
-   - 'done': (files) triggered when the uploader is done locally.
-   - 'error': (err) triggered whenever an error occurs.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">EventEmitter</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">?</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="xhrUpload"><span class="type-signature">&lt;static> </span>Uploader#xhrUpload(file, hashedFile, ev)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Upload a file over XHR to the transcoder. To be called with an event emitter as the last argument
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>file</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">file to upload</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>hashedFile</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">hash of the file ??</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>ev</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">EventEmitter</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">event emitter</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.ipfs.uploader.js.html">paratii.ipfs.uploader.js</a>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -2659,7 +1989,7 @@ TODO RIVEDI I TIPI
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">this.xhrUpload(file, hashedFile, ev)</pre>
+    <pre class="sunlight-highlight-javascript">paratii.ipfs.warn(&quot;some-text&quot;)</pre>
 
 
     
@@ -2715,7 +2045,7 @@ TODO RIVEDI I TIPI
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2018-04-05T12:18:49+02:00
+		on 2018-04-06T14:20:37+02:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

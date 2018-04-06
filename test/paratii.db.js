@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { Paratii } from '../lib/paratii.js'
+import { Paratii } from '../src/paratii.js'
 import { DB_PROVIDER } from './utils.js'
 import nock from 'nock'
 const videos = require('./data/fixtures')

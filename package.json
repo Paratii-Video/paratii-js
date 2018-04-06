@@ -1,7 +1,7 @@
 {
-  "name": "paratii-lib",
-  "version": "0.0.1",
-  "description": "Paratii Library",
+  "name": "paratii-js",
+  "version": "1.0.0",
+  "description": "Paratii JS Library",
   "main": "dist/paratii.js",
   "browser": {
     "fs": false,
@@ -12,7 +12,7 @@
     "test": "test"
   },
   "scripts": {
-    "build": "babel ./lib -d ./dist",
+    "build": "babel ./src -d ./dist",
     "build-browser": "webpack --progress --colors",
     "test": "mocha --require babel.js --exit --timeout 20000 test/*.js",
     "parity": "parity --config parity-config.toml",
@@ -71,7 +71,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Paratii-Video/paratii-lib"
+    "url": "https://github.com/Paratii-Video/paratii-js"
   },
   "keywords": [
     "javascript",
@@ -80,12 +80,12 @@
     "API",
     "paratii"
   ],
-  "author": "Jelle Gerbrandy <jelle@gerbrandy.com>",
+  "author": "Paratii <hello@paratii.video>",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/Paratii-Video/paratii-lib/issues"
+    "url": "https://github.com/Paratii-Video/paratii-js/issues"
   },
-  "homepage": "https://github.com/Paratii-Video/paratii-lib",
+  "homepage": "https://github.com/Paratii-Video/paratii-js",
   "standard": {
     "envs": [
       "mocha"
@@ -100,8 +100,7 @@
     ],
     "ignore": [
       "dist",
-      "docs",
-      "out"
+      "docs"
     ]
   },
   "pre-commit": [
