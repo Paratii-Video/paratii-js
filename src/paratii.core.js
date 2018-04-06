@@ -39,12 +39,15 @@ export class ParatiiCore {
     for (let i in vids) {
       let vid = vids[i]
       await this.vids.update(vid.id, {owner: newAccount})
-      await this.paratii.eth.tcr.exit(vid.id)
+      let didVideoApply = await this.config.paratii.eth.tcr.didVideoApply(vid.id)
+      if (didVideoApply) {
+        // removing video from statke
+        await this.paratii.eth.tcr.exit(vid.id)
+      }
     }
 
     // transfer all  PTI to the new account
     let ptiBalance = await this.paratii.eth.balanceOf(oldAccount, 'PTI')
-    console.log(ptiBalance)
     await this.paratii.eth.transfer(newAccount, ptiBalance, 'PTI')
     // FIXME: need to call tc.apply(vid.id) with newAccount as sender (how to do that?)
   }

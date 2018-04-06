@@ -65,7 +65,7 @@ var ParatiiCore = exports.ParatiiCore = function () {
   (0, _createClass3.default)(ParatiiCore, [{
     key: 'migrateAccount',
     value: function migrateAccount(newAccount) {
-      var oldAccount, vids, i, vid, ptiBalance;
+      var oldAccount, vids, i, vid, didVideoApply, ptiBalance;
       return _regenerator2.default.async(function migrateAccount$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -81,7 +81,7 @@ var ParatiiCore = exports.ParatiiCore = function () {
 
             case 5:
               if ((_context.t1 = _context.t0()).done) {
-                _context.next = 14;
+                _context.next = 18;
                 break;
               }
 
@@ -92,24 +92,33 @@ var ParatiiCore = exports.ParatiiCore = function () {
 
             case 10:
               _context.next = 12;
-              return _regenerator2.default.awrap(this.paratii.eth.tcr.exit(vid.id));
+              return _regenerator2.default.awrap(this.config.paratii.eth.tcr.didVideoApply(vid.id));
 
             case 12:
+              didVideoApply = _context.sent;
+
+              if (!didVideoApply) {
+                _context.next = 16;
+                break;
+              }
+
+              _context.next = 16;
+              return _regenerator2.default.awrap(this.paratii.eth.tcr.exit(vid.id));
+
+            case 16:
               _context.next = 5;
               break;
 
-            case 14:
-              _context.next = 16;
+            case 18:
+              _context.next = 20;
               return _regenerator2.default.awrap(this.paratii.eth.balanceOf(oldAccount, 'PTI'));
 
-            case 16:
+            case 20:
               ptiBalance = _context.sent;
-
-              console.log(ptiBalance);
-              _context.next = 20;
+              _context.next = 23;
               return _regenerator2.default.awrap(this.paratii.eth.transfer(newAccount, ptiBalance, 'PTI'));
 
-            case 20:
+            case 23:
             case 'end':
               return _context.stop();
           }

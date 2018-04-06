@@ -1,6 +1,7 @@
 import { Paratii } from '../src/paratii.js'
 import { address, testConfig } from './utils.js'
 import { assert } from 'chai'
+import { BigNumber } from 'bignumber.js'
 
 describe('paratii.eth.tcr:', function () {
   let paratii
@@ -10,7 +11,8 @@ describe('paratii.eth.tcr:', function () {
     await paratii.eth.deployContracts()
   })
 
-  let videoId = 'some-vide-id'
+  let videoId = 'some-video-id'
+  let videoId2 = 'some-other-video-id'
 
   it('should be able to get minDeposit', async function () {
     let amount = await paratii.eth.tcr.getMinDeposit()
@@ -54,10 +56,12 @@ describe('paratii.eth.tcr:', function () {
       .sub(paratii.eth.web3.utils.toBN(balanceAfter.toString())).toString()
     , paratii.eth.web3.utils.toWei(amount.toString()).toString())
   })
-
-  it('videoId should be in process (appWasMade)', async function () {
-    let appWasMade = await paratii.eth.tcr.didVideoApply(videoId)
-    assert.isTrue(appWasMade)
+  it('checkEligiblityAndApply should work', async function () {
+    let amount = 5
+    let result = await paratii.eth.tcr.checkEligiblityAndApply(videoId2, paratii.eth.web3.utils.toWei(amount.toString()))
+    assert.isOk(result, result)
+    let didVideoApply = await paratii.eth.tcr.didVideoApply(videoId2)
+    assert.isOk(didVideoApply)
   })
 
   it('should NOT be able to apply twice', async function () {
@@ -68,5 +72,13 @@ describe('paratii.eth.tcr:', function () {
       Error,
        /already applied/g
      )
+  })
+
+  it('exit() should delist the video and return the money', async function () {
+    let amount = new BigNumber(paratii.eth.web3.utils.toWei('5'))
+    let balance1 = new BigNumber(await paratii.eth.balanceOf(paratii.config.account.address, 'PTI'))
+    await paratii.eth.tcr.checkEligiblityAndApply('yetanothervid', amount)
+    let balance2 = new BigNumber(await paratii.eth.balanceOf(paratii.config.account.address, 'PTI'))
+    assert.equal(Number(balance2), Number(balance1.minus(amount)))
   })
 })
