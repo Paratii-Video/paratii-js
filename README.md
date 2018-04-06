@@ -1,6 +1,6 @@
 # paratii.js
 
-[![CircleCI](https://circleci.com/gh/Paratii-Video/paratii-lib.svg?style=svg)](https://circleci.com/gh/Paratii-Video/paratii-lib)
+[![CircleCI](https://circleci.com/gh/Paratii-Video/paratii-js.svg?style=svg)](https://circleci.com/gh/Paratii-Video/paratii-js)
 
 `paratii.js` is the main entry point and abstraction layer to interact with the Paratii platform.
 
