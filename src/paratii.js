@@ -29,7 +29,7 @@ const utils = require('./utils.js')
  * @class paratii
  */
 
-class Paratii {
+class Paratii extends ParatiiCore {
   constructor (opts = {}) {
     const schema = joi.object({
       account: accountSchema,
@@ -40,10 +40,13 @@ class Paratii {
 
     const result = joi.validate(opts, schema)
     if (result.error) throw result.error
-    this.config = result.value
+    const config = result.value
+    super(config)
+    this.config = config
     this.config.paratii = this
+    // this.core = this
     this.eth = new ParatiiEth(this.config)
-    this.core = new ParatiiCore(this.config)
+    // this.core = new ParatiiCore(this.config)
     this.db = new ParatiiDb(this.config)
     this.ipfs = new ParatiiIPFS(this.config)
   }

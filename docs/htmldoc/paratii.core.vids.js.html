@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="paratii.html">paratii</a></li><li><a href="paratii.core.html">paratii.core</a></li><li><a href="paratii.core.users.html">paratii.core.users</a></li><li><a href="paratii.core.vids.html">paratii.core.vids</a></li><li><a href="paratii.db.html">paratii.db</a></li><li><a href="paratii.db.users.html">paratii.db.users</a></li><li><a href="paratii.db.vids.html">paratii.db.vids</a></li><li><a href="paratii.eth.html">paratii.eth</a></li><li><a href="paratii.eth.events.html">paratii.eth.events</a></li><li><a href="paratii.eth.tcr.html">paratii.eth.tcr</a></li><li><a href="paratii.eth.users.html">paratii.eth.users</a></li><li><a href="paratii.eth.vids.html">paratii.eth.vids</a></li><li><a href="paratii.eth.vouchers.html">paratii.eth.vouchers</a></li><li><a href="paratii.eth.wallet.html">paratii.eth.wallet</a></li><li><a href="paratii.ipfs.uploader.html">paratii.ipfs.uploader</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li>
+					<li><a href="paratii.html">paratii</a></li><li><a href="paratii.core.html">paratii.core</a></li><li><a href="paratii.core.vids.html">paratii.core.vids</a></li><li><a href="paratii.db.html">paratii.db</a></li><li><a href="paratii.db.users.html">paratii.db.users</a></li><li><a href="paratii.db.vids.html">paratii.db.vids</a></li><li><a href="paratii.eth.html">paratii.eth</a></li><li><a href="paratii.eth.events.html">paratii.eth.events</a></li><li><a href="paratii.eth.tcr.html">paratii.eth.tcr</a></li><li><a href="paratii.eth.users.html">paratii.eth.users</a></li><li><a href="paratii.eth.vids.html">paratii.eth.vids</a></li><li><a href="paratii.eth.vouchers.html">paratii.eth.vouchers</a></li><li><a href="paratii.eth.wallet.html">paratii.eth.wallet</a></li><li><a href="paratii.ipfs.uploader.html">paratii.ipfs.uploader</a></li><li><a href="paratii.users.html">paratii.users</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li>
 				</ul>
 			</li>
 			
@@ -97,7 +97,6 @@ export class ParatiiCoreVids {
     // let options = result.value
 
     this.config = config
-    this.paratii = this.config.paratii
   }
 
   /**
@@ -123,10 +122,10 @@ export class ParatiiCoreVids {
     options = result.value
 
     if (options.id === null) {
-      options.id = this.paratii.eth.vids.makeId()
+      options.id = this.config.paratii.eth.vids.makeId()
     }
 
-    let hash = await this.paratii.ipfs.addAndPinJSON({
+    let hash = await this.config.paratii.ipfs.addAndPinJSON({
       author: options.author,
       description: options.description,
       duration: options.duration,
@@ -142,7 +141,7 @@ export class ParatiiCoreVids {
 
     options.ipfsData = hash
 
-    await this.paratii.eth.vids.create({
+    await this.config.paratii.eth.vids.create({
       id: options.id,
       owner: options.owner,
       price: options.price,
@@ -162,7 +161,7 @@ export class ParatiiCoreVids {
    * @memberof paratii.core.vids
    */
   like (videoId) {
-    return this.paratii.eth.vids.like(videoId)
+    return this.config.paratii.eth.vids.like(videoId)
   }
   /**
    * Writes a dislike for the video on the blockchain (contract Likes), and negates a like for the video, if it exists.
@@ -172,7 +171,7 @@ export class ParatiiCoreVids {
    * @memberof paratii.core.vids
    */
   dislike (videoId) {
-    return this.paratii.eth.vids.dislike(videoId)
+    return this.config.paratii.eth.vids.dislike(videoId)
   }
   /**
    * Check if the current user has already liked the video
@@ -182,7 +181,7 @@ export class ParatiiCoreVids {
    * @memberof paratii.core.vids
    */
   doesLike (videoId) {
-    return this.paratii.eth.vids.doesLike(videoId)
+    return this.config.paratii.eth.vids.doesLike(videoId)
   }
   /**
    * Check if the viewer has already viewed the video
@@ -193,7 +192,7 @@ export class ParatiiCoreVids {
    * @memberof paratii.core.vids
    */
   hasViewedVideo (viewer, videoId) {
-    return this.paratii.eth.vids.userViewedVideo({ viewer: viewer, videoId: videoId })
+    return this.config.paratii.eth.vids.userViewedVideo({ viewer: viewer, videoId: videoId })
   }
   /**
    * Check if the current user has already disliked the video
@@ -203,7 +202,7 @@ export class ParatiiCoreVids {
    * @memberof paratii.core.vids
   */
   doesDislike (videoId) {
-    return this.paratii.eth.vids.doesDislike(videoId)
+    return this.config.paratii.eth.vids.doesDislike(videoId)
   }
 
   /**
@@ -249,7 +248,7 @@ export class ParatiiCoreVids {
    * @param  {Object}  options video informations
    * @return {Promise}         updated/new video informations
    * @example
-   * paratii.core.vids.upsert({ id: 'some-video-id', owner: 'some-user-id', title: 'videoTitle'}) //insert a new video
+   * paratii.vids.upsert({ id: 'some-video-id', owner: 'some-user-id', title: 'videoTitle'}) //insert a new video
    * @memberof paratii.core.vids
    */
   async upsert (options) {
@@ -283,9 +282,9 @@ export class ParatiiCoreVids {
         optionsIpfs[key] = options[key]
       }
     })
-    let hash = await this.paratii.ipfs.addJSON(optionsIpfs)
+    let hash = await this.config.paratii.ipfs.addJSON(optionsIpfs)
     optionsBlockchain['ipfsData'] = hash
-    return this.paratii.eth.vids.view(optionsBlockchain)
+    return this.config.paratii.eth.vids.view(optionsBlockchain)
   }
   /**
    * Get the data of the video identified by videoId
@@ -295,7 +294,7 @@ export class ParatiiCoreVids {
    * @memberof paratii.core.vids
    */
   async get (videoId) {
-    return this.paratii.db.vids.get(videoId)
+    return this.config.paratii.db.vids.get(videoId)
   }
   /**
    * Get the data of the video
@@ -312,7 +311,7 @@ export class ParatiiCoreVids {
    * @memberof paratii.core.vids
    */
   search (options) {
-    return this.paratii.db.vids.search(options)
+    return this.config.paratii.db.vids.search(options)
   }
 }
 </pre>
@@ -356,7 +355,7 @@ export class ParatiiCoreVids {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2018-04-06T15:53:40+02:00
+		on 2018-04-06T16:37:11+02:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

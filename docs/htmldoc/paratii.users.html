@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Paratii Class: db</title>
+	<title>Paratii Class: users</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,7 +72,7 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: db</h1>
+	<h1 class="page-title">Class: users</h1>
 <section>
 
 <header>
@@ -80,7 +80,7 @@
         <h2>
             <span class="ancestors"><a href="paratii.html">paratii</a>.</span>
         
-        db
+        users
         </h2>
         
     
@@ -93,7 +93,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="db"><span class="type-signature"></span>new db(config)</h4>
+    <h4 class="name" id="users"><span class="type-signature"></span>new users(config)</h4>
     
     
 </dt>
@@ -101,8 +101,7 @@
 
     
     <div class="description">
-        ParatiiDb contains a functionality to interact with the Paratii Blockchain Index. <br>
-validates the config file and istantiates ParatiiDbVids and ParatiiDbUsers.
+        Utilities to create and manipulate information about the users on the blockchain.
     </div>
     
 
@@ -154,7 +153,7 @@ validates the config file and istantiates ParatiiDbVids and ParatiiDbUsers.
 
             
 
-            <td class="description last"></td>
+            <td class="description last">configuration object to initialize Paratii object</td>
         </tr>
 
     
@@ -198,7 +197,7 @@ validates the config file and istantiates ParatiiDbVids and ParatiiDbUsers.
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.db.js.html">paratii.db.js</a>
+				<a href="paratii.core.users.js.html">paratii.core.users.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -235,23 +234,547 @@ validates the config file and istantiates ParatiiDbVids and ParatiiDbUsers.
     
 
     
-        <h3 class="subsection-title">Classes</h3>
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
 
         <dl>
-            <dt><a href="paratii.db.users.html">users</a></dt>
-            <dd></dd>
+            
+<hr>
+<dt>
+    <h4 class="name" id="create"><span class="type-signature">&lt;async, static> </span>ParatiiCoreUsers#create(options)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Creates a user, fields id, name and email go to the smart contract Users, other fields are stored on IPFS.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
         
-            <dt><a href="paratii.db.vids.html">vids</a></dt>
-            <dd></dd>
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">information about the video ( id, name, email ... )</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.core.users.js.html">paratii.core.users.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    the id of the newly created user
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">paratii.users.create({
+             id: &#x27;some-user-id&#x27;,
+             name: &#x27;A user name&#x27;,
+             email: &#x27;some@email.com&#x27;,
+             ...
+            })</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="get"><span class="type-signature">&lt;static> </span>ParatiiCoreUsers#get(id)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        retrieve data about the user
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">user univocal id</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.core.users.js.html">paratii.core.users.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    data about the user
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">paratii.users.get(&#x27;some-user-id&#x27;)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="update"><span class="type-signature">&lt;async, static> </span>ParatiiCoreUsers#update(userId, options)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Updates a user's details. name and email are defined in the smart contract Users, other fields get written to IPFS.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>userId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">user univocal id</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">updated data i.e. { name: 'A new user name' }</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.core.users.js.html">paratii.core.users.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    updated data about the user
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">paratii.users.update(&#x27;some-user-id&#x27;, {name: &#x27;A new user name&#x27;})</pre>
+
+
+    
+</dd>
+
         </dl>
-    
-
-    
-
-    
-
-    
-
     
 
     

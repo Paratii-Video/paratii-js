@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="paratii.html">paratii</a></li><li><a href="paratii.core.html">paratii.core</a></li><li><a href="paratii.core.users.html">paratii.core.users</a></li><li><a href="paratii.core.vids.html">paratii.core.vids</a></li><li><a href="paratii.db.html">paratii.db</a></li><li><a href="paratii.db.users.html">paratii.db.users</a></li><li><a href="paratii.db.vids.html">paratii.db.vids</a></li><li><a href="paratii.eth.html">paratii.eth</a></li><li><a href="paratii.eth.events.html">paratii.eth.events</a></li><li><a href="paratii.eth.tcr.html">paratii.eth.tcr</a></li><li><a href="paratii.eth.users.html">paratii.eth.users</a></li><li><a href="paratii.eth.vids.html">paratii.eth.vids</a></li><li><a href="paratii.eth.vouchers.html">paratii.eth.vouchers</a></li><li><a href="paratii.eth.wallet.html">paratii.eth.wallet</a></li><li><a href="paratii.ipfs.uploader.html">paratii.ipfs.uploader</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li>
+					<li><a href="paratii.html">paratii</a></li><li><a href="paratii.core.html">paratii.core</a></li><li><a href="paratii.core.vids.html">paratii.core.vids</a></li><li><a href="paratii.db.html">paratii.db</a></li><li><a href="paratii.db.users.html">paratii.db.users</a></li><li><a href="paratii.db.vids.html">paratii.db.vids</a></li><li><a href="paratii.eth.html">paratii.eth</a></li><li><a href="paratii.eth.events.html">paratii.eth.events</a></li><li><a href="paratii.eth.tcr.html">paratii.eth.tcr</a></li><li><a href="paratii.eth.users.html">paratii.eth.users</a></li><li><a href="paratii.eth.vids.html">paratii.eth.vids</a></li><li><a href="paratii.eth.vouchers.html">paratii.eth.vouchers</a></li><li><a href="paratii.eth.wallet.html">paratii.eth.wallet</a></li><li><a href="paratii.ipfs.uploader.html">paratii.ipfs.uploader</a></li><li><a href="paratii.users.html">paratii.users</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li>
 				</ul>
 			</li>
 			
@@ -82,32 +82,31 @@
 /**
  * Utilities to create and manipulate information about the users on the blockchain.
  * @param {Object} config configuration object to initialize Paratii object
- * @class paratii.core.users
+ * @class paratii.users
  */
 export class ParatiiCoreUsers {
   constructor (config) {
-    const schema = joi.object({
-      'db.provider': joi.string().default(null)
-    }).unknown()
-
-    const result = joi.validate(config, schema)
-    const error = result.error
-    if (error) throw error
-    this.config = result.value
-    this.paratii = this.config.paratii
+    // const schema = joi.object({
+    //   'db.provider': joi.string().default(null)
+    // }).unknown()
+    //
+    // const result = joi.validate(config, schema)
+    // // const error = result.error
+    // if (error) throw error
+    this.config = config
   }
 /**
  * Creates a user, fields id, name and email go to the smart contract Users, other fields are stored on IPFS.
  * @param  {Object}  options information about the video ( id, name, email ... )
  * @return {Promise}         the id of the newly created user
  * @example
- *            paratii.core.users.create({
+ *            paratii.users.create({
  *              id: 'some-user-id',
  *              name: 'A user name',
  *              email: 'some@email.com',
  *              ...
  *             })
- * @memberof paratii.core.users
+ * @memberof paratii.users
  */
   async create (options) {
     let keysForBlockchain = ['id', 'name', 'email']
@@ -121,27 +120,27 @@ export class ParatiiCoreUsers {
         optionsIpfs[key] = options[key]
       }
     })
-    let hash = await this.paratii.ipfs.addJSON(optionsIpfs)
+    let hash = await this.config.paratii.ipfs.addJSON(optionsIpfs)
     optionsBlockchain['ipfsData'] = hash
-    return this.paratii.eth.users.create(optionsBlockchain)
+    return this.config.paratii.eth.users.create(optionsBlockchain)
   }
   /**
    * retrieve data about the user
    * @param  {String} id user univocal id
    * @return {Object}    data about the user
-   * @example paratii.core.users.get('some-user-id')
-   * @memberof paratii.core.users
+   * @example paratii.users.get('some-user-id')
+   * @memberof paratii.users
   */
   get (id) {
-    return this.paratii.db.users.get(id)
+    return this.config.paratii.db.users.get(id)
   }
   /**
    * Updates a user's details. name and email are defined in the smart contract Users, other fields get written to IPFS.
    * @param  {String}  userId  user univocal id
    * @param  {Object}  options updated data i.e. { name: 'A new user name' }
    * @return {Promise}         updated data about the user
-   * @example paratii.core.users.update('some-user-id', {name: 'A new user name'})
-   * @memberof paratii.core.users
+   * @example paratii.users.update('some-user-id', {name: 'A new user name'})
+   * @memberof paratii.users
    */
   async update (userId, options) {
     const schema = joi.object({
@@ -209,7 +208,7 @@ export class ParatiiCoreUsers {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2018-04-06T15:53:40+02:00
+		on 2018-04-06T16:37:11+02:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

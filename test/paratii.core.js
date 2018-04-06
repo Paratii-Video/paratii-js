@@ -2,13 +2,13 @@ import { Paratii } from '../src/paratii.js'
 import { vidsFixture, mockDb, testAccount, address, address23 } from './utils.js'
 import { assert } from 'chai'
 
-describe('paratii.core API: :', function () {
+describe('paratii API: :', function () {
   let paratii, paratiiCore
 
   beforeEach(async function () {
     paratii = new Paratii({account: testAccount})
     await paratii.eth.deployContracts()
-    paratiiCore = paratii.core
+    paratiiCore = paratii
     mockDb()
   })
 
@@ -18,7 +18,7 @@ describe('paratii.core API: :', function () {
     assert.isOk(paratiiCore.vids)
   })
 
-  it('migrateAccount should work @watch', async function () {
+  it('migrateAccount should work', async function () {
     // migrate all assets from default account address to address23
     let id1 = vidsFixture[1].id
     let id2 = vidsFixture[2].id
@@ -34,7 +34,7 @@ describe('paratii.core API: :', function () {
     assert.isOk(oldBalance > 0, oldBalance)
 
     // now (the current owner) sends  a request to migrate her account
-    await paratii.core.migrateAccount(address23)
+    await paratii.migrateAccount(address23)
 
     // now the owner of the videos (on the contract) should be address23
     let vid = await paratii.eth.vids.get(id1)

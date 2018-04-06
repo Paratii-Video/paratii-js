@@ -48,7 +48,6 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
     // let options = result.value
 
     this.config = config;
-    this.paratii = this.config.paratii;
   }
 
   /**
@@ -92,11 +91,11 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
               options = result.value;
 
               if (options.id === null) {
-                options.id = this.paratii.eth.vids.makeId();
+                options.id = this.config.paratii.eth.vids.makeId();
               }
 
               _context.next = 8;
-              return _regenerator2.default.awrap(this.paratii.ipfs.addAndPinJSON({
+              return _regenerator2.default.awrap(this.config.paratii.ipfs.addAndPinJSON({
                 author: options.author,
                 description: options.description,
                 duration: options.duration,
@@ -117,7 +116,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
               options.ipfsData = hash;
 
               _context.next = 12;
-              return _regenerator2.default.awrap(this.paratii.eth.vids.create({
+              return _regenerator2.default.awrap(this.config.paratii.eth.vids.create({
                 id: options.id,
                 owner: options.owner,
                 price: options.price,
@@ -148,7 +147,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   }, {
     key: 'like',
     value: function like(videoId) {
-      return this.paratii.eth.vids.like(videoId);
+      return this.config.paratii.eth.vids.like(videoId);
     }
     /**
      * Writes a dislike for the video on the blockchain (contract Likes), and negates a like for the video, if it exists.
@@ -161,7 +160,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   }, {
     key: 'dislike',
     value: function dislike(videoId) {
-      return this.paratii.eth.vids.dislike(videoId);
+      return this.config.paratii.eth.vids.dislike(videoId);
     }
     /**
      * Check if the current user has already liked the video
@@ -174,7 +173,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   }, {
     key: 'doesLike',
     value: function doesLike(videoId) {
-      return this.paratii.eth.vids.doesLike(videoId);
+      return this.config.paratii.eth.vids.doesLike(videoId);
     }
     /**
      * Check if the viewer has already viewed the video
@@ -188,7 +187,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   }, {
     key: 'hasViewedVideo',
     value: function hasViewedVideo(viewer, videoId) {
-      return this.paratii.eth.vids.userViewedVideo({ viewer: viewer, videoId: videoId });
+      return this.config.paratii.eth.vids.userViewedVideo({ viewer: viewer, videoId: videoId });
     }
     /**
      * Check if the current user has already disliked the video
@@ -201,7 +200,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   }, {
     key: 'doesDislike',
     value: function doesDislike(videoId) {
-      return this.paratii.eth.vids.doesDislike(videoId);
+      return this.config.paratii.eth.vids.doesDislike(videoId);
     }
 
     /**
@@ -283,7 +282,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
      * @param  {Object}  options video informations
      * @return {Promise}         updated/new video informations
      * @example
-     * paratii.core.vids.upsert({ id: 'some-video-id', owner: 'some-user-id', title: 'videoTitle'}) //insert a new video
+     * paratii.vids.upsert({ id: 'some-video-id', owner: 'some-user-id', title: 'videoTitle'}) //insert a new video
      * @memberof paratii.core.vids
      */
 
@@ -356,13 +355,13 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 }
               });
               _context4.next = 7;
-              return _regenerator2.default.awrap(this.paratii.ipfs.addJSON(optionsIpfs));
+              return _regenerator2.default.awrap(this.config.paratii.ipfs.addJSON(optionsIpfs));
 
             case 7:
               hash = _context4.sent;
 
               optionsBlockchain['ipfsData'] = hash;
-              return _context4.abrupt('return', this.paratii.eth.vids.view(optionsBlockchain));
+              return _context4.abrupt('return', this.config.paratii.eth.vids.view(optionsBlockchain));
 
             case 10:
             case 'end':
@@ -386,7 +385,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
         while (1) {
           switch (_context5.prev = _context5.next) {
             case 0:
-              return _context5.abrupt('return', this.paratii.db.vids.get(videoId));
+              return _context5.abrupt('return', this.config.paratii.db.vids.get(videoId));
 
             case 1:
             case 'end':
@@ -413,7 +412,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   }, {
     key: 'search',
     value: function search(options) {
-      return this.paratii.db.vids.search(options);
+      return this.config.paratii.db.vids.search(options);
     }
   }]);
   return ParatiiCoreVids;

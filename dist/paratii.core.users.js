@@ -28,35 +28,34 @@ var joi = require('joi');
 /**
  * Utilities to create and manipulate information about the users on the blockchain.
  * @param {Object} config configuration object to initialize Paratii object
- * @class paratii.core.users
+ * @class paratii.users
  */
 
 var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
   function ParatiiCoreUsers(config) {
     (0, _classCallCheck3.default)(this, ParatiiCoreUsers);
 
-    var schema = joi.object({
-      'db.provider': joi.string().default(null)
-    }).unknown();
-
-    var result = joi.validate(config, schema);
-    var error = result.error;
-    if (error) throw error;
-    this.config = result.value;
-    this.paratii = this.config.paratii;
+    // const schema = joi.object({
+    //   'db.provider': joi.string().default(null)
+    // }).unknown()
+    //
+    // const result = joi.validate(config, schema)
+    // // const error = result.error
+    // if (error) throw error
+    this.config = config;
   }
   /**
    * Creates a user, fields id, name and email go to the smart contract Users, other fields are stored on IPFS.
    * @param  {Object}  options information about the video ( id, name, email ... )
    * @return {Promise}         the id of the newly created user
    * @example
-   *            paratii.core.users.create({
+   *            paratii.users.create({
    *              id: 'some-user-id',
    *              name: 'A user name',
    *              email: 'some@email.com',
    *              ...
    *             })
-   * @memberof paratii.core.users
+   * @memberof paratii.users
    */
 
 
@@ -81,13 +80,13 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
                 }
               });
               _context.next = 7;
-              return _regenerator2.default.awrap(this.paratii.ipfs.addJSON(optionsIpfs));
+              return _regenerator2.default.awrap(this.config.paratii.ipfs.addJSON(optionsIpfs));
 
             case 7:
               hash = _context.sent;
 
               optionsBlockchain['ipfsData'] = hash;
-              return _context.abrupt('return', this.paratii.eth.users.create(optionsBlockchain));
+              return _context.abrupt('return', this.config.paratii.eth.users.create(optionsBlockchain));
 
             case 10:
             case 'end':
@@ -100,22 +99,22 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
      * retrieve data about the user
      * @param  {String} id user univocal id
      * @return {Object}    data about the user
-     * @example paratii.core.users.get('some-user-id')
-     * @memberof paratii.core.users
+     * @example paratii.users.get('some-user-id')
+     * @memberof paratii.users
     */
 
   }, {
     key: 'get',
     value: function get(id) {
-      return this.paratii.db.users.get(id);
+      return this.config.paratii.db.users.get(id);
     }
     /**
      * Updates a user's details. name and email are defined in the smart contract Users, other fields get written to IPFS.
      * @param  {String}  userId  user univocal id
      * @param  {Object}  options updated data i.e. { name: 'A new user name' }
      * @return {Promise}         updated data about the user
-     * @example paratii.core.users.update('some-user-id', {name: 'A new user name'})
-     * @memberof paratii.core.users
+     * @example paratii.users.update('some-user-id', {name: 'A new user name'})
+     * @memberof paratii.users
      */
 
   }, {

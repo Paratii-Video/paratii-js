@@ -9,6 +9,10 @@ var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
+var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
 var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
@@ -16,6 +20,14 @@ var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 var _createClass2 = require('babel-runtime/helpers/createClass');
 
 var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _paratiiCore = require('./paratii.core.js');
 
@@ -54,7 +66,9 @@ var utils = require('./utils.js');
  * @class paratii
  */
 
-var Paratii = function () {
+var Paratii = function (_ParatiiCore) {
+  (0, _inherits3.default)(Paratii, _ParatiiCore);
+
   function Paratii() {
     var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     (0, _classCallCheck3.default)(this, Paratii);
@@ -68,12 +82,18 @@ var Paratii = function () {
 
     var result = joi.validate(opts, schema);
     if (result.error) throw result.error;
-    this.config = result.value;
-    this.config.paratii = this;
-    this.eth = new _paratiiEth.ParatiiEth(this.config);
-    this.core = new _paratiiCore.ParatiiCore(this.config);
-    this.db = new _paratiiDb.ParatiiDb(this.config);
-    this.ipfs = new _paratiiIpfs.ParatiiIPFS(this.config);
+    var config = result.value;
+
+    var _this = (0, _possibleConstructorReturn3.default)(this, (Paratii.__proto__ || (0, _getPrototypeOf2.default)(Paratii)).call(this, config));
+
+    _this.config = config;
+    _this.config.paratii = _this;
+    // this.core = this
+    _this.eth = new _paratiiEth.ParatiiEth(_this.config);
+    // this.core = new ParatiiCore(this.config)
+    _this.db = new _paratiiDb.ParatiiDb(_this.config);
+    _this.ipfs = new _paratiiIpfs.ParatiiIPFS(_this.config);
+    return _this;
   }
   /**
    * Set the ethereum address what will be used to sign all transactions
@@ -215,7 +235,7 @@ var Paratii = function () {
     }
   }]);
   return Paratii;
-}();
+}(_paratiiCore.ParatiiCore);
 
 exports.default = Paratii;
 exports.Paratii = Paratii;

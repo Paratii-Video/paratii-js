@@ -18,7 +18,6 @@ export class ParatiiCoreVids {
     // let options = result.value
 
     this.config = config
-    this.paratii = this.config.paratii
   }
 
   /**
@@ -44,10 +43,10 @@ export class ParatiiCoreVids {
     options = result.value
 
     if (options.id === null) {
-      options.id = this.paratii.eth.vids.makeId()
+      options.id = this.config.paratii.eth.vids.makeId()
     }
 
-    let hash = await this.paratii.ipfs.addAndPinJSON({
+    let hash = await this.config.paratii.ipfs.addAndPinJSON({
       author: options.author,
       description: options.description,
       duration: options.duration,
@@ -63,7 +62,7 @@ export class ParatiiCoreVids {
 
     options.ipfsData = hash
 
-    await this.paratii.eth.vids.create({
+    await this.config.paratii.eth.vids.create({
       id: options.id,
       owner: options.owner,
       price: options.price,
@@ -83,7 +82,7 @@ export class ParatiiCoreVids {
    * @memberof paratii.core.vids
    */
   like (videoId) {
-    return this.paratii.eth.vids.like(videoId)
+    return this.config.paratii.eth.vids.like(videoId)
   }
   /**
    * Writes a dislike for the video on the blockchain (contract Likes), and negates a like for the video, if it exists.
@@ -93,7 +92,7 @@ export class ParatiiCoreVids {
    * @memberof paratii.core.vids
    */
   dislike (videoId) {
-    return this.paratii.eth.vids.dislike(videoId)
+    return this.config.paratii.eth.vids.dislike(videoId)
   }
   /**
    * Check if the current user has already liked the video
@@ -103,7 +102,7 @@ export class ParatiiCoreVids {
    * @memberof paratii.core.vids
    */
   doesLike (videoId) {
-    return this.paratii.eth.vids.doesLike(videoId)
+    return this.config.paratii.eth.vids.doesLike(videoId)
   }
   /**
    * Check if the viewer has already viewed the video
@@ -114,7 +113,7 @@ export class ParatiiCoreVids {
    * @memberof paratii.core.vids
    */
   hasViewedVideo (viewer, videoId) {
-    return this.paratii.eth.vids.userViewedVideo({ viewer: viewer, videoId: videoId })
+    return this.config.paratii.eth.vids.userViewedVideo({ viewer: viewer, videoId: videoId })
   }
   /**
    * Check if the current user has already disliked the video
@@ -124,7 +123,7 @@ export class ParatiiCoreVids {
    * @memberof paratii.core.vids
   */
   doesDislike (videoId) {
-    return this.paratii.eth.vids.doesDislike(videoId)
+    return this.config.paratii.eth.vids.doesDislike(videoId)
   }
 
   /**
@@ -170,7 +169,7 @@ export class ParatiiCoreVids {
    * @param  {Object}  options video informations
    * @return {Promise}         updated/new video informations
    * @example
-   * paratii.core.vids.upsert({ id: 'some-video-id', owner: 'some-user-id', title: 'videoTitle'}) //insert a new video
+   * paratii.vids.upsert({ id: 'some-video-id', owner: 'some-user-id', title: 'videoTitle'}) //insert a new video
    * @memberof paratii.core.vids
    */
   async upsert (options) {
@@ -204,9 +203,9 @@ export class ParatiiCoreVids {
         optionsIpfs[key] = options[key]
       }
     })
-    let hash = await this.paratii.ipfs.addJSON(optionsIpfs)
+    let hash = await this.config.paratii.ipfs.addJSON(optionsIpfs)
     optionsBlockchain['ipfsData'] = hash
-    return this.paratii.eth.vids.view(optionsBlockchain)
+    return this.config.paratii.eth.vids.view(optionsBlockchain)
   }
   /**
    * Get the data of the video identified by videoId
@@ -216,7 +215,7 @@ export class ParatiiCoreVids {
    * @memberof paratii.core.vids
    */
   async get (videoId) {
-    return this.paratii.db.vids.get(videoId)
+    return this.config.paratii.db.vids.get(videoId)
   }
   /**
    * Get the data of the video
@@ -233,6 +232,6 @@ export class ParatiiCoreVids {
    * @memberof paratii.core.vids
    */
   search (options) {
-    return this.paratii.db.vids.search(options)
+    return this.config.paratii.db.vids.search(options)
   }
 }
