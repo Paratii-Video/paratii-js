@@ -1,8 +1,8 @@
 // const whyIsNodeRunning = require('why-is-node-running')
 
-// import Paratii from '../lib/paratii.js'
+// import Paratii from '../src/paratii.js'
 // import { address, privateKey } from './utils.js'
-import { ParatiiIPFS } from '../lib/paratii.ipfs.js'
+import { ParatiiIPFS } from '../src/paratii.ipfs.js'
 import { assert, expect } from 'chai'
 
 describe('ParatiiIPFS Uploader :', function () {

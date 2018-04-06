@@ -1,4 +1,4 @@
-import { Paratii } from '../../lib/paratii.js'
+import { Paratii } from '../../src/paratii.js'
 
 contract('Paratii:', function (accounts) {
   it('should work with a non-testprc provider', async function () {
