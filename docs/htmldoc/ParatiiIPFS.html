@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Paratii Class: tcr</title>
+	<title>Paratii Class: ParatiiIPFS</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,16 +72,16 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: tcr</h1>
+	<h1 class="page-title">Class: ParatiiIPFS</h1>
 <section>
 
 <header>
     
         <h2>
-            <span class="ancestors"><a href="paratii.html">paratii</a><a href="paratii.eth.html">.eth</a>.</span>
-        
-        tcr
+        ParatiiIPFS
         </h2>
+        
+            <div class="class-description">Contains functions to interact with the IPFS instance.</div>
         
     
 </header>
@@ -93,16 +93,12 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="tcr"><span class="type-signature"></span>new tcr(context)</h4>
+    <h4 class="name" id="ParatiiIPFS"><span class="type-signature"></span>new ParatiiIPFS(config)</h4>
     
     
 </dt>
 <dd>
 
-    
-    <div class="description">
-        TCR functionality
-    </div>
     
 
     
@@ -136,13 +132,13 @@
 
         <tr>
             
-                <td class="name"><code>context</code></td>
+                <td class="name"><code>config</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">Object</span>
 
 
 
@@ -153,7 +149,7 @@
 
             
 
-            <td class="description last">ParatiiEth Instance</td>
+            <td class="description last">configuration object to initialize Paratii object</td>
         </tr>
 
     
@@ -197,7 +193,7 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.eth.tcr.js.html">paratii.eth.tcr.js</a>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -222,30 +218,6 @@
     
 
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    returns instances of Tcr
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">TCR</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
 
     
 </dd>
@@ -272,7 +244,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="apply"><span class="type-signature">&lt;async, static> </span>ParatiiEthTcr#apply(videoId, amountToStake)</h4>
+    <h4 class="name" id="add"><span class="type-signature">&lt;async> </span>add(fileStream)</h4>
     
     
 </dt>
@@ -280,9 +252,7 @@
 
     
     <div class="description">
-        start the application process.
-NOTE that this require the client approves PTI amount first before actually
-running this function, use `checkEligiblityAndApply` instead.
+        Adds the file to ipfs
     </div>
     
 
@@ -317,13 +287,13 @@ running this function, use `checkEligiblityAndApply` instead.
 
         <tr>
             
-                <td class="name"><code>videoId</code></td>
+                <td class="name"><code>fileStream</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">ReadStream</span>
 
 
 
@@ -334,31 +304,7 @@ running this function, use `checkEligiblityAndApply` instead.
 
             
 
-            <td class="description last">videoId</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>amountToStake</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Float</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">number of tokens to stake. must >= minDeposit</td>
+            <td class="description last">ReadStream of the file. Can be created with fs.createReadStream(path)</td>
         </tr>
 
     
@@ -402,7 +348,7 @@ running this function, use `checkEligiblityAndApply` instead.
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.eth.tcr.js.html">paratii.eth.tcr.js</a>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -431,197 +377,7 @@ running this function, use `checkEligiblityAndApply` instead.
     
             
 <div class="param-desc">
-    returns true if all is good, plus _Application
-event.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">boolean</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="checkEligiblityAndApply"><span class="type-signature">&lt;async, static> </span>ParatiiEthTcr#checkEligiblityAndApply(videoId, amountToStake)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Stake amountToStake on video with id videoId
-does a number of separate steps:
-- check preconditions for staking
-- approve that the TCR contract can transfer amountToStake tokens
-- apply to the TCR
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>videoId</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">strin</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">[description]</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>amountToStake</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">[description]</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.eth.tcr.js.html">paratii.eth.tcr.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    [description]
+    data about the added file (path,multihash,size)
 </div>
 
 
@@ -643,13 +399,21 @@ does a number of separate steps:
         
 
     
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let path = &#x27;test/data/some-file.txt&#x27;
+let fileStream = fs.createReadStream(path)
+let result = await paratiiIPFS.add(fileStream)</pre>
+
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="didVideoApply"><span class="type-signature">&lt;async, static> </span>ParatiiEthTcr#didVideoApply(videoId)</h4>
+    <h4 class="name" id="addAndPinJSON"><span class="type-signature">&lt;async> </span>addAndPinJSON(data)</h4>
     
     
 </dt>
@@ -657,7 +421,7 @@ does a number of separate steps:
 
     
     <div class="description">
-        check whether a video started the application process or not yet.
+        convenient method to add JSON and send it for persistance storage.
     </div>
     
 
@@ -692,13 +456,13 @@ does a number of separate steps:
 
         <tr>
             
-                <td class="name"><code>videoId</code></td>
+                <td class="name"><code>data</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">object</span>
 
 
 
@@ -709,7 +473,7 @@ does a number of separate steps:
 
             
 
-            <td class="description last">videoId</td>
+            <td class="description last">JSON object to store</td>
         </tr>
 
     
@@ -753,7 +517,7 @@ does a number of separate steps:
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.eth.tcr.js.html">paratii.eth.tcr.js</a>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -782,7 +546,7 @@ does a number of separate steps:
     
             
 <div class="param-desc">
-    did the video start the TCR process.
+    returns multihash of the stored object.
 </div>
 
 
@@ -793,7 +557,7 @@ does a number of separate steps:
     </dt>
     <dd>
         
-<span class="param-type">boolean</span>
+<span class="param-type">string</span>
 
 
 
@@ -804,13 +568,19 @@ does a number of separate steps:
         
 
     
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let result = await paratiiIPFS.addAndPinJSON(data)</pre>
+
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="exit"><span class="type-signature">&lt;async, static> </span>ParatiiEthTcr#exit()</h4>
+    <h4 class="name" id="addJSON"><span class="type-signature">&lt;async> </span>addJSON(data)</h4>
     
     
 </dt>
@@ -818,7 +588,7 @@ does a number of separate steps:
 
     
     <div class="description">
-        remove the video given by videoId from the listing
+        adds a data Object to the IPFS local instance
     </div>
     
 
@@ -827,6 +597,56 @@ does a number of separate steps:
     
 
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>data</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">JSON object to store</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -864,212 +684,7 @@ does a number of separate steps:
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.eth.tcr.js.html">paratii.eth.tcr.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="getMinDeposit"><span class="type-signature">&lt;async, static> </span>ParatiiEthTcr#getMinDeposit()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        get the minimum amount required to stake a video.
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.eth.tcr.js.html">paratii.eth.tcr.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-	<dt class="tag-todo method-doc-label method-doc-details-label">To Do:</dt>
-	<dd class="tag-todo">
-		<ul>
-			<li>return amount as bignumber.js Object</li>
-			</ul>
-	</dd>
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    amount required in PTI
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Float</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="getTcrContract"><span class="type-signature">&lt;async, static> </span>ParatiiEthTcr#getTcrContract()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        get TCR contract instance.
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.eth.tcr.js.html">paratii.eth.tcr.js</a>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -1098,7 +713,7 @@ does a number of separate steps:
     
             
 <div class="param-desc">
-    Contract instance.
+    promise with the ipfs multihash
 </div>
 
 
@@ -1120,13 +735,19 @@ does a number of separate steps:
         
 
     
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let result = await paratiiIPFS.addJSON(data)</pre>
+
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="isWhitelisted"><span class="type-signature">&lt;async, static> </span>ParatiiEthTcr#isWhitelisted(videoId)</h4>
+    <h4 class="name" id="error"><span class="type-signature"></span>error(msg)</h4>
     
     
 </dt>
@@ -1134,9 +755,7 @@ does a number of separate steps:
 
     
     <div class="description">
-        check if video is already whitelisted or not. note that this returns false
-till the video is actually whitelisted. use didVideoApply in case you want
-to check whether the video is in application process.
+        log errors on the console if verbose is set
     </div>
     
 
@@ -1159,6 +778,8 @@ to check whether the video is in application process.
         <th>Type</th>
 
         
+        <th>Argument</th>
+        
 
         
 
@@ -1171,13 +792,13 @@ to check whether the video is in application process.
 
         <tr>
             
-                <td class="name"><code>videoId</code></td>
+                <td class="name"><code>msg</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">String</span>
 
 
 
@@ -1185,10 +806,20 @@ to check whether the video is in application process.
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+
+                
+                    &lt;repeatable><br>
+                
+                </td>
+            
 
             
 
-            <td class="description last">videoId</td>
+            <td class="description last">error message</td>
         </tr>
 
     
@@ -1232,7 +863,150 @@ to check whether the video is in application process.
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.eth.tcr.js.html">paratii.eth.tcr.js</a>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">paratii.ipfs.error(&quot;some-text&quot;)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="get"><span class="type-signature">&lt;async> </span>get(hash)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        get file from ipfs
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>hash</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">multihash of the file</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -1261,7 +1035,7 @@ to check whether the video is in application process.
     
             
 <div class="param-desc">
-    is video whitelisted or not.
+    the file (path,content)
 </div>
 
 
@@ -1272,7 +1046,7 @@ to check whether the video is in application process.
     </dt>
     <dd>
         
-<span class="param-type">boolean</span>
+<span class="param-type">Promise</span>
 
 
 
@@ -1281,6 +1055,942 @@ to check whether the video is in application process.
 
 
         
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let result = await paratiiIPFS.add(fileStream)
+let hash = result[0].hash
+let fileContent = await paratiiIPFS.get(hash)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getIPFSInstance"><span class="type-signature"></span>getIPFSInstance()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        get an ipfs instance of jsipfs. Singleton pattern
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Ipfs instance
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">ipfs = await paratii.ipfs.getIPFSInstance()</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getJSON"><span class="type-signature">&lt;async> </span>getJSON(multihash)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        gets a JSON object stored in IPFS
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>multihash</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">ipfs multihash of the object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    requested Object
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let jsonObj = await paratiiIPFS.getJSON(&#x27;some-multihash&#x27;)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="log"><span class="type-signature"></span>log(msg)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        log messages on the console if verbose is set
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>msg</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                    &lt;repeatable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last">text to log</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">paratii.ipfs.log(&quot;some-text&quot;)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="start"><span class="type-signature"></span>start(callback)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Starts the IPFS node
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">callback function</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    DON'T KNOW?
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">?</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">?</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="stop"><span class="type-signature"></span>stop(callback)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Stops the IPFS node.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">callback function</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    DON'T KNOW?
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">?</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">?</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="warn"><span class="type-signature"></span>warn(msg)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        log warns on the console if verbose is set
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>msg</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                    &lt;repeatable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last">warn text</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">paratii.ipfs.warn(&quot;some-text&quot;)</pre>
+
 
     
 </dd>
