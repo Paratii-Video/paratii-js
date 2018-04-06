@@ -467,6 +467,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
         }
       }, null, this, [[4, 10]]);
     }
+
     /**
      * Starts the IPFS node
      * @param  {Function} callback callback function
@@ -483,14 +484,15 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
       return new _promise2.default(function (resolve, reject) {
         if (_this4.ipfs && _this4.ipfs.isOnline()) {
           console.log('IPFS is already running');
-          return resolve();
+          return resolve(_this4.ipfs);
         }
 
         _this4.getIPFSInstance().then(function (ipfs) {
-          resolve();
+          resolve(ipfs);
         });
       });
     }
+
     /**
      * Stops the IPFS node.
      * @param  {Function} callback callback function
@@ -500,19 +502,21 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
 
   }, {
     key: 'stop',
-    value: function stop(callback) {
-      if (!this.ipfs || !this.ipfs.isOnline()) {
-        if (callback) {
-          return callback();
+    value: function stop() {
+      var _this5 = this;
+
+      return new _promise2.default(function (resolve, reject) {
+        if (!_this5.ipfs || !_this5.ipfs.isOnline()) {
+          resolve();
         }
-      }
-      if (this.ipfs) {
-        this.ipfs.stop(function () {
-          (0, _setImmediate3.default)(function () {
-            callback();
+        if (_this5.ipfs) {
+          _this5.ipfs.stop(function () {
+            (0, _setImmediate3.default)(function () {
+              resolve();
+            });
           });
-        });
-      }
+        }
+      });
     }
   }]);
   return ParatiiIPFS;
