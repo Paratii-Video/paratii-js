@@ -223,6 +223,14 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
           }) // eslint-disable-line
           .then(function (Ipfs) {
             var ipfs = new Ipfs({
+              EXPERIMENTAL: { // enable experimental features
+                relay: {
+                  enabled: true, // enable circuit relay dialer and listener
+                  hop: {
+                    enabled: true // enable circuit relay HOP (make this node a relay)
+                  }
+                }
+              },
               bitswap: {
                 // maxMessageSize: 256 * 1024
                 maxMessageSize: _this2.config.ipfs['bitswap.maxMessageSize']
