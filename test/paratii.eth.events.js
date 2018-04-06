@@ -1,4 +1,4 @@
-import { Paratii } from '../lib/paratii.js'
+import { Paratii } from '../src/paratii.js'
 import { testConfig, address, address1, voucherAmountInitial11 } from './utils.js'
 import { assert } from 'chai'
 

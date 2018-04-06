@@ -1,4 +1,4 @@
-import { Paratii } from '../lib/paratii.js'
+import { Paratii } from '../src/paratii.js'
 import { testAccount } from './utils.js'
 
 describe('Paratii API:', function () {

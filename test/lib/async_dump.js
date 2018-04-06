@@ -1,7 +1,7 @@
 'use strict'
 
 const {createHook} = require('async_hooks')
-const {stackTraceFilter} = require('mocha/lib/utils')
+const {stackTraceFilter} = require('mocha/src/utils')
 const allResources = new Map()
 
 // this will pull Mocha internals out of the stacks
