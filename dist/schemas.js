@@ -6,10 +6,10 @@ Object.defineProperty(exports, "__esModule", {
 var joi = require('joi');
 
 /**
-  @typedef {Array} accountSchema
-  @property {?string} address
-  @property {?string} privateKey
-  @property {?string} mnemonic
+  * @typedef {Array} accountSchema
+  * @property {?string} address
+  * @property {?string} privateKey
+  * @property {?string} mnemonic
  */
 var accountSchema = joi.object({
   address: joi.string().default(null).allow(null),

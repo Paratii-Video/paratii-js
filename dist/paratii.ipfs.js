@@ -62,6 +62,8 @@ global.Buffer = global.Buffer || require('buffer').Buffer;
 /**
  * Contains functions to interact with the IPFS instance.
  * @param {Object} config configuration object to initialize Paratii object
+ * @class paratii.ipfs
+ * @memberof paratii
  */
 
 var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
@@ -96,6 +98,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
    * let path = 'test/data/some-file.txt'
    * let fileStream = fs.createReadStream(path)
    * let result = await paratiiIPFS.add(fileStream)
+   * @memberof paratii.ipfs
    */
 
 
@@ -129,6 +132,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
      * let result = await paratiiIPFS.add(fileStream)
      * let hash = result[0].hash
      * let fileContent = await paratiiIPFS.get(hash)
+     * @memberof paratii.ipfs
      */
 
   }, {
@@ -158,6 +162,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
      * @param  {String} msg text to log
      * @example
      * paratii.ipfs.log("some-text")
+     * @memberof paratii.ipfs
      */
 
   }, {
@@ -174,6 +179,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
      * @param  {String} msg warn text
      * @example
      * paratii.ipfs.warn("some-text")
+     * @memberof paratii.ipfs
      */
 
   }, {
@@ -190,6 +196,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     * @param  {String} msg error message
     * @example
     * paratii.ipfs.error("some-text")
+    * @memberof paratii.ipfs
     */
 
   }, {
@@ -205,6 +212,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
      * get an ipfs instance of jsipfs. Singleton pattern
      * @return {Object} Ipfs instance
      * @example ipfs = await paratii.ipfs.getIPFSInstance()
+     * @memberof paratii.ipfs
      */
 
   }, {
@@ -315,6 +323,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
      * @param  {Object}  data JSON object to store
      * @return {Promise}      promise with the ipfs multihash
      * @example let result = await paratiiIPFS.addJSON(data)
+     * @memberof paratii.ipfs
      */
 
   }, {
@@ -375,6 +384,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
      * @param  {object}  data JSON object to store
      * @return {string}      returns multihash of the stored object.
      * @example let result = await paratiiIPFS.addAndPinJSON(data)
+     * @memberof paratii.ipfs
      */
 
   }, {
@@ -429,6 +439,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     * @param  {String}  multihash ipfs multihash of the object
     * @return {Promise}           requested Object
     * @example let jsonObj = await paratiiIPFS.getJSON('some-multihash')
+    * @memberof paratii.ipfs
     */
 
   }, {
@@ -500,6 +511,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
      * @param  {Function} callback callback function
      * @return {?}            DON'T KNOW?
      * @example ?
+     * @memberof paratii.ipfs
      */
 
   }, {

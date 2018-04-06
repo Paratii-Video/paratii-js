@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Paratii Source: paratii.eth.vouchers.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.simplex.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top ">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Paratii</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="paratii.html">paratii</a></li><li><a href="paratii.core.html">paratii.core</a></li><li><a href="paratii.core.users.html">paratii.core.users</a></li><li><a href="paratii.core.vids.html">paratii.core.vids</a></li><li><a href="paratii.db.html">paratii.db</a></li><li><a href="paratii.db.users.html">paratii.db.users</a></li><li><a href="paratii.db.vids.html">paratii.db.vids</a></li><li><a href="paratii.eth.html">paratii.eth</a></li><li><a href="paratii.eth.events.html">paratii.eth.events</a></li><li><a href="paratii.eth.tcr.html">paratii.eth.tcr</a></li><li><a href="paratii.eth.users.html">paratii.eth.users</a></li><li><a href="paratii.eth.vids.html">paratii.eth.vids</a></li><li><a href="paratii.eth.vouchers.html">paratii.eth.vouchers</a></li><li><a href="paratii.eth.wallet.html">paratii.eth.wallet</a></li><li><a href="paratii.ipfs.html">paratii.ipfs</a></li><li><a href="paratii.ipfs.uploader.html">paratii.ipfs.uploader</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="global.html">Global</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: paratii.eth.vouchers.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript ">import { getInfoFromLogs, NULL_ADDRESS, makeId } from './utils.js'
+const joi = require('joi')
+/**
+ * Functions for redeeming vouchers
+ * @class paratii.eth.vouchers
+ */
+export class ParatiiEthVouchers {
+  constructor (context) {
+    // context is a ParatiiEth instance
+    this.eth = context
+  }
+  /**
+   * Get the contract instance of the vouchers contract
+   * @return {Promise} Object representing the contract
+   * @example let contract = await paratii.eth.vids.getVouchersContract()
+   * @memberof paratii.eth.vouchers
+  */
+  async getVouchersContract () {
+    let contract = await this.eth.getContract('Vouchers')
+    if (contract.options.address === '0x0') {
+      throw Error('There is not Vouchers contract known in the registry')
+    }
+    return contract
+  }
+  /**
+   * Function for creating a voucher. Can only be called by the owner of the contract.
+   * @param  {Object}  options data about the voucher
+   * @param {String} options.voucherCode unique string associated to this voucher
+   * @param {Number} options.amount amount of PTI in wei of this voucher
+   * @return {Promise}         the voucher id
+   * @example await paratii.eth.vouchers.create({ voucherCode: 'some-id', amount: 10 })
+   * @memberof paratii.eth.vouchers
+   */
+  async create (options) {
+    const schema = joi.object({
+      voucherCode: joi.string(),
+      amount: joi.number()
+    })
+
+    const result = joi.validate(options, schema)
+    const error = result.error
+    if (error) throw error
+    options = result.value
+
+    if (options.voucherCode === null) {
+      let msg = 'Voucher Code argument must not be null'
+      throw Error(msg)
+    }
+    if (typeof options.voucherCode !== 'string') {
+      let msg = 'Voucher Code argument needs to be a string'
+      throw Error(msg)
+    }
+    if (typeof options.amount !== 'number') {
+      let msg = 'Amount argument needs to be a number'
+      throw Error(msg)
+    }
+    if (options.amount === 0) {
+      let msg = 'Amount needs to be greater than zero'
+      throw Error(msg)
+    }
+
+    let contract = await this.getVouchersContract()
+    let hashedVoucher = await contract.methods.hashVoucher(options.voucherCode).call()
+    let tx = await contract.methods.create(
+      hashedVoucher,
+      options.amount
+    ).send()
+    let voucherId = getInfoFromLogs(tx, 'LogCreateVoucher', '_hashedVoucher')
+
+    return voucherId
+  }
+  /**
+   * throws a test error
+   * @memberof paratii.eth.vouchers
+   */
+  async test () {
+    throw Error('test error message')
+  }
+
+   /**
+    * Generates a given number of vouchers with unique IDs, and the given amount, and returns an array of objects.
+    * @param  {Number}  number number of voucher to create
+    * @param  {Number}  amount amount of every voucher
+    * @return {Promise}        Object containing every voucher created
+    * @example let vouchers = await paratii.eth.vouchers.createVouchers(10, 10)
+    * @memberof paratii.eth.vouchers
+    */
+  async createVouchers (number, amount) {
+    let i
+    let vouchers = []
+    for (i = 0; i &lt; number; i++) {
+      let code = makeId()
+      let voucher = { voucherCode: code, amount: amount }
+      await this.create(voucher)
+      vouchers.push(voucher)
+    }
+    return vouchers
+  }
+  /**
+   * Function for redeeming a voucher to the current account's address.
+   * @param  {String}  voucherCode univocal voucher code
+   * @return {Promise}             true if everything goes well, otherwise throws an error
+   * @example await paratii.eth.vouchers.redeem('some-code')
+   * @memberof paratii.eth.vouchers
+   */
+  async redeem (voucherCode) {
+    let contract = await this.getVouchersContract()
+    let voucherBytes = await contract.methods.hashVoucher(voucherCode).call()
+    let thisVoucher = await contract.methods.vouchers(voucherBytes).call()
+    let thisVoucherClaimant = thisVoucher[0].toString()
+    let thisVoucherAmount = Number(thisVoucher[1])
+    let vouchersContractBalance = Number(await this.eth.balanceOf(contract.options.address, 'PTI'))
+    if (thisVoucherClaimant !== NULL_ADDRESS) {
+      throw Error('This voucher was already used')
+    }
+    if (thisVoucherAmount > vouchersContractBalance) {
+      throw Error('The Vouchers contract doesn\'t have enough PTI to redeem the voucher')
+    }
+    if (thisVoucherAmount === Number(0)) {
+      throw Error('This voucher doesn\'t exist')
+    }
+    try {
+      let tx = await contract.methods.redeem(voucherCode).send()
+      let claimant = getInfoFromLogs(tx, 'LogRedeemVoucher', '_claimant', 1)
+      let amount = getInfoFromLogs(tx, 'LogRedeemVoucher', '_amount', 1)
+      if (claimant === this.eth.config.account.address) {
+        return amount
+      } else {
+        return false
+      }
+    } catch (e) {
+      throw Error('An unknown error occurred')
+    }
+  }
+}
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	
+		on 2018-04-05T18:28:26+02:00
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : false,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

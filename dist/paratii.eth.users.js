@@ -22,6 +22,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var joi = require('joi');
 /**
  * The eth.user namespace contains functions to interact with the video registration on the blockchain.
+ * @class paratii.eth.users
  */
 
 var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
@@ -34,6 +35,7 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
   /**
    * Get the contract instance of the user contract
    * @return {Promise}  Object representing the contract
+   * @memberof paratii.eth.users
    */
 
 
@@ -68,6 +70,7 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
      *                    ipfsData: 'some-hash'
      *              }
      *         let result = await paratii.eth.users.create(userData)
+     * @memberof paratii.eth.users
      */
 
   }, {
@@ -130,6 +133,7 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
      * @param  {String}  userId valid address
      * @return {Promise}        information about the user
      * @example user = await paratii.eth.users.get('some-id')
+     * @memberof paratii.eth.users
      */
 
   }, {
@@ -171,6 +175,7 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
      * @param  {Object}  options information to update. Left-out data is kept the same.
      * @return {Promise}         updated data
      * @example await paratii.eth.users.update('some-id', {ipfsData: 'new-hash'})
+     * @memberof paratii.eth.users
      */
 
   }, {
@@ -209,6 +214,7 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
      * @param  {String}  userId valid address
      * @return {Promise}        blockchain transaction
      * @example await paratii.eth.users.delete('some-id')
+     * @memberof paratii.eth.users
      */
 
   }, {
