@@ -20,6 +20,61 @@ export class ParatiiCoreVids {
     this.config = config
     this.paratii = this.config.paratii
   }
+
+  /**
+   * This call will register the video on the blockchain, add its metadata to IPFS, upload file to IPFS, and transcode it
+   * @param  {Object}  options information about the video ( id, title, FilePath ... )
+   * @return {Promise}         information about the video ( id, owner, ipfsHash ... )
+   * @example paratii.core.vids.create({
+   *  id: 'some-video-id',
+   *  owner: 'some-user-id',
+   *  title: 'some Title',
+   *  author: 'Steven Spielberg',
+   *  duration: '2h 32m',
+   *  description: 'A long description',
+   *  price: 0,
+   *  filename: 'test/data/some-file.txt'
+   * })
+   * @memberof paratii.core.vids
+   */
+  async create (options = {}) {
+    const result = joi.validate(options, videoSchema)
+    const error = result.error
+    if (error) throw error
+    options = result.value
+
+    if (options.id === null) {
+      options.id = this.paratii.eth.vids.makeId()
+    }
+
+    let hash = await this.paratii.ipfs.addAndPinJSON({
+      author: options.author,
+      description: options.description,
+      duration: options.duration,
+      filename: options.filename,
+      filesize: options.filesize,
+      free: options.free,
+      storageStatus: options.storageStatus,
+      title: options.title,
+      transcodingStatus: options.transcodingStatus,
+      uploadStatus: options.uploadStatus,
+      thumbnails: options.thumbnails
+    })
+
+    options.ipfsData = hash
+
+    await this.paratii.eth.vids.create({
+      id: options.id,
+      owner: options.owner,
+      price: options.price,
+      ipfsHashOrig: options.ipfsHashOrig,
+      ipfsHash: options.ipfsHash,
+      ipfsData: options.ipfsData
+    })
+
+    return options
+  }
+
   /**
    * Writes a like for the video on the blockchain (contract Likes), and negates a dislike for the video, if it exists.
    * @param  {String} videoId univocal video identifier
@@ -71,59 +126,7 @@ export class ParatiiCoreVids {
   doesDislike (videoId) {
     return this.paratii.eth.vids.doesDislike(videoId)
   }
-  /**
-   * This call will register the video on the blockchain, add its metadata to IPFS, upload file to IPFS, and transcode it
-   * @param  {Object}  options information about the video ( id, title, FilePath ... )
-   * @return {Promise}         information about the video ( id, owner, ipfsHash ... )
-   * @example paratii.core.vids.create({
-   *  id: 'some-video-id',
-   *  owner: 'some-user-id',
-   *  title: 'some Title',
-   *  author: 'Steven Spielberg',
-   *  duration: '2h 32m',
-   *  description: 'A long description',
-   *  price: 0,
-   *  file: 'test/data/some-file.txt'
-   * })
-   * @memberof paratii.core.vids
-   */
-  async create (options = {}) {
-    const result = joi.validate(options, videoSchema)
-    const error = result.error
-    if (error) throw error
-    options = result.value
 
-    if (options.id === null) {
-      options.id = this.paratii.eth.vids.makeId()
-    }
-
-    let hash = await this.paratii.ipfs.addAndPinJSON({
-      author: options.author,
-      description: options.description,
-      duration: options.duration,
-      filename: options.filename,
-      filesize: options.filesize,
-      free: options.free,
-      storageStatus: options.storageStatus,
-      title: options.title,
-      transcodingStatus: options.transcodingStatus,
-      uploadStatus: options.uploadStatus,
-      thumbnails: options.thumbnails
-    })
-
-    options.ipfsData = hash
-
-    await this.paratii.eth.vids.create({
-      id: options.id,
-      owner: options.owner,
-      price: options.price,
-      ipfsHashOrig: options.ipfsHashOrig,
-      ipfsHash: options.ipfsHash,
-      ipfsData: options.ipfsData
-    })
-
-    return options
-  }
   /**
    * Update the information on the video.
    *  Only the account that has registered the video, or the owner of the contract, can update the information.

@@ -50,91 +50,26 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
     this.config = config;
     this.paratii = this.config.paratii;
   }
+
   /**
-   * Writes a like for the video on the blockchain (contract Likes), and negates a dislike for the video, if it exists.
-   * @param  {String} videoId univocal video identifier
-   * @return {Object}         information about the transaction recording the like
-   * @example paratii.core.vids.like('some-video-id')
+   * This call will register the video on the blockchain, add its metadata to IPFS, upload file to IPFS, and transcode it
+   * @param  {Object}  options information about the video ( id, title, FilePath ... )
+   * @return {Promise}         information about the video ( id, owner, ipfsHash ... )
+   * @example paratii.core.vids.create({
+   *  id: 'some-video-id',
+   *  owner: 'some-user-id',
+   *  title: 'some Title',
+   *  author: 'Steven Spielberg',
+   *  duration: '2h 32m',
+   *  description: 'A long description',
+   *  price: 0,
+   *  filename: 'test/data/some-file.txt'
+   * })
    * @memberof paratii.core.vids
    */
 
 
   (0, _createClass3.default)(ParatiiCoreVids, [{
-    key: 'like',
-    value: function like(videoId) {
-      return this.paratii.eth.vids.like(videoId);
-    }
-    /**
-     * Writes a dislike for the video on the blockchain (contract Likes), and negates a like for the video, if it exists.
-     * @param  {String} videoId univocal video identifier
-     * @return {Object}         information about the transaction recording the dislike
-     * @example paratii.core.vids.dislike('some-video-id')
-     * @memberof paratii.core.vids
-     */
-
-  }, {
-    key: 'dislike',
-    value: function dislike(videoId) {
-      return this.paratii.eth.vids.dislike(videoId);
-    }
-    /**
-     * Check if the current user has already liked the video
-     * @param  {String} videoId univocal video identifier
-     * @return {Boolean}         true if the current user already liked the video, false otherwise
-     * @example paratii.core.vids.doesLike('some-video-id')
-     * @memberof paratii.core.vids
-     */
-
-  }, {
-    key: 'doesLike',
-    value: function doesLike(videoId) {
-      return this.paratii.eth.vids.doesLike(videoId);
-    }
-    /**
-     * Check if the viewer has already viewed the video
-     * @param  {String}  viewer  viewer address
-     * @param  {String}  videoId univocal video identifier
-     * @return {Boolean}         true if the current user already viewed the video, false otherwise
-     * @example paratii.core.vids.hasViewedVideo('some-user-id','some-video-id')
-     * @memberof paratii.core.vids
-     */
-
-  }, {
-    key: 'hasViewedVideo',
-    value: function hasViewedVideo(viewer, videoId) {
-      return this.paratii.eth.vids.userViewedVideo({ viewer: viewer, videoId: videoId });
-    }
-    /**
-     * Check if the current user has already disliked the video
-     * @param  {String} videoId univocal video identifier
-     * @return {Boolean}         true if the current user already disliked the video, false otherwise
-     * @example paratii.core.vids.doesDislike('some-video-id')
-     * @memberof paratii.core.vids
-    */
-
-  }, {
-    key: 'doesDislike',
-    value: function doesDislike(videoId) {
-      return this.paratii.eth.vids.doesDislike(videoId);
-    }
-    /**
-     * This call will register the video on the blockchain, add its metadata to IPFS, upload file to IPFS, and transcode it
-     * @param  {Object}  options information about the video ( id, title, FilePath ... )
-     * @return {Promise}         information about the video ( id, owner, ipfsHash ... )
-     * @example paratii.core.vids.create({
-     *  id: 'some-video-id',
-     *  owner: 'some-user-id',
-     *  title: 'some Title',
-     *  author: 'Steven Spielberg',
-     *  duration: '2h 32m',
-     *  description: 'A long description',
-     *  price: 0,
-     *  file: 'test/data/some-file.txt'
-     * })
-     * @memberof paratii.core.vids
-     */
-
-  }, {
     key: 'create',
     value: function create() {
       var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -201,6 +136,74 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
         }
       }, null, this);
     }
+
+    /**
+     * Writes a like for the video on the blockchain (contract Likes), and negates a dislike for the video, if it exists.
+     * @param  {String} videoId univocal video identifier
+     * @return {Object}         information about the transaction recording the like
+     * @example paratii.core.vids.like('some-video-id')
+     * @memberof paratii.core.vids
+     */
+
+  }, {
+    key: 'like',
+    value: function like(videoId) {
+      return this.paratii.eth.vids.like(videoId);
+    }
+    /**
+     * Writes a dislike for the video on the blockchain (contract Likes), and negates a like for the video, if it exists.
+     * @param  {String} videoId univocal video identifier
+     * @return {Object}         information about the transaction recording the dislike
+     * @example paratii.core.vids.dislike('some-video-id')
+     * @memberof paratii.core.vids
+     */
+
+  }, {
+    key: 'dislike',
+    value: function dislike(videoId) {
+      return this.paratii.eth.vids.dislike(videoId);
+    }
+    /**
+     * Check if the current user has already liked the video
+     * @param  {String} videoId univocal video identifier
+     * @return {Boolean}         true if the current user already liked the video, false otherwise
+     * @example paratii.core.vids.doesLike('some-video-id')
+     * @memberof paratii.core.vids
+     */
+
+  }, {
+    key: 'doesLike',
+    value: function doesLike(videoId) {
+      return this.paratii.eth.vids.doesLike(videoId);
+    }
+    /**
+     * Check if the viewer has already viewed the video
+     * @param  {String}  viewer  viewer address
+     * @param  {String}  videoId univocal video identifier
+     * @return {Boolean}         true if the current user already viewed the video, false otherwise
+     * @example paratii.core.vids.hasViewedVideo('some-user-id','some-video-id')
+     * @memberof paratii.core.vids
+     */
+
+  }, {
+    key: 'hasViewedVideo',
+    value: function hasViewedVideo(viewer, videoId) {
+      return this.paratii.eth.vids.userViewedVideo({ viewer: viewer, videoId: videoId });
+    }
+    /**
+     * Check if the current user has already disliked the video
+     * @param  {String} videoId univocal video identifier
+     * @return {Boolean}         true if the current user already disliked the video, false otherwise
+     * @example paratii.core.vids.doesDislike('some-video-id')
+     * @memberof paratii.core.vids
+    */
+
+  }, {
+    key: 'doesDislike',
+    value: function doesDislike(videoId) {
+      return this.paratii.eth.vids.doesDislike(videoId);
+    }
+
     /**
      * Update the information on the video.
      *  Only the account that has registered the video, or the owner of the contract, can update the information.

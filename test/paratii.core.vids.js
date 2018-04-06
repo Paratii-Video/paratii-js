@@ -12,11 +12,11 @@ describe('paratii.core.vids:', function () {
   let videoTitle = 'some title'
   let videoTitle2 = 'some title 2'
 
-  before(function () {
+  before(async function () {
     mockDb()
-  })
-
-  beforeEach(async function () {
+  // })
+  //
+  // beforeEach(async function () {
     paratii = new Paratii({
       eth: {provider: 'http://localhost:8545/rpc/'},
       account: testAccount,
@@ -25,7 +25,7 @@ describe('paratii.core.vids:', function () {
     await paratii.eth.deployContracts()
   })
 
-  it.skip('core.vids.create() and get() should work as expected', async function () {
+  it('core.vids.create() and get() should work as expected', async function () {
     let videoFromCreate, videoFromDb
     videoFromCreate = await paratii.core.vids.create({
       id: 'some-id',
@@ -35,7 +35,7 @@ describe('paratii.core.vids:', function () {
       duration: '2h 32m',
       description: 'A long description',
       price: 0,
-      file: videoFile
+      filename: videoFile
     })
     assert.equal(videoFromCreate.id, 'some-id')
     videoFromDb = await paratii.core.vids.get(videoFromCreate.id)
@@ -46,7 +46,7 @@ describe('paratii.core.vids:', function () {
     let data
 
     // make sure the video does not exist
-    await assert.isRejected(paratii.eth.vids.get(videoId), Error, 'No video')
+    await assert.isRejected(paratii.eth.vids.get(videoId2), Error, 'No video')
 
     data = await paratii.core.vids.create({
       id: videoId2,
