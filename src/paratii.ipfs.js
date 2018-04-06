@@ -260,6 +260,7 @@ export class ParatiiIPFS extends EventEmitter {
 
     return JSON.parse(node.toString())
   }
+
   /**
    * Starts the IPFS node
    * @param  {Function} callback callback function
@@ -271,32 +272,33 @@ export class ParatiiIPFS extends EventEmitter {
     return new Promise((resolve, reject) => {
       if (this.ipfs && this.ipfs.isOnline()) {
         console.log('IPFS is already running')
-        return resolve()
+        return resolve(this.ipfs)
       }
 
       this.getIPFSInstance().then(function (ipfs) {
-        resolve()
+        resolve(ipfs)
       })
     })
   }
+
     /**
      * Stops the IPFS node.
      * @param  {Function} callback callback function
      * @return {?}            DON'T KNOW?
      * @example ?
      */
-  stop (callback) {
-    if (!this.ipfs || !this.ipfs.isOnline()) {
-      if (callback) {
-        return callback()
+  stop () {
+    return new Promise((resolve, reject) => {
+      if (!this.ipfs || !this.ipfs.isOnline()) {
+        resolve()
       }
-    }
-    if (this.ipfs) {
-      this.ipfs.stop(() => {
-        setImmediate(() => {
-          callback()
+      if (this.ipfs) {
+        this.ipfs.stop(() => {
+          setImmediate(() => {
+            resolve()
+          })
         })
-      })
-    }
+      }
+    })
   }
   }
