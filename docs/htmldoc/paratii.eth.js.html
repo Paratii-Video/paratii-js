@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Paratii Source: paratii.eth.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.simplex.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top ">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Paratii</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="paratii.html">paratii</a></li><li><a href="paratii.core.html">paratii.core</a></li><li><a href="paratii.core.users.html">paratii.core.users</a></li><li><a href="paratii.core.vids.html">paratii.core.vids</a></li><li><a href="paratii.db.html">paratii.db</a></li><li><a href="paratii.db.users.html">paratii.db.users</a></li><li><a href="paratii.db.vids.html">paratii.db.vids</a></li><li><a href="paratii.eth.html">paratii.eth</a></li><li><a href="paratii.eth.events.html">paratii.eth.events</a></li><li><a href="paratii.eth.tcr.html">paratii.eth.tcr</a></li><li><a href="paratii.eth.users.html">paratii.eth.users</a></li><li><a href="paratii.eth.vids.html">paratii.eth.vids</a></li><li><a href="paratii.eth.vouchers.html">paratii.eth.vouchers</a></li><li><a href="paratii.eth.wallet.html">paratii.eth.wallet</a></li><li><a href="paratii.ipfs.html">paratii.ipfs</a></li><li><a href="paratii.ipfs.uploader.html">paratii.ipfs.uploader</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="global.html">Global</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: paratii.eth.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript ">import { add0x } from './utils.js'
+import { ParatiiEthVids } from './paratii.eth.vids.js'
+import { ParatiiEthUsers } from './paratii.eth.users.js'
+import { ParatiiEthEvents } from './paratii.eth.events.js'
+import { ParatiiEthVouchers } from './paratii.eth.vouchers.js'
+import { ParatiiEthTcr } from './paratii.eth.tcr.js'
+import { patchWallet } from './paratii.eth.wallet.js'
+import { ethSchema, accountSchema } from './schemas.js'
+import joi from 'joi'
+
+const Web3 = require('web3')
+// const joi = require('joi')
+/**
+ * contains functions to interact with the Ethereum blockchain and the Paratii contracts deployed there.
+ * @param {Object} config configuration object to initialize Paratii object
+ * @class paratii.eth
+ * @memberof paratii
+*/
+export class ParatiiEth {
+  constructor (config) {
+    const schema = joi.object({
+      account: accountSchema,
+      eth: ethSchema
+    //   web3: joi.any().default(null)
+    })
+    const result = joi.validate(config, schema, {allowUnknown: true})
+    if (result.error) throw result.error
+    config.eth = result.value.eth
+    config.account = result.value.account
+    if (config.eth.provider.match(/(localhost|127\.0\.0\.1)/g)) {
+      config.eth.isTestNet = true
+    } else {
+      config.eth.isTestNet = false
+    }
+
+    if (config.web3) {
+      this.web3 = config.web3
+    } else {
+      this.web3 = new Web3()
+      if (config.eth.provider.substring(0, 2) === 'ws') {
+        this.web3.setProvider(new this.web3.providers.WebsocketProvider(config.eth.provider))
+      } else {
+        this.web3.setProvider(new this.web3.providers.HttpProvider(config.eth.provider))
+      }
+    }
+    this.config = config
+
+    this.wallet = patchWallet(this.web3.eth.accounts.wallet, this.config)
+    this.setAccount(this.config.account.address, this.config.account.privateKey, this.config.account.mnemonic)
+
+    this.contracts = {}
+    this.contracts.ParatiiToken = this.requireContract('ParatiiToken')
+    this.contracts.Avatar = this.requireContract('Avatar')
+    this.contracts.Registry = this.requireContract('Registry')
+    this.contracts.SendEther = this.requireContract('SendEther')
+    this.contracts.Users = this.requireContract('Users')
+    this.contracts.Videos = this.requireContract('Videos')
+    this.contracts.Store = this.requireContract('Store')
+    this.contracts.Likes = this.requireContract('Likes')
+    this.contracts.Views = this.requireContract('Views')
+    this.contracts.Vouchers = this.requireContract('Vouchers')
+    this.contracts.TcrPlaceholder = this.requireContract('TcrPlaceholder')
+
+    this.vids = new ParatiiEthVids(this)
+    this.users = new ParatiiEthUsers(this)
+    this.events = new ParatiiEthEvents(this)
+    this.vouchers = new ParatiiEthVouchers(this)
+    this.tcr = new ParatiiEthTcr(this)
+  }
+  /**
+   * creates an account using the private key or, if not present, using the mnemonic
+   * @param {String} address    public address
+   * @param {String} privateKey private key related to the previous public address
+   * @param {String} mnemonic   mnemonic related to the previous public address
+   * @example paratii.eth.setAccount('some-address','some-private-key')
+   * @example paratii.eth.setAccount('some-address','some-mnemonic')
+   * @memberof paratii.eth
+   */
+  setAccount (address, privateKey, mnemonic) {
+    const wallet = this.web3.eth.accounts.wallet
+    this.config.account.address = address
+    this.config.account.privateKey = privateKey
+    this.web3.eth.testAccount = address
+    if (privateKey) {
+      let account = wallet.add(privateKey)
+      if (account.address !== address) {
+        throw Error('Private Key and Account address are not compatible!')
+      }
+      this.config.account.address = address
+      this.config.account.privateKey = privateKey
+    } else if (mnemonic) {
+      wallet.create(1, mnemonic)
+      if (address &amp;&amp; wallet[0].address !== address) {
+        throw Error(`Mnemonic ${mnemonic} and account address ${address} are not compatible!`)
+      }
+      this.config.account.address = wallet[0].address
+      this.config.account.privateKey = wallet[0].privateKey
+    }
+  }
+
+  /**
+   * Get the contract instance specified
+   * @param {String} name the name of the token
+   * @return {Promise} Object representing the contract
+   * @example paratii.eth.getContract('ParatiiToken')
+   * @memberof paratii.eth
+   */
+  async getContract (name) {
+    let contract = this.contracts[name]
+    if (!contract) {
+      throw Error(`No contract with name "${name}" is known`)
+    }
+    if (!contract.options.address) {
+      let address = await this.getContractAddress(name)
+      if (address &amp;&amp; address !== '0x0') {
+        contract.options.address = address
+      }
+    }
+    if (!contract.methods.constructor._ethAccounts) {
+      contract.methods.constructor._ethAccounts = this.web3.eth.accounts
+    }
+    contract.options.from = this.config.account.address
+
+    return contract
+  }
+  /**
+   * creates the javascript contract object from the json file
+   * @param  {String} contractName name of the contract
+   * @return {String}              Contract Object
+   * @example paratii.eth.requireContract('ParatiiToken')
+   * @memberof paratii.eth
+   */
+  requireContract (contractName) {
+    const artifact = require(`paratii-contracts/build/contracts/${contractName}.json`)
+    let from = this.config.account.address
+
+    const contract = new this.web3.eth.Contract(
+      artifact.abi,
+      {
+        from: from,
+        gas: this.web3.utils.toHex(4e6),
+        data: artifact.bytecode
+      })
+    // contract.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
+    return contract
+  }
+  /**
+   * deploys contract on the blockchain
+   * @param  {String}  name name of the contract
+   * @param  {Object}  args configuration for the contract (strings or numbers). It is allowed to pass more than one parameter
+   * @return {Promise}      the deployed contract
+   * @example paratii.eth.deployContract('ParatiiToken')
+   * @memberof paratii.eth
+   */
+  async deployContract (name, ...args) {
+    if (!this.config.account.address) {
+      let msg = 'You need an Ethereum account to write information to the blockchain - you can use .setAccount(address, [privateKey]) or specify it when creating the object'
+      throw Error(msg)
+    }
+    let contract = await this.getContract(name)
+
+    let deployedContract = await contract.deploy({arguments: args}).send()
+    deployedContract.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
+    this.contracts[name] = deployedContract
+    return deployedContract
+  }
+
+  /**
+   * deploy all the contracts on the blockchain
+   * @return {Promise} all the paratii contracts
+   * @example let contracts = await paratii.eth.deployContracts()
+   * @example let likes = await this.deployContract('Likes', paratiiRegistryAddress)
+   * @memberof paratii.eth
+   */
+  async deployContracts () {
+    let paratiiRegistry = await this.deployContract('Registry')
+    let paratiiRegistryAddress = paratiiRegistry.options.address
+    await this.setRegistryAddress(paratiiRegistry.options.address)
+
+    let paratiiAvatar = await this.deployContract('Avatar', paratiiRegistryAddress)
+    let paratiiToken = await this.deployContract('ParatiiToken')
+    let sendEther = await this.deployContract('SendEther')
+    let userRegistry = await this.deployContract('Users', paratiiRegistryAddress)
+    let videoRegistry = await this.deployContract('Videos', paratiiRegistryAddress)
+    let videoStore = await this.deployContract('Store', paratiiRegistryAddress)
+    let likes = await this.deployContract('Likes', paratiiRegistryAddress)
+    let views = await this.deployContract('Views', paratiiRegistryAddress)
+    let vouchers = await this.deployContract('Vouchers', paratiiRegistryAddress)
+    let tcrPlaceholder = await this.deployContract('TcrPlaceholder', paratiiRegistryAddress, paratiiToken.options.address, this.web3.utils.toWei('5'), 100)
+
+    paratiiRegistry = await this.getContract('Registry')
+
+    await paratiiRegistry.methods.registerAddress('Avatar', paratiiAvatar.options.address).send()
+    // console.log(`Registered address of Avatar ${paratiiAvatar.options.address} at contract ${paratiiRegistryAddress}`)
+    await paratiiRegistry.methods.registerAddress('ParatiiToken', paratiiToken.options.address).send()
+    await paratiiRegistry.methods.registerAddress('SendEther', sendEther.options.address).send()
+    await paratiiRegistry.methods.registerAddress('Videos', videoRegistry.options.address).send()
+    await paratiiRegistry.methods.registerAddress('Store', videoStore.options.address).send()
+    await paratiiRegistry.methods.registerAddress('Users', userRegistry.options.address).send()
+    await paratiiRegistry.methods.registerAddress('Likes', likes.options.address).send()
+    await paratiiRegistry.methods.registerAddress('Views', views.options.address).send()
+    await paratiiRegistry.methods.registerAddress('Vouchers', vouchers.options.address).send()
+    await paratiiRegistry.methods.registerAddress('TcrPlaceholder', tcrPlaceholder.options.address).send()
+
+    await paratiiRegistry.methods.registerUint('VideoRedistributionPoolShare', this.web3.utils.toWei('0.3'))
+
+    await paratiiAvatar.methods.addToWhitelist(videoStore.address)
+
+    this.contracts = {
+      Avatar: paratiiAvatar,
+      Registry: paratiiRegistry,
+      ParatiiToken: paratiiToken,
+      SendEther: sendEther,
+      Users: userRegistry,
+      Videos: videoRegistry,
+      Likes: likes,
+      Views: views,
+      Vouchers: vouchers,
+      Store: videoStore,
+      TcrPlaceholder: tcrPlaceholder
+    }
+
+    // await this.setContractsProvider()
+
+    this.setRegistryAddress(paratiiRegistryAddress)
+
+    return this.contracts
+  }
+
+  /**
+   * Set the provider on all the contracts
+   * @example paratii.eth.setContractsProvider()
+   * @memberof paratii.eth
+   */
+  async setContractsProvider () {
+    for (var key in this.contracts) {
+      this.contracts[key].setProvider(this.web3.currentProvider, this.web3.eth.accounts)
+    }
+  }
+  /**
+   * return all the contracts
+   * @return {Promise} all the contracts
+   * @example let contracts = await paratii.eth.getContracts()
+   * @memberof paratii.eth
+   */
+  async getContracts () {
+    for (var name in this.contracts) {
+      let contract = this.contracts[name]
+      if (!contract.options.address) {
+        let address = await this.getContractAddress(name)
+        if (address &amp;&amp; address !== '0x0') {
+          contract.options.address = address
+        }
+      }
+    }
+    return this.contracts
+  }
+/**
+ * get the address of the contract on the blockchain
+ * @param  {String}  name name of the contract
+ * @return {Promise}      Contract address on the blockchain (String)
+ * @example paratii.eth.getContractAddress('ParatiiToken')
+ * @memberof paratii.eth
+ */
+  async getContractAddress (name) {
+    let registryAddress = this.getRegistryAddress()
+    if (name === 'Registry') {
+      return registryAddress
+    }
+    if (!registryAddress) {
+      throw Error('No registry address configured')
+    }
+    try {
+      let registry = await this.getContract('Registry')
+      if (!registry) {
+        throw Error('No registry contract!')
+      }
+      let address = await registry.methods.getContract(name).call()
+      return address
+    } catch (err) {
+      throw err
+    }
+  }
+
+  /**
+   * get the address of the Registry contract on the blockchain
+   * @return {String} address on the blockchain
+   * @example let registryAddress = paratii.eth.getRegistryAddress()
+   * @memberof paratii.eth
+   */
+  getRegistryAddress () {
+    return this.config.eth.registryAddress
+  }
+  /**
+   * set the address of the Registry contract on the blockchain
+   * @param {String} registryAddress new address
+   * @example await paratii.eth.setRegistryAddress('some-address')
+   * @memberof paratii.eth
+   */
+  setRegistryAddress (registryAddress) {
+    this.config.eth.registryAddress = registryAddress
+    for (var name in this.contracts) {
+      let contract = this.contracts[name]
+      contract.options.address = undefined
+    }
+  }
+  /**
+  * When called with a second argument, returns the balance of that Token.&lt;br>
+  * When called without a second argument, returns information about all relevant balances.
+  * @param  {String}  address ethereum address
+  * @param  {String}  symbol  optional - symbol of the token (ETH,PTI)
+  * @return {Promise}         information about balances of that address
+  * @example paratii.eth.balanceOf('some-address', 'ETH') // returns the ETH balance of the given address
+  * @example paratii.eth.balanceOf('some-address', 'PTI') // returns the PTI balance of the given address
+  * @example paratii.eth.balanceOf('some-address') // returns both the PTI and the ETH balance of the given address
+  * @memberof paratii.eth
+  */
+  async balanceOf (address, symbol) {
+    let balance
+    let balances = {}
+
+    if (symbol &amp;&amp; !(['PTI', 'ETH'].includes(symbol))) {
+      throw Error(`Unknown symbol "${symbol}", must be one of "ETH", "PTI"`)
+    }
+
+    if (!symbol || symbol === 'ETH') {
+      balance = await this.web3.eth.getBalance(address)
+      balances.ETH = balance
+    }
+    if (!symbol || symbol === 'PTI') {
+      let contract = await this.getContract('ParatiiToken')
+      balance = await contract.methods.balanceOf(address).call()
+      balances.PTI = balance
+    }
+    if (symbol) {
+      return balance
+    } else {
+      return balances
+    }
+  }
+  /**
+   * send ETH from current account to beneficiary
+   * @param  {String}  beneficiary ETH address
+   * @param  {Number}  amount      amount of ETH to be sent
+   * @param  {String}  description optional - description of the transaction (will be written in the blockchain)
+   * @return {Promise}             information about the transaction recording the transfer
+   * @example return paratii.eth._transferETH('some-address', 20, 'an-optional-description')
+   * @memberof paratii.eth
+   */
+  async _transferETH (beneficiary, amount, description) {
+    const contract = await this.getContract('SendEther')
+    if (!contract.options || !contract.options.address) {
+      throw Error('No SendEther contract known - please run paratii.diagnose()')
+    }
+
+    let from = this.config.account.address
+    if (!from) {
+      throw Error('No account set! Cannot send transactions')
+    }
+
+    if (!description) {
+      description = ''
+    }
+    from = add0x(from)
+    beneficiary = add0x(beneficiary)
+
+    try {
+      return await contract.methods.transfer(beneficiary, description).send({value: amount})
+    } catch (err) {
+      throw err
+    }
+  }
+  /**
+   * send PTI from current account to beneficiary
+   * @param  {String}  beneficiary ETH address
+   * @param  {Number}  amount      amount of PTI to be sent
+   * @return {Promise}             information about the transaction recording the transfer
+   * @example return paratii.eth._transferPTI('some-address', 20)
+   * @memberof paratii.eth
+   */
+  async _transferPTI (beneficiary, amount) {
+    const contract = await this.getContract('ParatiiToken')
+
+    if (!contract.options || !contract.options.address) {
+      throw Error('No ParatiiToken contract known - please run paratii.diagnose()')
+    }
+    let from = this.config.account.address
+    if (!from) {
+      throw Error('No account set! Cannot send transactions')
+    }
+    from = add0x(from)
+    beneficiary = add0x(beneficiary)
+
+    let result = await contract.methods.transfer(beneficiary, amount).send()
+
+    return result
+  }
+  /**
+   * Use this to send ETH or PTI from paratii.config.address
+   * @param  {String}  beneficiary ETH address
+   * @param  {Number}  amount      amount of ETH/PTI to be sent
+   * @param  {String}  symbol      symbol of the token to send (ETH,PTI)
+   * @param  {String}  description optional - description to be inserted in the blockchain
+   * @return {Promise}             information about the transaction recording the transfer
+   * @example let result = await paratii.eth.transfer('some-address', 20, 'ETH', 'thanks for all the fish')
+   * @memberof paratii.eth
+   */
+  async transfer (beneficiary, amount, symbol, description) {
+    if (symbol === 'ETH') {
+      return this._transferETH(beneficiary, amount, description)
+    } else if (symbol === 'PTI') {
+      return this._transferPTI(beneficiary, amount)
+    }
+  }
+}
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	
+		on 2018-04-06T13:03:37+02:00
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : false,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

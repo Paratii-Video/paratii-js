@@ -12,17 +12,14 @@
     "test": "test"
   },
   "scripts": {
-    "build": "babel ./lib -d ./dist",
+    "build": "babel ./src -d ./dist",
     "build-browser": "webpack --progress --colors",
     "test": "mocha --require babel.js --exit --timeout 20000 test/*.js",
     "parity": "parity --config parity-config.toml",
     "lint": "standard",
     "lint-fix": "standard --fix",
     "node": "node",
-    "docs": "npm run docs-html && npm run docs-md",
-    "docs-html": "documentation build lib/** -f html -o docs",
-    "docs-md": "documentation build lib/** -f md -o docs/jsdoc.md",
-    "docs-watch": "documentation build lib/** -f html -o docs --watch",
+    "docs": "jsdoc --configure .jsdoc.json --readme ./README.md --destination ./docs/htmldoc",
     "git-add-docs-and-build": "git add docs dist"
   },
   "dependencies": {
@@ -61,8 +58,9 @@
     "browserify-fs": "^1.0.0",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
-    "documentation": "^6.1.0",
     "file-api": "^0.10.4",
+    "jsdoc": "^3.5.5",
+    "ink-docstrap": "^1.3.2",
     "mocha": "^4.1.0",
     "nock": "^9.1.6",
     "postinstall-prepare": "^1.0.1",

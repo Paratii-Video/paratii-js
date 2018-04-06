@@ -28,6 +28,7 @@ var joi = require('joi');
 /**
  * Utilities to create and manipulate information about the users on the blockchain.
  * @param {Object} config configuration object to initialize Paratii object
+ * @class paratii.core.users
  */
 
 var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
@@ -55,6 +56,7 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
    *              email: 'some@email.com',
    *              ...
    *             })
+   * @memberof paratii.core.users
    */
 
 
@@ -99,6 +101,7 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
      * @param  {String} id user univocal id
      * @return {Object}    data about the user
      * @example paratii.core.users.get('some-user-id')
+     * @memberof paratii.core.users
     */
 
   }, {
@@ -112,6 +115,7 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
      * @param  {Object}  options updated data i.e. { name: 'A new user name' }
      * @return {Promise}         updated data about the user
      * @example paratii.core.users.update('some-user-id', {name: 'A new user name'})
+     * @memberof paratii.core.users
      */
 
   }, {

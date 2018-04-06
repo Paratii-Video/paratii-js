@@ -33,6 +33,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Contains functions that operate transversally over several backend systems. <br />
  * validates the config file and istantiates ParatiiCoreVids and ParatiiCoreUsers.
  * @param {Object} config configuration object to initialize Paratii object
+ * @class paratii.core
+ * @memberof paratii
  */
 var ParatiiCore = exports.ParatiiCore = function () {
   function ParatiiCore(config) {
@@ -56,6 +58,7 @@ var ParatiiCore = exports.ParatiiCore = function () {
 
   /**
    * migrate all contract data for  paratii.config.account to a new account
+   * @memberof paratii.core
    */
 
 
