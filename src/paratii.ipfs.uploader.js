@@ -54,8 +54,6 @@ export class Uploader extends EventEmitter {
    * @memberof paratii.ipfs.uploader
    */
   xhrUpload (file, hashedFile, ev) {
-    console.log('transcoder dropUrl', `${this.config.transcoderDropUrl}/${hashedFile.hash}`)
-
     let r = new Resumable({
       target: `${this.config.ipfs.transcoderDropUrl}/${hashedFile.hash}`,
       chunkSize: this.config.ipfs.xhrChunkSize,
