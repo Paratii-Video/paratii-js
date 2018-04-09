@@ -14,7 +14,7 @@ export function patchWallet (wallet, config) {
   /**
    * Create a wallet with a given number of accounts from a BIP39 mnemonic
    * @param  {number} numberOfAccounts number of accounts to be created
-   * @param  {string} mnemonic         optional - mnemonic of the wallet, if not specified a random one is generated
+   * @param  {?string} mnemonic         mnemonic of the wallet, if not specified a random one is generated
    * @return {Object}                  the created wallet
    * @example wallet = await wallet.create(5, 'some long mnemonic phrase')
    */

@@ -604,7 +604,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
     * When called with a second argument, returns the balance of that Token.<br>
     * When called without a second argument, returns information about all relevant balances.
     * @param  {string}  address ethereum address
-    * @param  {string}  symbol  optional - symbol of the token (ETH,PTI)
+    * @param  {?string}  symbol  symbol of the token (ETH,PTI)
     * @return {Promise}         information about balances of that address
     * @example paratii.eth.balanceOf('some-address', 'ETH') // returns the ETH balance of the given address
     * @example paratii.eth.balanceOf('some-address', 'PTI') // returns the PTI balance of the given address
@@ -685,7 +685,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
      * send ETH from current account to beneficiary
      * @param  {string}  beneficiary ETH address
      * @param  {number}  amount      amount of ETH to be sent
-     * @param  {string}  description optional - description of the transaction (will be written in the blockchain)
+     * @param  {?string}  description  description of the transaction (will be written in the blockchain)
      * @return {Promise}             information about the transaction recording the transfer
      * @example return paratii.eth._transferETH('some-address', 20, 'an-optional-description')
      */
@@ -811,7 +811,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
      * @param  {string}  beneficiary ETH address
      * @param  {number}  amount      amount of ETH/PTI to be sent
      * @param  {string}  symbol      symbol of the token to send (ETH,PTI)
-     * @param  {string}  description optional - description to be inserted in the blockchain
+     * @param  {?string}  description description to be inserted in the blockchain
      * @return {Promise}             information about the transaction recording the transfer
      * @example let result = await paratii.eth.transfer('some-address', 20, 'ETH', 'thanks for all the fish')
      */
