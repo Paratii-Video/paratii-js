@@ -165,3 +165,12 @@ it('if the registry address doesn\'t exist, paratii should throw a meaningful er
 
   // await paratii.eth.getContract('Likes')
 })
+
+it('Paratii should throw a meaningful error if no blockchain is available', async function () {
+  let paratii = new Paratii({
+    eth: { provider: 'http://localhost:8000' }, // wrong port
+    account: testAccount
+  })
+
+  paratii.eth.deployContracts()
+})
