@@ -64,7 +64,6 @@ var dbSchema = joi.object({
 }).default();
 
 /**
- * this is the data structure of a video
  * @typedef {Array} videoSchema
  * @property {?string} id
  * @property {?string} author
@@ -118,13 +117,6 @@ var videoSchema = joi.object({
   }).allow(null).default({})
 });
 
-/**
-  * @typedef {Array} configSchema
-  * @property {?accountSchema} account
-  * @property {?ethSchema} eth
-  * @property {?dbSchema} db
-  * @property {?ipfsSchema} ipfs
- */
 exports.accountSchema = accountSchema;
 exports.ethSchema = ethSchema;
 exports.ipfsSchema = ipfsSchema;

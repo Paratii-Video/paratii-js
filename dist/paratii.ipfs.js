@@ -61,12 +61,19 @@ global.Buffer = global.Buffer || require('buffer').Buffer;
 
 /**
  * Contains functions to interact with the IPFS instance.
- * @param {Object} config configuration object to initialize Paratii object
+ * @param {ParatiiIPFSSchema} config configuration object to initialize Paratii object
+ * @property {Uploader} uploader Paratii IPFS uploader interface
  */
 
 var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   (0, _inherits3.default)(ParatiiIPFS, _EventEmitter);
 
+  /**
+  * @typedef {Array} ParatiiIPFSSchema
+  * @property {?ipfsSchema} ipfs
+  * @property {?accountSchema} account
+  * @property {?boolean} verbose
+  */
   function ParatiiIPFS(config) {
     (0, _classCallCheck3.default)(this, ParatiiIPFS);
 

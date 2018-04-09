@@ -8,9 +8,16 @@ global.Buffer = global.Buffer || require('buffer').Buffer
 
 /**
  * Contains functions to interact with the IPFS instance.
- * @param {Object} config configuration object to initialize Paratii object
+ * @param {ParatiiIPFSSchema} config configuration object to initialize Paratii object
+ * @property {Uploader} uploader Paratii IPFS uploader interface
  */
 export class ParatiiIPFS extends EventEmitter {
+  /**
+  * @typedef {Array} ParatiiIPFSSchema
+  * @property {?ipfsSchema} ipfs
+  * @property {?accountSchema} account
+  * @property {?boolean} verbose
+ */
   constructor (config) {
     super()
     const schema = joi.object({

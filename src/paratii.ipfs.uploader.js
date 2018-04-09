@@ -17,10 +17,14 @@ const Resumable = require('resumablejs')
 /**
  * IPFS UPLOADER : Paratii IPFS uploader interface.
  * @extends EventEmitter
- * @param {Object} opts
-
+ * @param {ParatiiIPFSUploaderSchema} opts
  */
 export class Uploader extends EventEmitter {
+  /**
+  * @typedef {Array} ParatiiIPFSUploaderSchema
+  * @property {?ipfsSchema} ipfs
+  * @property {?Object} ParatiiIPFS
+  */
   constructor (opts) {
     super()
     const schema = joi.object({

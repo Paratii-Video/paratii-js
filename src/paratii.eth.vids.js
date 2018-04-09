@@ -2,7 +2,8 @@ import { getInfoFromLogs, makeId, NULL_ADDRESS } from './utils.js'
 const joi = require('joi')
 /**
  * The eth.vids namespace contains functions to interact with the video registration on the blockchain.
-
+ * @param {Object} context ParatiiEth instance
+ * @property {ParatiiEth} eth ParatiiEth instance
  */
 export class ParatiiEthVids {
   constructor (context) {
@@ -13,7 +14,6 @@ export class ParatiiEthVids {
    * Get the contract instance of the videos contract
    * @return {Promise} Object representing the contract
    * @example let contract = await paratii.eth.vids.getVideoRegistry()
-
    */
   async getVideoRegistry () {
     let contract = await this.eth.getContract('Videos')

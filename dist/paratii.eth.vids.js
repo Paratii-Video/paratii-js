@@ -24,7 +24,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var joi = require('joi');
 /**
  * The eth.vids namespace contains functions to interact with the video registration on the blockchain.
-
+ * @param {Object} context ParatiiEth instance
+ * @property {ParatiiEth} eth ParatiiEth instance
  */
 
 var ParatiiEthVids = exports.ParatiiEthVids = function () {
@@ -38,7 +39,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
    * Get the contract instance of the videos contract
    * @return {Promise} Object representing the contract
    * @example let contract = await paratii.eth.vids.getVideoRegistry()
-    */
+   */
 
 
   (0, _createClass3.default)(ParatiiEthVids, [{

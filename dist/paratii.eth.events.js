@@ -21,7 +21,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 /**
  * eth.events implements a part of the API of the EventEmitter, that can be used to manage subscriptions to Ethereum events.
-
+ * @param {Object} config configuration object to initialize Paratii object
  */
 var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
   function ParatiiEthEvents(config) {

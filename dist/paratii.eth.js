@@ -43,10 +43,20 @@ var Web3 = require('web3');
 // const joi = require('joi')
 /**
  * contains functions to interact with the Ethereum blockchain and the Paratii contracts deployed there.
- * @param {Object} config configuration object to initialize Paratii object
+ * @param {ParatiiEthSchema} config configuration object to initialize Paratii object
+ * @property {ParatiiCoreVids} vids operations on videos
+ * @property {ParatiiCoreUsers} users operations on users
+ * @property {ParatiiEthEvents} events manage subscriptions to Ethereum events
+ * @property {ParatiiEthVouchers} vouchers Functions for redeeming vouchers
+ * @property {ParatiiEthTcr} tcr TCR functionality
 */
 
 var ParatiiEth = exports.ParatiiEth = function () {
+  /**
+  * @typedef {Array} ParatiiEthSchema
+  * @property {?accountSchema} account
+  * @property {?ethSchema} eth
+  */
   function ParatiiEth(config) {
     (0, _classCallCheck3.default)(this, ParatiiEth);
 

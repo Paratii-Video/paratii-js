@@ -13,12 +13,12 @@ const utils = require('./utils.js')
  * contracts that are deployed on the blockchain, utilities to run and interact with a local IPFS node,
  * and utilities to interact with the Paratii index.
 
- * @param {configSchema} opts options object to configure paratii library
+ * @param {ParatiiConfigSchema} opts options object to configure paratii library
  * @property {ParatiiCoreVids} vids operations on videos
- * @property {ParatiiCoreUsers} users
+ * @property {ParatiiCoreUsers} users operations on users
  * @property {ParatiiEth} eth interact with the Ethereum blockchain
- * @property {ParatiiIPFS} ipfs
- * @property {ParatiiDb} db
+ * @property {ParatiiIPFS} ipfs interact with the IPFS instance
+ * @property {ParatiiDb} db interact with the Paratii Index
  * @example paratii = new Paratii({
  *  eth: {
  *    provider': 'http://localhost:8545'
@@ -30,6 +30,13 @@ const utils = require('./utils.js')
  */
 
 class Paratii extends ParatiiCore {
+  /**
+    * @typedef {Array} ParatiiConfigSchema
+    * @property {?accountSchema} account
+    * @property {?ethSchema} eth
+    * @property {?dbSchema} db
+    * @property {?ipfsSchema} ipfs
+   */
   constructor (opts = {}) {
     const schema = joi.object({
       account: accountSchema,

@@ -8,7 +8,7 @@ var hdkey = require('hdkey')
  * @param  {Object} wallet wallet to patch
  * @param  {Object} config configuration object to initialize Paratii object
  * @return {Object}        patched wallet
-
+ * @private
  */
 export function patchWallet (wallet, config) {
   /**
@@ -17,7 +17,6 @@ export function patchWallet (wallet, config) {
    * @param  {string} mnemonic         optional - mnemonic of the wallet, if not specified a random one is generated
    * @return {Object}                  the created wallet
    * @example wallet = await wallet.create(5, 'some long mnemonic phrase')
-
    */
   async function create (numberOfAccounts, mnemonic) {
     if (this.length > 0) {

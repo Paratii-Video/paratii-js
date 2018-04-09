@@ -1,7 +1,8 @@
 const joi = require('joi')
 /**
  * The eth.user namespace contains functions to interact with the video registration on the blockchain.
-
+ * @param {Object} context ParatiiEth instance
+ * @property {ParatiiEth} eth ParatiiEth instance
  */
 export class ParatiiEthUsers {
   constructor (context) {
@@ -11,7 +12,6 @@ export class ParatiiEthUsers {
   /**
    * Get the contract instance of the user contract
    * @return {Promise}  Object representing the contract
-
    */
   async getRegistry () {
     return this.eth.getContract('Users')

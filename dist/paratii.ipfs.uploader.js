@@ -57,13 +57,17 @@ var Resumable = require('resumablejs');
 /**
  * IPFS UPLOADER : Paratii IPFS uploader interface.
  * @extends EventEmitter
- * @param {Object} opts
-
+ * @param {ParatiiIPFSUploaderSchema} opts
  */
 
 var Uploader = exports.Uploader = function (_EventEmitter) {
   (0, _inherits3.default)(Uploader, _EventEmitter);
 
+  /**
+  * @typedef {Array} ParatiiIPFSUploaderSchema
+  * @property {?ipfsSchema} ipfs
+  * @property {?Object} ParatiiIPFS
+  */
   function Uploader(opts) {
     (0, _classCallCheck3.default)(this, Uploader);
 

@@ -32,9 +32,20 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Contains functions that operate transversally over several backend systems. <br />
  * validates the config file and istantiates ParatiiCoreVids and ParatiiCoreUsers.
- * @param {paratiiSchema} config configuration object to initialize Paratii object
+ * @param {ParatiiCoreSchema} config configuration object to initialize Paratii object
+ * @property {ParatiiCoreVids} vids operations on videos
+ * @property {ParatiiCoreUsers} users operations on users
+ * @property {Paratii} paratii main Paratii Object
  */
 var ParatiiCore = exports.ParatiiCore = function () {
+  /**
+  * @typedef {Array} ParatiiCoreSchema
+  * @property {?accountSchema} account
+  * @property {?ethSchema} eth
+  * @property {?dbSchema} db
+  * @property {?ipfsSchema} ipfs
+  * @property {?Object} paratii
+  */
   function ParatiiCore(config) {
     (0, _classCallCheck3.default)(this, ParatiiCore);
 
@@ -56,9 +67,8 @@ var ParatiiCore = exports.ParatiiCore = function () {
 
   /**
    * migrate all contract data for  paratii.config.account to a new account
-   * @alias migrateAccount
-   * @param newAccount Address of new account
-   * @async
+   * @param {Object} newAccount Address of new account
+   * @private
    */
 
 

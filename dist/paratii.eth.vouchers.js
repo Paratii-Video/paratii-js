@@ -24,7 +24,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var joi = require('joi');
 /**
  * Functions for redeeming vouchers
-
+ * @param  {Object} context ParatiiEth instance
+ * @property {ParatiiEth} eth ParatiiEth instance
  */
 
 var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
@@ -38,7 +39,7 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
    * Get the contract instance of the vouchers contract
    * @return {Promise} Object representing the contract
    * @example let contract = await paratii.eth.vids.getVouchersContract()
-   */
+  */
 
 
   (0, _createClass3.default)(ParatiiEthVouchers, [{

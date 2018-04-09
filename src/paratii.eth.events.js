@@ -1,6 +1,6 @@
 /**
  * eth.events implements a part of the API of the EventEmitter, that can be used to manage subscriptions to Ethereum events.
-
+ * @param {Object} config configuration object to initialize Paratii object
  */
 export class ParatiiEthEvents {
   constructor (config) {

@@ -22,7 +22,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var joi = require('joi');
 /**
  * The eth.user namespace contains functions to interact with the video registration on the blockchain.
-
+ * @param {Object} context ParatiiEth instance
+ * @property {ParatiiEth} eth ParatiiEth instance
  */
 
 var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
@@ -35,7 +36,7 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
   /**
    * Get the contract instance of the user contract
    * @return {Promise}  Object representing the contract
-    */
+   */
 
 
   (0, _createClass3.default)(ParatiiEthUsers, [{

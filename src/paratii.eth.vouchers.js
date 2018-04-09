@@ -2,7 +2,8 @@ import { getInfoFromLogs, NULL_ADDRESS, makeId } from './utils.js'
 const joi = require('joi')
 /**
  * Functions for redeeming vouchers
-
+ * @param  {Object} context ParatiiEth instance
+ * @property {ParatiiEth} eth ParatiiEth instance
  */
 export class ParatiiEthVouchers {
   constructor (context) {
@@ -13,7 +14,6 @@ export class ParatiiEthVouchers {
    * Get the contract instance of the vouchers contract
    * @return {Promise} Object representing the contract
    * @example let contract = await paratii.eth.vids.getVouchersContract()
-
   */
   async getVouchersContract () {
     let contract = await this.eth.getContract('Vouchers')
