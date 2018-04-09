@@ -105,7 +105,7 @@ var Paratii = function (_ParatiiCore) {
   /**
    * Set the ethereum address what will be used to sign all transactions
    * @param {string} address address of the operator/user
-   * @param {string} privateKey optional - private key of the operator/user
+   * @param {?string} privateKey  private key of the operator/user
    * @example paratii.setAccount('some-user-id','some-user-pub-key')
    */
 
