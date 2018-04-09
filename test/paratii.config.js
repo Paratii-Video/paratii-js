@@ -151,3 +151,17 @@ describe('Paratii configuration:', function () {
     await paratii.eth.deployContract('Registry')
   })
 })
+
+it('if the registry address doesn\'t exist, paratii should throw a meaningful error', async function () {
+  let paratii = new Paratii({
+    account: testAccount,
+    eth: {registryAddress: '0x0000000000000000000000000000000000000001',
+      provider: 'http://localhost:8545'}
+  })
+  await paratii.eth.deployContracts()
+
+  let reg = await paratii.eth.getRegistryAddress()
+  console.log(reg)
+  console.log(paratii.eth.registryAddress)
+  await paratii.eth.getContract('Likes')
+})
