@@ -18,7 +18,7 @@ describe('paratii.core API: :', function () {
     assert.isOk(paratiiCore.vids)
   })
 
-  it('migrateAccount should work @watch', async function () {
+  it('migrateAccount should work', async function () {
     // migrate all assets from default account address to address23
     let id1 = vidsFixture[1].id
     let id2 = vidsFixture[2].id
@@ -44,5 +44,17 @@ describe('paratii.core API: :', function () {
     // the balance in PTI should be transfered to the new address
     assert.equal(await paratii.eth.balanceOf(address23, 'PTI'), oldBalance)
     // assert.isOk(false, 'any stakes made should be transfered to the new account')
+  })
+
+  it('migrateAccount should work also when no vids present', async function () {
+    // result = await paratii.eth.tcr.apply(id1, paratii.eth.web3.utils.toWei('5'))
+    let oldBalance = await paratii.eth.balanceOf(address, 'PTI')
+    assert.isOk(oldBalance > 0, oldBalance)
+
+    // now (the current owner) sends  a request to migrate her account
+    await paratii.core.migrateAccount(address23)
+
+    // the balance in PTI should be transfered to the new address
+    assert.equal(await paratii.eth.balanceOf(address23, 'PTI'), oldBalance)
   })
 })

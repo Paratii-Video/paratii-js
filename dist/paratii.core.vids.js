@@ -138,29 +138,28 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
     key: 'create',
     value: function create() {
       var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      var result, error, hash;
+      var validation, hash;
       return _regenerator2.default.async(function create$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              result = _joi2.default.validate(options, _schemas.videoSchema);
-              error = result.error;
+              validation = _joi2.default.validate(options, _schemas.videoSchema);
 
-              if (!error) {
-                _context.next = 4;
+              if (!validation.error) {
+                _context.next = 3;
                 break;
               }
 
-              throw error;
+              throw validation.error;
 
-            case 4:
-              options = result.value;
+            case 3:
+              options = validation.value;
 
               if (options.id === null) {
                 options.id = this.paratii.eth.vids.makeId();
               }
 
-              _context.next = 8;
+              _context.next = 7;
               return _regenerator2.default.awrap(this.paratii.ipfs.addAndPinJSON({
                 author: options.author,
                 description: options.description,
@@ -175,13 +174,13 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 thumbnails: options.thumbnails
               }));
 
-            case 8:
+            case 7:
               hash = _context.sent;
 
 
               options.ipfsData = hash;
 
-              _context.next = 12;
+              _context.next = 11;
               return _regenerator2.default.awrap(this.paratii.eth.vids.create({
                 id: options.id,
                 owner: options.owner,
@@ -191,10 +190,10 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 ipfsData: options.ipfsData
               }));
 
-            case 12:
+            case 11:
               return _context.abrupt('return', options);
 
-            case 13:
+            case 12:
             case 'end':
               return _context.stop();
           }
@@ -244,7 +243,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 break;
               }
 
-              throw new Error('No video to update');
+              throw new Error('No video with id ' + videoId + ' to update');
 
             case 10:
 

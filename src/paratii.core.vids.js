@@ -88,10 +88,9 @@ export class ParatiiCoreVids {
    * @memberof paratii.core.vids
    */
   async create (options = {}) {
-    const result = joi.validate(options, videoSchema)
-    const error = result.error
-    if (error) throw error
-    options = result.value
+    const validation = joi.validate(options, videoSchema)
+    if (validation.error) throw validation.error
+    options = validation.value
 
     if (options.id === null) {
       options.id = this.paratii.eth.vids.makeId()
@@ -142,7 +141,7 @@ export class ParatiiCoreVids {
       data = await this.get(videoId)
     }
     if (data === null) {
-      throw new Error('No video to update')
+      throw new Error(`No video with id ${videoId} to update`)
     }
 
     // FIXME: missing the validate invociation
