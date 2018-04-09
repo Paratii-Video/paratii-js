@@ -130,7 +130,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     }
     /**
      * get file from ipfs
-     * @param  {string}  hash multihash of the file
+     * @param  {string}  hash ipfs multihash of the file
      * @return {Promise}      the file (path,content)
      * @example
      * let result = await paratiiIPFS.add(fileStream)
@@ -372,7 +372,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     /**
      * convenient method to add JSON and send it for persistance storage.
      * @param  {object}  data JSON object to store
-     * @return {string}      returns multihash of the stored object.
+     * @return {string}      returns ipfs multihash of the stored object.
      * @example let result = await paratiiIPFS.addAndPinJSON(data)
      */
 
