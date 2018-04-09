@@ -3,7 +3,6 @@ const joi = require('joi')
 /**
  * Utilities to create and manipulate information about the users on the blockchain.
  * @param {Object} config configuration object to initialize Paratii object
- * @class paratii.users
  */
 export class ParatiiCoreUsers {
   constructor (config) {
@@ -16,19 +15,21 @@ export class ParatiiCoreUsers {
     // if (error) throw error
     this.config = config
   }
-/**
- * Creates a user, fields id, name and email go to the smart contract Users, other fields are stored on IPFS.
- * @param  {Object}  options information about the video ( id, name, email ... )
- * @return {Promise}         the id of the newly created user
- * @example
- *            paratii.users.create({
- *              id: 'some-user-id',
- *              name: 'A user name',
- *              email: 'some@email.com',
- *              ...
- *             })
- * @memberof paratii.users
- */
+
+  /**
+   * Creates a user, fields id, name and email go to the smart contract Users, other fields are stored on IPFS.
+   * @param  {userSchema}  options information about the video ( id, name, email ... )
+   * @return {Promise}         the id of the newly created user
+   * @example
+   *            paratii.users.create({
+   *              id: 'some-user-id',
+   *              name: 'A user name',
+   *              email: 'some@email.com',
+   *              ...
+   *             })
+   * @memberof paratii.users
+   */
+  // FIXME: do some joi validation here
   async create (options) {
     let keysForBlockchain = ['id', 'name', 'email']
     let optionsKeys = Object.keys(options)
@@ -45,6 +46,7 @@ export class ParatiiCoreUsers {
     optionsBlockchain['ipfsData'] = hash
     return this.config.paratii.eth.users.create(optionsBlockchain)
   }
+
   /**
    * retrieve data about the user
    * @param  {String} id user univocal id

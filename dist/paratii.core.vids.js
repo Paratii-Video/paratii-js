@@ -32,29 +32,22 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Utilities to create and manipulate information about the videos on the blockchain.
  * @param {Object} config configuration object to initialize Paratii object
- * @class paratii.core.vids
+ * @namespace vids
+ * @lends Paratii
+ * @class ParatiiCoreVids
  */
 var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
   function ParatiiCoreVids(config) {
     (0, _classCallCheck3.default)(this, ParatiiCoreVids);
-
-    // const schema = joi.object({
-    //   'db.provider': joi.string().default(null)
-    // }).unknown()
-    //
-    // const result = joi.validate(config, schema)
-    // const error = result.error
-    // if (error) throw error
-    // let options = result.value
 
     this.config = config;
   }
 
   /**
    * This call will register the video on the blockchain, add its metadata to IPFS, upload file to IPFS, and transcode it
-   * @param  {Object}  options information about the video ( id, title, FilePath ... )
+   * @param  {videoSchema}  options information about the video ( id, title, FilePath ... )
    * @return {Promise}         information about the video ( id, owner, ipfsHash ... )
-   * @example paratii.core.vids.create({
+   * @example await paratii.core.vids.create({
    *  id: 'some-video-id',
    *  owner: 'some-user-id',
    *  title: 'some Title',
@@ -64,7 +57,6 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
    *  price: 0,
    *  filename: 'test/data/some-file.txt'
    * })
-   * @memberof paratii.core.vids
    */
 
 

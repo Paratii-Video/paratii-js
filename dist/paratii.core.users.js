@@ -28,7 +28,6 @@ var joi = require('joi');
 /**
  * Utilities to create and manipulate information about the users on the blockchain.
  * @param {Object} config configuration object to initialize Paratii object
- * @class paratii.users
  */
 
 var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
@@ -44,9 +43,10 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
     // if (error) throw error
     this.config = config;
   }
+
   /**
    * Creates a user, fields id, name and email go to the smart contract Users, other fields are stored on IPFS.
-   * @param  {Object}  options information about the video ( id, name, email ... )
+   * @param  {userSchema}  options information about the video ( id, name, email ... )
    * @return {Promise}         the id of the newly created user
    * @example
    *            paratii.users.create({
@@ -57,6 +57,7 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
    *             })
    * @memberof paratii.users
    */
+  // FIXME: do some joi validation here
 
 
   (0, _createClass3.default)(ParatiiCoreUsers, [{
@@ -95,6 +96,7 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
         }
       }, null, this);
     }
+
     /**
      * retrieve data about the user
      * @param  {String} id user univocal id

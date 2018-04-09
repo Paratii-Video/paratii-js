@@ -14,19 +14,22 @@ const utils = require('./utils.js')
  * contracts that are deployed on the blockchain, utilities to run and interact with a local IPFS node,
  * and utilities to interact with the Paratii index.
  * @class Paratii
- * @param {accountSchema} opts options object to configure paratii library
- * @param {String} opts.provider optional - the address of an ethereum node (defaults to localhost:8754)
- * @param {String} opts.registryAddress optional - the address where the Paratii Contract registry can be found
- * @param {String} opts.address optional - address of the operator/user
- * @param {String} opts.privateKey optional - private key of the user
- * @param {Object} opts.ipfs TODO fix ipfs.repo --> ipfsrepo
- * @param {String} opts.ipfs.repo optional - namespace of the ipfs repository
- * @param {Object} opts.db TODO fix db.provider --> dbprovider
- * @param {String} opts.db.provider optional - baseURL of the mongoDb mirror
- * @param {String} opts.mnemonic optional - mnemonic of the user
- *
- * @example     paratii = new Paratii({ 'eth.provider': 'http://localhost:8545', address: 'some-user-id', privateKey: 'some-user-priv-key'})
- * @class paratii
+ * @param {configSchema} opts options object to configure paratii library
+ * @example paratii = new Paratii({
+ *  eth: {
+ *    provider': 'http://localhost:8545'
+ *   },
+ *   account: {
+ *     address: 'your-address'
+ *   }
+ * })
+ * @property {ParatiiCoreVids} vids operations on videos
+ * @property {ParatiiCoreUsers} users
+ * @property {ParatiiEth} eth interact with the Ethereum blockchain
+ * @property {ParatiiEthTcr} eth.tcr interaction with the TCR contract on ethereum
+ * @property {ParatiiIPFS} ipfs
+ * @property {ParatiiDb} db
+ * @property {ParatiiDbUsers} db.users
  */
 
 class Paratii extends ParatiiCore {
@@ -55,7 +58,6 @@ class Paratii extends ParatiiCore {
    * @param {String} address address of the operator/user
    * @param {String} privateKey optional - private key of the operator/user
    * @example paratii.setAccount('some-user-id','some-user-pub-key')
-   * @memberof paratii
    */
   setAccount (address, privateKey) {
     this.eth.setAccount(address, privateKey)
@@ -64,7 +66,6 @@ class Paratii extends ParatiiCore {
    * Set the address of the ParatiiRegistry contract
    * @param {String} address address of the ParatiiRegistry contract
    * @example paratii.setRegistryAddress('some-address')
-   * @memberof paratii
   */
   setRegistryAddress (address) {
     return this.eth.setRegistryAddress(address)
@@ -74,7 +75,6 @@ class Paratii extends ParatiiCore {
    * return an array of strings with diagnostic info
    * @return {Promise} array of strings with diagnostic info
    * @example paratii.diagnose()
-   * @memberof paratii
    */
   async diagnose () {
     let msg, address, msgs

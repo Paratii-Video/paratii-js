@@ -6,9 +6,7 @@ import joi from 'joi'
 /**
  * Contains functions that operate transversally over several backend systems. <br />
  * validates the config file and istantiates ParatiiCoreVids and ParatiiCoreUsers.
- * @param {Object} config configuration object to initialize Paratii object
- * @class paratii.core
- * @memberof paratii
+ * @param {paratiiSchema} config configuration object to initialize Paratii object
  */
 export class ParatiiCore {
   constructor (config) {
@@ -30,7 +28,10 @@ export class ParatiiCore {
 
   /**
    * migrate all contract data for  paratii.config.account to a new account
-   * @memberof paratii.core
+   * @alias migrateAccount
+   * @param newAccount Address of new account
+   * @async
+   * @memberof Paratii
    */
   async migrateAccount (newAccount) {
     // migrate the videos

@@ -71,6 +71,13 @@ var videoSchema = joi.object({
   }).allow(null).default({})
 });
 
+/**
+  * @typedef {Array} configSchema
+  * @property {?accountSchema} account
+  * @property {?object} eth
+  * @property {?object} db
+  * @property {?Object} ipfs
+ */
 exports.accountSchema = accountSchema;
 exports.ethSchema = ethSchema;
 exports.ipfsSchema = ipfsSchema;

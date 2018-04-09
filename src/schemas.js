@@ -75,4 +75,11 @@ const videoSchema = joi.object({
   }).allow(null).default({})
 })
 
+/**
+  * @typedef {Array} configSchema
+  * @property {?accountSchema} account
+  * @property {?object} eth
+  * @property {?object} db
+  * @property {?Object} ipfs
+ */
 export { accountSchema, ethSchema, ipfsSchema, dbSchema, videoSchema }

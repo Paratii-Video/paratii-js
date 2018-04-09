@@ -22,11 +22,10 @@ var _joi2 = _interopRequireDefault(_joi);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * ParatiiDb contains a functionality to interact with the Paratii Blockchain Index. <br>
- * validates the config file and istantiates ParatiiDbVids and ParatiiDbUsers.
+ * ParatiiDb contains a functionality to interact with the Paratii Index.
  * @param {Object} config
- * @class paratii.db
- * @memberof paratii
+ * @example paratii = new Paratii()
+ * paratii.db.vids.get('video-id')
  */
 var ParatiiDb = exports.ParatiiDb = function ParatiiDb(config) {
   (0, _classCallCheck3.default)(this, ParatiiDb);

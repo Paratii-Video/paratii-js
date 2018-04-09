@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Paratii Class: vids</title>
+	<title>Paratii Class: ParatiiEth</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="paratii.html">paratii</a></li><li><a href="paratii.core.html">paratii.core</a></li><li><a href="paratii.core.vids.html">paratii.core.vids</a></li><li><a href="paratii.db.html">paratii.db</a></li><li><a href="paratii.db.users.html">paratii.db.users</a></li><li><a href="paratii.db.vids.html">paratii.db.vids</a></li><li><a href="paratii.eth.html">paratii.eth</a></li><li><a href="paratii.eth.events.html">paratii.eth.events</a></li><li><a href="paratii.eth.tcr.html">paratii.eth.tcr</a></li><li><a href="paratii.eth.users.html">paratii.eth.users</a></li><li><a href="paratii.eth.vids.html">paratii.eth.vids</a></li><li><a href="paratii.eth.vouchers.html">paratii.eth.vouchers</a></li><li><a href="paratii.eth.wallet.html">paratii.eth.wallet</a></li><li><a href="paratii.ipfs.uploader.html">paratii.ipfs.uploader</a></li><li><a href="paratii.users.html">paratii.users</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li>
+					<li><a href="Paratii.html">Paratii</a></li><li><a href="paratii.db.vids.html">paratii.db.vids</a></li><li><a href="paratii.eth.events.html">paratii.eth.events</a></li><li><a href="paratii.eth.tcr.html">paratii.eth.tcr</a></li><li><a href="paratii.eth.users.html">paratii.eth.users</a></li><li><a href="paratii.eth.vids.html">paratii.eth.vids</a></li><li><a href="paratii.eth.vouchers.html">paratii.eth.vouchers</a></li><li><a href="paratii.eth.wallet.html">paratii.eth.wallet</a></li><li><a href="paratii.ipfs.uploader.html">paratii.ipfs.uploader</a></li><li><a href="ParatiiCore.html">ParatiiCore</a></li><li><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></li><li><a href="ParatiiDb.html">ParatiiDb</a></li><li><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></li><li><a href="ParatiiEth.html">ParatiiEth</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li>
 				</ul>
 			</li>
 			
@@ -72,16 +72,16 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: vids</h1>
+	<h1 class="page-title">Class: ParatiiEth</h1>
 <section>
 
 <header>
     
         <h2>
-            <span class="ancestors"><a href="paratii.html">paratii</a><a href="paratii.core.html">.core</a>.</span>
-        
-        vids
+        ParatiiEth
         </h2>
+        
+            <div class="class-description">contains functions to interact with the Ethereum blockchain and the Paratii contracts deployed there.</div>
         
     
 </header>
@@ -93,16 +93,12 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="vids"><span class="type-signature"></span>new vids(config)</h4>
+    <h4 class="name" id="ParatiiEth"><span class="type-signature"></span>new ParatiiEth(config)</h4>
     
     
 </dt>
 <dd>
 
-    
-    <div class="description">
-        Utilities to create and manipulate information about the videos on the blockchain.
-    </div>
     
 
     
@@ -197,7 +193,7 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.core.vids.js.html">paratii.core.vids.js</a>
+				<a href="paratii.eth.js.html">paratii.eth.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -248,7 +244,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="create"><span class="type-signature">&lt;async, static> </span>ParatiiCoreVids#create(options)</h4>
+    <h4 class="name" id="balanceOf"><span class="type-signature">&lt;async> </span>balanceOf(address, symbol)</h4>
     
     
 </dt>
@@ -256,7 +252,8 @@
 
     
     <div class="description">
-        This call will register the video on the blockchain, add its metadata to IPFS, upload file to IPFS, and transcode it
+        When called with a second argument, returns the balance of that Token.<br>
+When called without a second argument, returns information about all relevant balances.
     </div>
     
 
@@ -291,13 +288,13 @@
 
         <tr>
             
-                <td class="name"><code>options</code></td>
+                <td class="name"><code>address</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">String</span>
 
 
 
@@ -308,7 +305,31 @@
 
             
 
-            <td class="description last">information about the video ( id, title, FilePath ... )</td>
+            <td class="description last">ethereum address</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>symbol</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional - symbol of the token (ETH,PTI)</td>
         </tr>
 
     
@@ -352,7 +373,7 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.core.vids.js.html">paratii.core.vids.js</a>
+				<a href="paratii.eth.js.html">paratii.eth.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -381,7 +402,222 @@
     
             
 <div class="param-desc">
-    information about the video ( id, owner, ipfsHash ... )
+    information about balances of that address
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Examples</h5>
+        
+    <pre class="sunlight-highlight-javascript">paratii.eth.balanceOf(&#x27;some-address&#x27;, &#x27;ETH&#x27;) // returns the ETH balance of the given address</pre>
+
+    <pre class="sunlight-highlight-javascript">paratii.eth.balanceOf(&#x27;some-address&#x27;, &#x27;PTI&#x27;) // returns the PTI balance of the given address</pre>
+
+    <pre class="sunlight-highlight-javascript">paratii.eth.balanceOf(&#x27;some-address&#x27;) // returns both the PTI and the ETH balance of the given address</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="deployContract"><span class="type-signature">&lt;async> </span>deployContract(name, args)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        deploys contract on the blockchain
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">name of the contract</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>args</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                    &lt;repeatable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last">configuration for the contract (strings or numbers). It is allowed to pass more than one parameter</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.eth.js.html">paratii.eth.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    the deployed contract
 </div>
 
 
@@ -405,16 +641,7 @@
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">paratii.core.vids.create({
- id: &#x27;some-video-id&#x27;,
- owner: &#x27;some-user-id&#x27;,
- title: &#x27;some Title&#x27;,
- author: &#x27;Steven Spielberg&#x27;,
- duration: &#x27;2h 32m&#x27;,
- description: &#x27;A long description&#x27;,
- price: 0,
- filename: &#x27;test/data/some-file.txt&#x27;
-})</pre>
+    <pre class="sunlight-highlight-javascript">paratii.eth.deployContract(&#x27;ParatiiToken&#x27;)</pre>
 
 
     
@@ -424,7 +651,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="dislike"><span class="type-signature">&lt;static> </span>ParatiiCoreVids#dislike(videoId)</h4>
+    <h4 class="name" id="deployContracts"><span class="type-signature">&lt;async> </span>deployContracts()</h4>
     
     
 </dt>
@@ -432,7 +659,7 @@
 
     
     <div class="description">
-        Writes a dislike for the video on the blockchain (contract Likes), and negates a like for the video, if it exists.
+        deploy all the contracts on the blockchain
     </div>
     
 
@@ -441,56 +668,6 @@
     
 
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>videoId</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">univocal video identifier</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
     
 
     
@@ -528,7 +705,7 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.core.vids.js.html">paratii.core.vids.js</a>
+				<a href="paratii.eth.js.html">paratii.eth.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -557,7 +734,7 @@
     
             
 <div class="param-desc">
-    information about the transaction recording the dislike
+    all the paratii contracts
 </div>
 
 
@@ -568,7 +745,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Object</span>
+<span class="param-type">Promise</span>
 
 
 
@@ -579,9 +756,11 @@
         
 
     
-        <h5>Example</h5>
+        <h5>Examples</h5>
         
-    <pre class="sunlight-highlight-javascript">paratii.core.vids.dislike(&#x27;some-video-id&#x27;)</pre>
+    <pre class="sunlight-highlight-javascript">let contracts = await paratii.eth.deployContracts()</pre>
+
+    <pre class="sunlight-highlight-javascript">let likes = await this.deployContract(&#x27;Likes&#x27;, paratiiRegistryAddress)</pre>
 
 
     
@@ -591,7 +770,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="doesDislike"><span class="type-signature">&lt;static> </span>ParatiiCoreVids#doesDislike(videoId)</h4>
+    <h4 class="name" id="getContract"><span class="type-signature">&lt;async> </span>getContract(name)</h4>
     
     
 </dt>
@@ -599,7 +778,7 @@
 
     
     <div class="description">
-        Check if the current user has already disliked the video
+        Get the contract instance specified
     </div>
     
 
@@ -634,7 +813,7 @@
 
         <tr>
             
-                <td class="name"><code>videoId</code></td>
+                <td class="name"><code>name</code></td>
             
 
             <td class="type">
@@ -651,7 +830,7 @@
 
             
 
-            <td class="description last">univocal video identifier</td>
+            <td class="description last">the name of the token</td>
         </tr>
 
     
@@ -695,7 +874,7 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.core.vids.js.html">paratii.core.vids.js</a>
+				<a href="paratii.eth.js.html">paratii.eth.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -724,341 +903,7 @@
     
             
 <div class="param-desc">
-    true if the current user already disliked the video, false otherwise
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Boolean</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">paratii.core.vids.doesDislike(&#x27;some-video-id&#x27;)</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="doesLike"><span class="type-signature">&lt;static> </span>ParatiiCoreVids#doesLike(videoId)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Check if the current user has already liked the video
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>videoId</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">univocal video identifier</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.core.vids.js.html">paratii.core.vids.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    true if the current user already liked the video, false otherwise
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Boolean</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">paratii.core.vids.doesLike(&#x27;some-video-id&#x27;)</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="get"><span class="type-signature">&lt;async, static> </span>ParatiiCoreVids#get(videoId)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Get the data of the video identified by videoId
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>videoId</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">univocal video identifier</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.core.vids.js.html">paratii.core.vids.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    data about the video
+    Object representing the contract
 </div>
 
 
@@ -1082,7 +927,7 @@
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">paratii.core.vids.get(&#x27;some-video-id&#x27;)</pre>
+    <pre class="sunlight-highlight-javascript">paratii.eth.getContract(&#x27;ParatiiToken&#x27;)</pre>
 
 
     
@@ -1092,7 +937,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="hasViewedVideo"><span class="type-signature">&lt;static> </span>ParatiiCoreVids#hasViewedVideo(viewer, videoId)</h4>
+    <h4 class="name" id="getContractAddress"><span class="type-signature">&lt;async> </span>getContractAddress(name)</h4>
     
     
 </dt>
@@ -1100,7 +945,7 @@
 
     
     <div class="description">
-        Check if the viewer has already viewed the video
+        get the address of the contract on the blockchain
     </div>
     
 
@@ -1135,7 +980,7 @@
 
         <tr>
             
-                <td class="name"><code>viewer</code></td>
+                <td class="name"><code>name</code></td>
             
 
             <td class="type">
@@ -1152,31 +997,7 @@
 
             
 
-            <td class="description last">viewer address</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>videoId</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">univocal video identifier</td>
+            <td class="description last">name of the contract</td>
         </tr>
 
     
@@ -1220,7 +1041,7 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.core.vids.js.html">paratii.core.vids.js</a>
+				<a href="paratii.eth.js.html">paratii.eth.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -1249,341 +1070,7 @@
     
             
 <div class="param-desc">
-    true if the current user already viewed the video, false otherwise
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Boolean</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">paratii.core.vids.hasViewedVideo(&#x27;some-user-id&#x27;,&#x27;some-video-id&#x27;)</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="like"><span class="type-signature">&lt;static> </span>ParatiiCoreVids#like(videoId)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Writes a like for the video on the blockchain (contract Likes), and negates a dislike for the video, if it exists.
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>videoId</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">univocal video identifier</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.core.vids.js.html">paratii.core.vids.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    information about the transaction recording the like
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">paratii.core.vids.like(&#x27;some-video-id&#x27;)</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="search"><span class="type-signature">&lt;static> </span>ParatiiCoreVids#search(options)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Get the data of the video
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">data about the video and (optional) owner i.e {'keyword':'titleOfTheVideo'}</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.core.vids.js.html">paratii.core.vids.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    data about the video
+    Contract address on the blockchain (String)
 </div>
 
 
@@ -1607,14 +1094,7 @@
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">paratii.core.vids.search({keyword : &#x27;titleOftheVideo&#x27;})
-the keyword value can be one from the following list
-- video title
-- description
-- owner
-- uploader.name
-- uploader.address
-- tags</pre>
+    <pre class="sunlight-highlight-javascript">paratii.eth.getContractAddress(&#x27;ParatiiToken&#x27;)</pre>
 
 
     
@@ -1624,7 +1104,7 @@ the keyword value can be one from the following list
             
 <hr>
 <dt>
-    <h4 class="name" id="update"><span class="type-signature">&lt;async, static> </span>ParatiiCoreVids#update(videoId, options, dataToUpdate)</h4>
+    <h4 class="name" id="getContracts"><span class="type-signature">&lt;async> </span>getContracts()</h4>
     
     
 </dt>
@@ -1632,8 +1112,241 @@ the keyword value can be one from the following list
 
     
     <div class="description">
-        Update the information on the video.
- Only the account that has registered the video, or the owner of the contract, can update the information.
+        return all the contracts
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.eth.js.html">paratii.eth.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    all the contracts
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let contracts = await paratii.eth.getContracts()</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getRegistryAddress"><span class="type-signature"></span>getRegistryAddress()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        get the address of the Registry contract on the blockchain
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.eth.js.html">paratii.eth.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    address on the blockchain
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let registryAddress = paratii.eth.getRegistryAddress()</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="requireContract"><span class="type-signature"></span>requireContract(contractName)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        creates the javascript contract object from the json file
     </div>
     
 
@@ -1668,7 +1381,7 @@ the keyword value can be one from the following list
 
         <tr>
             
-                <td class="name"><code>videoId</code></td>
+                <td class="name"><code>contractName</code></td>
             
 
             <td class="type">
@@ -1685,55 +1398,7 @@ the keyword value can be one from the following list
 
             
 
-            <td class="description last">univocal video identifier</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">key value pairs of properties and new values e.g. ({title: 'another-title'})</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>dataToUpdate</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">optional. old data of the video. If not passed to the method, it will fetch the data itself using the videoId</td>
+            <td class="description last">name of the contract</td>
         </tr>
 
     
@@ -1777,7 +1442,7 @@ the keyword value can be one from the following list
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.core.vids.js.html">paratii.core.vids.js</a>
+				<a href="paratii.eth.js.html">paratii.eth.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -1806,7 +1471,7 @@ the keyword value can be one from the following list
     
             
 <div class="param-desc">
-    Updated video informations
+    Contract Object
 </div>
 
 
@@ -1817,7 +1482,7 @@ the keyword value can be one from the following list
     </dt>
     <dd>
         
-<span class="param-type">Promise</span>
+<span class="param-type">String</span>
 
 
 
@@ -1830,7 +1495,7 @@ the keyword value can be one from the following list
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">paratii.core.vids.update(&#x27;some-video-id&#x27;, {title: &#x27;another-title&#x27;})</pre>
+    <pre class="sunlight-highlight-javascript">paratii.eth.requireContract(&#x27;ParatiiToken&#x27;)</pre>
 
 
     
@@ -1840,7 +1505,7 @@ the keyword value can be one from the following list
             
 <hr>
 <dt>
-    <h4 class="name" id="upsert"><span class="type-signature">&lt;async, static> </span>ParatiiCoreVids#upsert(options)</h4>
+    <h4 class="name" id="setAccount"><span class="type-signature"></span>setAccount(address, privateKey, mnemonic)</h4>
     
     
 </dt>
@@ -1848,7 +1513,7 @@ the keyword value can be one from the following list
 
     
     <div class="description">
-        Update the information of the video the video already exists, otherwise it creates it
+        creates an account using the private key or, if not present, using the mnemonic
     </div>
     
 
@@ -1883,13 +1548,13 @@ the keyword value can be one from the following list
 
         <tr>
             
-                <td class="name"><code>options</code></td>
+                <td class="name"><code>address</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">String</span>
 
 
 
@@ -1900,7 +1565,55 @@ the keyword value can be one from the following list
 
             
 
-            <td class="description last">video informations</td>
+            <td class="description last">public address</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>privateKey</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">private key related to the previous public address</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>mnemonic</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">mnemonic related to the previous public address</td>
         </tr>
 
     
@@ -1944,7 +1657,7 @@ the keyword value can be one from the following list
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.core.vids.js.html">paratii.core.vids.js</a>
+				<a href="paratii.eth.js.html">paratii.eth.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -1969,35 +1682,13 @@ the keyword value can be one from the following list
     
 
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    updated/new video informations
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
 
     
-        <h5>Example</h5>
+        <h5>Examples</h5>
         
-    <pre class="sunlight-highlight-javascript">paratii.vids.upsert({ id: &#x27;some-video-id&#x27;, owner: &#x27;some-user-id&#x27;, title: &#x27;videoTitle&#x27;}) //insert a new video</pre>
+    <pre class="sunlight-highlight-javascript">paratii.eth.setAccount(&#x27;some-address&#x27;,&#x27;some-private-key&#x27;)</pre>
+
+    <pre class="sunlight-highlight-javascript">paratii.eth.setAccount(&#x27;some-address&#x27;,&#x27;some-mnemonic&#x27;)</pre>
 
 
     
@@ -2007,7 +1698,7 @@ the keyword value can be one from the following list
             
 <hr>
 <dt>
-    <h4 class="name" id="view"><span class="type-signature">&lt;async, static> </span>ParatiiCoreVids#view(options)</h4>
+    <h4 class="name" id="setRegistryAddress"><span class="type-signature"></span>setRegistryAddress(registryAddress)</h4>
     
     
 </dt>
@@ -2015,7 +1706,7 @@ the keyword value can be one from the following list
 
     
     <div class="description">
-        Register a view on the blockchain
+        set the address of the Registry contract on the blockchain
     </div>
     
 
@@ -2050,13 +1741,13 @@ the keyword value can be one from the following list
 
         <tr>
             
-                <td class="name"><code>options</code></td>
+                <td class="name"><code>registryAddress</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">String</span>
 
 
 
@@ -2067,7 +1758,7 @@ the keyword value can be one from the following list
 
             
 
-            <td class="description last">should contain keys viewer (address of the viewer) and videoId (univocal video identifier)</td>
+            <td class="description last">new address</td>
         </tr>
 
     
@@ -2111,7 +1802,222 @@ the keyword value can be one from the following list
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.core.vids.js.html">paratii.core.vids.js</a>
+				<a href="paratii.eth.js.html">paratii.eth.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">await paratii.eth.setRegistryAddress(&#x27;some-address&#x27;)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="transfer"><span class="type-signature">&lt;async> </span>transfer(beneficiary, amount, symbol, description)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Use this to send ETH or PTI from paratii.config.address
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>beneficiary</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">ETH address</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>amount</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">amount of ETH/PTI to be sent</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>symbol</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">symbol of the token to send (ETH,PTI)</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>description</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional - description to be inserted in the blockchain</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.eth.js.html">paratii.eth.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -2140,7 +2046,7 @@ the keyword value can be one from the following list
     
             
 <div class="param-desc">
-    information about the transaction recording the view
+    information about the transaction recording the transfer
 </div>
 
 
@@ -2164,7 +2070,7 @@ the keyword value can be one from the following list
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">paratii.core.vids.view({viewer:&#x27;some-user-id&#x27;,videoId: &#x27;some-video-id&#x27;})</pre>
+    <pre class="sunlight-highlight-javascript">let result = await paratii.eth.transfer(&#x27;some-address&#x27;, 20, &#x27;ETH&#x27;, &#x27;thanks for all the fish&#x27;)</pre>
 
 
     
@@ -2220,7 +2126,7 @@ the keyword value can be one from the following list
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2018-04-06T16:37:11+02:00
+		on 2018-04-09T09:28:48+02:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
