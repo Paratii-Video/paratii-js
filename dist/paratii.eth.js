@@ -428,9 +428,9 @@ var ParatiiEth = exports.ParatiiEth = function () {
     }
 
     /**
-     * @private
      * Set the provider on all the contracts
      * @example paratii.eth.setContractsProvider()
+     * @private
      */
 
   }, {
@@ -681,13 +681,13 @@ var ParatiiEth = exports.ParatiiEth = function () {
       }, null, this);
     }
     /**
-     * @private
      * send ETH from current account to beneficiary
      * @param  {string}  beneficiary ETH address
      * @param  {number}  amount      amount of ETH to be sent
      * @param  {?string}  description  description of the transaction (will be written in the blockchain)
      * @return {Promise}             information about the transaction recording the transfer
      * @example return paratii.eth._transferETH('some-address', 20, 'an-optional-description')
+     * @private
      */
 
   }, {
@@ -749,12 +749,12 @@ var ParatiiEth = exports.ParatiiEth = function () {
       }, null, this, [[11, 17]]);
     }
     /**
-     * @private
      * send PTI from current account to beneficiary
      * @param  {string}  beneficiary ETH address
      * @param  {number}  amount      amount of PTI to be sent
      * @return {Promise}             information about the transaction recording the transfer
      * @example return paratii.eth._transferPTI('some-address', 20)
+     * @private
      */
 
   }, {
