@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Paratii Class: ParatiiEth</title>
+	<title>Paratii Class: ParatiiEthVids</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,16 +72,16 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: ParatiiEth</h1>
+	<h1 class="page-title">Class: ParatiiEthVids</h1>
 <section>
 
 <header>
     
         <h2>
-        ParatiiEth
+        ParatiiEthVids
         </h2>
         
-            <div class="class-description">contains functions to interact with the Ethereum blockchain and the Paratii contracts deployed there.</div>
+            <div class="class-description">The eth.vids namespace contains functions to interact with the video registration on the blockchain.</div>
         
     
 </header>
@@ -93,7 +93,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="ParatiiEth"><span class="type-signature"></span>new ParatiiEth(config)</h4>
+    <h4 class="name" id="ParatiiEthVids"><span class="type-signature"></span>new ParatiiEthVids()</h4>
     
     
 </dt>
@@ -106,56 +106,6 @@
     
 
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>config</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">configuration object to initialize Paratii object</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
     
 
     
@@ -193,7 +143,7 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.eth.js.html">paratii.eth.js</a>
+				<a href="paratii.eth.vids.js.html">paratii.eth.vids.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -244,7 +194,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="balanceOf"><span class="type-signature">&lt;async> </span>balanceOf(address, symbol)</h4>
+    <h4 class="name" id="create"><span class="type-signature">&lt;async> </span>create(options [, retry])</h4>
     
     
 </dt>
@@ -252,203 +202,7 @@
 
     
     <div class="description">
-        When called with a second argument, returns the balance of that Token.<br>
-When called without a second argument, returns information about all relevant balances.
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>address</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">ethereum address</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>symbol</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">optional - symbol of the token (ETH,PTI)</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.eth.js.html">paratii.eth.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    information about balances of that address
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-        <h5>Examples</h5>
-        
-    <pre class="sunlight-highlight-javascript">paratii.eth.balanceOf(&#x27;some-address&#x27;, &#x27;ETH&#x27;) // returns the ETH balance of the given address</pre>
-
-    <pre class="sunlight-highlight-javascript">paratii.eth.balanceOf(&#x27;some-address&#x27;, &#x27;PTI&#x27;) // returns the PTI balance of the given address</pre>
-
-    <pre class="sunlight-highlight-javascript">paratii.eth.balanceOf(&#x27;some-address&#x27;) // returns both the PTI and the ETH balance of the given address</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="deployContract"><span class="type-signature">&lt;async> </span>deployContract(name, args)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        deploys contract on the blockchain
+        Record the video on the blockchain
     </div>
     
 
@@ -475,6 +229,8 @@ When called without a second argument, returns information about all relevant ba
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -485,39 +241,7 @@ When called without a second argument, returns information about all relevant ba
 
         <tr>
             
-                <td class="name"><code>name</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">name of the contract</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>args</code></td>
+                <td class="name"><code>options</code></td>
             
 
             <td class="type">
@@ -537,14 +261,56 @@ When called without a second argument, returns information about all relevant ba
                 
 
                 
-                    &lt;repeatable><br>
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">data about the video</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>retry</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
                 
                 </td>
             
 
             
+                <td class="default">
+                
+                    1
+                
+                </td>
+            
 
-            <td class="description last">configuration for the contract (strings or numbers). It is allowed to pass more than one parameter</td>
+            <td class="description last">optional, default = 1</td>
         </tr>
 
     
@@ -588,7 +354,7 @@ When called without a second argument, returns information about all relevant ba
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.eth.js.html">paratii.eth.js</a>
+				<a href="paratii.eth.vids.js.html">paratii.eth.vids.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -617,7 +383,7 @@ When called without a second argument, returns information about all relevant ba
     
             
 <div class="param-desc">
-    the deployed contract
+    the video id
 </div>
 
 
@@ -641,7 +407,12 @@ When called without a second argument, returns information about all relevant ba
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">paratii.eth.deployContract(&#x27;ParatiiToken&#x27;)</pre>
+    <pre class="sunlight-highlight-javascript">let videoId = await paratii.eth.vids.create({
+                                   id: &#x27;some-id&#x27;,
+                                   price: 20,
+                                   owner: &#x27;some-address&#x27;,
+                                   ipfsHash: &#x27;some-hash&#x27;
+                         })</pre>
 
 
     
@@ -651,7 +422,7 @@ When called without a second argument, returns information about all relevant ba
             
 <hr>
 <dt>
-    <h4 class="name" id="deployContracts"><span class="type-signature">&lt;async> </span>deployContracts()</h4>
+    <h4 class="name" id="delete"><span class="type-signature">&lt;async> </span>delete(videoId)</h4>
     
     
 </dt>
@@ -659,126 +430,7 @@ When called without a second argument, returns information about all relevant ba
 
     
     <div class="description">
-        deploy all the contracts on the blockchain
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.eth.js.html">paratii.eth.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    all the paratii contracts
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-        <h5>Examples</h5>
-        
-    <pre class="sunlight-highlight-javascript">let contracts = await paratii.eth.deployContracts()</pre>
-
-    <pre class="sunlight-highlight-javascript">let likes = await this.deployContract(&#x27;Likes&#x27;, paratiiRegistryAddress)</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="getContract"><span class="type-signature">&lt;async> </span>getContract(name)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Get the contract instance specified
+        delete the video from the blockchain
     </div>
     
 
@@ -813,7 +465,7 @@ When called without a second argument, returns information about all relevant ba
 
         <tr>
             
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>videoId</code></td>
             
 
             <td class="type">
@@ -830,7 +482,7 @@ When called without a second argument, returns information about all relevant ba
 
             
 
-            <td class="description last">the name of the token</td>
+            <td class="description last">univocal video identifier</td>
         </tr>
 
     
@@ -874,7 +526,792 @@ When called without a second argument, returns information about all relevant ba
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.eth.js.html">paratii.eth.js</a>
+				<a href="paratii.eth.vids.js.html">paratii.eth.vids.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    transaction recording the remove action
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let tx = paratii.eth.vids.delete(&#x27;some-id&#x27;)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="dislike"><span class="type-signature">&lt;async> </span>dislike(videoId)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Writes a dislike for the video on the blockchain (contract Likes), and negates a like for the video, if it exists.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>videoId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">univocal video identifier</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.eth.vids.js.html">paratii.eth.vids.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    transaction recording the dislike
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let result = paratii.eth.vids.dislike(&#x27;some-id&#x27;)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="doesDislike"><span class="type-signature">&lt;async> </span>doesDislike(videoId)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Check if the current user has already disliked the video.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>videoId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">univocal video identifier</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.eth.vids.js.html">paratii.eth.vids.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    true if the current user already disliked the video, false otherwise
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let result = paratii.eth.vids.doesDislike(&#x27;some-id&#x27;)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="doesLike"><span class="type-signature">&lt;async> </span>doesLike(videoId)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Check if the current user has already liked the video
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>videoId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">univocal video identifier</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.eth.vids.js.html">paratii.eth.vids.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    true if the current user already liked the video, false otherwise
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let result = paratii.eth.vids.doesLike(&#x27;some-id&#x27;)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="get"><span class="type-signature">&lt;async> </span>get(videoId)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        get data about the video
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>videoId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">univocal video id</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.eth.vids.js.html">paratii.eth.vids.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    data about the video
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let video = eth.vids.get(&#x27;0x12345&#x27;)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getLikesContract"><span class="type-signature">&lt;async> </span>getLikesContract()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Get the contract instance of the likes contract
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.eth.vids.js.html">paratii.eth.vids.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -927,7 +1364,7 @@ When called without a second argument, returns information about all relevant ba
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">paratii.eth.getContract(&#x27;ParatiiToken&#x27;)</pre>
+    <pre class="sunlight-highlight-javascript">let contract = await paratii.eth.vids.getLikesContract()</pre>
 
 
     
@@ -937,7 +1374,7 @@ When called without a second argument, returns information about all relevant ba
             
 <hr>
 <dt>
-    <h4 class="name" id="getContractAddress"><span class="type-signature">&lt;async> </span>getContractAddress(name)</h4>
+    <h4 class="name" id="getVideoRegistry"><span class="type-signature">&lt;async> </span>getVideoRegistry()</h4>
     
     
 </dt>
@@ -945,7 +1382,7 @@ When called without a second argument, returns information about all relevant ba
 
     
     <div class="description">
-        get the address of the contract on the blockchain
+        Get the contract instance of the videos contract
     </div>
     
 
@@ -954,56 +1391,6 @@ When called without a second argument, returns information about all relevant ba
     
 
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">name of the contract</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
     
 
     
@@ -1041,7 +1428,7 @@ When called without a second argument, returns information about all relevant ba
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.eth.js.html">paratii.eth.js</a>
+				<a href="paratii.eth.vids.js.html">paratii.eth.vids.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -1070,7 +1457,7 @@ When called without a second argument, returns information about all relevant ba
     
             
 <div class="param-desc">
-    Contract address on the blockchain (String)
+    Object representing the contract
 </div>
 
 
@@ -1094,7 +1481,7 @@ When called without a second argument, returns information about all relevant ba
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">paratii.eth.getContractAddress(&#x27;ParatiiToken&#x27;)</pre>
+    <pre class="sunlight-highlight-javascript">let contract = await paratii.eth.vids.getVideoRegistry()</pre>
 
 
     
@@ -1104,7 +1491,7 @@ When called without a second argument, returns information about all relevant ba
             
 <hr>
 <dt>
-    <h4 class="name" id="getContracts"><span class="type-signature">&lt;async> </span>getContracts()</h4>
+    <h4 class="name" id="getViewsContract"><span class="type-signature">&lt;async> </span>getViewsContract()</h4>
     
     
 </dt>
@@ -1112,7 +1499,7 @@ When called without a second argument, returns information about all relevant ba
 
     
     <div class="description">
-        return all the contracts
+        Get the contract instance of the views contract
     </div>
     
 
@@ -1158,7 +1545,7 @@ When called without a second argument, returns information about all relevant ba
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.eth.js.html">paratii.eth.js</a>
+				<a href="paratii.eth.vids.js.html">paratii.eth.vids.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -1187,7 +1574,7 @@ When called without a second argument, returns information about all relevant ba
     
             
 <div class="param-desc">
-    all the contracts
+    Object representing the contract
 </div>
 
 
@@ -1211,7 +1598,7 @@ When called without a second argument, returns information about all relevant ba
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">let contracts = await paratii.eth.getContracts()</pre>
+    <pre class="sunlight-highlight-javascript">let contract = await paratii.eth.vids.getViewsContract()</pre>
 
 
     
@@ -1221,7 +1608,7 @@ When called without a second argument, returns information about all relevant ba
             
 <hr>
 <dt>
-    <h4 class="name" id="getRegistryAddress"><span class="type-signature"></span>getRegistryAddress()</h4>
+    <h4 class="name" id="like"><span class="type-signature">&lt;async> </span>like(videoId)</h4>
     
     
 </dt>
@@ -1229,124 +1616,7 @@ When called without a second argument, returns information about all relevant ba
 
     
     <div class="description">
-        get the address of the Registry contract on the blockchain
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.eth.js.html">paratii.eth.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    address on the blockchain
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">String</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">let registryAddress = paratii.eth.getRegistryAddress()</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="requireContract"><span class="type-signature"></span>requireContract(contractName)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        creates the javascript contract object from the json file
+        Writes a like for the video on the blockchain (contract Likes), and negates a dislike for the video, if it exists.
     </div>
     
 
@@ -1381,7 +1651,7 @@ When called without a second argument, returns information about all relevant ba
 
         <tr>
             
-                <td class="name"><code>contractName</code></td>
+                <td class="name"><code>videoId</code></td>
             
 
             <td class="type">
@@ -1398,7 +1668,7 @@ When called without a second argument, returns information about all relevant ba
 
             
 
-            <td class="description last">name of the contract</td>
+            <td class="description last">univocal video identifier</td>
         </tr>
 
     
@@ -1442,7 +1712,7 @@ When called without a second argument, returns information about all relevant ba
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.eth.js.html">paratii.eth.js</a>
+				<a href="paratii.eth.vids.js.html">paratii.eth.vids.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -1471,7 +1741,124 @@ When called without a second argument, returns information about all relevant ba
     
             
 <div class="param-desc">
-    Contract Object
+    transaction recording the like
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let result = paratii.eth.vids.like(&#x27;some-id&#x27;)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="makeId"><span class="type-signature"></span>makeId()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Creates a random id
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.eth.vids.js.html">paratii.eth.vids.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    id created
 </div>
 
 
@@ -1495,7 +1882,7 @@ When called without a second argument, returns information about all relevant ba
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">paratii.eth.requireContract(&#x27;ParatiiToken&#x27;)</pre>
+    <pre class="sunlight-highlight-javascript">let id = paratii.eth.vids.makeId()</pre>
 
 
     
@@ -1505,7 +1892,7 @@ When called without a second argument, returns information about all relevant ba
             
 <hr>
 <dt>
-    <h4 class="name" id="setAccount"><span class="type-signature"></span>setAccount(address, privateKey, mnemonic)</h4>
+    <h4 class="name" id="sendLike"><span class="type-signature">&lt;async> </span>sendLike(options)</h4>
     
     
 </dt>
@@ -1513,7 +1900,8 @@ When called without a second argument, returns information about all relevant ba
 
     
     <div class="description">
-        creates an account using the private key or, if not present, using the mnemonic
+        record a like/dislike to the video on the blockchain
+TODO RIVEDI I TIPI
     </div>
     
 
@@ -1548,7 +1936,50 @@ When called without a second argument, returns information about all relevant ba
 
         <tr>
             
-                <td class="name"><code>address</code></td>
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">data about the video to like
+                <h6 class="method-params-label method-subparams-label">Properties</h6>
+                
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>videoId</code></td>
             
 
             <td class="type">
@@ -1565,20 +1996,20 @@ When called without a second argument, returns information about all relevant ba
 
             
 
-            <td class="description last">public address</td>
+            <td class="description last">univocal video id</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>privateKey</code></td>
+                <td class="name"><code>liked</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">Boolean</span>
 
 
 
@@ -1589,31 +2020,14 @@ When called without a second argument, returns information about all relevant ba
 
             
 
-            <td class="description last">private key related to the previous public address</td>
+            <td class="description last">true/false</td>
         </tr>
 
     
+    </tbody>
+</table>
 
-        <tr>
-            
-                <td class="name"><code>mnemonic</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
             </td>
-
-            
-
-            
-
-            <td class="description last">mnemonic related to the previous public address</td>
         </tr>
 
     
@@ -1657,7 +2071,7 @@ When called without a second argument, returns information about all relevant ba
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.eth.js.html">paratii.eth.js</a>
+				<a href="paratii.eth.vids.js.html">paratii.eth.vids.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -1682,13 +2096,37 @@ When called without a second argument, returns information about all relevant ba
     
 
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    transaction recording the like
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
 
     
         <h5>Examples</h5>
         
-    <pre class="sunlight-highlight-javascript">paratii.eth.setAccount(&#x27;some-address&#x27;,&#x27;some-private-key&#x27;)</pre>
+    <pre class="sunlight-highlight-javascript">await paratii.eth.vids.sendLike({ videoId: &#x27;some-id&#x27;, liked: true })</pre>
 
-    <pre class="sunlight-highlight-javascript">paratii.eth.setAccount(&#x27;some-address&#x27;,&#x27;some-mnemonic&#x27;)</pre>
+    <pre class="sunlight-highlight-javascript">await paratii.eth.vids.sendLike({ videoId: &#x27;some-id&#x27;, liked: false })</pre>
 
 
     
@@ -1698,7 +2136,7 @@ When called without a second argument, returns information about all relevant ba
             
 <hr>
 <dt>
-    <h4 class="name" id="setRegistryAddress"><span class="type-signature"></span>setRegistryAddress(registryAddress)</h4>
+    <h4 class="name" id="update"><span class="type-signature">&lt;async> </span>update(videoId, options)</h4>
     
     
 </dt>
@@ -1706,7 +2144,8 @@ When called without a second argument, returns information about all relevant ba
 
     
     <div class="description">
-        set the address of the Registry contract on the blockchain
+        Update the information on the video.
+ Only the account that has registered the video, or the owner of the contract, can update the information.
     </div>
     
 
@@ -1741,7 +2180,7 @@ When called without a second argument, returns information about all relevant ba
 
         <tr>
             
-                <td class="name"><code>registryAddress</code></td>
+                <td class="name"><code>videoId</code></td>
             
 
             <td class="type">
@@ -1758,7 +2197,31 @@ When called without a second argument, returns information about all relevant ba
 
             
 
-            <td class="description last">new address</td>
+            <td class="description last">univocal video identifier</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">key value pairs of properties and new values e.g. ({title: 'another-title'})</td>
         </tr>
 
     
@@ -1802,222 +2265,7 @@ When called without a second argument, returns information about all relevant ba
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.eth.js.html">paratii.eth.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">await paratii.eth.setRegistryAddress(&#x27;some-address&#x27;)</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="transfer"><span class="type-signature">&lt;async> </span>transfer(beneficiary, amount, symbol, description)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Use this to send ETH or PTI from paratii.config.address
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>beneficiary</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">ETH address</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>amount</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">amount of ETH/PTI to be sent</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>symbol</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">symbol of the token to send (ETH,PTI)</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>description</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">optional - description to be inserted in the blockchain</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.eth.js.html">paratii.eth.js</a>
+				<a href="paratii.eth.vids.js.html">paratii.eth.vids.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -2046,7 +2294,7 @@ When called without a second argument, returns information about all relevant ba
     
             
 <div class="param-desc">
-    information about the transaction recording the transfer
+    Updated video informations
 </div>
 
 
@@ -2070,7 +2318,513 @@ When called without a second argument, returns information about all relevant ba
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">let result = await paratii.eth.transfer(&#x27;some-address&#x27;, 20, &#x27;ETH&#x27;, &#x27;thanks for all the fish&#x27;)</pre>
+    <pre class="sunlight-highlight-javascript">paratii.eth.vids.update(&#x27;some-video-id&#x27;, {title: &#x27;another-title&#x27;})</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="userViewedVideo"><span class="type-signature">&lt;async> </span>userViewedVideo(options)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Check if the viewer has already viewed the video
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">data about the video and the viewer
+                <h6 class="method-params-label method-subparams-label">Properties</h6>
+                
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>viewer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">viewer address</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>videoId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">univocal video identifier</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.eth.vids.js.html">paratii.eth.vids.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    true if the current user already viewed the video, false otherwise
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let result = await paratii.eth.vids.userViewedVideo({viewer:&#x27;some-user-id&#x27;,videoId: &#x27;some-video-id&#x27;})</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="view"><span class="type-signature">&lt;async> </span>view(options)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        record a views to the video on the blockchain
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">data about the video and the viewer
+                <h6 class="method-params-label method-subparams-label">Properties</h6>
+                
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>viewer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">address of the viewer</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>videoId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">univocal video identifier</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ipfsData</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">ipfs multihash</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.eth.vids.js.html">paratii.eth.vids.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    transaction recording the view
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">await paratii.eth.vids.view({viewer:&#x27;some-user-id&#x27;,videoId: &#x27;some-video-id&#x27;})</pre>
 
 
     

@@ -4,9 +4,6 @@ import joi from 'joi'
  /**
   * Utilities to create and manipulate information about the videos on the blockchain.
   * @param {Object} config configuration object to initialize Paratii object
-  * @namespace vids
-  * @lends Paratii
-  * @class ParatiiCoreVids
   */
 export class ParatiiCoreVids {
   constructor (config) {
@@ -71,7 +68,7 @@ export class ParatiiCoreVids {
    * @param  {String} videoId univocal video identifier
    * @return {Object}         information about the transaction recording the like
    * @example paratii.core.vids.like('some-video-id')
-   * @memberof paratii.core.vids
+
    */
   like (videoId) {
     return this.config.paratii.eth.vids.like(videoId)
@@ -81,7 +78,7 @@ export class ParatiiCoreVids {
    * @param  {String} videoId univocal video identifier
    * @return {Object}         information about the transaction recording the dislike
    * @example paratii.core.vids.dislike('some-video-id')
-   * @memberof paratii.core.vids
+
    */
   dislike (videoId) {
     return this.config.paratii.eth.vids.dislike(videoId)
@@ -91,7 +88,7 @@ export class ParatiiCoreVids {
    * @param  {String} videoId univocal video identifier
    * @return {Boolean}         true if the current user already liked the video, false otherwise
    * @example paratii.core.vids.doesLike('some-video-id')
-   * @memberof paratii.core.vids
+
    */
   doesLike (videoId) {
     return this.config.paratii.eth.vids.doesLike(videoId)
@@ -102,7 +99,7 @@ export class ParatiiCoreVids {
    * @param  {String}  videoId univocal video identifier
    * @return {Boolean}         true if the current user already viewed the video, false otherwise
    * @example paratii.core.vids.hasViewedVideo('some-user-id','some-video-id')
-   * @memberof paratii.core.vids
+
    */
   hasViewedVideo (viewer, videoId) {
     return this.config.paratii.eth.vids.userViewedVideo({ viewer: viewer, videoId: videoId })
@@ -112,7 +109,7 @@ export class ParatiiCoreVids {
    * @param  {String} videoId univocal video identifier
    * @return {Boolean}         true if the current user already disliked the video, false otherwise
    * @example paratii.core.vids.doesDislike('some-video-id')
-   * @memberof paratii.core.vids
+
   */
   doesDislike (videoId) {
     return this.config.paratii.eth.vids.doesDislike(videoId)
@@ -126,7 +123,7 @@ export class ParatiiCoreVids {
    * @param  {Object}  dataToUpdate optional. old data of the video. If not passed to the method, it will fetch the data itself using the videoId
    * @return {Promise}              Updated video informations
    * @example paratii.core.vids.update('some-video-id', {title: 'another-title'})
-   * @memberof paratii.core.vids
+
    */
   async update (videoId, options, dataToUpdate) {
     let data
@@ -162,7 +159,7 @@ export class ParatiiCoreVids {
    * @return {Promise}         updated/new video informations
    * @example
    * paratii.vids.upsert({ id: 'some-video-id', owner: 'some-user-id', title: 'videoTitle'}) //insert a new video
-   * @memberof paratii.core.vids
+
    */
   async upsert (options) {
     let data = null
@@ -181,7 +178,7 @@ export class ParatiiCoreVids {
    * @param  {Object}  options should contain keys viewer (address of the viewer) and videoId (univocal video identifier)
    * @return {Promise}         information about the transaction recording the view
    * @example paratii.core.vids.view({viewer:'some-user-id',videoId: 'some-video-id'})
-   * @memberof paratii.core.vids
+
    */
   async view (options) {
     let keysForBlockchain = ['viewer', 'videoId']
@@ -204,7 +201,7 @@ export class ParatiiCoreVids {
    * @param  {String}  videoId univocal video identifier
    * @return {Promise}         data about the video
    * @example paratii.core.vids.get('some-video-id')
-   * @memberof paratii.core.vids
+
    */
   async get (videoId) {
     return this.config.paratii.db.vids.get(videoId)
@@ -221,7 +218,7 @@ export class ParatiiCoreVids {
    * - uploader.name
    * - uploader.address
    * - tags
-   * @memberof paratii.core.vids
+
    */
   search (options) {
     return this.config.paratii.db.vids.search(options)

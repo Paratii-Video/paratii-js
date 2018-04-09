@@ -5,7 +5,7 @@ import { getInfoFromLogs } from './utils.js'
   * TCR functionality
   * @param  {object} context ParatiiEth Instance
   * @return {TCR}      returns instances of Tcr
-  * @class paratii.eth.tcr
+
   */
 export class ParatiiEthTcr {
   constructor (context) {
@@ -15,7 +15,7 @@ export class ParatiiEthTcr {
   /**
    * get TCR contract instance.
    * @return {Promise} Contract instance.
-   * @memberof paratii.eth.tcr
+
    */
   async getTcrContract () {
     let contract = await this.eth.getContract('TcrPlaceholder')
@@ -29,7 +29,7 @@ export class ParatiiEthTcr {
    * get the minimum amount required to stake a video.
    * @return {Float} amount required in PTI
    * @todo return amount as bignumber.js Object
-   * @memberof paratii.eth.tcr
+
    */
   async getMinDeposit () {
     let contract = await this.getTcrContract()
@@ -43,7 +43,7 @@ export class ParatiiEthTcr {
    * to check whether the video is in application process.
    * @param  {string}  videoId videoId
    * @return {boolean}         is video whitelisted or not.
-   * @memberof paratii.eth.tcr
+
    */
   async isWhitelisted (videoId) {
     let contract = await this.getTcrContract()
@@ -55,7 +55,7 @@ export class ParatiiEthTcr {
    * check whether a video started the application process or not yet.
    * @param  {string}  videoId videoId
    * @return {boolean}         did the video start the TCR process.
-   * @memberof paratii.eth.tcr
+
    */
   async didVideoApply (videoId) {
     let contract = await this.getTcrContract()
@@ -71,7 +71,7 @@ export class ParatiiEthTcr {
    * @param  {Float}  amountToStake number of tokens to stake. must >= minDeposit
    * @return {boolean}               returns true if all is good, plus _Application
    * event.
-   * @memberof paratii.eth.tcr
+
    */
   async apply (videoId, amountToStake) {
     // FIXME: it is more efficient if we first call "apply", and check for preconditions only after this failed
@@ -120,7 +120,7 @@ export class ParatiiEthTcr {
    * @param  {strin}  videoId       [description]
    * @param  {number}  amountToStake [description]
    * @return {Promise}               [description]
-   * @memberof paratii.eth.tcr
+
    */
    // FIXME: better naming
   async checkEligiblityAndApply (videoId, amountToStake) {
@@ -166,7 +166,7 @@ export class ParatiiEthTcr {
 
   /**
    * remove the video given by videoId from the listing
-   * @memberof paratii.eth.tcr
+
    */
   async exit (videoId) {
     let contract = await this.getTcrContract()

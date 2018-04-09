@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Paratii Class: Paratii</title>
+	<title>Paratii Class: ParatiiEthEvents</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,19 +72,16 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: Paratii</h1>
+	<h1 class="page-title">Class: ParatiiEthEvents</h1>
 <section>
 
 <header>
     
         <h2>
-        Paratii
+        ParatiiEthEvents
         </h2>
         
-            <div class="class-description">Paratii library main object
-The Paratii object serves as the general entry point for interacting with the family of Paratii
-contracts that are deployed on the blockchain, utilities to run and interact with a local IPFS node,
-and utilities to interact with the Paratii index.</div>
+            <div class="class-description">eth.events implements a part of the API of the EventEmitter, that can be used to manage subscriptions to Ethereum events.</div>
         
     
 </header>
@@ -96,12 +93,118 @@ and utilities to interact with the Paratii index.</div>
         
 <hr>
 <dt>
-    <h4 class="name" id="Paratii"><span class="type-signature"></span>new Paratii(opts)</h4>
+    <h4 class="name" id="ParatiiEthEvents"><span class="type-signature"></span>new ParatiiEthEvents()</h4>
     
     
 </dt>
 <dd>
 
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.eth.events.js.html">paratii.eth.events.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<hr>
+<dt>
+    <h4 class="name" id="_addListener"><span class="type-signature">&lt;async> </span>_addListener(eventType, listener, options)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        [_addListener description]
+TODO RIVEDI I TIPI
+    </div>
     
 
     
@@ -135,13 +238,13 @@ and utilities to interact with the Paratii index.</div>
 
         <tr>
             
-                <td class="name"><code>opts</code></td>
+                <td class="name"><code>eventType</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#configSchema">configSchema</a></span>
+<span class="param-type">Object</span>
 
 
 
@@ -152,378 +255,61 @@ and utilities to interact with the Paratii index.</div>
 
             
 
-            <td class="description last">options object to configure paratii library</td>
+            <td class="description last">[description]</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>listener</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">[description]</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">[description]</td>
         </tr>
 
     
     </tbody>
 </table>
 
-    
-
-    
-<dl class="details">
-    
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    <dl>
-
-<table class="props table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>vids</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ParatiiCoreVids.html">ParatiiCoreVids</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">operations on videos</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>users</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>eth</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ParatiiEth.html">ParatiiEth</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">interact with the Ethereum blockchain
-                <h6>Properties</h6>
-
-<table class="props table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>tcr</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ParatiiEthTcr.html">ParatiiEthTcr</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">interaction with the TCR contract on ethereum</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>ipfs</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ParatiiIPFS.html">ParatiiIPFS</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>db</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ParatiiDb.html">ParatiiDb</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <h6>Properties</h6>
-
-<table class="props table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>users</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-    </tbody>
-</table>
-</dl>
-
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.js.html">paratii.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">paratii = new Paratii({
- eth: {
-   provider&#x27;: &#x27;http://localhost:8545&#x27;
-  },
-  account: {
-    address: &#x27;your-address&#x27;
-  }
-})</pre>
-
-
-    
-</dd>
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-            
-<hr>
-<dt>
-    <h4 class="name" id="diagnose"><span class="type-signature">&lt;async> </span>diagnose()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        return an array of strings with diagnostic info
-    </div>
-    
-
-    
-
-    
-
-    
     
 
     
@@ -561,7 +347,7 @@ and utilities to interact with the Paratii index.</div>
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.js.html">paratii.js</a>
+				<a href="paratii.eth.events.js.html">paratii.eth.events.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -590,7 +376,7 @@ and utilities to interact with the Paratii index.</div>
     
             
 <div class="param-desc">
-    array of strings with diagnostic info
+    [description]
 </div>
 
 
@@ -612,19 +398,13 @@ and utilities to interact with the Paratii index.</div>
         
 
     
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">paratii.diagnose()</pre>
-
-
-    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="setAccount"><span class="type-signature"></span>setAccount(address, privateKey)</h4>
+    <h4 class="name" id="_getStructuredEvent"><span class="type-signature"></span>_getStructuredEvent(eventType)</h4>
     
     
 </dt>
@@ -632,7 +412,7 @@ and utilities to interact with the Paratii index.</div>
 
     
     <div class="description">
-        Set the ethereum address what will be used to sign all transactions
+        parse event from simple string to an object
     </div>
     
 
@@ -667,7 +447,7 @@ and utilities to interact with the Paratii index.</div>
 
         <tr>
             
-                <td class="name"><code>address</code></td>
+                <td class="name"><code>eventType</code></td>
             
 
             <td class="type">
@@ -684,31 +464,7 @@ and utilities to interact with the Paratii index.</div>
 
             
 
-            <td class="description last">address of the operator/user</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>privateKey</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">optional - private key of the operator/user</td>
+            <td class="description last">Event type</td>
         </tr>
 
     
@@ -752,7 +508,7 @@ and utilities to interact with the Paratii index.</div>
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.js.html">paratii.js</a>
+				<a href="paratii.eth.events.js.html">paratii.eth.events.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -777,11 +533,35 @@ and utilities to interact with the Paratii index.</div>
     
 
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Event Object
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
 
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">paratii.setAccount(&#x27;some-user-id&#x27;,&#x27;some-user-pub-key&#x27;)</pre>
+    <pre class="sunlight-highlight-javascript">let structuredEvent = this._getStructuredEvent(&#x27;some-event&#x27;)</pre>
 
 
     
@@ -791,7 +571,7 @@ and utilities to interact with the Paratii index.</div>
             
 <hr>
 <dt>
-    <h4 class="name" id="setRegistryAddress"><span class="type-signature"></span>setRegistryAddress(address)</h4>
+    <h4 class="name" id="_isFunction"><span class="type-signature"></span>_isFunction(functionToCheck)</h4>
     
     
 </dt>
@@ -799,7 +579,8 @@ and utilities to interact with the Paratii index.</div>
 
     
     <div class="description">
-        Set the address of the ParatiiRegistry contract
+        [_isFunction description]
+TODO RIVEDI I TIPI
     </div>
     
 
@@ -834,13 +615,13 @@ and utilities to interact with the Paratii index.</div>
 
         <tr>
             
-                <td class="name"><code>address</code></td>
+                <td class="name"><code>functionToCheck</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">Object</span>
 
 
 
@@ -851,7 +632,7 @@ and utilities to interact with the Paratii index.</div>
 
             
 
-            <td class="description last">address of the ParatiiRegistry contract</td>
+            <td class="description last">[description]</td>
         </tr>
 
     
@@ -895,7 +676,402 @@ and utilities to interact with the Paratii index.</div>
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.js.html">paratii.js</a>
+				<a href="paratii.eth.events.js.html">paratii.eth.events.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    [description]
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="addListener"><span class="type-signature">&lt;async> </span>addListener(eventType, options, listener)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        subscribe to the specified event
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>eventType</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">type of the event</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">function called when the events occurs</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>listener</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">?</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">optional ?</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.eth.events.js.html">paratii.eth.events.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    [description]
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="addSubscription"><span class="type-signature"></span>addSubscription(eventType, subscription)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        [addSubscription description]
+TODO RIVEDI I TIPI
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>eventType</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">[description]</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>subscription</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">[description]</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.eth.events.js.html">paratii.eth.events.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -922,10 +1098,166 @@ and utilities to interact with the Paratii index.</div>
     
 
     
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">paratii.setRegistryAddress(&#x27;some-address&#x27;)</pre>
+</dd>
 
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="removeAllSubscriptions"><span class="type-signature"></span>removeAllSubscriptions(eventType)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        [removeAllSubscriptions description]
+TODO RIVEDI I TIPI
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>eventType</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">[description]</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.eth.events.js.html">paratii.eth.events.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    [description]
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
 
     
 </dd>

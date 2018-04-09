@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Paratii Class: ParatiiDb</title>
+	<title>Paratii Class: ParatiiDbVids</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,16 +72,16 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: ParatiiDb</h1>
+	<h1 class="page-title">Class: ParatiiDbVids</h1>
 <section>
 
 <header>
     
         <h2>
-        ParatiiDb
+        ParatiiDbVids
         </h2>
         
-            <div class="class-description">ParatiiDb contains a functionality to interact with the Paratii Index.</div>
+            <div class="class-description">ParatiiDbUsers contains functionalities regarding the videos to interact with the Paratii Blockchain Index</div>
         
     
 </header>
@@ -93,7 +93,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="ParatiiDb"><span class="type-signature"></span>new ParatiiDb(config)</h4>
+    <h4 class="name" id="ParatiiDbVids"><span class="type-signature"></span>new ParatiiDbVids(config)</h4>
     
     
 </dt>
@@ -149,7 +149,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">object to initialize Paratii object</td>
         </tr>
 
     
@@ -193,7 +193,7 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.db.js.html">paratii.db.js</a>
+				<a href="paratii.db.vids.js.html">paratii.db.vids.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -220,13 +220,6 @@
     
 
     
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">paratii = new Paratii()
-paratii.db.vids.get(&#x27;video-id&#x27;)</pre>
-
-
-    
 </dd>
 
     
@@ -244,6 +237,351 @@ paratii.db.vids.get(&#x27;video-id&#x27;)</pre>
 
     
 
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<hr>
+<dt>
+    <h4 class="name" id="get"><span class="type-signature">&lt;async> </span>get(videoId)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Get information about this video from the db
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>videoId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">univocal video identifier</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.db.vids.js.html">paratii.db.vids.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    data about the video
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">paratii.db.vids.get(&#x27;some-video-id&#x27;)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="search"><span class="type-signature">&lt;async> </span>search(options)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Get the data of the video
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">data about the video and (optional) owner i.e {'keyword':'titleOfTheVideo'}</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.db.vids.js.html">paratii.db.vids.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    data about the video
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">paratii.db.vids.search({keyword : &#x27;titleOftheVideo&#x27;})
+the keyword value can be one from the following list
+- video title
+- description
+- owner
+- uploader.name
+- uploader.address
+- tags</pre>
+
+
+    
+</dd>
+
+        </dl>
     
 
     

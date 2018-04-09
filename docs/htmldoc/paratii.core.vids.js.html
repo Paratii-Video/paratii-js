@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="Paratii.html">Paratii</a></li><li><a href="paratii.db.vids.html">paratii.db.vids</a></li><li><a href="paratii.eth.events.html">paratii.eth.events</a></li><li><a href="paratii.eth.tcr.html">paratii.eth.tcr</a></li><li><a href="paratii.eth.users.html">paratii.eth.users</a></li><li><a href="paratii.eth.vids.html">paratii.eth.vids</a></li><li><a href="paratii.eth.vouchers.html">paratii.eth.vouchers</a></li><li><a href="paratii.eth.wallet.html">paratii.eth.wallet</a></li><li><a href="paratii.ipfs.uploader.html">paratii.ipfs.uploader</a></li><li><a href="ParatiiCore.html">ParatiiCore</a></li><li><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></li><li><a href="ParatiiDb.html">ParatiiDb</a></li><li><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></li><li><a href="ParatiiEth.html">ParatiiEth</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li>
+					<li><a href="Paratii.html">Paratii</a></li><li><a href="ParatiiCore.html">ParatiiCore</a></li><li><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></li><li><a href="ParatiiCoreVids.html">ParatiiCoreVids</a></li><li><a href="ParatiiDb.html">ParatiiDb</a></li><li><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></li><li><a href="ParatiiDbVids.html">ParatiiDbVids</a></li><li><a href="ParatiiEth.html">ParatiiEth</a></li><li><a href="ParatiiEthEvents.html">ParatiiEthEvents</a></li><li><a href="ParatiiEthTcr.html">ParatiiEthTcr</a></li><li><a href="ParatiiEthUsers.html">ParatiiEthUsers</a></li><li><a href="ParatiiEthVids.html">ParatiiEthVids</a></li><li><a href="ParatiiEthVouchers.html">ParatiiEthVouchers</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li><li><a href="Uploader.html">Uploader</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html">Global</a></li>
+					<li><a href="global.html#migrateAccount">migrateAccount</a></li><li><a href="global.html#patchWallet">patchWallet</a></li>
 				</ul>
 			</li>
 			
@@ -83,9 +83,6 @@ import joi from 'joi'
  /**
   * Utilities to create and manipulate information about the videos on the blockchain.
   * @param {Object} config configuration object to initialize Paratii object
-  * @namespace vids
-  * @lends Paratii
-  * @class ParatiiCoreVids
   */
 export class ParatiiCoreVids {
   constructor (config) {
@@ -150,7 +147,7 @@ export class ParatiiCoreVids {
    * @param  {String} videoId univocal video identifier
    * @return {Object}         information about the transaction recording the like
    * @example paratii.core.vids.like('some-video-id')
-   * @memberof paratii.core.vids
+
    */
   like (videoId) {
     return this.config.paratii.eth.vids.like(videoId)
@@ -160,7 +157,7 @@ export class ParatiiCoreVids {
    * @param  {String} videoId univocal video identifier
    * @return {Object}         information about the transaction recording the dislike
    * @example paratii.core.vids.dislike('some-video-id')
-   * @memberof paratii.core.vids
+
    */
   dislike (videoId) {
     return this.config.paratii.eth.vids.dislike(videoId)
@@ -170,7 +167,7 @@ export class ParatiiCoreVids {
    * @param  {String} videoId univocal video identifier
    * @return {Boolean}         true if the current user already liked the video, false otherwise
    * @example paratii.core.vids.doesLike('some-video-id')
-   * @memberof paratii.core.vids
+
    */
   doesLike (videoId) {
     return this.config.paratii.eth.vids.doesLike(videoId)
@@ -181,7 +178,7 @@ export class ParatiiCoreVids {
    * @param  {String}  videoId univocal video identifier
    * @return {Boolean}         true if the current user already viewed the video, false otherwise
    * @example paratii.core.vids.hasViewedVideo('some-user-id','some-video-id')
-   * @memberof paratii.core.vids
+
    */
   hasViewedVideo (viewer, videoId) {
     return this.config.paratii.eth.vids.userViewedVideo({ viewer: viewer, videoId: videoId })
@@ -191,7 +188,7 @@ export class ParatiiCoreVids {
    * @param  {String} videoId univocal video identifier
    * @return {Boolean}         true if the current user already disliked the video, false otherwise
    * @example paratii.core.vids.doesDislike('some-video-id')
-   * @memberof paratii.core.vids
+
   */
   doesDislike (videoId) {
     return this.config.paratii.eth.vids.doesDislike(videoId)
@@ -205,7 +202,7 @@ export class ParatiiCoreVids {
    * @param  {Object}  dataToUpdate optional. old data of the video. If not passed to the method, it will fetch the data itself using the videoId
    * @return {Promise}              Updated video informations
    * @example paratii.core.vids.update('some-video-id', {title: 'another-title'})
-   * @memberof paratii.core.vids
+
    */
   async update (videoId, options, dataToUpdate) {
     let data
@@ -241,7 +238,7 @@ export class ParatiiCoreVids {
    * @return {Promise}         updated/new video informations
    * @example
    * paratii.vids.upsert({ id: 'some-video-id', owner: 'some-user-id', title: 'videoTitle'}) //insert a new video
-   * @memberof paratii.core.vids
+
    */
   async upsert (options) {
     let data = null
@@ -260,7 +257,7 @@ export class ParatiiCoreVids {
    * @param  {Object}  options should contain keys viewer (address of the viewer) and videoId (univocal video identifier)
    * @return {Promise}         information about the transaction recording the view
    * @example paratii.core.vids.view({viewer:'some-user-id',videoId: 'some-video-id'})
-   * @memberof paratii.core.vids
+
    */
   async view (options) {
     let keysForBlockchain = ['viewer', 'videoId']
@@ -283,7 +280,7 @@ export class ParatiiCoreVids {
    * @param  {String}  videoId univocal video identifier
    * @return {Promise}         data about the video
    * @example paratii.core.vids.get('some-video-id')
-   * @memberof paratii.core.vids
+
    */
   async get (videoId) {
     return this.config.paratii.db.vids.get(videoId)
@@ -300,7 +297,7 @@ export class ParatiiCoreVids {
    * - uploader.name
    * - uploader.address
    * - tags
-   * @memberof paratii.core.vids
+
    */
   search (options) {
     return this.config.paratii.db.vids.search(options)
@@ -347,7 +344,7 @@ export class ParatiiCoreVids {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2018-04-09T09:28:48+02:00
+		on 2018-04-09T10:49:13+02:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

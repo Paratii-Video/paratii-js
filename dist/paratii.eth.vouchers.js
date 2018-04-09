@@ -24,7 +24,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var joi = require('joi');
 /**
  * Functions for redeeming vouchers
- * @class paratii.eth.vouchers
+
  */
 
 var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
@@ -38,8 +38,7 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
    * Get the contract instance of the vouchers contract
    * @return {Promise} Object representing the contract
    * @example let contract = await paratii.eth.vids.getVouchersContract()
-   * @memberof paratii.eth.vouchers
-  */
+   */
 
 
   (0, _createClass3.default)(ParatiiEthVouchers, [{
@@ -80,8 +79,7 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
      * @param {Number} options.amount amount of PTI in wei of this voucher
      * @return {Promise}         the voucher id
      * @example await paratii.eth.vouchers.create({ voucherCode: 'some-id', amount: 10 })
-     * @memberof paratii.eth.vouchers
-     */
+      */
 
   }, {
     key: 'create',
@@ -172,8 +170,7 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
     }
     /**
      * throws a test error
-     * @memberof paratii.eth.vouchers
-     */
+      */
 
   }, {
     key: 'test',
@@ -198,8 +195,7 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
      * @param  {Number}  amount amount of every voucher
      * @return {Promise}        Object containing every voucher created
      * @example let vouchers = await paratii.eth.vouchers.createVouchers(10, 10)
-     * @memberof paratii.eth.vouchers
-     */
+      */
 
   }, {
     key: 'createVouchers',
@@ -247,8 +243,7 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
      * @param  {String}  voucherCode univocal voucher code
      * @return {Promise}             true if everything goes well, otherwise throws an error
      * @example await paratii.eth.vouchers.redeem('some-code')
-     * @memberof paratii.eth.vouchers
-     */
+      */
 
   }, {
     key: 'redeem',

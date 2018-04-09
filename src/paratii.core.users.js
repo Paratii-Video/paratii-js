@@ -27,7 +27,7 @@ export class ParatiiCoreUsers {
    *              email: 'some@email.com',
    *              ...
    *             })
-   * @memberof paratii.users
+
    */
   // FIXME: do some joi validation here
   async create (options) {
@@ -52,7 +52,7 @@ export class ParatiiCoreUsers {
    * @param  {String} id user univocal id
    * @return {Object}    data about the user
    * @example paratii.users.get('some-user-id')
-   * @memberof paratii.users
+
   */
   get (id) {
     return this.config.paratii.db.users.get(id)
@@ -63,7 +63,7 @@ export class ParatiiCoreUsers {
    * @param  {Object}  options updated data i.e. { name: 'A new user name' }
    * @return {Promise}         updated data about the user
    * @example paratii.users.update('some-user-id', {name: 'A new user name'})
-   * @memberof paratii.users
+
    */
   async update (userId, options) {
     const schema = joi.object({

@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="Paratii.html">Paratii</a></li><li><a href="paratii.db.vids.html">paratii.db.vids</a></li><li><a href="paratii.eth.events.html">paratii.eth.events</a></li><li><a href="paratii.eth.tcr.html">paratii.eth.tcr</a></li><li><a href="paratii.eth.users.html">paratii.eth.users</a></li><li><a href="paratii.eth.vids.html">paratii.eth.vids</a></li><li><a href="paratii.eth.vouchers.html">paratii.eth.vouchers</a></li><li><a href="paratii.eth.wallet.html">paratii.eth.wallet</a></li><li><a href="paratii.ipfs.uploader.html">paratii.ipfs.uploader</a></li><li><a href="ParatiiCore.html">ParatiiCore</a></li><li><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></li><li><a href="ParatiiDb.html">ParatiiDb</a></li><li><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></li><li><a href="ParatiiEth.html">ParatiiEth</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li>
+					<li><a href="Paratii.html">Paratii</a></li><li><a href="ParatiiCore.html">ParatiiCore</a></li><li><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></li><li><a href="ParatiiCoreVids.html">ParatiiCoreVids</a></li><li><a href="ParatiiDb.html">ParatiiDb</a></li><li><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></li><li><a href="ParatiiDbVids.html">ParatiiDbVids</a></li><li><a href="ParatiiEth.html">ParatiiEth</a></li><li><a href="ParatiiEthEvents.html">ParatiiEthEvents</a></li><li><a href="ParatiiEthTcr.html">ParatiiEthTcr</a></li><li><a href="ParatiiEthUsers.html">ParatiiEthUsers</a></li><li><a href="ParatiiEthVids.html">ParatiiEthVids</a></li><li><a href="ParatiiEthVouchers.html">ParatiiEthVouchers</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li><li><a href="Uploader.html">Uploader</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html">Global</a></li>
+					<li><a href="global.html#migrateAccount">migrateAccount</a></li><li><a href="global.html#patchWallet">patchWallet</a></li>
 				</ul>
 			</li>
 			
@@ -97,7 +97,6 @@ const Resumable = require('resumablejs')
  * IPFS UPLOADER : Paratii IPFS uploader interface.
  * @extends EventEmitter
  * @param {Object} opts
- * @class paratii.ipfs.uploader
 
  */
 export class Uploader extends EventEmitter {
@@ -119,7 +118,7 @@ export class Uploader extends EventEmitter {
    * ????
    * @param  {?} ev ?
    * @return {?}    ?
-   * @memberof paratii.ipfs.uploader
+
    */
   onDrop (ev) {
   }
@@ -130,7 +129,7 @@ export class Uploader extends EventEmitter {
    * @param  {String} hashedFile hash of the file ??
    * @param  {EventEmitter} ev         event emitter
    * @example this.xhrUpload(file, hashedFile, ev)
-   * @memberof paratii.ipfs.uploader
+
    */
   xhrUpload (file, hashedFile, ev) {
     let r = new Resumable({
@@ -170,7 +169,7 @@ export class Uploader extends EventEmitter {
    * @param {File} file HTML5 File Object.
    * @returns {EventEmitter} checkout the upload function below for details.
    * @example let uploaderEv = paratiiIPFS.uploader.add(files)
-   * @memberof paratii.ipfs.uploader
+
    */
   add (file) {
     let files
@@ -203,7 +202,7 @@ export class Uploader extends EventEmitter {
    * @param  {File} file  HTML5 File Object
    * @return {Object}      generic file object.
    * @example ?
-   * @memberof paratii.ipfs.uploader
+
    */
   html5FileToPull (file) {
     return {
@@ -220,7 +219,7 @@ export class Uploader extends EventEmitter {
    * @param  {String} filePath Path to file.
    * @return {Object} generic file object.
    * @example ?
-   * @memberof paratii.ipfs.uploader
+
    */
   fsFileToPull (filePath) {
     let stats = fs.statSync(filePath)
@@ -245,7 +244,7 @@ export class Uploader extends EventEmitter {
    *    - 'done': (files) triggered when the uploader is done locally.
    *    - 'error': (err) triggered whenever an error occurs.
    * @example ?
-   * @memberof paratii.ipfs.uploader
+
    */
   upload (files) {
     let meta = {} // holds File metadata.
@@ -311,7 +310,7 @@ export class Uploader extends EventEmitter {
    * @param  {String}   dirPath path to directory
    * @return {Promise}           returns the {multihash, path, size} for the uploaded folder.
    * @example ?
-   * @memberof paratii.ipfs.uploader
+
    */
   addDirectory (dirPath) {
     return new Promise((resolve, reject) => {
@@ -383,7 +382,7 @@ export class Uploader extends EventEmitter {
    *    - 'transcoding:done': (hash, transcoderResult) triggered when the transcoder is done - returns the hash of the transcoded file
    *    - 'transcoder:error': (err) triggered whenever an error occurs.
    * @example ?
-   * @memberof paratii.ipfs.uploader
+
    */
   transcode (fileHash, options) {
     const schema = joi.object({
@@ -451,7 +450,7 @@ export class Uploader extends EventEmitter {
    * @param  {EventEmitter} ev the transcoding job EventEmitter
    * @return {function}    returns various events based on transcoder response.
    * @example ?
-   * @memberof paratii.ipfs.uploader
+
    */
   _transcoderRespHander (ev, fileHash) {
     return (peerId, command) => {
@@ -507,7 +506,7 @@ export class Uploader extends EventEmitter {
   /**
    * convenience method for adding and transcoding files
    * @param {Array} files Array of HTML5 File Objects
-   * @memberof paratii.ipfs.uploader
+
    */
   addAndTranscode (files) {
     let ev = this.add(files)
@@ -523,7 +522,7 @@ export class Uploader extends EventEmitter {
    * @param  {Object} files [description]
    * @param  {Object} ev    [description]
    * @return {Object}       [description]
-   * @memberof paratii.ipfs.uploader
+
    */
   _signalTranscoder (files, ev) {
     let file
@@ -554,7 +553,7 @@ export class Uploader extends EventEmitter {
    * @param  {Object} fileHash [description]
    * @param  {Object} options  [description]
    * @return {Object}          [description]
-   * @memberof paratii.ipfs.uploader
+
    */
   getMetaData (fileHash, options) {
     return new Promise((resolve, reject) => {
@@ -640,7 +639,7 @@ export class Uploader extends EventEmitter {
    * @param  {Object} fileHash [description]
    * @param  {Object} options  [description]
    * @return {Object}          [description]
-   * @memberof paratii.ipfs.uploader
+
    */
   pinFile (fileHash, options) {
     if (options === undefined) options = {}
@@ -703,7 +702,7 @@ export class Uploader extends EventEmitter {
    * [_pinResponseHandler description]
    * @param  {Object} ev [description]
    * @return {Object}    [description]
-   * @memberof paratii.ipfs.uploader
+
    */
   _pinResponseHandler (ev) {
     return (peerId, command) => {
@@ -861,7 +860,7 @@ export class Uploader extends EventEmitter {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2018-04-09T09:28:48+02:00
+		on 2018-04-09T10:49:13+02:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

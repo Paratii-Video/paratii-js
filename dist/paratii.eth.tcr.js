@@ -25,8 +25,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * TCR functionality
  * @param  {object} context ParatiiEth Instance
  * @return {TCR}      returns instances of Tcr
- * @class paratii.eth.tcr
- */
+  */
 var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   function ParatiiEthTcr(context) {
     (0, _classCallCheck3.default)(this, ParatiiEthTcr);
@@ -37,8 +36,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   /**
    * get TCR contract instance.
    * @return {Promise} Contract instance.
-   * @memberof paratii.eth.tcr
-   */
+    */
 
 
   (0, _createClass3.default)(ParatiiEthTcr, [{
@@ -77,8 +75,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
      * get the minimum amount required to stake a video.
      * @return {Float} amount required in PTI
      * @todo return amount as bignumber.js Object
-     * @memberof paratii.eth.tcr
-     */
+      */
 
   }, {
     key: 'getMinDeposit',
@@ -114,8 +111,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
      * to check whether the video is in application process.
      * @param  {string}  videoId videoId
      * @return {boolean}         is video whitelisted or not.
-     * @memberof paratii.eth.tcr
-     */
+      */
 
   }, {
     key: 'isWhitelisted',
@@ -149,8 +145,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
      * check whether a video started the application process or not yet.
      * @param  {string}  videoId videoId
      * @return {boolean}         did the video start the TCR process.
-     * @memberof paratii.eth.tcr
-     */
+      */
 
   }, {
     key: 'didVideoApply',
@@ -188,8 +183,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
      * @param  {Float}  amountToStake number of tokens to stake. must >= minDeposit
      * @return {boolean}               returns true if all is good, plus _Application
      * event.
-     * @memberof paratii.eth.tcr
-     */
+      */
 
   }, {
     key: 'apply',
@@ -282,8 +276,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
      * @param  {strin}  videoId       [description]
      * @param  {number}  amountToStake [description]
      * @return {Promise}               [description]
-     * @memberof paratii.eth.tcr
-     */
+      */
     // FIXME: better naming
 
   }, {
@@ -387,8 +380,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
     /**
      * remove the video given by videoId from the listing
-     * @memberof paratii.eth.tcr
-     */
+      */
 
   }, {
     key: 'exit',

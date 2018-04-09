@@ -59,7 +59,6 @@ var ParatiiCore = exports.ParatiiCore = function () {
    * @alias migrateAccount
    * @param newAccount Address of new account
    * @async
-   * @memberof Paratii
    */
 
 

@@ -7,14 +7,20 @@ import { ipfsSchema, ethSchema, accountSchema, dbSchema } from './schemas.js'
 const joi = require('joi')
 const utils = require('./utils.js')
 
-//
 /**
  * Paratii library main object
  * The Paratii object serves as the general entry point for interacting with the family of Paratii
  * contracts that are deployed on the blockchain, utilities to run and interact with a local IPFS node,
  * and utilities to interact with the Paratii index.
- * @class Paratii
+
  * @param {configSchema} opts options object to configure paratii library
+  * @property {ParatiiCoreVids} vids operations on videos
+  * @property {ParatiiCoreUsers} users
+  * @property {ParatiiEth} eth interact with the Ethereum blockchain
+  * @property {ParatiiEthTcr} eth.tcr interaction with the TCR contract on ethereum
+  * @property {ParatiiIPFS} ipfs
+  * @property {ParatiiDb} db
+  * @property {ParatiiDbUsers} db.users
  * @example paratii = new Paratii({
  *  eth: {
  *    provider': 'http://localhost:8545'
@@ -23,13 +29,6 @@ const utils = require('./utils.js')
  *     address: 'your-address'
  *   }
  * })
- * @property {ParatiiCoreVids} vids operations on videos
- * @property {ParatiiCoreUsers} users
- * @property {ParatiiEth} eth interact with the Ethereum blockchain
- * @property {ParatiiEthTcr} eth.tcr interaction with the TCR contract on ethereum
- * @property {ParatiiIPFS} ipfs
- * @property {ParatiiDb} db
- * @property {ParatiiDbUsers} db.users
  */
 
 class Paratii extends ParatiiCore {

@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Paratii Class: Paratii</title>
+	<title>Paratii Class: ParatiiEthVouchers</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,19 +72,16 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: Paratii</h1>
+	<h1 class="page-title">Class: ParatiiEthVouchers</h1>
 <section>
 
 <header>
     
         <h2>
-        Paratii
+        ParatiiEthVouchers
         </h2>
         
-            <div class="class-description">Paratii library main object
-The Paratii object serves as the general entry point for interacting with the family of Paratii
-contracts that are deployed on the blockchain, utilities to run and interact with a local IPFS node,
-and utilities to interact with the Paratii index.</div>
+            <div class="class-description">Functions for redeeming vouchers</div>
         
     
 </header>
@@ -96,12 +93,117 @@ and utilities to interact with the Paratii index.</div>
         
 <hr>
 <dt>
-    <h4 class="name" id="Paratii"><span class="type-signature"></span>new Paratii(opts)</h4>
+    <h4 class="name" id="ParatiiEthVouchers"><span class="type-signature"></span>new ParatiiEthVouchers()</h4>
     
     
 </dt>
 <dd>
 
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.eth.vouchers.js.html">paratii.eth.vouchers.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<hr>
+<dt>
+    <h4 class="name" id="create"><span class="type-signature">&lt;async> </span>create(options)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Function for creating a voucher. Can only be called by the owner of the contract.
+    </div>
     
 
     
@@ -135,13 +237,13 @@ and utilities to interact with the Paratii index.</div>
 
         <tr>
             
-                <td class="name"><code>opts</code></td>
+                <td class="name"><code>options</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#configSchema">configSchema</a></span>
+<span class="param-type">Object</span>
 
 
 
@@ -152,24 +254,11 @@ and utilities to interact with the Paratii index.</div>
 
             
 
-            <td class="description last">options object to configure paratii library</td>
-        </tr>
+            <td class="description last">data about the voucher
+                <h6 class="method-params-label method-subparams-label">Properties</h6>
+                
 
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-    <h5 class="subsection-title">Properties:</h5>
-
-    <dl>
-
-<table class="props table table-striped">
+<table class="params table table-striped">
     <thead>
     <tr>
         
@@ -191,13 +280,13 @@ and utilities to interact with the Paratii index.</div>
 
         <tr>
             
-                <td class="name"><code>vids</code></td>
+                <td class="name"><code>voucherCode</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="ParatiiCoreVids.html">ParatiiCoreVids</a></span>
+<span class="param-type">String</span>
 
 
 
@@ -208,20 +297,20 @@ and utilities to interact with the Paratii index.</div>
 
             
 
-            <td class="description last">operations on videos</td>
+            <td class="description last">unique string associated to this voucher</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>users</code></td>
+                <td class="name"><code>amount</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></span>
+<span class="param-type">Number</span>
 
 
 
@@ -232,170 +321,7 @@ and utilities to interact with the Paratii index.</div>
 
             
 
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>eth</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ParatiiEth.html">ParatiiEth</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">interact with the Ethereum blockchain
-                <h6>Properties</h6>
-
-<table class="props table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>tcr</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ParatiiEthTcr.html">ParatiiEthTcr</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">interaction with the TCR contract on ethereum</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>ipfs</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ParatiiIPFS.html">ParatiiIPFS</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>db</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ParatiiDb.html">ParatiiDb</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">
-                <h6>Properties</h6>
-
-<table class="props table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>users</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
+            <td class="description last">amount of PTI in wei of this voucher</td>
         </tr>
 
     
@@ -408,122 +334,7 @@ and utilities to interact with the Paratii index.</div>
     
     </tbody>
 </table>
-</dl>
 
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.js.html">paratii.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">paratii = new Paratii({
- eth: {
-   provider&#x27;: &#x27;http://localhost:8545&#x27;
-  },
-  account: {
-    address: &#x27;your-address&#x27;
-  }
-})</pre>
-
-
-    
-</dd>
-
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-            
-<hr>
-<dt>
-    <h4 class="name" id="diagnose"><span class="type-signature">&lt;async> </span>diagnose()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        return an array of strings with diagnostic info
-    </div>
-    
-
-    
-
-    
-
-    
     
 
     
@@ -561,7 +372,7 @@ and utilities to interact with the Paratii index.</div>
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.js.html">paratii.js</a>
+				<a href="paratii.eth.vouchers.js.html">paratii.eth.vouchers.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -590,7 +401,7 @@ and utilities to interact with the Paratii index.</div>
     
             
 <div class="param-desc">
-    array of strings with diagnostic info
+    the voucher id
 </div>
 
 
@@ -614,7 +425,7 @@ and utilities to interact with the Paratii index.</div>
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">paratii.diagnose()</pre>
+    <pre class="sunlight-highlight-javascript">await paratii.eth.vouchers.create({ voucherCode: &#x27;some-id&#x27;, amount: 10 })</pre>
 
 
     
@@ -624,7 +435,7 @@ and utilities to interact with the Paratii index.</div>
             
 <hr>
 <dt>
-    <h4 class="name" id="setAccount"><span class="type-signature"></span>setAccount(address, privateKey)</h4>
+    <h4 class="name" id="createVouchers"><span class="type-signature">&lt;async> </span>createVouchers(number, amount)</h4>
     
     
 </dt>
@@ -632,7 +443,7 @@ and utilities to interact with the Paratii index.</div>
 
     
     <div class="description">
-        Set the ethereum address what will be used to sign all transactions
+        Generates a given number of vouchers with unique IDs, and the given amount, and returns an array of objects.
     </div>
     
 
@@ -667,13 +478,13 @@ and utilities to interact with the Paratii index.</div>
 
         <tr>
             
-                <td class="name"><code>address</code></td>
+                <td class="name"><code>number</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">Number</span>
 
 
 
@@ -684,20 +495,20 @@ and utilities to interact with the Paratii index.</div>
 
             
 
-            <td class="description last">address of the operator/user</td>
+            <td class="description last">number of voucher to create</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>privateKey</code></td>
+                <td class="name"><code>amount</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">Number</span>
 
 
 
@@ -708,7 +519,7 @@ and utilities to interact with the Paratii index.</div>
 
             
 
-            <td class="description last">optional - private key of the operator/user</td>
+            <td class="description last">amount of every voucher</td>
         </tr>
 
     
@@ -752,7 +563,7 @@ and utilities to interact with the Paratii index.</div>
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.js.html">paratii.js</a>
+				<a href="paratii.eth.vouchers.js.html">paratii.eth.vouchers.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -777,11 +588,35 @@ and utilities to interact with the Paratii index.</div>
     
 
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Object containing every voucher created
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
 
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">paratii.setAccount(&#x27;some-user-id&#x27;,&#x27;some-user-pub-key&#x27;)</pre>
+    <pre class="sunlight-highlight-javascript">let vouchers = await paratii.eth.vouchers.createVouchers(10, 10)</pre>
 
 
     
@@ -791,7 +626,7 @@ and utilities to interact with the Paratii index.</div>
             
 <hr>
 <dt>
-    <h4 class="name" id="setRegistryAddress"><span class="type-signature"></span>setRegistryAddress(address)</h4>
+    <h4 class="name" id="getVouchersContract"><span class="type-signature">&lt;async> </span>getVouchersContract()</h4>
     
     
 </dt>
@@ -799,7 +634,124 @@ and utilities to interact with the Paratii index.</div>
 
     
     <div class="description">
-        Set the address of the ParatiiRegistry contract
+        Get the contract instance of the vouchers contract
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.eth.vouchers.js.html">paratii.eth.vouchers.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    Object representing the contract
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let contract = await paratii.eth.vids.getVouchersContract()</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="redeem"><span class="type-signature">&lt;async> </span>redeem(voucherCode)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Function for redeeming a voucher to the current account's address.
     </div>
     
 
@@ -834,7 +786,7 @@ and utilities to interact with the Paratii index.</div>
 
         <tr>
             
-                <td class="name"><code>address</code></td>
+                <td class="name"><code>voucherCode</code></td>
             
 
             <td class="type">
@@ -851,7 +803,7 @@ and utilities to interact with the Paratii index.</div>
 
             
 
-            <td class="description last">address of the ParatiiRegistry contract</td>
+            <td class="description last">univocal voucher code</td>
         </tr>
 
     
@@ -895,7 +847,7 @@ and utilities to interact with the Paratii index.</div>
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.js.html">paratii.js</a>
+				<a href="paratii.eth.vouchers.js.html">paratii.eth.vouchers.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -920,12 +872,123 @@ and utilities to interact with the Paratii index.</div>
     
 
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    true if everything goes well, otherwise throws an error
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
 
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">paratii.setRegistryAddress(&#x27;some-address&#x27;)</pre>
+    <pre class="sunlight-highlight-javascript">await paratii.eth.vouchers.redeem(&#x27;some-code&#x27;)</pre>
 
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="test"><span class="type-signature">&lt;async> </span>test()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        throws a test error
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.eth.vouchers.js.html">paratii.eth.vouchers.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 
     
 </dd>

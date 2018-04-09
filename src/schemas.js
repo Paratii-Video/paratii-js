@@ -12,12 +12,24 @@ const accountSchema = joi.object({
   mnemonic: joi.string().default(null).allow(null)
 }).default()
 
+/**
+  * @typedef {Array} ethSchema
+  * @property {?string} provider
+  * @property {?string} registryAddress
+  * @property {?boolean} isTestNet
+ */
 const ethSchema = joi.object({
   provider: joi.string().default('ws://localhost:8546'),
   registryAddress: joi.string().default(null).allow(null),
   isTestNet: joi.boolean().optional()
 }).default()
 
+/**
+  * @typedef {Array} ipfsSchema
+  * @property {?string} repo
+  * @property {?string} registryAddress
+  * @property {?boolean} isTestNet
+ */
 const ipfsSchema = joi.object({
   repo: joi.string().default(null).allow(null),
   // passed to IPFS constructor as `config.Addresses.Swarm`

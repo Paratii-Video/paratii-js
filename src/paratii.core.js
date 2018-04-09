@@ -31,7 +31,6 @@ export class ParatiiCore {
    * @alias migrateAccount
    * @param newAccount Address of new account
    * @async
-   * @memberof Paratii
    */
   async migrateAccount (newAccount) {
     // migrate the videos

@@ -1,6 +1,6 @@
 /**
  * eth.events implements a part of the API of the EventEmitter, that can be used to manage subscriptions to Ethereum events.
- * @class paratii.eth.events
+
  */
 export class ParatiiEthEvents {
   constructor (config) {
@@ -68,7 +68,7 @@ export class ParatiiEthEvents {
    * @param  {String} eventType Event type
    * @return {Object}           Event Object
    * @example let structuredEvent = this._getStructuredEvent('some-event')
-   * @memberof paratii.eth.events
+
    */
   _getStructuredEvent (eventType) {
     let structuredEvent = {}
@@ -94,7 +94,7 @@ export class ParatiiEthEvents {
    * @param  {Function}  options   function called when the events occurs
    * @param  {?}  listener  optional ?
    * @return {Promise}           [description]
-   * @memberof paratii.eth.events
+
    */
   async addListener (eventType, options, listener) {
     if (this._isFunction(options)) {
@@ -110,7 +110,7 @@ export class ParatiiEthEvents {
    * @param  {Object}  listener  [description]
    * @param  {Object}  options   [description]
    * @return {Promise}           [description]
-   * @memberof paratii.eth.events
+
    */
   async _addListener (eventType, listener, options) {
     let structuredEvent = this._getStructuredEvent(eventType)
@@ -150,7 +150,7 @@ export class ParatiiEthEvents {
    * TODO RIVEDI I TIPI
    * @param  {Object}  functionToCheck [description]
    * @return {Boolean}                 [description]
-   * @memberof paratii.eth.events
+
    */
   _isFunction (functionToCheck) {
     var getType = {}
@@ -161,7 +161,7 @@ export class ParatiiEthEvents {
    * TODO RIVEDI I TIPI
    * @param {Object} eventType    [description]
    * @param {Object} subscription [description]
-   * @memberof paratii.eth.events
+
    */
   addSubscription (eventType, subscription) {
     if (!this._subscriptions[eventType]) {
@@ -181,7 +181,7 @@ export class ParatiiEthEvents {
    * TODO RIVEDI I TIPI
    * @param  {Object} eventType [description]
    * @return {Object}           [description]
-   * @memberof paratii.eth.events
+
    */
   removeAllSubscriptions (eventType) {
     if (eventType === undefined) {
