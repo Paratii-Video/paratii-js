@@ -109,7 +109,7 @@ var Uploader = exports.Uploader = function (_EventEmitter) {
     key: 'xhrUpload',
     value: function xhrUpload(file, hashedFile, ev) {
       var r = new Resumable({
-        target: this.config.transcoderDropUrl + '/' + hashedFile.hash,
+        target: this.config.ipfs.transcoderDropUrl + '/' + hashedFile.hash,
         chunkSize: this.config.ipfs.xhrChunkSize,
         simultaneousUploads: 4,
         testChunks: false,
