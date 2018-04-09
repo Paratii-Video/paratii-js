@@ -55,7 +55,7 @@ export class Uploader extends EventEmitter {
    */
   xhrUpload (file, hashedFile, ev) {
     let r = new Resumable({
-      target: `${this.config.transcoderDropUrl}/${hashedFile.hash}`,
+      target: `${this.config.ipfs.transcoderDropUrl}/${hashedFile.hash}`,
       chunkSize: this.config.ipfs.xhrChunkSize,
       simultaneousUploads: 4,
       testChunks: false,
