@@ -32,8 +32,14 @@ var ethSchema = joi.object({
 /**
   * @typedef {Array} ipfsSchema
   * @property {?string} repo
-  * @property {?string} registryAddress
-  * @property {?boolean} isTestNet
+  * @property {Array} swarm
+  * @property {Array} bootstrap
+  * @property {?number} bitswap.maxMessageSize
+  * @property {?number} chunkSize
+  * @property {?number} xhrChunkSize
+  * @property {?number} maxFileSize
+  * @property {?string} defaultTranscoder
+  * @property {?string} transcoderDropUrl
  */
 var ipfsSchema = joi.object({
   repo: joi.string().default(null).allow(null),
@@ -49,11 +55,40 @@ var ipfsSchema = joi.object({
 
 }).default();
 
+/**
+  * @typedef {Array} dbSchema
+  * @property {?string} provider
+ */
 var dbSchema = joi.object({
   provider: joi.string().default('https://db.paratii.video/api/v1/')
 }).default();
 
-// this is the data structure of a video
+/**
+ * this is the data structure of a video
+ * @typedef {Array} videoSchema
+ * @property {?string} id
+ * @property {?string} author
+ * @property {?string} description
+ * @property {?string} duration
+ * @property {?string} filename
+ * @property {number} filesize
+ * @property {?string} free
+ * @property {?string} ipfsHashOrig
+ * @property {?string} ipfsHash
+ * @property {string} owner
+ * @property {?number} price
+ * @property {?string} title
+ * @property {Array} thumbnails
+ * @property {?Object} storageStatus
+ * @property {string} storageStatus.name
+ * @property {?Object} storageStatus.data
+ * @property {?Object} transcodingStatus
+ * @property {string} transcodingStatus.name
+ * @property {?Object} transcodingStatus.data
+ * @property {?Object} uploadStatus
+ * @property {string} uploadStatus.name
+ * @property {?Object} uploadStatus.data
+*/
 var videoSchema = joi.object({
   id: joi.string().default(null),
   author: joi.string().empty('').default('').allow(null),
@@ -86,9 +121,9 @@ var videoSchema = joi.object({
 /**
   * @typedef {Array} configSchema
   * @property {?accountSchema} account
-  * @property {?object} eth
-  * @property {?object} db
-  * @property {?Object} ipfs
+  * @property {?ethSchema} eth
+  * @property {?dbSchema} db
+  * @property {?ipfsSchema} ipfs
  */
 exports.accountSchema = accountSchema;
 exports.ethSchema = ethSchema;

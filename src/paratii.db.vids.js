@@ -14,7 +14,7 @@ export class ParatiiDbVids {
   }
   /**
    * Get information about this video from the db
-   * @param  {String}  videoId univocal video identifier
+   * @param  {string}  videoId univocal video identifier
    * @return {Promise}         data about the video
    * @example paratii.db.vids.get('some-video-id')
 

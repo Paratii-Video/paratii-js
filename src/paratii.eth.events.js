@@ -65,7 +65,7 @@ export class ParatiiEthEvents {
   }
   /**
    * parse event from simple string to an object
-   * @param  {String} eventType Event type
+   * @param  {string} eventType Event type
    * @return {Object}           Event Object
    * @example let structuredEvent = this._getStructuredEvent('some-event')
 
@@ -90,7 +90,7 @@ export class ParatiiEthEvents {
   }
   /**
    * subscribe to the specified event
-   * @param  {String}  eventType type of the event
+   * @param  {string}  eventType type of the event
    * @param  {Function}  options   function called when the events occurs
    * @param  {?}  listener  optional ?
    * @return {Promise}           [description]

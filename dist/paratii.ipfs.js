@@ -123,7 +123,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     }
     /**
      * get file from ipfs
-     * @param  {String}  hash multihash of the file
+     * @param  {string}  hash multihash of the file
      * @return {Promise}      the file (path,content)
      * @example
      * let result = await paratiiIPFS.add(fileStream)
@@ -155,7 +155,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     }
     /**
      * log messages on the console if verbose is set
-     * @param  {String} msg text to log
+     * @param  {string} msg text to log
      * @example
      * paratii.ipfs.log("some-text")
      */
@@ -171,7 +171,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     }
     /**
      * log warns on the console if verbose is set
-     * @param  {String} msg warn text
+     * @param  {string} msg warn text
      * @example
      * paratii.ipfs.warn("some-text")
      */
@@ -187,7 +187,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     }
     /**
     * log errors on the console if verbose is set
-    * @param  {String} msg error message
+    * @param  {string} msg error message
     * @example
     * paratii.ipfs.error("some-text")
     */
@@ -418,7 +418,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     }
     /**
     * gets a JSON object stored in IPFS
-    * @param  {String}  multihash ipfs multihash of the object
+    * @param  {string}  multihash ipfs multihash of the object
     * @return {Promise}           requested Object
     * @example let jsonObj = await paratiiIPFS.getJSON('some-multihash')
     */

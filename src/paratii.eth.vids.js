@@ -50,7 +50,7 @@ export class ParatiiEthVids {
   }
   /**
    * Creates a random id
-   * @return {String} id created
+   * @return {string} id created
    * @example let id = paratii.eth.vids.makeId()
 
    */
@@ -61,7 +61,7 @@ export class ParatiiEthVids {
   /**
    * Record the video on the blockchain
    * @param  {Object}  options   data about the video
-   * @param  {Number}  [retry=1] optional, default = 1
+   * @param  {number}  [retry=1] optional, default = 1
    * @return {Promise}           the video id
    * @example let videoId = await paratii.eth.vids.create({
    *                                    id: 'some-id',
@@ -129,7 +129,7 @@ export class ParatiiEthVids {
   }
   /**
    * get data about the video
-   * @param  {String}  videoId univocal video id
+   * @param  {string}  videoId univocal video id
    * @return {Promise}         data about the video
    * @example let video = eth.vids.get('0x12345')
 
@@ -154,7 +154,7 @@ export class ParatiiEthVids {
  * record a like/dislike to the video on the blockchain
  * TODO RIVEDI I TIPI
  * @param  {Object}  options data about the video to like
- * @param {String} options.videoId univocal video id
+ * @param {string} options.videoId univocal video id
  * @param {Boolean} options.liked true/false
  * @return {Promise}         transaction recording the like
  * @example await paratii.eth.vids.sendLike({ videoId: 'some-id', liked: true })
@@ -196,9 +196,9 @@ export class ParatiiEthVids {
 /**
  * record a views to the video on the blockchain
  * @param  {Object}  options data about the video and the viewer
- * @param {String} options.viewer address of the viewer
- * @param {String} options.videoId univocal video identifier
- * @param {String} options.ipfsData ipfs multihash
+ * @param {string} options.viewer address of the viewer
+ * @param {string} options.videoId univocal video identifier
+ * @param {string} options.ipfsData ipfs multihash
  * @return {Promise}         transaction recording the view
  * @example await paratii.eth.vids.view({viewer:'some-user-id',videoId: 'some-video-id'})
 
@@ -227,8 +227,8 @@ export class ParatiiEthVids {
   /**
    * Check if the viewer has already viewed the video
    * @param  {Object}  options data about the video and the viewer
-   * @param {String} options.viewer viewer address
-   * @param {String} options.videoId  univocal video identifier
+   * @param {string} options.viewer viewer address
+   * @param {string} options.videoId  univocal video identifier
    * @return {Promise}         true if the current user already viewed the video, false otherwise
    * @example let result = await paratii.eth.vids.userViewedVideo({viewer:'some-user-id',videoId: 'some-video-id'})
 
@@ -253,7 +253,7 @@ export class ParatiiEthVids {
   }
   /**
    * Writes a like for the video on the blockchain (contract Likes), and negates a dislike for the video, if it exists.
-   * @param  {String}  videoId univocal video identifier
+   * @param  {string}  videoId univocal video identifier
    * @return {Promise}          transaction recording the like
    * @example let result = paratii.eth.vids.like('some-id')
 
@@ -263,7 +263,7 @@ export class ParatiiEthVids {
   }
   /**
    * Writes a dislike for the video on the blockchain (contract Likes), and negates a like for the video, if it exists.
-   * @param  {String}  videoId univocal video identifier
+   * @param  {string}  videoId univocal video identifier
    * @return {Promise}          transaction recording the dislike
    * @example let result = paratii.eth.vids.dislike('some-id')
 
@@ -273,7 +273,7 @@ export class ParatiiEthVids {
   }
   /**
    * Check if the current user has already liked the video
-   * @param  {String}  videoId univocal video identifier
+   * @param  {string}  videoId univocal video identifier
    * @return {Promise}          true if the current user already liked the video, false otherwise
    * @example let result = paratii.eth.vids.doesLike('some-id')
 
@@ -287,7 +287,7 @@ export class ParatiiEthVids {
   }
   /**
    * Check if the current user has already disliked the video.
-   * @param  {String}  videoId univocal video identifier
+   * @param  {string}  videoId univocal video identifier
    * @return {Promise}          true if the current user already disliked the video, false otherwise
    * @example let result = paratii.eth.vids.doesDislike('some-id')
 
@@ -302,7 +302,7 @@ export class ParatiiEthVids {
   /**
    * Update the information on the video.
    *  Only the account that has registered the video, or the owner of the contract, can update the information.
-   * @param  {String}  videoId      univocal video identifier
+   * @param  {string}  videoId      univocal video identifier
    * @param  {Object}  options      key value pairs of properties and new values e.g. ({title: 'another-title'})
    * @return {Promise}              Updated video informations
    * @example paratii.eth.vids.update('some-video-id', {title: 'another-title'})
@@ -319,7 +319,7 @@ export class ParatiiEthVids {
   }
   /**
    * delete the video from the blockchain
-   * @param  {String}  videoId univocal video identifier
+   * @param  {string}  videoId univocal video identifier
    * @return {Promise}         transaction recording the remove action
    * @example let tx = paratii.eth.vids.delete('some-id')
    */

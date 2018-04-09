@@ -14,13 +14,11 @@ const utils = require('./utils.js')
  * and utilities to interact with the Paratii index.
 
  * @param {configSchema} opts options object to configure paratii library
-  * @property {ParatiiCoreVids} vids operations on videos
-  * @property {ParatiiCoreUsers} users
-  * @property {ParatiiEth} eth interact with the Ethereum blockchain
-  * @property {ParatiiEthTcr} eth.tcr interaction with the TCR contract on ethereum
-  * @property {ParatiiIPFS} ipfs
-  * @property {ParatiiDb} db
-  * @property {ParatiiDbUsers} db.users
+ * @property {ParatiiCoreVids} vids operations on videos
+ * @property {ParatiiCoreUsers} users
+ * @property {ParatiiEth} eth interact with the Ethereum blockchain
+ * @property {ParatiiIPFS} ipfs
+ * @property {ParatiiDb} db
  * @example paratii = new Paratii({
  *  eth: {
  *    provider': 'http://localhost:8545'
@@ -54,8 +52,8 @@ class Paratii extends ParatiiCore {
   }
   /**
    * Set the ethereum address what will be used to sign all transactions
-   * @param {String} address address of the operator/user
-   * @param {String} privateKey optional - private key of the operator/user
+   * @param {string} address address of the operator/user
+   * @param {string} privateKey optional - private key of the operator/user
    * @example paratii.setAccount('some-user-id','some-user-pub-key')
    */
   setAccount (address, privateKey) {
@@ -63,7 +61,7 @@ class Paratii extends ParatiiCore {
   }
   /**
    * Set the address of the ParatiiRegistry contract
-   * @param {String} address address of the ParatiiRegistry contract
+   * @param {string} address address of the ParatiiRegistry contract
    * @example paratii.setRegistryAddress('some-address')
   */
   setRegistryAddress (address) {

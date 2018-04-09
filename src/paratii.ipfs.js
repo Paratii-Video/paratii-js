@@ -43,7 +43,7 @@ export class ParatiiIPFS extends EventEmitter {
   }
   /**
    * get file from ipfs
-   * @param  {String}  hash multihash of the file
+   * @param  {string}  hash multihash of the file
    * @return {Promise}      the file (path,content)
    * @example
    * let result = await paratiiIPFS.add(fileStream)
@@ -56,7 +56,7 @@ export class ParatiiIPFS extends EventEmitter {
   }
   /**
    * log messages on the console if verbose is set
-   * @param  {String} msg text to log
+   * @param  {string} msg text to log
    * @example
    * paratii.ipfs.log("some-text")
    */
@@ -67,7 +67,7 @@ export class ParatiiIPFS extends EventEmitter {
   }
   /**
    * log warns on the console if verbose is set
-   * @param  {String} msg warn text
+   * @param  {string} msg warn text
    * @example
    * paratii.ipfs.warn("some-text")
    */
@@ -78,7 +78,7 @@ export class ParatiiIPFS extends EventEmitter {
   }
   /**
   * log errors on the console if verbose is set
-  * @param  {String} msg error message
+  * @param  {string} msg error message
   * @example
   * paratii.ipfs.error("some-text")
   */
@@ -245,7 +245,7 @@ export class ParatiiIPFS extends EventEmitter {
   }
   /**
   * gets a JSON object stored in IPFS
-  * @param  {String}  multihash ipfs multihash of the object
+  * @param  {string}  multihash ipfs multihash of the object
   * @return {Promise}           requested Object
   * @example let jsonObj = await paratiiIPFS.getJSON('some-multihash')
   */

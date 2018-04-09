@@ -57,10 +57,10 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
     /**
      * Creates a user
      * @param  {Object}  options information about the user
-     * @param {String} options.id valid address
-     * @param {String} options.name name of the user
-     * @param {String} options.email email of the user
-     * @param {String} options.ipfsData ipfs hash
+     * @param {string} options.id valid address
+     * @param {string} options.name name of the user
+     * @param {string} options.email email of the user
+     * @param {string} options.ipfsData ipfs hash
      * @return {Promise}         the id of the newly created user
      * @example let userData = {
      *                    id: 'some-id',
@@ -128,7 +128,7 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
     }
     /**
      * Get a users details from the blockchain
-     * @param  {String}  userId valid address
+     * @param  {string}  userId valid address
      * @return {Promise}        information about the user
      * @example user = await paratii.eth.users.get('some-id')
       */
@@ -168,7 +168,7 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
     }
     /**
      * Updates a user details on the blockchain.
-     * @param  {String}  userId  valid address
+     * @param  {string}  userId  valid address
      * @param  {Object}  options information to update. Left-out data is kept the same.
      * @return {Promise}         updated data
      * @example await paratii.eth.users.update('some-id', {ipfsData: 'new-hash'})
@@ -207,7 +207,7 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
     }
     /**
      * Deletes a user from the blockchain. Can only be called by the contract owner or the user him/her-self
-     * @param  {String}  userId valid address
+     * @param  {string}  userId valid address
      * @return {Promise}        blockchain transaction
      * @example await paratii.eth.users.delete('some-id')
       */

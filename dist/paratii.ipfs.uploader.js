@@ -96,7 +96,7 @@ var Uploader = exports.Uploader = function (_EventEmitter) {
     /**
      * Upload a file over XHR to the transcoder. To be called with an event emitter as the last argument
      * @param  {Object} file       file to upload
-     * @param  {String} hashedFile hash of the file ??
+     * @param  {string} hashedFile hash of the file ??
      * @param  {EventEmitter} ev         event emitter
      * @example this.xhrUpload(file, hashedFile, ev)
       */
@@ -192,7 +192,7 @@ var Uploader = exports.Uploader = function (_EventEmitter) {
 
     /**
      * returns a generic file Object from a file path
-     * @param  {String} filePath Path to file.
+     * @param  {string} filePath Path to file.
      * @return {Object} generic file object.
      * @example ?
       */
@@ -282,7 +282,7 @@ var Uploader = exports.Uploader = function (_EventEmitter) {
 
     /**
      * upload an entire directory to IPFS
-     * @param  {String}   dirPath path to directory
+     * @param  {string}   dirPath path to directory
      * @return {Promise}           returns the {multihash, path, size} for the uploaded folder.
      * @example ?
       */
@@ -354,7 +354,7 @@ var Uploader = exports.Uploader = function (_EventEmitter) {
 
     /**
      * signals transcoder(s) to transcode fileHash
-     * @param  {String} fileHash IPFS file hash.
+     * @param  {string} fileHash IPFS file hash.
      * @param  {Object} options  ref: https://github.com/Paratii-Video/paratii-lib/blob/master/docs/paratii-ipfs.md#ipfsuploadertranscodefilehash-options
      * @return {EventEmitter} returns EventEmitter with the following events:
      *    - 'uploader:progress': (hash, chunkSize, percent) client to transcoder upload progress.

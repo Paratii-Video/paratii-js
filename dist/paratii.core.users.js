@@ -98,7 +98,7 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
 
     /**
      * retrieve data about the user
-     * @param  {String} id user univocal id
+     * @param  {string} id user univocal id
      * @return {Object}    data about the user
      * @example paratii.users.get('some-user-id')
      */
@@ -110,7 +110,7 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
     }
     /**
      * Updates a user's details. name and email are defined in the smart contract Users, other fields get written to IPFS.
-     * @param  {String}  userId  user univocal id
+     * @param  {string}  userId  user univocal id
      * @param  {Object}  options updated data i.e. { name: 'A new user name' }
      * @return {Promise}         updated data about the user
      * @example paratii.users.update('some-user-id', {name: 'A new user name'})

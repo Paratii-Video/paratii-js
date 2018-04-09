@@ -27,8 +27,8 @@ var hdkey = require('hdkey');
 function patchWallet(wallet, config) {
   /**
    * Create a wallet with a given number of accounts from a BIP39 mnemonic
-   * @param  {Number} numberOfAccounts number of accounts to be created
-   * @param  {String} mnemonic         optional - mnemonic of the wallet, if not specified a random one is generated
+   * @param  {number} numberOfAccounts number of accounts to be created
+   * @param  {string} mnemonic         optional - mnemonic of the wallet, if not specified a random one is generated
    * @return {Object}                  the created wallet
    * @example wallet = await wallet.create(5, 'some long mnemonic phrase')
     */
@@ -90,7 +90,7 @@ function patchWallet(wallet, config) {
   }
   /**
    * check if the passed mnemonic is bip39 valid
-   * @param  {String}  mnemonic mnemonic to check
+   * @param  {string}  mnemonic mnemonic to check
    * @return {Boolean}          true if the mnemonic is valid, false otherwise
    * @example paratii.eth.wallet.isValidMnemonic('some long mnemonic phrase')
     */
@@ -99,7 +99,7 @@ function patchWallet(wallet, config) {
   }
   /**
    * generates a new mnemonic
-   * @return {String} newly generated mnemonic
+   * @return {string} newly generated mnemonic
    * @example let newMnemonic = paratii.eth.wallet.generateMnemonic()
     */
   function newMnemonic() {
@@ -118,7 +118,7 @@ function patchWallet(wallet, config) {
   /**
    * decrypts the wallet
    * @param       {Object} data     encrypted wallet
-   * @param       {String} password password to decrypt
+   * @param       {string} password password to decrypt
    * @return      {Object}          decrypted wallet
    * @example let decryptedWallet = paratii.eth.wallet._decrypt(encryptedWallet,'some-psw')
     */
