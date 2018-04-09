@@ -81,7 +81,7 @@
         ParatiiEthTcr
         </h2>
         
-            <div class="class-description">TCR functionality</div>
+            <div class="class-description">Token Curated Registry functionalities</div>
         
     
 </header>
@@ -305,9 +305,9 @@
 
     
     <div class="description">
-        start the application process.
+        start the application process.<br>
 NOTE that this require the client approves PTI amount first before actually
-running this function, use `checkEligiblityAndApply` instead.
+running this function, use checkEligiblityAndApply instead.
     </div>
     
 
@@ -359,7 +359,7 @@ running this function, use `checkEligiblityAndApply` instead.
 
             
 
-            <td class="description last">videoId</td>
+            <td class="description last">univocal video identifier randomly generated</td>
         </tr>
 
     
@@ -479,6 +479,12 @@ event.
         
 
     
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let result = await paratii.eth.tcr.apply(&#x27;some-video-id&#x27;, &#x27;amount of tokens&#x27;)</pre>
+
+
+    
 </dd>
 
         
@@ -538,7 +544,7 @@ does a number of separate steps:
             <td class="type">
             
                 
-<span class="param-type">strin</span>
+<span class="param-type">string</span>
 
 
 
@@ -549,7 +555,7 @@ does a number of separate steps:
 
             
 
-            <td class="description last">[description]</td>
+            <td class="description last">univocal video identifier randomly generated</td>
         </tr>
 
     
@@ -573,7 +579,7 @@ does a number of separate steps:
 
             
 
-            <td class="description last">[description]</td>
+            <td class="description last">number of tokens to stake</td>
         </tr>
 
     
@@ -646,7 +652,8 @@ does a number of separate steps:
     
             
 <div class="param-desc">
-    [description]
+    returns true if all is good, plus _Application
+event.
 </div>
 
 
@@ -666,6 +673,12 @@ does a number of separate steps:
 
 
         
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let result = await paratii.eth.tcr.checkEligiblityAndApply(&#x27;some-video-id&#x27;, &#x27;amount of tokens&#x27;)</pre>
+
 
     
 </dd>
@@ -734,7 +747,7 @@ does a number of separate steps:
 
             
 
-            <td class="description last">videoId</td>
+            <td class="description last">univocal video identifier randomly generated</td>
         </tr>
 
     
@@ -807,7 +820,7 @@ does a number of separate steps:
     
             
 <div class="param-desc">
-    did the video start the TCR process.
+    true if video started the application process, false otherwise
 </div>
 
 
@@ -829,13 +842,19 @@ does a number of separate steps:
         
 
     
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let appWasMade = await paratii.eth.tcr.didVideoApply(&#x27;some-video-id&#x27;)</pre>
+
+
+    
 </dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="exit"><span class="type-signature">&lt;async> </span>exit()</h4>
+    <h4 class="name" id="exit"><span class="type-signature">&lt;async> </span>exit(videoId)</h4>
     
     
 </dt>
@@ -852,6 +871,50 @@ does a number of separate steps:
     
 
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>videoId</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">univocal video identifier randomly generated</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -914,6 +977,23 @@ does a number of separate steps:
     
 
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    information about the transaction
+</div>
+
+
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let tx = await paratii.eth.tcr.exit(&#x27;some-video-id&#x27;)</pre>
+
 
     
 </dd>
@@ -1034,6 +1114,12 @@ does a number of separate steps:
         
 
     
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let minDeposit = await paratii.eth.tcr.getMinDeposit()</pre>
+
+
+    
 </dd>
 
         
@@ -1145,6 +1231,12 @@ does a number of separate steps:
         
 
     
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let contract = await paratii.eth.tcr.getTcrContract()</pre>
+
+
+    
 </dd>
 
         
@@ -1213,7 +1305,7 @@ to check whether the video is in application process.
 
             
 
-            <td class="description last">videoId</td>
+            <td class="description last">univocal video identifier randomly generated</td>
         </tr>
 
     
@@ -1286,7 +1378,7 @@ to check whether the video is in application process.
     
             
 <div class="param-desc">
-    is video whitelisted or not.
+    true if video is whitelisted, false otherwise
 </div>
 
 
@@ -1306,6 +1398,12 @@ to check whether the video is in application process.
 
 
         
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let isWhitelisted = await paratii.eth.tcr.isWhitelisted(&#x27;some-video-id&#x27;)</pre>
+
 
     
 </dd>
@@ -1360,7 +1458,7 @@ to check whether the video is in application process.
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2018-04-09T12:35:08+02:00
+		on 2018-04-09T13:06:42+02:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
