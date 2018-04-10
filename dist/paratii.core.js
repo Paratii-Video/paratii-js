@@ -5,17 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ParatiiCore = undefined;
 
-var _regenerator = require('babel-runtime/regenerator');
-
-var _regenerator2 = _interopRequireDefault(_regenerator);
-
 var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
-
-var _createClass2 = require('babel-runtime/helpers/createClass');
-
-var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _paratiiCoreVids = require('./paratii.core.vids.js');
 
@@ -34,100 +26,21 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * validates the config file and istantiates ParatiiCoreVids and ParatiiCoreUsers.
  * @param {paratiiSchema} config configuration object to initialize Paratii object
  */
-var ParatiiCore = exports.ParatiiCore = function () {
-  function ParatiiCore(config) {
-    (0, _classCallCheck3.default)(this, ParatiiCore);
+var ParatiiCore = exports.ParatiiCore = function ParatiiCore(config) {
+  (0, _classCallCheck3.default)(this, ParatiiCore);
 
-    var schema = _joi2.default.object({
-      account: _schemas.accountSchema,
-      eth: _schemas.ethSchema,
-      db: _schemas.dbSchema,
-      ipfs: _schemas.ipfsSchema,
-      paratii: _joi2.default.object().optional()
-    });
-    var result = _joi2.default.validate(config, schema);
-    if (result.error) throw result.error;
-    this.config = config;
-    // this.config = result.value
-    this.vids = new _paratiiCoreVids.ParatiiCoreVids(this.config);
-    this.users = new _paratiiCoreUsers.ParatiiCoreUsers(this.config);
-    this.paratii = this.config.paratii;
-  }
-
-  /**
-   * migrate all contract data for  paratii.config.account to a new account
-   * @alias migrateAccount
-   * @param newAccount Address of new account
-   * @async
-   * @memberof Paratii
-   */
-
-
-  (0, _createClass3.default)(ParatiiCore, [{
-    key: 'migrateAccount',
-    value: function migrateAccount(newAccount) {
-      var paratii, oldAccount, vids, i, vid, videoId, didVideoApply, ptiBalance;
-      return _regenerator2.default.async(function migrateAccount$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              // migrate the videos
-              paratii = this.config.paratii;
-              oldAccount = this.config.account.address;
-              _context.next = 4;
-              return _regenerator2.default.awrap(this.vids.search({ owner: oldAccount }));
-
-            case 4:
-              vids = _context.sent;
-              _context.t0 = _regenerator2.default.keys(vids);
-
-            case 6:
-              if ((_context.t1 = _context.t0()).done) {
-                _context.next = 20;
-                break;
-              }
-
-              i = _context.t1.value;
-              vid = vids[i];
-              videoId = vid.id || vid._id;
-              _context.next = 12;
-              return _regenerator2.default.awrap(this.vids.update(videoId, { owner: newAccount }));
-
-            case 12:
-              _context.next = 14;
-              return _regenerator2.default.awrap(paratii.eth.tcr.didVideoApply(vid.id));
-
-            case 14:
-              didVideoApply = _context.sent;
-
-              if (!didVideoApply) {
-                _context.next = 18;
-                break;
-              }
-
-              _context.next = 18;
-              return _regenerator2.default.awrap(this.paratii.eth.tcr.exit(videoId));
-
-            case 18:
-              _context.next = 6;
-              break;
-
-            case 20:
-              _context.next = 22;
-              return _regenerator2.default.awrap(paratii.eth.balanceOf(oldAccount, 'PTI'));
-
-            case 22:
-              ptiBalance = _context.sent;
-              _context.next = 25;
-              return _regenerator2.default.awrap(paratii.eth.transfer(newAccount, ptiBalance, 'PTI'));
-
-            case 25:
-            case 'end':
-              return _context.stop();
-          }
-        }
-      }, null, this);
-    }
-  }]);
-  return ParatiiCore;
-}();
+  var schema = _joi2.default.object({
+    account: _schemas.accountSchema,
+    eth: _schemas.ethSchema,
+    db: _schemas.dbSchema,
+    ipfs: _schemas.ipfsSchema,
+    paratii: _joi2.default.object().optional()
+  });
+  var result = _joi2.default.validate(config, schema);
+  if (result.error) throw result.error;
+  this.config = config;
+  // this.config = result.value
+  this.vids = new _paratiiCoreVids.ParatiiCoreVids(this.config);
+  this.users = new _paratiiCoreUsers.ParatiiCoreUsers(this.config);
+  this.paratii = this.config.paratii;
+};
