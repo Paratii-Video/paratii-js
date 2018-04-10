@@ -49,11 +49,12 @@ export class ParatiiCore {
     const vids = await this.vids.search({owner: oldAccount})
     for (let i in vids) {
       let vid = vids[i]
-      await this.vids.update(vid.id, {owner: newAccount})
+      let videoId = vid.id || vid._id
+      await this.vids.update(videoId, {owner: newAccount})
       let didVideoApply = await paratii.eth.tcr.didVideoApply(vid.id)
       if (didVideoApply) {
         // removing video from statke
-        await paratii.eth.tcr.exit(vid.id)
+        await this.paratii.eth.tcr.exit(videoId)
       }
     }
 
