@@ -1,7 +1,7 @@
 // var webpack = require('webpack')
 var path = require('path')
 
-var srcDir = path.resolve(__dirname, 'lib')
+var srcDir = path.resolve(__dirname, 'src')
 var jsDir = srcDir
 // var stylesDir = srcDir + '/styles';
 var buildDir = path.resolve(__dirname, 'dist')
@@ -12,9 +12,9 @@ var config = {
   entry: jsDir + '/paratii.js',
   output: {
     path: buildDir,
-    filename: 'bundle.js',
-    library: 'paratii-lib',
-    libraryTarget: 'commonjs2'
+    filename: 'paratii.min.js',
+    library: 'paratiijs',
+    libraryTarget: 'var'
   },
   resolve: {
     alias: {
