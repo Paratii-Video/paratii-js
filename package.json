@@ -108,6 +108,7 @@
   "pre-commit": [
     "lint",
     "build",
+    "build-browser",
     "docs",
     "git-add-docs-and-dist"
   ]
