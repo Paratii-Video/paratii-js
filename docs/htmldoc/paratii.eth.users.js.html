@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="paratii.html">paratii</a></li><li><a href="paratii.core.html">paratii.core</a></li><li><a href="paratii.core.users.html">paratii.core.users</a></li><li><a href="paratii.core.vids.html">paratii.core.vids</a></li><li><a href="paratii.db.html">paratii.db</a></li><li><a href="paratii.db.users.html">paratii.db.users</a></li><li><a href="paratii.db.vids.html">paratii.db.vids</a></li><li><a href="paratii.eth.html">paratii.eth</a></li><li><a href="paratii.eth.events.html">paratii.eth.events</a></li><li><a href="paratii.eth.tcr.html">paratii.eth.tcr</a></li><li><a href="paratii.eth.users.html">paratii.eth.users</a></li><li><a href="paratii.eth.vids.html">paratii.eth.vids</a></li><li><a href="paratii.eth.vouchers.html">paratii.eth.vouchers</a></li><li><a href="paratii.eth.wallet.html">paratii.eth.wallet</a></li><li><a href="paratii.ipfs.uploader.html">paratii.ipfs.uploader</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li>
+					<li><a href="Paratii.html">Paratii</a></li><li><a href="ParatiiCore.html">ParatiiCore</a></li><li><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></li><li><a href="ParatiiCoreVids.html">ParatiiCoreVids</a></li><li><a href="ParatiiDb.html">ParatiiDb</a></li><li><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></li><li><a href="ParatiiDbVids.html">ParatiiDbVids</a></li><li><a href="ParatiiEth.html">ParatiiEth</a></li><li><a href="ParatiiEthEvents.html">ParatiiEthEvents</a></li><li><a href="ParatiiEthTcr.html">ParatiiEthTcr</a></li><li><a href="ParatiiEthUsers.html">ParatiiEthUsers</a></li><li><a href="ParatiiEthVids.html">ParatiiEthVids</a></li><li><a href="ParatiiEthVouchers.html">ParatiiEthVouchers</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li><li><a href="Uploader.html">Uploader</a></li>
 				</ul>
 			</li>
 			
@@ -80,7 +80,8 @@
             class="sunlight-highlight-javascript ">const joi = require('joi')
 /**
  * The eth.user namespace contains functions to interact with the video registration on the blockchain.
- * @class paratii.eth.users
+ * @param {Object} context ParatiiEth instance
+ * @property {ParatiiEth} eth ParatiiEth instance
  */
 export class ParatiiEthUsers {
   constructor (context) {
@@ -90,7 +91,6 @@ export class ParatiiEthUsers {
   /**
    * Get the contract instance of the user contract
    * @return {Promise}  Object representing the contract
-   * @memberof paratii.eth.users
    */
   async getRegistry () {
     return this.eth.getContract('Users')
@@ -98,10 +98,10 @@ export class ParatiiEthUsers {
   /**
    * Creates a user
    * @param  {Object}  options information about the user
-   * @param {String} options.id valid address
-   * @param {String} options.name name of the user
-   * @param {String} options.email email of the user
-   * @param {String} options.ipfsData ipfs hash
+   * @param {string} options.id valid address
+   * @param {string} options.name name of the user
+   * @param {string} options.email email of the user
+   * @param {string} options.ipfsData ipfs hash
    * @return {Promise}         the id of the newly created user
    * @example let userData = {
    *                    id: 'some-id',
@@ -110,7 +110,7 @@ export class ParatiiEthUsers {
    *                    ipfsData: 'some-hash'
    *              }
    *         let result = await paratii.eth.users.create(userData)
-   * @memberof paratii.eth.users
+
    */
   async create (options) {
     const schema = joi.object({
@@ -136,10 +136,10 @@ export class ParatiiEthUsers {
   }
   /**
    * Get a users details from the blockchain
-   * @param  {String}  userId valid address
+   * @param  {string}  userId valid address
    * @return {Promise}        information about the user
    * @example user = await paratii.eth.users.get('some-id')
-   * @memberof paratii.eth.users
+
    */
   async get (userId) {
     let contract = await this.getRegistry()
@@ -154,11 +154,11 @@ export class ParatiiEthUsers {
   }
   /**
    * Updates a user details on the blockchain.
-   * @param  {String}  userId  valid address
+   * @param  {string}  userId  valid address
    * @param  {Object}  options information to update. Left-out data is kept the same.
    * @return {Promise}         updated data
    * @example await paratii.eth.users.update('some-id', {ipfsData: 'new-hash'})
-   * @memberof paratii.eth.users
+
    */
   async update (userId, options) {
     options.id = userId
@@ -171,10 +171,10 @@ export class ParatiiEthUsers {
   }
   /**
    * Deletes a user from the blockchain. Can only be called by the contract owner or the user him/her-self
-   * @param  {String}  userId valid address
+   * @param  {string}  userId valid address
    * @return {Promise}        blockchain transaction
    * @example await paratii.eth.users.delete('some-id')
-   * @memberof paratii.eth.users
+
    */
   async delete (userId) {
     let contract = await this.getRegistry()
@@ -223,7 +223,7 @@ export class ParatiiEthUsers {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2018-04-10T18:46:08+02:00
+		on 2018-04-10T18:55:37+02:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

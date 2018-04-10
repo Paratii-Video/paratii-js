@@ -9,6 +9,10 @@ var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
+var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
 var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
@@ -16,6 +20,14 @@ var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 var _createClass2 = require('babel-runtime/helpers/createClass');
 
 var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _paratiiCore = require('./paratii.core.js');
 
@@ -32,29 +44,38 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var joi = require('joi');
 var utils = require('./utils.js');
 
-//
 /**
  * Paratii library main object
  * The Paratii object serves as the general entry point for interacting with the family of Paratii
  * contracts that are deployed on the blockchain, utilities to run and interact with a local IPFS node,
  * and utilities to interact with the Paratii index.
- * @class Paratii
- * @param {accountSchema} opts options object to configure paratii library
- * @param {String} opts.provider optional - the address of an ethereum node (defaults to localhost:8754)
- * @param {String} opts.registryAddress optional - the address where the Paratii Contract registry can be found
- * @param {String} opts.address optional - address of the operator/user
- * @param {String} opts.privateKey optional - private key of the user
- * @param {Object} opts.ipfs TODO fix ipfs.repo --> ipfsrepo
- * @param {String} opts.ipfs.repo optional - namespace of the ipfs repository
- * @param {Object} opts.db TODO fix db.provider --> dbprovider
- * @param {String} opts.db.provider optional - baseURL of the mongoDb mirror
- * @param {String} opts.mnemonic optional - mnemonic of the user
- *
- * @example     paratii = new Paratii({ 'eth.provider': 'http://localhost:8545', address: 'some-user-id', privateKey: 'some-user-priv-key'})
- * @class paratii
+
+ * @param {ParatiiConfigSchema} opts options object to configure paratii library
+ * @property {ParatiiCoreVids} vids operations on videos
+ * @property {ParatiiCoreUsers} users operations on users
+ * @property {ParatiiEth} eth interact with the Ethereum blockchain
+ * @property {ParatiiIPFS} ipfs interact with the IPFS instance
+ * @property {ParatiiDb} db interact with the Paratii Index
+ * @example paratii = new Paratii({
+ *  eth: {
+ *    provider': 'http://localhost:8545'
+ *   },
+ *   account: {
+ *     address: 'your-address'
+ *   }
+ * })
  */
 
-var Paratii = function () {
+var Paratii = function (_ParatiiCore) {
+  (0, _inherits3.default)(Paratii, _ParatiiCore);
+
+  /**
+    * @typedef {Array} ParatiiConfigSchema
+    * @property {?accountSchema} account
+    * @property {?ethSchema} eth
+    * @property {?dbSchema} db
+    * @property {?ipfsSchema} ipfs
+   */
   function Paratii() {
     var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     (0, _classCallCheck3.default)(this, Paratii);
@@ -68,19 +89,24 @@ var Paratii = function () {
 
     var result = joi.validate(opts, schema);
     if (result.error) throw result.error;
-    this.config = result.value;
-    this.config.paratii = this;
-    this.eth = new _paratiiEth.ParatiiEth(this.config);
-    this.core = new _paratiiCore.ParatiiCore(this.config);
-    this.db = new _paratiiDb.ParatiiDb(this.config);
-    this.ipfs = new _paratiiIpfs.ParatiiIPFS(this.config);
+    var config = result.value;
+
+    var _this = (0, _possibleConstructorReturn3.default)(this, (Paratii.__proto__ || (0, _getPrototypeOf2.default)(Paratii)).call(this, config));
+
+    _this.config = config;
+    _this.config.paratii = _this;
+    // this.core = this
+    _this.eth = new _paratiiEth.ParatiiEth(_this.config);
+    // this.core = new ParatiiCore(this.config)
+    _this.db = new _paratiiDb.ParatiiDb(_this.config);
+    _this.ipfs = new _paratiiIpfs.ParatiiIPFS(_this.config);
+    return _this;
   }
   /**
    * Set the ethereum address what will be used to sign all transactions
-   * @param {String} address address of the operator/user
-   * @param {String} privateKey optional - private key of the operator/user
+   * @param {string} address address of the operator/user
+   * @param {?string} privateKey  private key of the operator/user
    * @example paratii.setAccount('some-user-id','some-user-pub-key')
-   * @memberof paratii
    */
 
 
@@ -102,9 +128,8 @@ var Paratii = function () {
     }
     /**
      * Set the address of the ParatiiRegistry contract
-     * @param {String} address address of the ParatiiRegistry contract
+     * @param {string} address address of the ParatiiRegistry contract
      * @example paratii.setRegistryAddress('some-address')
-     * @memberof paratii
     */
 
   }, {
@@ -117,7 +142,6 @@ var Paratii = function () {
      * return an array of strings with diagnostic info
      * @return {Promise} array of strings with diagnostic info
      * @example paratii.diagnose()
-     * @memberof paratii
      */
 
   }, {
@@ -226,7 +250,7 @@ var Paratii = function () {
     }
   }]);
   return Paratii;
-}();
+}(_paratiiCore.ParatiiCore);
 
 exports.default = Paratii;
 exports.Paratii = Paratii;

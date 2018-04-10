@@ -22,10 +22,9 @@ var _utils = require('./utils.js');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * TCR functionality
- * @param  {object} context ParatiiEth Instance
- * @return {TCR}      returns instances of Tcr
- * @class paratii.eth.tcr
+ * Token Curated Registry functionalities
+ * @param  {Object} context ParatiiEth instance
+ * @property {ParatiiEth} eth ParatiiEth instance
  */
 var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   function ParatiiEthTcr(context) {
@@ -37,7 +36,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   /**
    * get TCR contract instance.
    * @return {Promise} Contract instance.
-   * @memberof paratii.eth.tcr
+   * @example let contract = await paratii.eth.tcr.getTcrContract()
    */
 
 
@@ -77,7 +76,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
      * get the minimum amount required to stake a video.
      * @return {Float} amount required in PTI
      * @todo return amount as bignumber.js Object
-     * @memberof paratii.eth.tcr
+     * @example let minDeposit = await paratii.eth.tcr.getMinDeposit()
      */
 
   }, {
@@ -112,9 +111,9 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
      * check if video is already whitelisted or not. note that this returns false
      * till the video is actually whitelisted. use didVideoApply in case you want
      * to check whether the video is in application process.
-     * @param  {string}  videoId videoId
-     * @return {boolean}         is video whitelisted or not.
-     * @memberof paratii.eth.tcr
+     * @param  {string}  videoId univocal video identifier randomly generated
+     * @return {boolean}         true if video is whitelisted, false otherwise
+     * @example let isWhitelisted = await paratii.eth.tcr.isWhitelisted('some-video-id')
      */
 
   }, {
@@ -147,9 +146,9 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
     /**
      * check whether a video started the application process or not yet.
-     * @param  {string}  videoId videoId
-     * @return {boolean}         did the video start the TCR process.
-     * @memberof paratii.eth.tcr
+     * @param  {string}  videoId univocal video identifier randomly generated
+     * @return {boolean}         true if video started the application process, false otherwise
+     * @example let appWasMade = await paratii.eth.tcr.didVideoApply('some-video-id')
      */
 
   }, {
@@ -181,14 +180,14 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     }
 
     /**
-     * start the application process.
+     * start the application process.<br>
      * NOTE that this require the client approves PTI amount first before actually
-     * running this function, use `checkEligiblityAndApply` instead.
-     * @param  {string}  videoId       videoId
+     * running this function, use checkEligiblityAndApply instead.
+     * @param  {string} videoId univocal video identifier randomly generated
      * @param  {Float}  amountToStake number of tokens to stake. must >= minDeposit
      * @return {boolean}               returns true if all is good, plus _Application
      * event.
-     * @memberof paratii.eth.tcr
+     * @example let result = await paratii.eth.tcr.apply('some-video-id', 'amount of tokens')
      */
 
   }, {
@@ -279,10 +278,11 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
      * - check preconditions for staking
      * - approve that the TCR contract can transfer amountToStake tokens
      * - apply to the TCR
-     * @param  {strin}  videoId       [description]
-     * @param  {number}  amountToStake [description]
-     * @return {Promise}               [description]
-     * @memberof paratii.eth.tcr
+     * @param  {string}  videoId       univocal video identifier randomly generated
+     * @param  {number}  amountToStake number of tokens to stake
+     * @return {Promise}                returns true if all is good, plus _Application
+     * event.
+     * @example let result = await paratii.eth.tcr.checkEligiblityAndApply('some-video-id', 'amount of tokens')
      */
     // FIXME: better naming
 
@@ -387,7 +387,9 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
     /**
      * remove the video given by videoId from the listing
-     * @memberof paratii.eth.tcr
+     * @param videoId univocal video identifier randomly generated
+     * @return information about the transaction
+     * @example let tx = await paratii.eth.tcr.exit('some-video-id')
      */
 
   }, {

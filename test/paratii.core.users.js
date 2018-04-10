@@ -4,7 +4,7 @@ import { DB_PROVIDER, testAccount } from './utils.js'
 import nock from 'nock'
 const users = require('./users-fixtures')
 
-describe('paratii.core.users: ', function () {
+describe('paratii.users: ', function () {
   let paratii
   let newUserData = {
     id: '0xa99dBd162ad5E1601E8d8B20703e5A3bA5c00Be7',
@@ -30,19 +30,19 @@ describe('paratii.core.users: ', function () {
     await paratii.eth.deployContracts()
   })
 
-  it('core.users.create() should work as expected', async function () {
-    let result = await paratii.core.users.create(newUserData)
+  it('users.create() should work as expected', async function () {
+    let result = await paratii.users.create(newUserData)
     assert.equal(result, newUserId)
   })
 
-  it('core.users.get() should work as expected', async function () {
-    let result = await paratii.core.users.get(newUserId)
+  it('users.get() should work as expected', async function () {
+    let result = await paratii.users.get(newUserId)
     assert.deepEqual(result, users[0])
   })
 
-  it('core.users.update() should work as expected', async function () {
-    await paratii.core.users.create(newUserData)
-    await paratii.core.users.update(newUserId, {name: 'John Doe'})
+  it('users.update() should work as expected', async function () {
+    await paratii.users.create(newUserData)
+    await paratii.users.update(newUserId, {name: 'John Doe'})
     let user = await paratii.eth.users.get(newUserId)
     assert.equal(user.name, 'John Doe')
   })

@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Paratii Class: wallet</title>
+	<title>Paratii Class: ParatiiDbVids</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="paratii.html">paratii</a></li><li><a href="paratii.core.html">paratii.core</a></li><li><a href="paratii.core.users.html">paratii.core.users</a></li><li><a href="paratii.core.vids.html">paratii.core.vids</a></li><li><a href="paratii.db.html">paratii.db</a></li><li><a href="paratii.db.users.html">paratii.db.users</a></li><li><a href="paratii.db.vids.html">paratii.db.vids</a></li><li><a href="paratii.eth.html">paratii.eth</a></li><li><a href="paratii.eth.events.html">paratii.eth.events</a></li><li><a href="paratii.eth.tcr.html">paratii.eth.tcr</a></li><li><a href="paratii.eth.users.html">paratii.eth.users</a></li><li><a href="paratii.eth.vids.html">paratii.eth.vids</a></li><li><a href="paratii.eth.vouchers.html">paratii.eth.vouchers</a></li><li><a href="paratii.eth.wallet.html">paratii.eth.wallet</a></li><li><a href="paratii.ipfs.uploader.html">paratii.ipfs.uploader</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li>
+					<li><a href="Paratii.html">Paratii</a></li><li><a href="ParatiiCore.html">ParatiiCore</a></li><li><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></li><li><a href="ParatiiCoreVids.html">ParatiiCoreVids</a></li><li><a href="ParatiiDb.html">ParatiiDb</a></li><li><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></li><li><a href="ParatiiDbVids.html">ParatiiDbVids</a></li><li><a href="ParatiiEth.html">ParatiiEth</a></li><li><a href="ParatiiEthEvents.html">ParatiiEthEvents</a></li><li><a href="ParatiiEthTcr.html">ParatiiEthTcr</a></li><li><a href="ParatiiEthUsers.html">ParatiiEthUsers</a></li><li><a href="ParatiiEthVids.html">ParatiiEthVids</a></li><li><a href="ParatiiEthVouchers.html">ParatiiEthVouchers</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li><li><a href="Uploader.html">Uploader</a></li>
 				</ul>
 			</li>
 			
@@ -72,16 +72,16 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: wallet</h1>
+	<h1 class="page-title">Class: ParatiiDbVids</h1>
 <section>
 
 <header>
     
         <h2>
-            <span class="ancestors"><a href="paratii.html">paratii</a><a href="paratii.eth.html">.eth</a>.</span>
-        
-        wallet
+        ParatiiDbVids
         </h2>
+        
+            <div class="class-description">ParatiiDbUsers contains functionalities regarding the videos to interact with the Paratii Blockchain Index</div>
         
     
 </header>
@@ -93,16 +93,12 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="wallet"><span class="type-signature"></span>new wallet(wallet, config)</h4>
+    <h4 class="name" id="ParatiiDbVids"><span class="type-signature"></span>new ParatiiDbVids(config)</h4>
     
     
 </dt>
 <dd>
 
-    
-    <div class="description">
-        overrides some web3js wallet functionalties
-    </div>
     
 
     
@@ -136,30 +132,6 @@
 
         <tr>
             
-                <td class="name"><code>wallet</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">wallet to patch</td>
-        </tr>
-
-    
-
-        <tr>
-            
                 <td class="name"><code>config</code></td>
             
 
@@ -177,7 +149,7 @@
 
             
 
-            <td class="description last">configuration object to initialize Paratii object</td>
+            <td class="description last">object to initialize Paratii object</td>
         </tr>
 
     
@@ -221,7 +193,7 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.eth.wallet.js.html">paratii.eth.wallet.js</a>
+				<a href="paratii.db.vids.js.html">paratii.db.vids.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -246,30 +218,6 @@
     
 
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    patched wallet
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
 
     
 </dd>
@@ -296,7 +244,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="._decrypt"><span class="type-signature">&lt;static> </span>_decrypt(data, password)</h4>
+    <h4 class="name" id="get"><span class="type-signature">&lt;async> </span>get(videoId)</h4>
     
     
 </dt>
@@ -304,7 +252,7 @@
 
     
     <div class="description">
-        decrypts the wallet
+        Get information about this video from the db
     </div>
     
 
@@ -339,13 +287,13 @@
 
         <tr>
             
-                <td class="name"><code>data</code></td>
+                <td class="name"><code>videoId</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">string</span>
 
 
 
@@ -356,31 +304,7 @@
 
             
 
-            <td class="description last">encrypted wallet</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>password</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">password to decrypt</td>
+            <td class="description last">univocal video identifier randomly generated</td>
         </tr>
 
     
@@ -424,7 +348,7 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.eth.wallet.js.html">paratii.eth.wallet.js</a>
+				<a href="paratii.db.vids.js.html">paratii.db.vids.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -453,7 +377,7 @@
     
             
 <div class="param-desc">
-    decrypted wallet
+    data about the video
 </div>
 
 
@@ -464,7 +388,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Object</span>
+<span class="param-type">Promise</span>
 
 
 
@@ -477,7 +401,7 @@
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">let decryptedWallet = paratii.eth.wallet._decrypt(encryptedWallet,&#x27;some-psw&#x27;)</pre>
+    <pre class="sunlight-highlight-javascript">paratii.db.vids.get(&#x27;some-video-id&#x27;)</pre>
 
 
     
@@ -487,7 +411,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".create"><span class="type-signature">&lt;async, static> </span>create(numberOfAccounts, mnemonic)</h4>
+    <h4 class="name" id="search"><span class="type-signature">&lt;async> </span>search(options)</h4>
     
     
 </dt>
@@ -495,7 +419,7 @@
 
     
     <div class="description">
-        Create a wallet with a given number of accounts from a BIP39 mnemonic
+        Get the data of the video
     </div>
     
 
@@ -530,13 +454,13 @@
 
         <tr>
             
-                <td class="name"><code>numberOfAccounts</code></td>
+                <td class="name"><code>options</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Number</span>
+<span class="param-type">Object</span>
 
 
 
@@ -547,31 +471,7 @@
 
             
 
-            <td class="description last">number of accounts to be created</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>mnemonic</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">optional - mnemonic of the wallet, if not specified a random one is generated</td>
+            <td class="description last">data about the video and (optional) owner i.e {'keyword':'titleOfTheVideo'}</td>
         </tr>
 
     
@@ -615,7 +515,7 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.eth.wallet.js.html">paratii.eth.wallet.js</a>
+				<a href="paratii.db.vids.js.html">paratii.db.vids.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -644,7 +544,7 @@
     
             
 <div class="param-desc">
-    the created wallet
+    data about the video
 </div>
 
 
@@ -655,7 +555,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Object</span>
+<span class="param-type">Promise</span>
 
 
 
@@ -668,291 +568,14 @@
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">wallet = await wallet.create(5, &#x27;some long mnemonic phrase&#x27;)</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".isValidMnemonic"><span class="type-signature">&lt;static> </span>isValidMnemonic(mnemonic)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        check if the passed mnemonic is bip39 valid
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>mnemonic</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">mnemonic to check</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.eth.wallet.js.html">paratii.eth.wallet.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    true if the mnemonic is valid, false otherwise
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Boolean</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">paratii.eth.wallet.isValidMnemonic(&#x27;some long mnemonic phrase&#x27;)</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".newMnemonic"><span class="type-signature">&lt;static> </span>newMnemonic()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        generates a new mnemonic
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.eth.wallet.js.html">paratii.eth.wallet.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    newly generated mnemonic
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">String</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">let newMnemonic = paratii.eth.wallet.generateMnemonic()</pre>
+    <pre class="sunlight-highlight-javascript">paratii.db.vids.search({keyword : &#x27;titleOftheVideo&#x27;})
+the keyword value can be one from the following list
+- video title
+- description
+- owner
+- uploader.name
+- uploader.address
+- tags</pre>
 
 
     
@@ -1008,7 +631,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2018-04-10T18:46:08+02:00
+		on 2018-04-10T18:55:37+02:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

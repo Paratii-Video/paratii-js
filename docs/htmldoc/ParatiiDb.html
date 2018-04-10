@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Paratii Class: db</title>
+	<title>Paratii Class: ParatiiDb</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="paratii.html">paratii</a></li><li><a href="paratii.core.html">paratii.core</a></li><li><a href="paratii.core.users.html">paratii.core.users</a></li><li><a href="paratii.core.vids.html">paratii.core.vids</a></li><li><a href="paratii.db.html">paratii.db</a></li><li><a href="paratii.db.users.html">paratii.db.users</a></li><li><a href="paratii.db.vids.html">paratii.db.vids</a></li><li><a href="paratii.eth.html">paratii.eth</a></li><li><a href="paratii.eth.events.html">paratii.eth.events</a></li><li><a href="paratii.eth.tcr.html">paratii.eth.tcr</a></li><li><a href="paratii.eth.users.html">paratii.eth.users</a></li><li><a href="paratii.eth.vids.html">paratii.eth.vids</a></li><li><a href="paratii.eth.vouchers.html">paratii.eth.vouchers</a></li><li><a href="paratii.eth.wallet.html">paratii.eth.wallet</a></li><li><a href="paratii.ipfs.uploader.html">paratii.ipfs.uploader</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li>
+					<li><a href="Paratii.html">Paratii</a></li><li><a href="ParatiiCore.html">ParatiiCore</a></li><li><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></li><li><a href="ParatiiCoreVids.html">ParatiiCoreVids</a></li><li><a href="ParatiiDb.html">ParatiiDb</a></li><li><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></li><li><a href="ParatiiDbVids.html">ParatiiDbVids</a></li><li><a href="ParatiiEth.html">ParatiiEth</a></li><li><a href="ParatiiEthEvents.html">ParatiiEthEvents</a></li><li><a href="ParatiiEthTcr.html">ParatiiEthTcr</a></li><li><a href="ParatiiEthUsers.html">ParatiiEthUsers</a></li><li><a href="ParatiiEthVids.html">ParatiiEthVids</a></li><li><a href="ParatiiEthVouchers.html">ParatiiEthVouchers</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li><li><a href="Uploader.html">Uploader</a></li>
 				</ul>
 			</li>
 			
@@ -72,16 +72,16 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: db</h1>
+	<h1 class="page-title">Class: ParatiiDb</h1>
 <section>
 
 <header>
     
         <h2>
-            <span class="ancestors"><a href="paratii.html">paratii</a>.</span>
-        
-        db
+        ParatiiDb
         </h2>
+        
+            <div class="class-description">ParatiiDb contains a functionality to interact with the Paratii Index.</div>
         
     
 </header>
@@ -93,17 +93,12 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="db"><span class="type-signature"></span>new db(config)</h4>
+    <h4 class="name" id="ParatiiDb"><span class="type-signature"></span>new ParatiiDb(config)</h4>
     
     
 </dt>
 <dd>
 
-    
-    <div class="description">
-        ParatiiDb contains a functionality to interact with the Paratii Blockchain Index. <br>
-validates the config file and istantiates ParatiiDbVids and ParatiiDbUsers.
-    </div>
     
 
     
@@ -143,7 +138,7 @@ validates the config file and istantiates ParatiiDbVids and ParatiiDbUsers.
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type"><a href="global.html#ParatiiDbSchema">ParatiiDbSchema</a></span>
 
 
 
@@ -154,7 +149,7 @@ validates the config file and istantiates ParatiiDbVids and ParatiiDbUsers.
 
             
 
-            <td class="description last"></td>
+            <td class="description last">configuration object to initialize Paratii object</td>
         </tr>
 
     
@@ -165,6 +160,83 @@ validates the config file and istantiates ParatiiDbVids and ParatiiDbUsers.
 
     
 <dl class="details">
+    
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    <dl>
+
+<table class="props table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>vids</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ParatiiCoreVids.html">ParatiiCoreVids</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">operations on videos</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>users</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">operations on users</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+</dl>
+
     
 
 	
@@ -235,16 +307,6 @@ validates the config file and istantiates ParatiiDbVids and ParatiiDbUsers.
     
 
     
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="paratii.db.users.html">users</a></dt>
-            <dd></dd>
-        
-            <dt><a href="paratii.db.vids.html">vids</a></dt>
-            <dd></dd>
-        </dl>
-    
 
     
 
@@ -301,7 +363,7 @@ validates the config file and istantiates ParatiiDbVids and ParatiiDbUsers.
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2018-04-10T18:46:08+02:00
+		on 2018-04-10T18:55:37+02:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

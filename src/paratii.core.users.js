@@ -3,33 +3,33 @@ const joi = require('joi')
 /**
  * Utilities to create and manipulate information about the users on the blockchain.
  * @param {Object} config configuration object to initialize Paratii object
- * @class paratii.core.users
  */
 export class ParatiiCoreUsers {
   constructor (config) {
-    const schema = joi.object({
-      'db.provider': joi.string().default(null)
-    }).unknown()
-
-    const result = joi.validate(config, schema)
-    const error = result.error
-    if (error) throw error
-    this.config = result.value
-    this.paratii = this.config.paratii
+    // const schema = joi.object({
+    //   'db.provider': joi.string().default(null)
+    // }).unknown()
+    //
+    // const result = joi.validate(config, schema)
+    // // const error = result.error
+    // if (error) throw error
+    this.config = config
   }
-/**
- * Creates a user, fields id, name and email go to the smart contract Users, other fields are stored on IPFS.
- * @param  {Object}  options information about the video ( id, name, email ... )
- * @return {Promise}         the id of the newly created user
- * @example
- *            paratii.core.users.create({
- *              id: 'some-user-id',
- *              name: 'A user name',
- *              email: 'some@email.com',
- *              ...
- *             })
- * @memberof paratii.core.users
- */
+
+  /**
+   * Creates a user, fields id, name and email go to the smart contract Users, other fields are stored on IPFS.
+   * @param  {userSchema}  options information about the video ( id, name, email ... )
+   * @return {Promise}         the id of the newly created user
+   * @example
+   *            paratii.users.create({
+   *              id: 'some-user-id',
+   *              name: 'A user name',
+   *              email: 'some@email.com',
+   *              ...
+   *             })
+
+   */
+  // FIXME: do some joi validation here
   async create (options) {
     let keysForBlockchain = ['id', 'name', 'email']
     let optionsKeys = Object.keys(options)
@@ -42,27 +42,28 @@ export class ParatiiCoreUsers {
         optionsIpfs[key] = options[key]
       }
     })
-    let hash = await this.paratii.ipfs.addJSON(optionsIpfs)
+    let hash = await this.config.paratii.ipfs.addJSON(optionsIpfs)
     optionsBlockchain['ipfsData'] = hash
-    return this.paratii.eth.users.create(optionsBlockchain)
+    return this.config.paratii.eth.users.create(optionsBlockchain)
   }
+
   /**
    * retrieve data about the user
-   * @param  {String} id user univocal id
+   * @param  {string} id user univocal id
    * @return {Object}    data about the user
-   * @example paratii.core.users.get('some-user-id')
-   * @memberof paratii.core.users
+   * @example paratii.users.get('some-user-id')
+
   */
   get (id) {
-    return this.paratii.db.users.get(id)
+    return this.config.paratii.db.users.get(id)
   }
   /**
    * Updates a user's details. name and email are defined in the smart contract Users, other fields get written to IPFS.
-   * @param  {String}  userId  user univocal id
+   * @param  {string}  userId  user univocal id
    * @param  {Object}  options updated data i.e. { name: 'A new user name' }
    * @return {Promise}         updated data about the user
-   * @example paratii.core.users.update('some-user-id', {name: 'A new user name'})
-   * @memberof paratii.core.users
+   * @example paratii.users.update('some-user-id', {name: 'A new user name'})
+
    */
   async update (userId, options) {
     const schema = joi.object({
@@ -87,5 +88,34 @@ export class ParatiiCoreUsers {
     await this.create(data)
 
     return data
+  }
+
+  /**
+   * migrate all contract data for  paratii.config.account to a new account
+   * @alias migrateAccount
+   * @param newAccount Address of new account
+   * @async
+   * @memberof Paratii
+   */
+  async migrateAccount (newAccount) {
+    // migrate the videos
+    const paratii = this.config.paratii
+    const oldAccount = this.config.account.address
+    const vids = await paratii.vids.search({owner: oldAccount})
+    for (let i in vids) {
+      let vid = vids[i]
+      let videoId = vid.id || vid._id
+      await paratii.vids.update(videoId, {owner: newAccount})
+      let didVideoApply = await paratii.eth.tcr.didVideoApply(vid.id)
+      if (didVideoApply) {
+        // removing video from statke
+        await paratii.eth.tcr.exit(videoId)
+      }
+    }
+
+    // transfer all  PTI to the new account
+    let ptiBalance = await paratii.eth.balanceOf(oldAccount, 'PTI')
+    await paratii.eth.transfer(newAccount, ptiBalance, 'PTI')
+    // FIXME: need to call tc.apply(vid.id) with newAccount as sender (how to do that?)
   }
 }

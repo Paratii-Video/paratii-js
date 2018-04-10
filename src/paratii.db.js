@@ -4,13 +4,17 @@ import { dbSchema, accountSchema } from './schemas.js'
 import joi from 'joi'
 
 /**
- * ParatiiDb contains a functionality to interact with the Paratii Blockchain Index. <br>
- * validates the config file and istantiates ParatiiDbVids and ParatiiDbUsers.
- * @param {Object} config
- * @class paratii.db
- * @memberof paratii
+ * ParatiiDb contains a functionality to interact with the Paratii Index.
+ * @param {ParatiiDbSchema} config configuration object to initialize Paratii object
+ * @property {ParatiiCoreVids} vids operations on videos
+ * @property {ParatiiCoreUsers} users operations on users
  */
 export class ParatiiDb {
+  /**
+  * @typedef ParatiiDbSchema
+  * @property {dbSchema} db
+  * @property {accountSchema} account
+ */
   constructor (config) {
     const schema = {
       db: dbSchema,

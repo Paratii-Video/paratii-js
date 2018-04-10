@@ -23,7 +23,6 @@ var fetch = require('isomorphic-fetch');
 /**
  * ParatiiDbUsers contains functionalities regarding the users to interact with the Paratii Blockchain Index
  * @param {Object} config object to initialize Paratii object
- * @class paratii.db.users
  */
 
 var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
@@ -37,10 +36,9 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
 
   /**
    * retrieve data about the user
-   * @param  {String}  userId user univocal id
+   * @param  {string}  userId user univocal id
    * @return {Promise}        data about the user
    * @example paratii.db.users.get('some-user-id')
-   * @memberof paratii.db.users
    */
 
 
@@ -72,10 +70,9 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
     }
     /**
      * get information about all the videos of the user
-     * @param  {String}  userId univocal user identifier
+     * @param  {string}  userId univocal user identifier
      * @return {Promise}        Collection of all the videos of the user
      * @example paratii.db.users.videos('some-user-id')
-     * @memberof paratii.db.users
      */
 
   }, {

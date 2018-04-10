@@ -4,78 +4,17 @@ import joi from 'joi'
  /**
   * Utilities to create and manipulate information about the videos on the blockchain.
   * @param {Object} config configuration object to initialize Paratii object
-  * @class paratii.core.vids
   */
 export class ParatiiCoreVids {
   constructor (config) {
-    // const schema = joi.object({
-    //   'db.provider': joi.string().default(null)
-    // }).unknown()
-    //
-    // const result = joi.validate(config, schema)
-    // const error = result.error
-    // if (error) throw error
-    // let options = result.value
-
     this.config = config
-    this.paratii = this.config.paratii
   }
-  /**
-   * Writes a like for the video on the blockchain (contract Likes), and negates a dislike for the video, if it exists.
-   * @param  {String} videoId univocal video identifier
-   * @return {Object}         information about the transaction recording the like
-   * @example paratii.core.vids.like('some-video-id')
-   * @memberof paratii.core.vids
-   */
-  like (videoId) {
-    return this.paratii.eth.vids.like(videoId)
-  }
-  /**
-   * Writes a dislike for the video on the blockchain (contract Likes), and negates a like for the video, if it exists.
-   * @param  {String} videoId univocal video identifier
-   * @return {Object}         information about the transaction recording the dislike
-   * @example paratii.core.vids.dislike('some-video-id')
-   * @memberof paratii.core.vids
-   */
-  dislike (videoId) {
-    return this.paratii.eth.vids.dislike(videoId)
-  }
-  /**
-   * Check if the current user has already liked the video
-   * @param  {String} videoId univocal video identifier
-   * @return {Boolean}         true if the current user already liked the video, false otherwise
-   * @example paratii.core.vids.doesLike('some-video-id')
-   * @memberof paratii.core.vids
-   */
-  doesLike (videoId) {
-    return this.paratii.eth.vids.doesLike(videoId)
-  }
-  /**
-   * Check if the viewer has already viewed the video
-   * @param  {String}  viewer  viewer address
-   * @param  {String}  videoId univocal video identifier
-   * @return {Boolean}         true if the current user already viewed the video, false otherwise
-   * @example paratii.core.vids.hasViewedVideo('some-user-id','some-video-id')
-   * @memberof paratii.core.vids
-   */
-  hasViewedVideo (viewer, videoId) {
-    return this.paratii.eth.vids.userViewedVideo({ viewer: viewer, videoId: videoId })
-  }
-  /**
-   * Check if the current user has already disliked the video
-   * @param  {String} videoId univocal video identifier
-   * @return {Boolean}         true if the current user already disliked the video, false otherwise
-   * @example paratii.core.vids.doesDislike('some-video-id')
-   * @memberof paratii.core.vids
-  */
-  doesDislike (videoId) {
-    return this.paratii.eth.vids.doesDislike(videoId)
-  }
+
   /**
    * This call will register the video on the blockchain, add its metadata to IPFS, upload file to IPFS, and transcode it
-   * @param  {Object}  options information about the video ( id, title, FilePath ... )
+   * @param  {videoSchema}  options information about the video ( id, title, FilePath ... )
    * @return {Promise}         information about the video ( id, owner, ipfsHash ... )
-   * @example paratii.core.vids.create({
+   * @example await paratii.core.vids.create({
    *  id: 'some-video-id',
    *  owner: 'some-user-id',
    *  title: 'some Title',
@@ -83,20 +22,20 @@ export class ParatiiCoreVids {
    *  duration: '2h 32m',
    *  description: 'A long description',
    *  price: 0,
-   *  file: 'test/data/some-file.txt'
+   *  filename: 'test/data/some-file.txt'
    * })
-   * @memberof paratii.core.vids
    */
   async create (options = {}) {
-    const validation = joi.validate(options, videoSchema)
-    if (validation.error) throw validation.error
-    options = validation.value
+    const result = joi.validate(options, videoSchema)
+    const error = result.error
+    if (error) throw error
+    options = result.value
 
     if (options.id === null) {
-      options.id = this.paratii.eth.vids.makeId()
+      options.id = this.config.paratii.eth.vids.makeId()
     }
 
-    let hash = await this.paratii.ipfs.addAndPinJSON({
+    let hash = await this.config.paratii.ipfs.addAndPinJSON({
       author: options.author,
       description: options.description,
       duration: options.duration,
@@ -112,7 +51,7 @@ export class ParatiiCoreVids {
 
     options.ipfsData = hash
 
-    await this.paratii.eth.vids.create({
+    await this.config.paratii.eth.vids.create({
       id: options.id,
       owner: options.owner,
       price: options.price,
@@ -123,15 +62,68 @@ export class ParatiiCoreVids {
 
     return options
   }
+
+  /**
+   * Writes a like for the video on the blockchain (contract Likes), and negates a dislike for the video, if it exists.
+   * @param  {string} videoId univocal video identifier randomly generated
+   * @return {Object}         information about the transaction recording the like
+   * @example paratii.core.vids.like('some-video-id')
+
+   */
+  like (videoId) {
+    return this.config.paratii.eth.vids.like(videoId)
+  }
+  /**
+   * Writes a dislike for the video on the blockchain (contract Likes), and negates a like for the video, if it exists.
+   * @param  {string} videoId univocal video identifier randomly generated
+   * @return {Object}         information about the transaction recording the dislike
+   * @example paratii.core.vids.dislike('some-video-id')
+
+   */
+  dislike (videoId) {
+    return this.config.paratii.eth.vids.dislike(videoId)
+  }
+  /**
+   * Check if the current user has already liked the video
+   * @param  {string} videoId univocal video identifier randomly generated
+   * @return {Boolean}         true if the current user already liked the video, false otherwise
+   * @example paratii.core.vids.doesLike('some-video-id')
+
+   */
+  doesLike (videoId) {
+    return this.config.paratii.eth.vids.doesLike(videoId)
+  }
+  /**
+   * Check if the viewer has already viewed the video
+   * @param  {string}  viewer  viewer address
+   * @param  {string}  videoId univocal video identifier randomly generated
+   * @return {Boolean}         true if the current user already viewed the video, false otherwise
+   * @example paratii.core.vids.hasViewedVideo('some-user-id','some-video-id')
+
+   */
+  hasViewedVideo (viewer, videoId) {
+    return this.config.paratii.eth.vids.userViewedVideo({ viewer: viewer, videoId: videoId })
+  }
+  /**
+   * Check if the current user has already disliked the video
+   * @param  {string} videoId univocal video identifier randomly generated
+   * @return {Boolean}         true if the current user already disliked the video, false otherwise
+   * @example paratii.core.vids.doesDislike('some-video-id')
+
+  */
+  doesDislike (videoId) {
+    return this.config.paratii.eth.vids.doesDislike(videoId)
+  }
+
   /**
    * Update the information on the video.
    *  Only the account that has registered the video, or the owner of the contract, can update the information.
-   * @param  {String}  videoId      univocal video identifier
+   * @param  {string}  videoId      univocal video identifier
    * @param  {Object}  options      key value pairs of properties and new values e.g. ({title: 'another-title'})
    * @param  {Object}  dataToUpdate optional. old data of the video. If not passed to the method, it will fetch the data itself using the videoId
    * @return {Promise}              Updated video informations
    * @example paratii.core.vids.update('some-video-id', {title: 'another-title'})
-   * @memberof paratii.core.vids
+
    */
   async update (videoId, options, dataToUpdate) {
     let data
@@ -166,8 +158,8 @@ export class ParatiiCoreVids {
    * @param  {Object}  options video informations
    * @return {Promise}         updated/new video informations
    * @example
-   * paratii.core.vids.upsert({ id: 'some-video-id', owner: 'some-user-id', title: 'videoTitle'}) //insert a new video
-   * @memberof paratii.core.vids
+   * paratii.vids.upsert({ id: 'some-video-id', owner: 'some-user-id', title: 'videoTitle'}) //insert a new video
+
    */
   async upsert (options) {
     let data = null
@@ -186,7 +178,7 @@ export class ParatiiCoreVids {
    * @param  {Object}  options should contain keys viewer (address of the viewer) and videoId (univocal video identifier)
    * @return {Promise}         information about the transaction recording the view
    * @example paratii.core.vids.view({viewer:'some-user-id',videoId: 'some-video-id'})
-   * @memberof paratii.core.vids
+
    */
   async view (options) {
     let keysForBlockchain = ['viewer', 'videoId']
@@ -200,19 +192,19 @@ export class ParatiiCoreVids {
         optionsIpfs[key] = options[key]
       }
     })
-    let hash = await this.paratii.ipfs.addJSON(optionsIpfs)
+    let hash = await this.config.paratii.ipfs.addJSON(optionsIpfs)
     optionsBlockchain['ipfsData'] = hash
-    return this.paratii.eth.vids.view(optionsBlockchain)
+    return this.config.paratii.eth.vids.view(optionsBlockchain)
   }
   /**
    * Get the data of the video identified by videoId
-   * @param  {String}  videoId univocal video identifier
+   * @param  {string}  videoId univocal video identifier randomly generated
    * @return {Promise}         data about the video
    * @example paratii.core.vids.get('some-video-id')
-   * @memberof paratii.core.vids
+
    */
   async get (videoId) {
-    return this.paratii.db.vids.get(videoId)
+    return this.config.paratii.db.vids.get(videoId)
   }
   /**
    * Get the data of the video
@@ -226,9 +218,9 @@ export class ParatiiCoreVids {
    * - uploader.name
    * - uploader.address
    * - tags
-   * @memberof paratii.core.vids
+
    */
   search (options) {
-    return this.paratii.db.vids.search(options)
+    return this.config.paratii.db.vids.search(options)
   }
 }

@@ -6,11 +6,20 @@ import joi from 'joi'
 /**
  * Contains functions that operate transversally over several backend systems. <br />
  * validates the config file and istantiates ParatiiCoreVids and ParatiiCoreUsers.
- * @param {Object} config configuration object to initialize Paratii object
- * @class paratii.core
- * @memberof paratii
+ * @param {ParatiiCoreSchema} config configuration object to initialize Paratii object
+ * @property {ParatiiCoreVids} vids operations on videos
+ * @property {ParatiiCoreUsers} users operations on users
+ * @property {Paratii} paratii main Paratii Object
  */
 export class ParatiiCore {
+  /**
+  * @typedef {Array} ParatiiCoreSchema
+  * @property {?accountSchema} account
+  * @property {?ethSchema} eth
+  * @property {?dbSchema} db
+  * @property {?ipfsSchema} ipfs
+  * @property {?Object} paratii
+ */
   constructor (config) {
     const schema = joi.object({
       account: accountSchema,
@@ -26,30 +35,5 @@ export class ParatiiCore {
     this.vids = new ParatiiCoreVids(this.config)
     this.users = new ParatiiCoreUsers(this.config)
     this.paratii = this.config.paratii
-  }
-
-  /**
-   * migrate all contract data for  paratii.config.account to a new account
-   * @memberof paratii.core
-   */
-  async migrateAccount (newAccount) {
-    // migrate the videos
-    const oldAccount = this.paratii.eth.getAccount()
-    const vids = await this.vids.search({owner: oldAccount})
-    for (let i in vids) {
-      let vid = vids[i]
-      let videoId = vid.id || vid._id
-      await this.vids.update(videoId, {owner: newAccount})
-      let didVideoApply = await this.config.paratii.eth.tcr.didVideoApply(videoId)
-      if (didVideoApply) {
-        // removing video from statke
-        await this.paratii.eth.tcr.exit(videoId)
-      }
-    }
-
-    // transfer all  PTI to the new account
-    let ptiBalance = await this.paratii.eth.balanceOf(oldAccount, 'PTI')
-    await this.paratii.eth.transfer(newAccount, ptiBalance, 'PTI')
-    // FIXME: need to call tc.apply(vid.id) with newAccount as sender (how to do that?)
   }
 }

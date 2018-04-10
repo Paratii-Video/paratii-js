@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Paratii Class: vouchers</title>
+	<title>Paratii Class: ParatiiDbUsers</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="paratii.html">paratii</a></li><li><a href="paratii.core.html">paratii.core</a></li><li><a href="paratii.core.users.html">paratii.core.users</a></li><li><a href="paratii.core.vids.html">paratii.core.vids</a></li><li><a href="paratii.db.html">paratii.db</a></li><li><a href="paratii.db.users.html">paratii.db.users</a></li><li><a href="paratii.db.vids.html">paratii.db.vids</a></li><li><a href="paratii.eth.html">paratii.eth</a></li><li><a href="paratii.eth.events.html">paratii.eth.events</a></li><li><a href="paratii.eth.tcr.html">paratii.eth.tcr</a></li><li><a href="paratii.eth.users.html">paratii.eth.users</a></li><li><a href="paratii.eth.vids.html">paratii.eth.vids</a></li><li><a href="paratii.eth.vouchers.html">paratii.eth.vouchers</a></li><li><a href="paratii.eth.wallet.html">paratii.eth.wallet</a></li><li><a href="paratii.ipfs.uploader.html">paratii.ipfs.uploader</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li>
+					<li><a href="Paratii.html">Paratii</a></li><li><a href="ParatiiCore.html">ParatiiCore</a></li><li><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></li><li><a href="ParatiiCoreVids.html">ParatiiCoreVids</a></li><li><a href="ParatiiDb.html">ParatiiDb</a></li><li><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></li><li><a href="ParatiiDbVids.html">ParatiiDbVids</a></li><li><a href="ParatiiEth.html">ParatiiEth</a></li><li><a href="ParatiiEthEvents.html">ParatiiEthEvents</a></li><li><a href="ParatiiEthTcr.html">ParatiiEthTcr</a></li><li><a href="ParatiiEthUsers.html">ParatiiEthUsers</a></li><li><a href="ParatiiEthVids.html">ParatiiEthVids</a></li><li><a href="ParatiiEthVouchers.html">ParatiiEthVouchers</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li><li><a href="Uploader.html">Uploader</a></li>
 				</ul>
 			</li>
 			
@@ -72,16 +72,16 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: vouchers</h1>
+	<h1 class="page-title">Class: ParatiiDbUsers</h1>
 <section>
 
 <header>
     
         <h2>
-            <span class="ancestors"><a href="paratii.html">paratii</a><a href="paratii.eth.html">.eth</a>.</span>
-        
-        vouchers
+        ParatiiDbUsers
         </h2>
+        
+            <div class="class-description">ParatiiDbUsers contains functionalities regarding the users to interact with the Paratii Blockchain Index</div>
         
     
 </header>
@@ -93,23 +93,69 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="vouchers"><span class="type-signature"></span>new vouchers()</h4>
+    <h4 class="name" id="ParatiiDbUsers"><span class="type-signature"></span>new ParatiiDbUsers(config)</h4>
     
     
 </dt>
 <dd>
 
     
-    <div class="description">
-        Functions for redeeming vouchers
-    </div>
-    
 
     
 
     
 
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>config</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">object to initialize Paratii object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -147,7 +193,7 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.eth.vouchers.js.html">paratii.eth.vouchers.js</a>
+				<a href="paratii.db.users.js.html">paratii.db.users.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -198,7 +244,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="create"><span class="type-signature">&lt;async, static> </span>ParatiiEthVouchers#create(options)</h4>
+    <h4 class="name" id="get"><span class="type-signature">&lt;async> </span>get(userId)</h4>
     
     
 </dt>
@@ -206,7 +252,7 @@
 
     
     <div class="description">
-        Function for creating a voucher. Can only be called by the owner of the contract.
+        retrieve data about the user
     </div>
     
 
@@ -241,13 +287,13 @@
 
         <tr>
             
-                <td class="name"><code>options</code></td>
+                <td class="name"><code>userId</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">string</span>
 
 
 
@@ -258,81 +304,7 @@
 
             
 
-            <td class="description last">data about the voucher
-                <h6 class="method-params-label method-subparams-label">Properties</h6>
-                
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>voucherCode</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">unique string associated to this voucher</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>amount</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">amount of PTI in wei of this voucher</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
+            <td class="description last">user univocal id</td>
         </tr>
 
     
@@ -376,7 +348,7 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.eth.vouchers.js.html">paratii.eth.vouchers.js</a>
+				<a href="paratii.db.users.js.html">paratii.db.users.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -405,7 +377,7 @@
     
             
 <div class="param-desc">
-    the voucher id
+    data about the user
 </div>
 
 
@@ -429,7 +401,7 @@
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">await paratii.eth.vouchers.create({ voucherCode: &#x27;some-id&#x27;, amount: 10 })</pre>
+    <pre class="sunlight-highlight-javascript">paratii.db.users.get(&#x27;some-user-id&#x27;)</pre>
 
 
     
@@ -439,7 +411,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="createVouchers"><span class="type-signature">&lt;async, static> </span>ParatiiEthVouchers#createVouchers(number, amount)</h4>
+    <h4 class="name" id="videos"><span class="type-signature">&lt;async> </span>videos(userId)</h4>
     
     
 </dt>
@@ -447,7 +419,7 @@
 
     
     <div class="description">
-        Generates a given number of vouchers with unique IDs, and the given amount, and returns an array of objects.
+        get information about all the videos of the user
     </div>
     
 
@@ -482,13 +454,13 @@
 
         <tr>
             
-                <td class="name"><code>number</code></td>
+                <td class="name"><code>userId</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Number</span>
+<span class="param-type">string</span>
 
 
 
@@ -499,31 +471,7 @@
 
             
 
-            <td class="description last">number of voucher to create</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>amount</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">amount of every voucher</td>
+            <td class="description last">univocal user identifier</td>
         </tr>
 
     
@@ -567,7 +515,7 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.eth.vouchers.js.html">paratii.eth.vouchers.js</a>
+				<a href="paratii.db.users.js.html">paratii.db.users.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -596,7 +544,7 @@
     
             
 <div class="param-desc">
-    Object containing every voucher created
+    Collection of all the videos of the user
 </div>
 
 
@@ -620,379 +568,8 @@
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">let vouchers = await paratii.eth.vouchers.createVouchers(10, 10)</pre>
+    <pre class="sunlight-highlight-javascript">paratii.db.users.videos(&#x27;some-user-id&#x27;)</pre>
 
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="getVouchersContract"><span class="type-signature">&lt;async, static> </span>ParatiiEthVouchers#getVouchersContract()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Get the contract instance of the vouchers contract
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.eth.vouchers.js.html">paratii.eth.vouchers.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    Object representing the contract
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">let contract = await paratii.eth.vids.getVouchersContract()</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="redeem"><span class="type-signature">&lt;async, static> </span>ParatiiEthVouchers#redeem(voucherCode)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Function for redeeming a voucher to the current account's address.
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>voucherCode</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">univocal voucher code</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.eth.vouchers.js.html">paratii.eth.vouchers.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    true if everything goes well, otherwise throws an error
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">await paratii.eth.vouchers.redeem(&#x27;some-code&#x27;)</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="test"><span class="type-signature">&lt;async, static> </span>ParatiiEthVouchers#test()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        throws a test error
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.eth.vouchers.js.html">paratii.eth.vouchers.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
     
 </dd>
@@ -1047,7 +624,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2018-04-10T18:46:08+02:00
+		on 2018-04-10T18:55:37+02:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

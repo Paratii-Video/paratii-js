@@ -7,9 +7,9 @@ var joi = require('joi');
 
 /**
   * @typedef {Array} accountSchema
-  * @property {?string} address
-  * @property {?string} privateKey
-  * @property {?string} mnemonic
+  * @property {?string} address public address of the account
+  * @property {?string} privateKey private key of the account
+  * @property {?string} mnemonic mnemonic that generates private key and address
  */
 var accountSchema = joi.object({
   address: joi.string().default(null).allow(null),
@@ -17,12 +17,30 @@ var accountSchema = joi.object({
   mnemonic: joi.string().default(null).allow(null)
 }).default();
 
+/**
+  * @typedef {Array} ethSchema
+  * @property {?string} provider provider of the parity node
+  * @property {?string} registryAddress address of the TCR
+  * @property {?boolean} isTestNet true if it's on test net, false otherwise
+ */
 var ethSchema = joi.object({
   provider: joi.string().default('ws://localhost:8546'),
   registryAddress: joi.string().default(null).allow(null),
   isTestNet: joi.boolean().optional()
 }).default();
 
+/**
+  * @typedef {Array} ipfsSchema
+  * @property {?string} repo path to the ipfs repo
+  * @property {Array} swarm available transports for ipfs (webrtc, websocket, ...)
+  * @property {Array} bootstrap bootstrap nodes that ipfs connects to when it starts
+  * @property {?number} bitswap.maxMessageSize the maximum msg size allowed for paratii-ipfs-bitswap
+  * @property {?number} chunkSize max size allowed per file chunk
+  * @property {?number} xhrChunkSize max chunk size for the express uploader
+  * @property {?number} maxFileSize max size for an original video (default to 300MB)
+  * @property {?string} defaultTranscoder the default multiaddress of the main paratii-node
+  * @property {?string} transcoderDropUrl url for the express uploader
+ */
 var ipfsSchema = joi.object({
   repo: joi.string().default(null).allow(null),
   // passed to IPFS constructor as `config.Addresses.Swarm`
@@ -37,23 +55,51 @@ var ipfsSchema = joi.object({
 
 }).default();
 
+/**
+  * @typedef {Array} dbSchema
+  * @property {?string} provider provider of the db
+ */
 var dbSchema = joi.object({
   provider: joi.string().default('https://db.paratii.video/api/v1/')
 }).default();
 
-// this is the data structure of a video
+/**
+ * @typedef {Array} videoSchema
+ * @property {?string} id univocal video identifier randomly generated
+ * @property {?string} author author of the video
+ * @property {?string} description description of the video
+ * @property {?string} duration duration of the video
+ * @property {?string} filename filename of the video
+ * @property {number} filesize size of the video
+ * @property {?string} free ?
+ * @property {?string} ipfsHashOrig original ipfs multihash of the video
+ * @property {?string} ipfsHash ipfs multihash of the video
+ * @property {string} owner owner of the video
+ * @property {?number} price price of the video
+ * @property {?string} title title of the video
+ * @property {Array} thumbnails thumbnails of the video
+ * @property {?Object} storageStatus ?
+ * @property {string} storageStatus.name ?
+ * @property {?Object} storageStatus.data ?
+ * @property {?Object} transcodingStatus ?
+ * @property {string} transcodingStatus.name ?
+ * @property {?Object} transcodingStatus.data ?
+ * @property {?Object} uploadStatus ?
+ * @property {string} uploadStatus.name ?
+ * @property {?Object} uploadStatus.data ?
+ */
 var videoSchema = joi.object({
   id: joi.string().default(null),
   author: joi.string().empty('').default('').allow(null),
   description: joi.string().empty('').default(''),
   duration: joi.string().empty('').default('').allow(null),
   filename: joi.string().empty('').default('').allow(null).allow(''),
-  filesize: joi.any(),
+  filesize: joi.number(),
   free: joi.string().empty('').default(null).allow(null),
   ipfsHashOrig: joi.string().empty('').default(''),
   ipfsHash: joi.string().empty('').default(''),
   owner: joi.string().required(),
-  price: joi.any().default(0),
+  price: joi.number().default(0),
   // published: joi.any().default(false).allow(null),
   title: joi.string().empty('').default(''),
   thumbnails: joi.array(),

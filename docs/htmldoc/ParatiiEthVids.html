@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Paratii Class: vids</title>
+	<title>Paratii Class: ParatiiEthVids</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="paratii.html">paratii</a></li><li><a href="paratii.core.html">paratii.core</a></li><li><a href="paratii.core.users.html">paratii.core.users</a></li><li><a href="paratii.core.vids.html">paratii.core.vids</a></li><li><a href="paratii.db.html">paratii.db</a></li><li><a href="paratii.db.users.html">paratii.db.users</a></li><li><a href="paratii.db.vids.html">paratii.db.vids</a></li><li><a href="paratii.eth.html">paratii.eth</a></li><li><a href="paratii.eth.events.html">paratii.eth.events</a></li><li><a href="paratii.eth.tcr.html">paratii.eth.tcr</a></li><li><a href="paratii.eth.users.html">paratii.eth.users</a></li><li><a href="paratii.eth.vids.html">paratii.eth.vids</a></li><li><a href="paratii.eth.vouchers.html">paratii.eth.vouchers</a></li><li><a href="paratii.eth.wallet.html">paratii.eth.wallet</a></li><li><a href="paratii.ipfs.uploader.html">paratii.ipfs.uploader</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li>
+					<li><a href="Paratii.html">Paratii</a></li><li><a href="ParatiiCore.html">ParatiiCore</a></li><li><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></li><li><a href="ParatiiCoreVids.html">ParatiiCoreVids</a></li><li><a href="ParatiiDb.html">ParatiiDb</a></li><li><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></li><li><a href="ParatiiDbVids.html">ParatiiDbVids</a></li><li><a href="ParatiiEth.html">ParatiiEth</a></li><li><a href="ParatiiEthEvents.html">ParatiiEthEvents</a></li><li><a href="ParatiiEthTcr.html">ParatiiEthTcr</a></li><li><a href="ParatiiEthUsers.html">ParatiiEthUsers</a></li><li><a href="ParatiiEthVids.html">ParatiiEthVids</a></li><li><a href="ParatiiEthVouchers.html">ParatiiEthVouchers</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li><li><a href="Uploader.html">Uploader</a></li>
 				</ul>
 			</li>
 			
@@ -72,16 +72,16 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: vids</h1>
+	<h1 class="page-title">Class: ParatiiEthVids</h1>
 <section>
 
 <header>
     
         <h2>
-            <span class="ancestors"><a href="paratii.html">paratii</a><a href="paratii.eth.html">.eth</a>.</span>
-        
-        vids
+        ParatiiEthVids
         </h2>
+        
+            <div class="class-description">The eth.vids namespace contains functions to interact with the video registration on the blockchain.</div>
         
     
 </header>
@@ -93,27 +93,126 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="vids"><span class="type-signature"></span>new vids()</h4>
+    <h4 class="name" id="ParatiiEthVids"><span class="type-signature"></span>new ParatiiEthVids(context)</h4>
     
     
 </dt>
 <dd>
 
     
-    <div class="description">
-        The eth.vids namespace contains functions to interact with the video registration on the blockchain.
-    </div>
-    
 
     
 
     
 
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>context</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">ParatiiEth instance</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
 <dl class="details">
+    
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    <dl>
+
+<table class="props table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>eth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ParatiiEth.html">ParatiiEth</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">ParatiiEth instance</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+</dl>
+
     
 
 	
@@ -198,7 +297,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="create"><span class="type-signature">&lt;async, static> </span>ParatiiEthVids#create(options [, retry])</h4>
+    <h4 class="name" id="create"><span class="type-signature">&lt;async> </span>create(options [, retry])</h4>
     
     
 </dt>
@@ -287,7 +386,7 @@
             <td class="type">
             
                 
-<span class="param-type">Number</span>
+<span class="param-type">number</span>
 
 
 
@@ -426,7 +525,174 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="dislike"><span class="type-signature">&lt;async, static> </span>ParatiiEthVids#dislike(videoId)</h4>
+    <h4 class="name" id="delete"><span class="type-signature">&lt;async> </span>delete(videoId)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        delete the video from the blockchain
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>videoId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">univocal video identifier randomly generated</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.eth.vids.js.html">paratii.eth.vids.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    transaction recording the remove action
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let tx = paratii.eth.vids.delete(&#x27;some-id&#x27;)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="dislike"><span class="type-signature">&lt;async> </span>dislike(videoId)</h4>
     
     
 </dt>
@@ -475,7 +741,7 @@
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -486,7 +752,7 @@
 
             
 
-            <td class="description last">univocal video identifier</td>
+            <td class="description last">univocal video identifier randomly generated</td>
         </tr>
 
     
@@ -593,7 +859,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="doesDislike"><span class="type-signature">&lt;async, static> </span>ParatiiEthVids#doesDislike(videoId)</h4>
+    <h4 class="name" id="doesDislike"><span class="type-signature">&lt;async> </span>doesDislike(videoId)</h4>
     
     
 </dt>
@@ -642,7 +908,7 @@
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -653,7 +919,7 @@
 
             
 
-            <td class="description last">univocal video identifier</td>
+            <td class="description last">univocal video identifier randomly generated</td>
         </tr>
 
     
@@ -760,7 +1026,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="doesLike"><span class="type-signature">&lt;async, static> </span>ParatiiEthVids#doesLike(videoId)</h4>
+    <h4 class="name" id="doesLike"><span class="type-signature">&lt;async> </span>doesLike(videoId)</h4>
     
     
 </dt>
@@ -809,7 +1075,7 @@
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -820,7 +1086,7 @@
 
             
 
-            <td class="description last">univocal video identifier</td>
+            <td class="description last">univocal video identifier randomly generated</td>
         </tr>
 
     
@@ -927,7 +1193,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="get"><span class="type-signature">&lt;async, static> </span>ParatiiEthVids#get(videoId)</h4>
+    <h4 class="name" id="get"><span class="type-signature">&lt;async> </span>get(videoId)</h4>
     
     
 </dt>
@@ -976,7 +1242,7 @@
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -1094,7 +1360,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="getLikesContract"><span class="type-signature">&lt;async, static> </span>ParatiiEthVids#getLikesContract()</h4>
+    <h4 class="name" id="getLikesContract"><span class="type-signature">&lt;async> </span>getLikesContract()</h4>
     
     
 </dt>
@@ -1211,7 +1477,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="getVideoRegistry"><span class="type-signature">&lt;async, static> </span>ParatiiEthVids#getVideoRegistry()</h4>
+    <h4 class="name" id="getVideoRegistry"><span class="type-signature">&lt;async> </span>getVideoRegistry()</h4>
     
     
 </dt>
@@ -1328,7 +1594,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="getViewsContract"><span class="type-signature">&lt;async, static> </span>ParatiiEthVids#getViewsContract()</h4>
+    <h4 class="name" id="getViewsContract"><span class="type-signature">&lt;async> </span>getViewsContract()</h4>
     
     
 </dt>
@@ -1445,7 +1711,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="like"><span class="type-signature">&lt;async, static> </span>ParatiiEthVids#like(videoId)</h4>
+    <h4 class="name" id="like"><span class="type-signature">&lt;async> </span>like(videoId)</h4>
     
     
 </dt>
@@ -1494,7 +1760,7 @@
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -1505,7 +1771,7 @@
 
             
 
-            <td class="description last">univocal video identifier</td>
+            <td class="description last">univocal video identifier randomly generated</td>
         </tr>
 
     
@@ -1612,7 +1878,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="makeId"><span class="type-signature">&lt;static> </span>ParatiiEthVids#makeId()</h4>
+    <h4 class="name" id="makeId"><span class="type-signature"></span>makeId()</h4>
     
     
 </dt>
@@ -1706,7 +1972,7 @@
     </dt>
     <dd>
         
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -1729,7 +1995,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="sendLike"><span class="type-signature">&lt;async, static> </span>ParatiiEthVids#sendLike(options)</h4>
+    <h4 class="name" id="sendLike"><span class="type-signature">&lt;async> </span>sendLike(options)</h4>
     
     
 </dt>
@@ -1822,7 +2088,7 @@ TODO RIVEDI I TIPI
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -1973,7 +2239,7 @@ TODO RIVEDI I TIPI
             
 <hr>
 <dt>
-    <h4 class="name" id="update"><span class="type-signature">&lt;async, static> </span>ParatiiEthVids#update(videoId, options)</h4>
+    <h4 class="name" id="update"><span class="type-signature">&lt;async> </span>update(videoId, options)</h4>
     
     
 </dt>
@@ -2023,7 +2289,7 @@ TODO RIVEDI I TIPI
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -2165,7 +2431,7 @@ TODO RIVEDI I TIPI
             
 <hr>
 <dt>
-    <h4 class="name" id="userViewedVideo"><span class="type-signature">&lt;async, static> </span>ParatiiEthVids#userViewedVideo(options)</h4>
+    <h4 class="name" id="userViewedVideo"><span class="type-signature">&lt;async> </span>userViewedVideo(options)</h4>
     
     
 </dt>
@@ -2257,7 +2523,7 @@ TODO RIVEDI I TIPI
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -2281,7 +2547,7 @@ TODO RIVEDI I TIPI
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -2406,7 +2672,7 @@ TODO RIVEDI I TIPI
             
 <hr>
 <dt>
-    <h4 class="name" id="view"><span class="type-signature">&lt;async, static> </span>ParatiiEthVids#view(options)</h4>
+    <h4 class="name" id="view"><span class="type-signature">&lt;async> </span>view(options)</h4>
     
     
 </dt>
@@ -2498,7 +2764,7 @@ TODO RIVEDI I TIPI
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -2522,7 +2788,7 @@ TODO RIVEDI I TIPI
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -2533,7 +2799,7 @@ TODO RIVEDI I TIPI
 
             
 
-            <td class="description last">univocal video identifier</td>
+            <td class="description last">univocal video identifier randomly generated</td>
         </tr>
 
     
@@ -2546,7 +2812,7 @@ TODO RIVEDI I TIPI
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -2717,7 +2983,7 @@ TODO RIVEDI I TIPI
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2018-04-10T18:46:08+02:00
+		on 2018-04-10T18:55:37+02:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

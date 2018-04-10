@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Paratii Class: eth</title>
+	<title>Paratii Class: ParatiiEth</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="paratii.html">paratii</a></li><li><a href="paratii.core.html">paratii.core</a></li><li><a href="paratii.core.users.html">paratii.core.users</a></li><li><a href="paratii.core.vids.html">paratii.core.vids</a></li><li><a href="paratii.db.html">paratii.db</a></li><li><a href="paratii.db.users.html">paratii.db.users</a></li><li><a href="paratii.db.vids.html">paratii.db.vids</a></li><li><a href="paratii.eth.html">paratii.eth</a></li><li><a href="paratii.eth.events.html">paratii.eth.events</a></li><li><a href="paratii.eth.tcr.html">paratii.eth.tcr</a></li><li><a href="paratii.eth.users.html">paratii.eth.users</a></li><li><a href="paratii.eth.vids.html">paratii.eth.vids</a></li><li><a href="paratii.eth.vouchers.html">paratii.eth.vouchers</a></li><li><a href="paratii.eth.wallet.html">paratii.eth.wallet</a></li><li><a href="paratii.ipfs.uploader.html">paratii.ipfs.uploader</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li>
+					<li><a href="Paratii.html">Paratii</a></li><li><a href="ParatiiCore.html">ParatiiCore</a></li><li><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></li><li><a href="ParatiiCoreVids.html">ParatiiCoreVids</a></li><li><a href="ParatiiDb.html">ParatiiDb</a></li><li><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></li><li><a href="ParatiiDbVids.html">ParatiiDbVids</a></li><li><a href="ParatiiEth.html">ParatiiEth</a></li><li><a href="ParatiiEthEvents.html">ParatiiEthEvents</a></li><li><a href="ParatiiEthTcr.html">ParatiiEthTcr</a></li><li><a href="ParatiiEthUsers.html">ParatiiEthUsers</a></li><li><a href="ParatiiEthVids.html">ParatiiEthVids</a></li><li><a href="ParatiiEthVouchers.html">ParatiiEthVouchers</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li><li><a href="Uploader.html">Uploader</a></li>
 				</ul>
 			</li>
 			
@@ -72,16 +72,16 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: eth</h1>
+	<h1 class="page-title">Class: ParatiiEth</h1>
 <section>
 
 <header>
     
         <h2>
-            <span class="ancestors"><a href="paratii.html">paratii</a>.</span>
-        
-        eth
+        ParatiiEth
         </h2>
+        
+            <div class="class-description">contains functions to interact with the Ethereum blockchain and the Paratii contracts deployed there.</div>
         
     
 </header>
@@ -93,16 +93,12 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="eth"><span class="type-signature"></span>new eth(config)</h4>
+    <h4 class="name" id="ParatiiEth"><span class="type-signature"></span>new ParatiiEth(config)</h4>
     
     
 </dt>
 <dd>
 
-    
-    <div class="description">
-        contains functions to interact with the Ethereum blockchain and the Paratii contracts deployed there.
-    </div>
     
 
     
@@ -142,7 +138,7 @@
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type"><a href="global.html#ParatiiEthSchema">ParatiiEthSchema</a></span>
 
 
 
@@ -166,6 +162,155 @@
 <dl class="details">
     
 
+    <h5 class="subsection-title">Properties:</h5>
+
+    <dl>
+
+<table class="props table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>vids</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ParatiiCoreVids.html">ParatiiCoreVids</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">operations on videos</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>users</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">operations on users</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>events</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ParatiiEthEvents.html">ParatiiEthEvents</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">manage subscriptions to Ethereum events</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>vouchers</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ParatiiEthVouchers.html">ParatiiEthVouchers</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Functions for redeeming vouchers</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>tcr</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="ParatiiEthTcr.html">ParatiiEthTcr</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">TCR functionality</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+</dl>
+
+    
+
 	
 
 	
@@ -233,28 +378,6 @@
 
     
 
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="paratii.eth.events.html">events</a></dt>
-            <dd></dd>
-        
-            <dt><a href="paratii.eth.tcr.html">tcr</a></dt>
-            <dd></dd>
-        
-            <dt><a href="paratii.eth.users.html">users</a></dt>
-            <dd></dd>
-        
-            <dt><a href="paratii.eth.vids.html">vids</a></dt>
-            <dd></dd>
-        
-            <dt><a href="paratii.eth.vouchers.html">vouchers</a></dt>
-            <dd></dd>
-        
-            <dt><a href="paratii.eth.wallet.html">wallet</a></dt>
-            <dd></dd>
-        </dl>
     
 
     
@@ -270,413 +393,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="_transferETH"><span class="type-signature">&lt;async, static> </span>ParatiiEth#_transferETH(beneficiary, amount, description)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        send ETH from current account to beneficiary
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>beneficiary</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">ETH address</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>amount</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">amount of ETH to be sent</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>description</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">optional - description of the transaction (will be written in the blockchain)</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.eth.js.html">paratii.eth.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    information about the transaction recording the transfer
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">return paratii.eth._transferETH(&#x27;some-address&#x27;, 20, &#x27;an-optional-description&#x27;)</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="_transferPTI"><span class="type-signature">&lt;async, static> </span>ParatiiEth#_transferPTI(beneficiary, amount)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        send PTI from current account to beneficiary
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>beneficiary</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">String</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">ETH address</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>amount</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">amount of PTI to be sent</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.eth.js.html">paratii.eth.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    information about the transaction recording the transfer
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">return paratii.eth._transferPTI(&#x27;some-address&#x27;, 20)</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="balanceOf"><span class="type-signature">&lt;async, static> </span>ParatiiEth#balanceOf(address, symbol)</h4>
+    <h4 class="name" id="balanceOf"><span class="type-signature">&lt;async> </span>balanceOf(address, symbol)</h4>
     
     
 </dt>
@@ -708,6 +425,8 @@ When called without a second argument, returns information about all relevant ba
         <th>Type</th>
 
         
+        <th>Argument</th>
+        
 
         
 
@@ -726,13 +445,21 @@ When called without a second argument, returns information about all relevant ba
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
             
             </td>
 
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
             
 
             
@@ -750,7 +477,7 @@ When called without a second argument, returns information about all relevant ba
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -758,10 +485,20 @@ When called without a second argument, returns information about all relevant ba
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last">optional - symbol of the token (ETH,PTI)</td>
+            <td class="description last">symbol of the token (ETH,PTI)</td>
         </tr>
 
     
@@ -872,7 +609,7 @@ When called without a second argument, returns information about all relevant ba
             
 <hr>
 <dt>
-    <h4 class="name" id="deployContract"><span class="type-signature">&lt;async, static> </span>ParatiiEth#deployContract(name, args)</h4>
+    <h4 class="name" id="deployContract"><span class="type-signature">&lt;async> </span>deployContract(name, args)</h4>
     
     
 </dt>
@@ -923,7 +660,7 @@ When called without a second argument, returns information about all relevant ba
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -1083,7 +820,7 @@ When called without a second argument, returns information about all relevant ba
             
 <hr>
 <dt>
-    <h4 class="name" id="deployContracts"><span class="type-signature">&lt;async, static> </span>ParatiiEth#deployContracts()</h4>
+    <h4 class="name" id="deployContracts"><span class="type-signature">&lt;async> </span>deployContracts()</h4>
     
     
 </dt>
@@ -1202,100 +939,7 @@ When called without a second argument, returns information about all relevant ba
             
 <hr>
 <dt>
-    <h4 class="name" id="getAccount"><span class="type-signature">&lt;static> </span>ParatiiEth#getAccount()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Get the account
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.eth.js.html">paratii.eth.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">getAccount()</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="getContract"><span class="type-signature">&lt;async, static> </span>ParatiiEth#getContract(name)</h4>
+    <h4 class="name" id="getContract"><span class="type-signature">&lt;async> </span>getContract(name)</h4>
     
     
 </dt>
@@ -1344,7 +988,7 @@ When called without a second argument, returns information about all relevant ba
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -1462,7 +1106,7 @@ When called without a second argument, returns information about all relevant ba
             
 <hr>
 <dt>
-    <h4 class="name" id="getContractAddress"><span class="type-signature">&lt;async, static> </span>ParatiiEth#getContractAddress(name)</h4>
+    <h4 class="name" id="getContractAddress"><span class="type-signature">&lt;async> </span>getContractAddress(name)</h4>
     
     
 </dt>
@@ -1511,7 +1155,7 @@ When called without a second argument, returns information about all relevant ba
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -1629,7 +1273,7 @@ When called without a second argument, returns information about all relevant ba
             
 <hr>
 <dt>
-    <h4 class="name" id="getContracts"><span class="type-signature">&lt;async, static> </span>ParatiiEth#getContracts()</h4>
+    <h4 class="name" id="getContracts"><span class="type-signature">&lt;async> </span>getContracts()</h4>
     
     
 </dt>
@@ -1746,7 +1390,7 @@ When called without a second argument, returns information about all relevant ba
             
 <hr>
 <dt>
-    <h4 class="name" id="getRegistryAddress"><span class="type-signature">&lt;static> </span>ParatiiEth#getRegistryAddress()</h4>
+    <h4 class="name" id="getRegistryAddress"><span class="type-signature"></span>getRegistryAddress()</h4>
     
     
 </dt>
@@ -1840,7 +1484,7 @@ When called without a second argument, returns information about all relevant ba
     </dt>
     <dd>
         
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -1863,7 +1507,7 @@ When called without a second argument, returns information about all relevant ba
             
 <hr>
 <dt>
-    <h4 class="name" id="requireContract"><span class="type-signature">&lt;static> </span>ParatiiEth#requireContract(contractName)</h4>
+    <h4 class="name" id="requireContract"><span class="type-signature"></span>requireContract(contractName)</h4>
     
     
 </dt>
@@ -1912,7 +1556,7 @@ When called without a second argument, returns information about all relevant ba
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -2007,7 +1651,7 @@ When called without a second argument, returns information about all relevant ba
     </dt>
     <dd>
         
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -2030,7 +1674,7 @@ When called without a second argument, returns information about all relevant ba
             
 <hr>
 <dt>
-    <h4 class="name" id="setAccount"><span class="type-signature">&lt;static> </span>ParatiiEth#setAccount(address, privateKey, mnemonic)</h4>
+    <h4 class="name" id="setAccount"><span class="type-signature"></span>setAccount(address, privateKey, mnemonic)</h4>
     
     
 </dt>
@@ -2079,7 +1723,7 @@ When called without a second argument, returns information about all relevant ba
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -2103,7 +1747,7 @@ When called without a second argument, returns information about all relevant ba
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -2127,7 +1771,7 @@ When called without a second argument, returns information about all relevant ba
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -2223,100 +1867,7 @@ When called without a second argument, returns information about all relevant ba
             
 <hr>
 <dt>
-    <h4 class="name" id="setContractsProvider"><span class="type-signature">&lt;async, static> </span>ParatiiEth#setContractsProvider()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Set the provider on all the contracts
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.eth.js.html">paratii.eth.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">paratii.eth.setContractsProvider()</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="setRegistryAddress"><span class="type-signature">&lt;static> </span>ParatiiEth#setRegistryAddress(registryAddress)</h4>
+    <h4 class="name" id="setRegistryAddress"><span class="type-signature"></span>setRegistryAddress(registryAddress)</h4>
     
     
 </dt>
@@ -2365,7 +1916,7 @@ When called without a second argument, returns information about all relevant ba
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -2459,7 +2010,7 @@ When called without a second argument, returns information about all relevant ba
             
 <hr>
 <dt>
-    <h4 class="name" id="transfer"><span class="type-signature">&lt;async, static> </span>ParatiiEth#transfer(beneficiary, amount, symbol, description)</h4>
+    <h4 class="name" id="transfer"><span class="type-signature">&lt;async> </span>transfer(beneficiary, amount, symbol, description)</h4>
     
     
 </dt>
@@ -2490,6 +2041,8 @@ When called without a second argument, returns information about all relevant ba
         <th>Type</th>
 
         
+        <th>Argument</th>
+        
 
         
 
@@ -2508,13 +2061,21 @@ When called without a second argument, returns information about all relevant ba
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
             
             </td>
 
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
             
 
             
@@ -2532,13 +2093,21 @@ When called without a second argument, returns information about all relevant ba
             <td class="type">
             
                 
-<span class="param-type">Number</span>
+<span class="param-type">number</span>
 
 
 
             
             </td>
 
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
             
 
             
@@ -2556,13 +2125,21 @@ When called without a second argument, returns information about all relevant ba
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
             
             </td>
 
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
             
 
             
@@ -2580,7 +2157,7 @@ When called without a second argument, returns information about all relevant ba
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -2588,10 +2165,20 @@ When called without a second argument, returns information about all relevant ba
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last">optional - description to be inserted in the blockchain</td>
+            <td class="description last">description to be inserted in the blockchain</td>
         </tr>
 
     
@@ -2744,7 +2331,7 @@ When called without a second argument, returns information about all relevant ba
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2018-04-10T18:46:08+02:00
+		on 2018-04-10T18:55:37+02:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
