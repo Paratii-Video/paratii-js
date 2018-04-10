@@ -34,7 +34,7 @@ describe('paratii API: :', function () {
     assert.isOk(oldBalance > 0, oldBalance)
 
     // now (the current owner) sends  a request to migrate her account
-    await paratii.migrateAccount(address23)
+    await paratii.users.migrateAccount(address23)
 
     // now the owner of the videos (on the contract) should be address23
     let vid = await paratii.eth.vids.get(id1)
@@ -52,7 +52,7 @@ describe('paratii API: :', function () {
     assert.isOk(oldBalance > 0, oldBalance)
 
     // now (the current owner) sends  a request to migrate her account
-    await paratii.core.migrateAccount(address23)
+    await paratii.users.migrateAccount(address23)
 
     // the balance in PTI should be transfered to the new address
     assert.equal(await paratii.eth.balanceOf(address23, 'PTI'), oldBalance)
