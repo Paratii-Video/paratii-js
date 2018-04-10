@@ -238,7 +238,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 break;
               }
 
-              throw new Error('No video to update');
+              throw new Error('No video with id ' + videoId + ' to update');
 
             case 10:
 

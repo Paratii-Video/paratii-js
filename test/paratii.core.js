@@ -45,4 +45,16 @@ describe('paratii API: :', function () {
     assert.equal(await paratii.eth.balanceOf(address23, 'PTI'), oldBalance)
     // assert.isOk(false, 'any stakes made should be transfered to the new account')
   })
+
+  it('migrateAccount should work also when no vids present', async function () {
+    // result = await paratii.eth.tcr.apply(id1, paratii.eth.web3.utils.toWei('5'))
+    let oldBalance = await paratii.eth.balanceOf(address, 'PTI')
+    assert.isOk(oldBalance > 0, oldBalance)
+
+    // now (the current owner) sends  a request to migrate her account
+    await paratii.core.migrateAccount(address23)
+
+    // the balance in PTI should be transfered to the new address
+    assert.equal(await paratii.eth.balanceOf(address23, 'PTI'), oldBalance)
+  })
 })

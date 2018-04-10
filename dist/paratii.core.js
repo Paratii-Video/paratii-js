@@ -66,7 +66,7 @@ var ParatiiCore = exports.ParatiiCore = function () {
   (0, _createClass3.default)(ParatiiCore, [{
     key: 'migrateAccount',
     value: function migrateAccount(newAccount) {
-      var paratii, oldAccount, vids, i, vid, didVideoApply, ptiBalance;
+      var paratii, oldAccount, vids, i, vid, videoId, didVideoApply, ptiBalance;
       return _regenerator2.default.async(function migrateAccount$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -83,44 +83,45 @@ var ParatiiCore = exports.ParatiiCore = function () {
 
             case 6:
               if ((_context.t1 = _context.t0()).done) {
-                _context.next = 19;
+                _context.next = 20;
                 break;
               }
 
               i = _context.t1.value;
               vid = vids[i];
-              _context.next = 11;
-              return _regenerator2.default.awrap(this.vids.update(vid.id, { owner: newAccount }));
+              videoId = vid.id || vid._id;
+              _context.next = 12;
+              return _regenerator2.default.awrap(this.vids.update(videoId, { owner: newAccount }));
 
-            case 11:
-              _context.next = 13;
+            case 12:
+              _context.next = 14;
               return _regenerator2.default.awrap(paratii.eth.tcr.didVideoApply(vid.id));
 
-            case 13:
+            case 14:
               didVideoApply = _context.sent;
 
               if (!didVideoApply) {
-                _context.next = 17;
+                _context.next = 18;
                 break;
               }
 
-              _context.next = 17;
-              return _regenerator2.default.awrap(paratii.eth.tcr.exit(vid.id));
+              _context.next = 18;
+              return _regenerator2.default.awrap(this.paratii.eth.tcr.exit(videoId));
 
-            case 17:
+            case 18:
               _context.next = 6;
               break;
 
-            case 19:
-              _context.next = 21;
+            case 20:
+              _context.next = 22;
               return _regenerator2.default.awrap(paratii.eth.balanceOf(oldAccount, 'PTI'));
 
-            case 21:
+            case 22:
               ptiBalance = _context.sent;
-              _context.next = 24;
+              _context.next = 25;
               return _regenerator2.default.awrap(paratii.eth.transfer(newAccount, ptiBalance, 'PTI'));
 
-            case 24:
+            case 25:
             case 'end':
               return _context.stop();
           }

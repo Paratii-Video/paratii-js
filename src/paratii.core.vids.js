@@ -136,7 +136,7 @@ export class ParatiiCoreVids {
       data = await this.get(videoId)
     }
     if (data === null) {
-      throw new Error('No video to update')
+      throw new Error(`No video with id ${videoId} to update`)
     }
 
     // FIXME: missing the validate invociation
