@@ -145,7 +145,7 @@ export class ParatiiEthTcr {
     let tcrPlaceholder = await this.eth.getContract('TcrPlaceholder')
 
     // FIXME: restore this logic (it is broken!)
-    // let balance = await token.methods.balanceOf(this.eth.config.account.address).call()
+    // let balance = await token.methods.balanceOf(this.getAccount()).call()
     // if (this.eth.web3.utils.toBN(balance.toString()).lt(amountToStake)) {
     //   throw new Error(`Your balance is to low: it is ${balance.toString()}, while a minimal deposit of ${minDeposit.toString()} is required`)
     // }
@@ -155,7 +155,7 @@ export class ParatiiEthTcr {
       throw new Error('checkEligiblityAndApply Error ', tx2)
     }
 
-    let allowance = await token.methods.allowance(this.eth.config.account.address, tcrPlaceholder.options.address).call()
+    let allowance = await token.methods.allowance(this.eth.getAccount(), tcrPlaceholder.options.address).call()
     if (allowance.toString() !== amountToStake.toString()) {
       console.warn(`allowance ${allowance.toString()} != ${amountToStake.toString()}`)
     }

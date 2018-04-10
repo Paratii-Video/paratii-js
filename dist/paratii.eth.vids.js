@@ -584,7 +584,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
 
             case 2:
               contract = _context11.sent;
-              address = this.eth.config.account.address;
+              address = this.eth.getAccount();
               _context11.next = 6;
               return _regenerator2.default.awrap(contract.methods.userLikesVideo(address, videoId).call());
 
@@ -620,7 +620,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
 
             case 2:
               contract = _context12.sent;
-              address = this.eth.config.account.address;
+              address = this.eth.getAccount();
               _context12.next = 6;
               return _regenerator2.default.awrap(contract.methods.userDislikesVideo(address, videoId).call());
 

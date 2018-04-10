@@ -137,6 +137,19 @@ var ParatiiEth = exports.ParatiiEth = function () {
     }
 
     /**
+     * Get the account
+     * @example getAccount()
+     * @memberof paratii.eth
+     */
+
+  }, {
+    key: 'getAccount',
+    value: function getAccount() {
+      var wallet = this.web3.eth.accounts.wallet;
+      return wallet[0].address;
+    }
+
+    /**
      * Get the contract instance specified
      * @param {String} name the name of the token
      * @return {Promise} Object representing the contract

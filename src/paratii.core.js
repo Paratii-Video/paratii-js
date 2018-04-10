@@ -34,7 +34,7 @@ export class ParatiiCore {
    */
   async migrateAccount (newAccount) {
     // migrate the videos
-    const oldAccount = this.config.account.address
+    const oldAccount = this.paratii.eth.getAccount()
     const vids = await this.vids.search({owner: oldAccount})
     for (let i in vids) {
       let vid = vids[i]

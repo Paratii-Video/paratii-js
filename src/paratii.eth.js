@@ -99,6 +99,16 @@ export class ParatiiEth {
   }
 
   /**
+   * Get the account
+   * @example getAccount()
+   * @memberof paratii.eth
+   */
+  getAccount () {
+    const wallet = this.web3.eth.accounts.wallet
+    return wallet[0].address
+  }
+
+  /**
    * Get the contract instance specified
    * @param {String} name the name of the token
    * @return {Promise} Object representing the contract

@@ -123,7 +123,7 @@ export class ParatiiEthVouchers {
       let tx = await contract.methods.redeem(voucherCode).send()
       let claimant = getInfoFromLogs(tx, 'LogRedeemVoucher', '_claimant', 1)
       let amount = getInfoFromLogs(tx, 'LogRedeemVoucher', '_amount', 1)
-      if (claimant === this.eth.config.account.address) {
+      if (claimant === this.eth.getAccount()) {
         return amount
       } else {
         return false
