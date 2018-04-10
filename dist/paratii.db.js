@@ -23,11 +23,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 /**
  * ParatiiDb contains a functionality to interact with the Paratii Index.
- * @param {Object} config
- * @example paratii = new Paratii()
- * paratii.db.vids.get('video-id')
+ * @param {ParatiiDbSchema} config configuration object to initialize Paratii object
+ * @property {ParatiiCoreVids} vids operations on videos
+ * @property {ParatiiCoreUsers} users operations on users
  */
-var ParatiiDb = exports.ParatiiDb = function ParatiiDb(config) {
+var ParatiiDb =
+/**
+* @typedef ParatiiDbSchema
+* @property {dbSchema} db
+* @property {accountSchema} account
+*/
+exports.ParatiiDb = function ParatiiDb(config) {
   (0, _classCallCheck3.default)(this, ParatiiDb);
 
   var schema = {

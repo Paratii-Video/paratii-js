@@ -8,9 +8,16 @@ global.Buffer = global.Buffer || require('buffer').Buffer
 
 /**
  * Contains functions to interact with the IPFS instance.
- * @param {Object} config configuration object to initialize Paratii object
+ * @param {ParatiiIPFSSchema} config configuration object to initialize Paratii object
+ * @property {Uploader} uploader Paratii IPFS uploader interface
  */
 export class ParatiiIPFS extends EventEmitter {
+  /**
+  * @typedef {Array} ParatiiIPFSSchema
+  * @property {?ipfsSchema} ipfs
+  * @property {?accountSchema} account
+  * @property {?boolean} verbose
+ */
   constructor (config) {
     super()
     const schema = joi.object({
@@ -43,7 +50,7 @@ export class ParatiiIPFS extends EventEmitter {
   }
   /**
    * get file from ipfs
-   * @param  {String}  hash multihash of the file
+   * @param  {string}  hash ipfs multihash of the file
    * @return {Promise}      the file (path,content)
    * @example
    * let result = await paratiiIPFS.add(fileStream)
@@ -56,7 +63,7 @@ export class ParatiiIPFS extends EventEmitter {
   }
   /**
    * log messages on the console if verbose is set
-   * @param  {String} msg text to log
+   * @param  {string} msg text to log
    * @example
    * paratii.ipfs.log("some-text")
    */
@@ -67,7 +74,7 @@ export class ParatiiIPFS extends EventEmitter {
   }
   /**
    * log warns on the console if verbose is set
-   * @param  {String} msg warn text
+   * @param  {string} msg warn text
    * @example
    * paratii.ipfs.warn("some-text")
    */
@@ -78,7 +85,7 @@ export class ParatiiIPFS extends EventEmitter {
   }
   /**
   * log errors on the console if verbose is set
-  * @param  {String} msg error message
+  * @param  {string} msg error message
   * @example
   * paratii.ipfs.error("some-text")
   */
@@ -213,7 +220,7 @@ export class ParatiiIPFS extends EventEmitter {
   /**
    * convenient method to add JSON and send it for persistance storage.
    * @param  {object}  data JSON object to store
-   * @return {string}      returns multihash of the stored object.
+   * @return {string}      returns ipfs multihash of the stored object.
    * @example let result = await paratiiIPFS.addAndPinJSON(data)
    */
   async addAndPinJSON (data) {
@@ -245,7 +252,7 @@ export class ParatiiIPFS extends EventEmitter {
   }
   /**
   * gets a JSON object stored in IPFS
-  * @param  {String}  multihash ipfs multihash of the object
+  * @param  {string}  multihash ipfs multihash of the object
   * @return {Promise}           requested Object
   * @example let jsonObj = await paratiiIPFS.getJSON('some-multihash')
   */

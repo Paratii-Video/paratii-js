@@ -5,11 +5,16 @@ import joi from 'joi'
 
 /**
  * ParatiiDb contains a functionality to interact with the Paratii Index.
- * @param {Object} config
- * @example paratii = new Paratii()
- * paratii.db.vids.get('video-id')
+ * @param {ParatiiDbSchema} config configuration object to initialize Paratii object
+ * @property {ParatiiCoreVids} vids operations on videos
+ * @property {ParatiiCoreUsers} users operations on users
  */
 export class ParatiiDb {
+  /**
+  * @typedef ParatiiDbSchema
+  * @property {dbSchema} db
+  * @property {accountSchema} account
+ */
   constructor (config) {
     const schema = {
       db: dbSchema,

@@ -57,14 +57,17 @@ var Resumable = require('resumablejs');
 /**
  * IPFS UPLOADER : Paratii IPFS uploader interface.
  * @extends EventEmitter
- * @param {Object} opts
- * @class paratii.ipfs.uploader
-
+ * @param {ParatiiIPFSUploaderSchema} opts
  */
 
 var Uploader = exports.Uploader = function (_EventEmitter) {
   (0, _inherits3.default)(Uploader, _EventEmitter);
 
+  /**
+  * @typedef {Array} ParatiiIPFSUploaderSchema
+  * @property {?ipfsSchema} ipfs
+  * @property {?Object} ParatiiIPFS
+  */
   function Uploader(opts) {
     (0, _classCallCheck3.default)(this, Uploader);
 
@@ -87,8 +90,7 @@ var Uploader = exports.Uploader = function (_EventEmitter) {
    * ????
    * @param  {?} ev ?
    * @return {?}    ?
-   * @memberof paratii.ipfs.uploader
-   */
+    */
 
 
   (0, _createClass3.default)(Uploader, [{
@@ -98,11 +100,10 @@ var Uploader = exports.Uploader = function (_EventEmitter) {
     /**
      * Upload a file over XHR to the transcoder. To be called with an event emitter as the last argument
      * @param  {Object} file       file to upload
-     * @param  {String} hashedFile hash of the file ??
+     * @param  {string} hashedFile hash of the file ??
      * @param  {EventEmitter} ev         event emitter
      * @example this.xhrUpload(file, hashedFile, ev)
-     * @memberof paratii.ipfs.uploader
-     */
+      */
 
   }, {
     key: 'xhrUpload',
@@ -144,8 +145,7 @@ var Uploader = exports.Uploader = function (_EventEmitter) {
      * @param {File} file HTML5 File Object.
      * @returns {EventEmitter} checkout the upload function below for details.
      * @example let uploaderEv = paratiiIPFS.uploader.add(files)
-     * @memberof paratii.ipfs.uploader
-     */
+      */
 
   }, {
     key: 'add',
@@ -180,8 +180,7 @@ var Uploader = exports.Uploader = function (_EventEmitter) {
      * @param  {File} file  HTML5 File Object
      * @return {Object}      generic file object.
      * @example ?
-     * @memberof paratii.ipfs.uploader
-     */
+      */
 
   }, {
     key: 'html5FileToPull',
@@ -197,11 +196,10 @@ var Uploader = exports.Uploader = function (_EventEmitter) {
 
     /**
      * returns a generic file Object from a file path
-     * @param  {String} filePath Path to file.
+     * @param  {string} filePath Path to file.
      * @return {Object} generic file object.
      * @example ?
-     * @memberof paratii.ipfs.uploader
-     */
+      */
 
   }, {
     key: 'fsFileToPull',
@@ -228,8 +226,7 @@ var Uploader = exports.Uploader = function (_EventEmitter) {
      *    - 'done': (files) triggered when the uploader is done locally.
      *    - 'error': (err) triggered whenever an error occurs.
      * @example ?
-     * @memberof paratii.ipfs.uploader
-     */
+      */
 
   }, {
     key: 'upload',
@@ -289,11 +286,10 @@ var Uploader = exports.Uploader = function (_EventEmitter) {
 
     /**
      * upload an entire directory to IPFS
-     * @param  {String}   dirPath path to directory
+     * @param  {string}   dirPath path to directory
      * @return {Promise}           returns the {multihash, path, size} for the uploaded folder.
      * @example ?
-     * @memberof paratii.ipfs.uploader
-     */
+      */
 
   }, {
     key: 'addDirectory',
@@ -362,7 +358,7 @@ var Uploader = exports.Uploader = function (_EventEmitter) {
 
     /**
      * signals transcoder(s) to transcode fileHash
-     * @param  {String} fileHash IPFS file hash.
+     * @param  {string} fileHash IPFS file hash.
      * @param  {Object} options  ref: https://github.com/Paratii-Video/paratii-lib/blob/master/docs/paratii-ipfs.md#ipfsuploadertranscodefilehash-options
      * @return {EventEmitter} returns EventEmitter with the following events:
      *    - 'uploader:progress': (hash, chunkSize, percent) client to transcoder upload progress.
@@ -372,8 +368,7 @@ var Uploader = exports.Uploader = function (_EventEmitter) {
      *    - 'transcoding:done': (hash, transcoderResult) triggered when the transcoder is done - returns the hash of the transcoded file
      *    - 'transcoder:error': (err) triggered whenever an error occurs.
      * @example ?
-     * @memberof paratii.ipfs.uploader
-     */
+      */
 
   }, {
     key: 'transcode',
@@ -445,8 +440,7 @@ var Uploader = exports.Uploader = function (_EventEmitter) {
      * @param  {EventEmitter} ev the transcoding job EventEmitter
      * @return {function}    returns various events based on transcoder response.
      * @example ?
-     * @memberof paratii.ipfs.uploader
-     */
+      */
 
   }, {
     key: '_transcoderRespHander',
@@ -506,8 +500,7 @@ var Uploader = exports.Uploader = function (_EventEmitter) {
     /**
      * convenience method for adding and transcoding files
      * @param {Array} files Array of HTML5 File Objects
-     * @memberof paratii.ipfs.uploader
-     */
+      */
 
   }, {
     key: 'addAndTranscode',
@@ -527,8 +520,7 @@ var Uploader = exports.Uploader = function (_EventEmitter) {
      * @param  {Object} files [description]
      * @param  {Object} ev    [description]
      * @return {Object}       [description]
-     * @memberof paratii.ipfs.uploader
-     */
+      */
 
   }, {
     key: '_signalTranscoder',
@@ -562,8 +554,7 @@ var Uploader = exports.Uploader = function (_EventEmitter) {
      * @param  {Object} fileHash [description]
      * @param  {Object} options  [description]
      * @return {Object}          [description]
-     * @memberof paratii.ipfs.uploader
-     */
+      */
 
   }, {
     key: 'getMetaData',
@@ -653,8 +644,7 @@ var Uploader = exports.Uploader = function (_EventEmitter) {
      * @param  {Object} fileHash [description]
      * @param  {Object} options  [description]
      * @return {Object}          [description]
-     * @memberof paratii.ipfs.uploader
-     */
+      */
 
   }, {
     key: 'pinFile',
@@ -721,8 +711,7 @@ var Uploader = exports.Uploader = function (_EventEmitter) {
      * [_pinResponseHandler description]
      * @param  {Object} ev [description]
      * @return {Object}    [description]
-     * @memberof paratii.ipfs.uploader
-     */
+      */
 
   }, {
     key: '_pinResponseHandler',

@@ -55,8 +55,7 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
    *              email: 'some@email.com',
    *              ...
    *             })
-   * @memberof paratii.users
-   */
+    */
   // FIXME: do some joi validation here
 
 
@@ -99,11 +98,10 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
 
     /**
      * retrieve data about the user
-     * @param  {String} id user univocal id
+     * @param  {string} id user univocal id
      * @return {Object}    data about the user
      * @example paratii.users.get('some-user-id')
-     * @memberof paratii.users
-    */
+     */
 
   }, {
     key: 'get',
@@ -112,12 +110,11 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
     }
     /**
      * Updates a user's details. name and email are defined in the smart contract Users, other fields get written to IPFS.
-     * @param  {String}  userId  user univocal id
+     * @param  {string}  userId  user univocal id
      * @param  {Object}  options updated data i.e. { name: 'A new user name' }
      * @return {Promise}         updated data about the user
      * @example paratii.users.update('some-user-id', {name: 'A new user name'})
-     * @memberof paratii.users
-     */
+      */
 
   }, {
     key: 'update',
@@ -167,6 +164,80 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
             case 14:
             case 'end':
               return _context2.stop();
+          }
+        }
+      }, null, this);
+    }
+
+    /**
+     * migrate all contract data for  paratii.config.account to a new account
+     * @alias migrateAccount
+     * @param newAccount Address of new account
+     * @async
+     * @memberof Paratii
+     */
+
+  }, {
+    key: 'migrateAccount',
+    value: function migrateAccount(newAccount) {
+      var paratii, oldAccount, vids, i, vid, videoId, didVideoApply, ptiBalance;
+      return _regenerator2.default.async(function migrateAccount$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              // migrate the videos
+              paratii = this.config.paratii;
+              oldAccount = this.config.account.address;
+              _context3.next = 4;
+              return _regenerator2.default.awrap(paratii.vids.search({ owner: oldAccount }));
+
+            case 4:
+              vids = _context3.sent;
+              _context3.t0 = _regenerator2.default.keys(vids);
+
+            case 6:
+              if ((_context3.t1 = _context3.t0()).done) {
+                _context3.next = 20;
+                break;
+              }
+
+              i = _context3.t1.value;
+              vid = vids[i];
+              videoId = vid.id || vid._id;
+              _context3.next = 12;
+              return _regenerator2.default.awrap(paratii.vids.update(videoId, { owner: newAccount }));
+
+            case 12:
+              _context3.next = 14;
+              return _regenerator2.default.awrap(paratii.eth.tcr.didVideoApply(vid.id));
+
+            case 14:
+              didVideoApply = _context3.sent;
+
+              if (!didVideoApply) {
+                _context3.next = 18;
+                break;
+              }
+
+              _context3.next = 18;
+              return _regenerator2.default.awrap(paratii.eth.tcr.exit(videoId));
+
+            case 18:
+              _context3.next = 6;
+              break;
+
+            case 20:
+              _context3.next = 22;
+              return _regenerator2.default.awrap(paratii.eth.balanceOf(oldAccount, 'PTI'));
+
+            case 22:
+              ptiBalance = _context3.sent;
+              _context3.next = 25;
+              return _regenerator2.default.awrap(paratii.eth.transfer(newAccount, ptiBalance, 'PTI'));
+
+            case 25:
+            case 'end':
+              return _context3.stop();
           }
         }
       }, null, this);

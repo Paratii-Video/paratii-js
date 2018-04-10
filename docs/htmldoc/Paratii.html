@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="Paratii.html">Paratii</a></li><li><a href="paratii.db.vids.html">paratii.db.vids</a></li><li><a href="paratii.eth.events.html">paratii.eth.events</a></li><li><a href="paratii.eth.tcr.html">paratii.eth.tcr</a></li><li><a href="paratii.eth.users.html">paratii.eth.users</a></li><li><a href="paratii.eth.vids.html">paratii.eth.vids</a></li><li><a href="paratii.eth.vouchers.html">paratii.eth.vouchers</a></li><li><a href="paratii.eth.wallet.html">paratii.eth.wallet</a></li><li><a href="paratii.ipfs.uploader.html">paratii.ipfs.uploader</a></li><li><a href="ParatiiCore.html">ParatiiCore</a></li><li><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></li><li><a href="ParatiiDb.html">ParatiiDb</a></li><li><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></li><li><a href="ParatiiEth.html">ParatiiEth</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li>
+					<li><a href="Paratii.html">Paratii</a></li><li><a href="ParatiiCore.html">ParatiiCore</a></li><li><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></li><li><a href="ParatiiCoreVids.html">ParatiiCoreVids</a></li><li><a href="ParatiiDb.html">ParatiiDb</a></li><li><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></li><li><a href="ParatiiDbVids.html">ParatiiDbVids</a></li><li><a href="ParatiiEth.html">ParatiiEth</a></li><li><a href="ParatiiEthEvents.html">ParatiiEthEvents</a></li><li><a href="ParatiiEthTcr.html">ParatiiEthTcr</a></li><li><a href="ParatiiEthUsers.html">ParatiiEthUsers</a></li><li><a href="ParatiiEthVids.html">ParatiiEthVids</a></li><li><a href="ParatiiEthVouchers.html">ParatiiEthVouchers</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li><li><a href="Uploader.html">Uploader</a></li>
 				</ul>
 			</li>
 			
@@ -81,6 +81,11 @@
         Paratii
         </h2>
         
+            <div class="class-description">Paratii library main object
+The Paratii object serves as the general entry point for interacting with the family of Paratii
+contracts that are deployed on the blockchain, utilities to run and interact with a local IPFS node,
+and utilities to interact with the Paratii index.</div>
+        
     
 </header>
 
@@ -97,13 +102,6 @@
 </dt>
 <dd>
 
-    
-    <div class="description">
-        Paratii library main object
-The Paratii object serves as the general entry point for interacting with the family of Paratii
-contracts that are deployed on the blockchain, utilities to run and interact with a local IPFS node,
-and utilities to interact with the Paratii index.
-    </div>
     
 
     
@@ -143,7 +141,7 @@ and utilities to interact with the Paratii index.
             <td class="type">
             
                 
-<span class="param-type"><a href="global.html#configSchema">configSchema</a></span>
+<span class="param-type"><a href="global.html#ParatiiConfigSchema">ParatiiConfigSchema</a></span>
 
 
 
@@ -234,7 +232,7 @@ and utilities to interact with the Paratii index.
 
             
 
-            <td class="description last"></td>
+            <td class="description last">operations on users</td>
         </tr>
 
     
@@ -258,56 +256,7 @@ and utilities to interact with the Paratii index.
 
             
 
-            <td class="description last">interact with the Ethereum blockchain
-                <h6>Properties</h6>
-
-<table class="props table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>tcr</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">ParatiiEthTcr</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">interaction with the TCR contract on ethereum</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
+            <td class="description last">interact with the Ethereum blockchain</td>
         </tr>
 
     
@@ -331,7 +280,7 @@ and utilities to interact with the Paratii index.
 
             
 
-            <td class="description last"></td>
+            <td class="description last">interact with the IPFS instance</td>
         </tr>
 
     
@@ -355,56 +304,7 @@ and utilities to interact with the Paratii index.
 
             
 
-            <td class="description last">
-                <h6>Properties</h6>
-
-<table class="props table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>users</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
+            <td class="description last">interact with the Paratii Index</td>
         </tr>
 
     
@@ -607,7 +507,7 @@ and utilities to interact with the Paratii index.
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="paratii.core.js.html">paratii.core.js</a>
+				<a href="paratii.core.users.js.html">paratii.core.users.js</a>
 			</li>
 		</ul>
 	</dd>
@@ -788,6 +688,8 @@ and utilities to interact with the Paratii index.
         <th>Type</th>
 
         
+        <th>Argument</th>
+        
 
         
 
@@ -806,13 +708,21 @@ and utilities to interact with the Paratii index.
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
             
             </td>
 
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
             
 
             
@@ -830,7 +740,7 @@ and utilities to interact with the Paratii index.
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -838,10 +748,20 @@ and utilities to interact with the Paratii index.
             </td>
 
             
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
 
             
 
-            <td class="description last">optional - private key of the operator/user</td>
+            <td class="description last">private key of the operator/user</td>
         </tr>
 
     
@@ -973,7 +893,7 @@ and utilities to interact with the Paratii index.
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">string</span>
 
 
 
@@ -1113,7 +1033,7 @@ and utilities to interact with the Paratii index.
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2018-04-10T16:22:17+02:00
+		on 2018-04-10T16:24:23+02:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

@@ -2,7 +2,8 @@ import { getInfoFromLogs, NULL_ADDRESS, makeId } from './utils.js'
 const joi = require('joi')
 /**
  * Functions for redeeming vouchers
- * @class paratii.eth.vouchers
+ * @param  {Object} context ParatiiEth instance
+ * @property {ParatiiEth} eth ParatiiEth instance
  */
 export class ParatiiEthVouchers {
   constructor (context) {
@@ -13,7 +14,6 @@ export class ParatiiEthVouchers {
    * Get the contract instance of the vouchers contract
    * @return {Promise} Object representing the contract
    * @example let contract = await paratii.eth.vids.getVouchersContract()
-   * @memberof paratii.eth.vouchers
   */
   async getVouchersContract () {
     let contract = await this.eth.getContract('Vouchers')
@@ -25,11 +25,11 @@ export class ParatiiEthVouchers {
   /**
    * Function for creating a voucher. Can only be called by the owner of the contract.
    * @param  {Object}  options data about the voucher
-   * @param {String} options.voucherCode unique string associated to this voucher
-   * @param {Number} options.amount amount of PTI in wei of this voucher
+   * @param {string} options.voucherCode unique string associated to this voucher
+   * @param {number} options.amount amount of PTI in wei of this voucher
    * @return {Promise}         the voucher id
    * @example await paratii.eth.vouchers.create({ voucherCode: 'some-id', amount: 10 })
-   * @memberof paratii.eth.vouchers
+
    */
   async create (options) {
     const schema = joi.object({
@@ -71,7 +71,7 @@ export class ParatiiEthVouchers {
   }
   /**
    * throws a test error
-   * @memberof paratii.eth.vouchers
+
    */
   async test () {
     throw Error('test error message')
@@ -79,11 +79,11 @@ export class ParatiiEthVouchers {
 
    /**
     * Generates a given number of vouchers with unique IDs, and the given amount, and returns an array of objects.
-    * @param  {Number}  number number of voucher to create
-    * @param  {Number}  amount amount of every voucher
+    * @param  {number}  number number of voucher to create
+    * @param  {number}  amount amount of every voucher
     * @return {Promise}        Object containing every voucher created
     * @example let vouchers = await paratii.eth.vouchers.createVouchers(10, 10)
-    * @memberof paratii.eth.vouchers
+
     */
   async createVouchers (number, amount) {
     let i
@@ -98,10 +98,10 @@ export class ParatiiEthVouchers {
   }
   /**
    * Function for redeeming a voucher to the current account's address.
-   * @param  {String}  voucherCode univocal voucher code
+   * @param  {string}  voucherCode univocal voucher code
    * @return {Promise}             true if everything goes well, otherwise throws an error
    * @example await paratii.eth.vouchers.redeem('some-code')
-   * @memberof paratii.eth.vouchers
+
    */
   async redeem (voucherCode) {
     let contract = await this.getVouchersContract()

@@ -22,16 +22,15 @@ var hdkey = require('hdkey');
  * @param  {Object} wallet wallet to patch
  * @param  {Object} config configuration object to initialize Paratii object
  * @return {Object}        patched wallet
- * @class paratii.eth.wallet
+ * @private
  */
 function patchWallet(wallet, config) {
   /**
    * Create a wallet with a given number of accounts from a BIP39 mnemonic
-   * @param  {Number} numberOfAccounts number of accounts to be created
-   * @param  {String} mnemonic         optional - mnemonic of the wallet, if not specified a random one is generated
+   * @param  {number} numberOfAccounts number of accounts to be created
+   * @param  {?string} mnemonic         mnemonic of the wallet, if not specified a random one is generated
    * @return {Object}                  the created wallet
    * @example wallet = await wallet.create(5, 'some long mnemonic phrase')
-   * @memberof paratii.eth.wallet
    */
   function create(numberOfAccounts, mnemonic) {
     var seed, masternode, i, child, privkeyHex, privateKey;
@@ -91,20 +90,18 @@ function patchWallet(wallet, config) {
   }
   /**
    * check if the passed mnemonic is bip39 valid
-   * @param  {String}  mnemonic mnemonic to check
+   * @param  {string}  mnemonic mnemonic to check
    * @return {Boolean}          true if the mnemonic is valid, false otherwise
    * @example paratii.eth.wallet.isValidMnemonic('some long mnemonic phrase')
-   * @memberof paratii.eth.wallet
-   */
+    */
   function isValidMnemonic(mnemonic) {
     return bip39.validateMnemonic(mnemonic);
   }
   /**
    * generates a new mnemonic
-   * @return {String} newly generated mnemonic
+   * @return {string} newly generated mnemonic
    * @example let newMnemonic = paratii.eth.wallet.generateMnemonic()
-   * @memberof paratii.eth.wallet
-   */
+    */
   function newMnemonic() {
     return bip39.generateMnemonic();
   }
@@ -121,11 +118,10 @@ function patchWallet(wallet, config) {
   /**
    * decrypts the wallet
    * @param       {Object} data     encrypted wallet
-   * @param       {String} password password to decrypt
+   * @param       {string} password password to decrypt
    * @return      {Object}          decrypted wallet
    * @example let decryptedWallet = paratii.eth.wallet._decrypt(encryptedWallet,'some-psw')
-   * @memberof paratii.eth.wallet
-   */
+    */
   function _decrypt(data, password) {
     var newWallet = origDecrypt(data, password);
     if (newWallet) {

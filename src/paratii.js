@@ -7,14 +7,18 @@ import { ipfsSchema, ethSchema, accountSchema, dbSchema } from './schemas.js'
 const joi = require('joi')
 const utils = require('./utils.js')
 
-//
 /**
  * Paratii library main object
  * The Paratii object serves as the general entry point for interacting with the family of Paratii
  * contracts that are deployed on the blockchain, utilities to run and interact with a local IPFS node,
  * and utilities to interact with the Paratii index.
- * @class Paratii
- * @param {configSchema} opts options object to configure paratii library
+
+ * @param {ParatiiConfigSchema} opts options object to configure paratii library
+ * @property {ParatiiCoreVids} vids operations on videos
+ * @property {ParatiiCoreUsers} users operations on users
+ * @property {ParatiiEth} eth interact with the Ethereum blockchain
+ * @property {ParatiiIPFS} ipfs interact with the IPFS instance
+ * @property {ParatiiDb} db interact with the Paratii Index
  * @example paratii = new Paratii({
  *  eth: {
  *    provider': 'http://localhost:8545'
@@ -23,16 +27,16 @@ const utils = require('./utils.js')
  *     address: 'your-address'
  *   }
  * })
- * @property {ParatiiCoreVids} vids operations on videos
- * @property {ParatiiCoreUsers} users
- * @property {ParatiiEth} eth interact with the Ethereum blockchain
- * @property {ParatiiEthTcr} eth.tcr interaction with the TCR contract on ethereum
- * @property {ParatiiIPFS} ipfs
- * @property {ParatiiDb} db
- * @property {ParatiiDbUsers} db.users
  */
 
 class Paratii extends ParatiiCore {
+  /**
+    * @typedef {Array} ParatiiConfigSchema
+    * @property {?accountSchema} account
+    * @property {?ethSchema} eth
+    * @property {?dbSchema} db
+    * @property {?ipfsSchema} ipfs
+   */
   constructor (opts = {}) {
     const schema = joi.object({
       account: accountSchema,
@@ -55,8 +59,8 @@ class Paratii extends ParatiiCore {
   }
   /**
    * Set the ethereum address what will be used to sign all transactions
-   * @param {String} address address of the operator/user
-   * @param {String} privateKey optional - private key of the operator/user
+   * @param {string} address address of the operator/user
+   * @param {?string} privateKey  private key of the operator/user
    * @example paratii.setAccount('some-user-id','some-user-pub-key')
    */
   setAccount (address, privateKey) {
@@ -64,7 +68,7 @@ class Paratii extends ParatiiCore {
   }
   /**
    * Set the address of the ParatiiRegistry contract
-   * @param {String} address address of the ParatiiRegistry contract
+   * @param {string} address address of the ParatiiRegistry contract
    * @example paratii.setRegistryAddress('some-address')
   */
   setRegistryAddress (address) {

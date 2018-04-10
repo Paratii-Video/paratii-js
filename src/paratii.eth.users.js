@@ -1,7 +1,8 @@
 const joi = require('joi')
 /**
  * The eth.user namespace contains functions to interact with the video registration on the blockchain.
- * @class paratii.eth.users
+ * @param {Object} context ParatiiEth instance
+ * @property {ParatiiEth} eth ParatiiEth instance
  */
 export class ParatiiEthUsers {
   constructor (context) {
@@ -11,7 +12,6 @@ export class ParatiiEthUsers {
   /**
    * Get the contract instance of the user contract
    * @return {Promise}  Object representing the contract
-   * @memberof paratii.eth.users
    */
   async getRegistry () {
     return this.eth.getContract('Users')
@@ -19,10 +19,10 @@ export class ParatiiEthUsers {
   /**
    * Creates a user
    * @param  {Object}  options information about the user
-   * @param {String} options.id valid address
-   * @param {String} options.name name of the user
-   * @param {String} options.email email of the user
-   * @param {String} options.ipfsData ipfs hash
+   * @param {string} options.id valid address
+   * @param {string} options.name name of the user
+   * @param {string} options.email email of the user
+   * @param {string} options.ipfsData ipfs hash
    * @return {Promise}         the id of the newly created user
    * @example let userData = {
    *                    id: 'some-id',
@@ -31,7 +31,7 @@ export class ParatiiEthUsers {
    *                    ipfsData: 'some-hash'
    *              }
    *         let result = await paratii.eth.users.create(userData)
-   * @memberof paratii.eth.users
+
    */
   async create (options) {
     const schema = joi.object({
@@ -57,10 +57,10 @@ export class ParatiiEthUsers {
   }
   /**
    * Get a users details from the blockchain
-   * @param  {String}  userId valid address
+   * @param  {string}  userId valid address
    * @return {Promise}        information about the user
    * @example user = await paratii.eth.users.get('some-id')
-   * @memberof paratii.eth.users
+
    */
   async get (userId) {
     let contract = await this.getRegistry()
@@ -75,11 +75,11 @@ export class ParatiiEthUsers {
   }
   /**
    * Updates a user details on the blockchain.
-   * @param  {String}  userId  valid address
+   * @param  {string}  userId  valid address
    * @param  {Object}  options information to update. Left-out data is kept the same.
    * @return {Promise}         updated data
    * @example await paratii.eth.users.update('some-id', {ipfsData: 'new-hash'})
-   * @memberof paratii.eth.users
+
    */
   async update (userId, options) {
     options.id = userId
@@ -92,10 +92,10 @@ export class ParatiiEthUsers {
   }
   /**
    * Deletes a user from the blockchain. Can only be called by the contract owner or the user him/her-self
-   * @param  {String}  userId valid address
+   * @param  {string}  userId valid address
    * @return {Promise}        blockchain transaction
    * @example await paratii.eth.users.delete('some-id')
-   * @memberof paratii.eth.users
+
    */
   async delete (userId) {
     let contract = await this.getRegistry()

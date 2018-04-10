@@ -27,7 +27,7 @@ export class ParatiiCoreUsers {
    *              email: 'some@email.com',
    *              ...
    *             })
-   * @memberof paratii.users
+
    */
   // FIXME: do some joi validation here
   async create (options) {
@@ -49,21 +49,21 @@ export class ParatiiCoreUsers {
 
   /**
    * retrieve data about the user
-   * @param  {String} id user univocal id
+   * @param  {string} id user univocal id
    * @return {Object}    data about the user
    * @example paratii.users.get('some-user-id')
-   * @memberof paratii.users
+
   */
   get (id) {
     return this.config.paratii.db.users.get(id)
   }
   /**
    * Updates a user's details. name and email are defined in the smart contract Users, other fields get written to IPFS.
-   * @param  {String}  userId  user univocal id
+   * @param  {string}  userId  user univocal id
    * @param  {Object}  options updated data i.e. { name: 'A new user name' }
    * @return {Promise}         updated data about the user
    * @example paratii.users.update('some-user-id', {name: 'A new user name'})
-   * @memberof paratii.users
+
    */
   async update (userId, options) {
     const schema = joi.object({
@@ -88,5 +88,34 @@ export class ParatiiCoreUsers {
     await this.create(data)
 
     return data
+  }
+
+  /**
+   * migrate all contract data for  paratii.config.account to a new account
+   * @alias migrateAccount
+   * @param newAccount Address of new account
+   * @async
+   * @memberof Paratii
+   */
+  async migrateAccount (newAccount) {
+    // migrate the videos
+    const paratii = this.config.paratii
+    const oldAccount = this.config.account.address
+    const vids = await paratii.vids.search({owner: oldAccount})
+    for (let i in vids) {
+      let vid = vids[i]
+      let videoId = vid.id || vid._id
+      await paratii.vids.update(videoId, {owner: newAccount})
+      let didVideoApply = await paratii.eth.tcr.didVideoApply(vid.id)
+      if (didVideoApply) {
+        // removing video from statke
+        await paratii.eth.tcr.exit(videoId)
+      }
+    }
+
+    // transfer all  PTI to the new account
+    let ptiBalance = await paratii.eth.balanceOf(oldAccount, 'PTI')
+    await paratii.eth.transfer(newAccount, ptiBalance, 'PTI')
+    // FIXME: need to call tc.apply(vid.id) with newAccount as sender (how to do that?)
   }
 }
