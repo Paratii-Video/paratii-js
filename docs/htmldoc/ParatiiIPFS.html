@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="Paratii.html">Paratii</a></li><li><a href="ParatiiCore.html">ParatiiCore</a></li><li><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></li><li><a href="ParatiiCoreVids.html">ParatiiCoreVids</a></li><li><a href="ParatiiDb.html">ParatiiDb</a></li><li><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></li><li><a href="ParatiiDbVids.html">ParatiiDbVids</a></li><li><a href="ParatiiEth.html">ParatiiEth</a></li><li><a href="ParatiiEthEvents.html">ParatiiEthEvents</a></li><li><a href="ParatiiEthTcr.html">ParatiiEthTcr</a></li><li><a href="ParatiiEthUsers.html">ParatiiEthUsers</a></li><li><a href="ParatiiEthVids.html">ParatiiEthVids</a></li><li><a href="ParatiiEthVouchers.html">ParatiiEthVouchers</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li><li><a href="Uploader.html">Uploader</a></li>
+					<li><a href="Paratii.html">Paratii</a></li><li><a href="ParatiiCore.html">ParatiiCore</a></li><li><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></li><li><a href="ParatiiCoreVids.html">ParatiiCoreVids</a></li><li><a href="ParatiiDb.html">ParatiiDb</a></li><li><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></li><li><a href="ParatiiDbVids.html">ParatiiDbVids</a></li><li><a href="ParatiiEth.html">ParatiiEth</a></li><li><a href="ParatiiEthEvents.html">ParatiiEthEvents</a></li><li><a href="ParatiiEthTcr.html">ParatiiEthTcr</a></li><li><a href="ParatiiEthUsers.html">ParatiiEthUsers</a></li><li><a href="ParatiiEthVids.html">ParatiiEthVids</a></li><li><a href="ParatiiEthVouchers.html">ParatiiEthVouchers</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li><li><a href="ParatiiIPFSUploader.html">ParatiiIPFSUploader</a></li>
 				</ul>
 			</li>
 			
@@ -194,7 +194,7 @@
             <td class="type">
             
                 
-<span class="param-type"><a href="Uploader.html">Uploader</a></span>
+<span class="param-type">Uploader</span>
 
 
 
@@ -297,7 +297,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="add"><span class="type-signature">&lt;async> </span>add(fileStream)</h4>
+    <h4 class="name" id="add"><span class="type-signature"></span>add(file)</h4>
     
     
 </dt>
@@ -305,7 +305,7 @@
 
     
     <div class="description">
-        Adds the file to ipfs
+        uploads a single file or an array of files to *local* IPFS node
     </div>
     
 
@@ -340,13 +340,13 @@
 
         <tr>
             
-                <td class="name"><code>fileStream</code></td>
+                <td class="name"><code>file</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">ReadStream</span>
+<span class="param-type">File</span>
 
 
 
@@ -357,7 +357,7 @@
 
             
 
-            <td class="description last">ReadStream of the file. Can be created with fs.createReadStream(path)</td>
+            <td class="description last">HTML5 File Object.</td>
         </tr>
 
     
@@ -430,7 +430,7 @@
     
             
 <div class="param-desc">
-    data about the added file (path,multihash,size)
+    checkout the upload function below for details.
 </div>
 
 
@@ -441,7 +441,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Promise</span>
+<span class="param-type">EventEmitter</span>
 
 
 
@@ -474,7 +474,7 @@ let result = await paratiiIPFS.add(fileStream)</pre>
 
     
     <div class="description">
-        convenient method to add JSON and send it for persistance storage.
+        add a JSON to local IPFS instance, sends a message to paratii.config.ipfs.remoteIPFSNode to pin the mesage
     </div>
     
 
@@ -599,7 +599,7 @@ let result = await paratiiIPFS.add(fileStream)</pre>
     
             
 <div class="param-desc">
-    returns ipfs multihash of the stored object.
+    resolves in the hash of the added file, after confirmation from the remove node
 </div>
 
 
@@ -610,7 +610,7 @@ let result = await paratiiIPFS.add(fileStream)</pre>
     </dt>
     <dd>
         
-<span class="param-type">string</span>
+<span class="param-type">Promise</span>
 
 
 
@@ -623,7 +623,7 @@ let result = await paratiiIPFS.add(fileStream)</pre>
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">let result = await paratiiIPFS.addAndPinJSON(data)</pre>
+    <pre class="sunlight-highlight-javascript">let hash = await paratii.ipfs.addAndPinJSON(data)</pre>
 
 
     
@@ -1398,7 +1398,7 @@ let fileContent = await paratiiIPFS.get(hash)</pre>
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">let jsonObj = await paratiiIPFS.getJSON(&#x27;some-multihash&#x27;)</pre>
+    <pre class="sunlight-highlight-javascript">let jsonObj = await paratii.ipfs.getJSON(&#x27;some-multihash&#x27;)</pre>
 
 
     
@@ -1563,7 +1563,7 @@ let fileContent = await paratiiIPFS.get(hash)</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="start"><span class="type-signature"></span>start(callback)</h4>
+    <h4 class="name" id="stop"><span class="type-signature"></span>stop()</h4>
     
     
 </dt>
@@ -1581,56 +1581,6 @@ let fileContent = await paratiiIPFS.get(hash)</pre>
 
     
     
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>callback</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">callback function</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
 
     
 <dl class="details">
@@ -1696,7 +1646,7 @@ let fileContent = await paratiiIPFS.get(hash)</pre>
     
             
 <div class="param-desc">
-    DON'T KNOW?
+    that resolves in an IPFS instance
 </div>
 
 
@@ -1707,7 +1657,7 @@ let fileContent = await paratiiIPFS.get(hash)</pre>
     </dt>
     <dd>
         
-<span class="param-type">?</span>
+<span class="param-type">Promise</span>
 
 
 
@@ -1720,174 +1670,7 @@ let fileContent = await paratiiIPFS.get(hash)</pre>
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">?</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="stop"><span class="type-signature"></span>stop(callback)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Stops the IPFS node.
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>callback</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">function</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">callback function</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.ipfs.js.html">paratii.ipfs.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    DON'T KNOW?
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">?</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">?</pre>
+    <pre class="sunlight-highlight-javascript">paratii.ipfs.start()</pre>
 
 
     
@@ -2098,7 +1881,7 @@ let fileContent = await paratiiIPFS.get(hash)</pre>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2018-04-10T14:17:37+02:00
+		on 2018-04-10T17:28:09+02:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

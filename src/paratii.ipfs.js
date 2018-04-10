@@ -2,8 +2,7 @@ import Protocol from 'paratii-protocol'
 import { ipfsSchema, accountSchema } from './schemas.js'
 import joi from 'joi'
 import { EventEmitter } from 'events'
-import { Uploader } from './paratii.ipfs.uploader.js'
-
+import { ParatiiIPFSUploader } from './paratii.ipfs.uploader.js'
 global.Buffer = global.Buffer || require('buffer').Buffer
 
 /**
@@ -24,8 +23,6 @@ export class ParatiiIPFS extends EventEmitter {
       ipfs: ipfsSchema,
       account: accountSchema,
       verbose: joi.bool().default(false)
-    //   onReadyHook: joi.array().ordered().default([]),
-    //   protocol: joi.string().default(null),
     })
 
     const result = joi.validate(config, schema, {allowUnknown: true})
@@ -33,21 +30,54 @@ export class ParatiiIPFS extends EventEmitter {
     this.config = config
     this.config.ipfs = result.value.ipfs
     this.config.account = result.value.account
-    this.uploader = new Uploader({ipfs: this.config.ipfs, paratiiIPFS: this})
+    this.uploader = new ParatiiIPFSUploader({ipfs: this.config.ipfs, paratiiIPFS: this})
   }
+  // /**
+  //  * Adds the file to ipfs
+  //  * @param  {ReadStream}  fileStream ReadStream of the file. Can be created with fs.createReadStream(path)
+  //  * @return {Promise}            data about the added file (path,multihash,size)
+  //
+  //  */
+  // async add (fileStream) {
+  //   let ipfs = await this.getIPFSInstance()
+  //   return ipfs.files.add(fileStream)
+  // }
+
   /**
-   * Adds the file to ipfs
-   * @param  {ReadStream}  fileStream ReadStream of the file. Can be created with fs.createReadStream(path)
-   * @return {Promise}            data about the added file (path,multihash,size)
+   * uploads a single file or an array of files to *local* IPFS node
+   * @param {File} file HTML5 File Object.
+   * @returns {EventEmitter} checkout the upload function below for details.
    * @example
    * let path = 'test/data/some-file.txt'
    * let fileStream = fs.createReadStream(path)
    * let result = await paratiiIPFS.add(fileStream)
    */
-  async add (fileStream) {
-    let ipfs = await this.getIPFSInstance()
-    return ipfs.files.add(fileStream)
+  add (file) {
+    let files
+    if (Array.isArray(file)) {
+      files = file
+    } else {
+      files = [file]
+    }
+
+    let result = []
+
+    for (let i = 0; i < files.length; i++) {
+      // check if File is actually available or not.
+      // if not it means we're not in the browser land.
+      if (typeof File !== 'undefined') {
+        if (files[i] instanceof File) {
+          result.push(this.html5FileToPull(files[i]))
+        } else {
+          result.push(this.fsFileToPull(files[i]))
+        }
+      } else {
+        result.push(this.fsFileToPull(files[i]))
+      }
+    }
+    return this.uploader.upload(result)
   }
+
   /**
    * get file from ipfs
    * @param  {string}  hash ipfs multihash of the file
@@ -157,10 +187,6 @@ export class ParatiiIPFS extends EventEmitter {
               )
 
               this.uploader._node = ipfs
-              // this.uploader.setOptions({
-              //   node: ipfs,
-              //   chunkSize: 128 * 1024
-              // })
 
               this.protocol.notifications.on('message:new', (peerId, msg) => {
                 this.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg)
@@ -218,10 +244,10 @@ export class ParatiiIPFS extends EventEmitter {
   }
 
   /**
-   * convenient method to add JSON and send it for persistance storage.
+   * add a JSON to local IPFS instance, sends a message to paratii.config.ipfs.remoteIPFSNode to pin the mesage
    * @param  {object}  data JSON object to store
-   * @return {string}      returns ipfs multihash of the stored object.
-   * @example let result = await paratiiIPFS.addAndPinJSON(data)
+   * @return {Promise} resolves in the hash of the added file, after confirmation from the remove node
+   * @example let hash = await paratii.ipfs.addAndPinJSON(data)
    */
   async addAndPinJSON (data) {
     let hash = await this.addJSON(data)
@@ -254,7 +280,7 @@ export class ParatiiIPFS extends EventEmitter {
   * gets a JSON object stored in IPFS
   * @param  {string}  multihash ipfs multihash of the object
   * @return {Promise}           requested Object
-  * @example let jsonObj = await paratiiIPFS.getJSON('some-multihash')
+  * @example let jsonObj = await paratii.ipfs.getJSON('some-multihash')
   */
   async getJSON (multihash) {
     let ipfs = await this.getIPFSInstance()
@@ -270,30 +296,9 @@ export class ParatiiIPFS extends EventEmitter {
 
   /**
    * Starts the IPFS node
-   * @param  {Function} callback callback function
-   * @return {?}            DON'T KNOW?
-   * @example ?
+   * @return {Promise} that resolves in an IPFS instance
+   * @example paratii.ipfs.start()
    */
-  // TODO: return a promise
-  start () {
-    return new Promise((resolve, reject) => {
-      if (this.ipfs && this.ipfs.isOnline()) {
-        console.log('IPFS is already running')
-        return resolve(this.ipfs)
-      }
-
-      this.getIPFSInstance().then(function (ipfs) {
-        resolve(ipfs)
-      })
-    })
-  }
-
-    /**
-     * Stops the IPFS node.
-     * @param  {Function} callback callback function
-     * @return {?}            DON'T KNOW?
-     * @example ?
-     */
   stop () {
     return new Promise((resolve, reject) => {
       if (!this.ipfs || !this.ipfs.isOnline()) {

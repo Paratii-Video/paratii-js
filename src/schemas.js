@@ -34,6 +34,7 @@ const ethSchema = joi.object({
   * @property {?number} xhrChunkSize max chunk size for the express uploader
   * @property {?number} maxFileSize max size for an original video (default to 300MB)
   * @property {?string} defaultTranscoder the default multiaddress of the main paratii-node
+  * @property {?string} remoteIFPFSNode the default multiaddress of the main paratii-node
   * @property {?string} transcoderDropUrl url for the express uploader
  */
 const ipfsSchema = joi.object({
@@ -55,6 +56,7 @@ const ipfsSchema = joi.object({
   xhrChunkSize: joi.number().default(1 * 1024 * 1024),
   maxFileSize: joi.number().default(300 * 1024 * 1024),
   defaultTranscoder: joi.string().default('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'),
+  remoteIPFSNode: joi.string().default('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'),
   transcoderDropUrl: joi.string().default('https://uploader.paratii.video/api/v1/transcode')
 
 }).default()

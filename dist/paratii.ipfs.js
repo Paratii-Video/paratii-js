@@ -64,6 +64,7 @@ global.Buffer = global.Buffer || require('buffer').Buffer;
  * @param {ParatiiIPFSSchema} config configuration object to initialize Paratii object
  * @property {Uploader} uploader Paratii IPFS uploader interface
  */
+/* global File */
 
 var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   (0, _inherits3.default)(ParatiiIPFS, _EventEmitter);
@@ -83,8 +84,6 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
       ipfs: _schemas.ipfsSchema,
       account: _schemas.accountSchema,
       verbose: _joi2.default.bool().default(false)
-      //   onReadyHook: joi.array().ordered().default([]),
-      //   protocol: joi.string().default(null),
     });
 
     var result = _joi2.default.validate(config, schema, { allowUnknown: true });
@@ -92,13 +91,24 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     _this.config = config;
     _this.config.ipfs = result.value.ipfs;
     _this.config.account = result.value.account;
-    _this.uploader = new _paratiiIpfsUploader.Uploader({ ipfs: _this.config.ipfs, paratiiIPFS: _this });
+    _this.uploader = new _paratiiIpfsUploader.ParatiiIPFSUploader({ ipfs: _this.config.ipfs, paratiiIPFS: _this });
     return _this;
   }
+  // /**
+  //  * Adds the file to ipfs
+  //  * @param  {ReadStream}  fileStream ReadStream of the file. Can be created with fs.createReadStream(path)
+  //  * @return {Promise}            data about the added file (path,multihash,size)
+  //
+  //  */
+  // async add (fileStream) {
+  //   let ipfs = await this.getIPFSInstance()
+  //   return ipfs.files.add(fileStream)
+  // }
+
   /**
-   * Adds the file to ipfs
-   * @param  {ReadStream}  fileStream ReadStream of the file. Can be created with fs.createReadStream(path)
-   * @return {Promise}            data about the added file (path,multihash,size)
+   * uploads a single file or an array of files to *local* IPFS node
+   * @param {File} file HTML5 File Object.
+   * @returns {EventEmitter} checkout the upload function below for details.
    * @example
    * let path = 'test/data/some-file.txt'
    * let fileStream = fs.createReadStream(path)
@@ -108,26 +118,32 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
 
   (0, _createClass3.default)(ParatiiIPFS, [{
     key: 'add',
-    value: function add(fileStream) {
-      var ipfs;
-      return _regenerator2.default.async(function add$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              _context.next = 2;
-              return _regenerator2.default.awrap(this.getIPFSInstance());
+    value: function add(file) {
+      var files = void 0;
+      if (Array.isArray(file)) {
+        files = file;
+      } else {
+        files = [file];
+      }
 
-            case 2:
-              ipfs = _context.sent;
-              return _context.abrupt('return', ipfs.files.add(fileStream));
+      var result = [];
 
-            case 4:
-            case 'end':
-              return _context.stop();
+      for (var i = 0; i < files.length; i++) {
+        // check if File is actually available or not.
+        // if not it means we're not in the browser land.
+        if (typeof File !== 'undefined') {
+          if (files[i] instanceof File) {
+            result.push(this.html5FileToPull(files[i]));
+          } else {
+            result.push(this.fsFileToPull(files[i]));
           }
+        } else {
+          result.push(this.fsFileToPull(files[i]));
         }
-      }, null, this);
+      }
+      return this.uploader.upload(result);
     }
+
     /**
      * get file from ipfs
      * @param  {string}  hash ipfs multihash of the file
@@ -142,20 +158,20 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     key: 'get',
     value: function get(hash) {
       var ipfs;
-      return _regenerator2.default.async(function get$(_context2) {
+      return _regenerator2.default.async(function get$(_context) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context.prev = _context.next) {
             case 0:
-              _context2.next = 2;
+              _context.next = 2;
               return _regenerator2.default.awrap(this.getIPFSInstance());
 
             case 2:
-              ipfs = _context2.sent;
-              return _context2.abrupt('return', ipfs.files.get(hash));
+              ipfs = _context.sent;
+              return _context.abrupt('return', ipfs.files.get(hash));
 
             case 4:
             case 'end':
-              return _context2.stop();
+              return _context.stop();
           }
         }
       }, null, this);
@@ -275,10 +291,6 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
                 ptiAddress);
 
                 _this2.uploader._node = ipfs;
-                // this.uploader.setOptions({
-                //   node: ipfs,
-                //   chunkSize: 128 * 1024
-                // })
 
                 _this2.protocol.notifications.on('message:new', function (peerId, msg) {
                   _this2.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
@@ -320,15 +332,15 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     key: 'addJSON',
     value: function addJSON(data) {
       var ipfs, obj, node;
-      return _regenerator2.default.async(function addJSON$(_context3) {
+      return _regenerator2.default.async(function addJSON$(_context2) {
         while (1) {
-          switch (_context3.prev = _context3.next) {
+          switch (_context2.prev = _context2.next) {
             case 0:
-              _context3.next = 2;
+              _context2.next = 2;
               return _regenerator2.default.awrap(this.getIPFSInstance());
 
             case 2:
-              ipfs = _context3.sent;
+              ipfs = _context2.sent;
 
               // if (!this.ipfs || !this.ipfs.isOnline()) {
               //   throw new Error('IPFS node is not ready, please trigger getIPFSInstance first')
@@ -338,42 +350,42 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
                 Links: []
               };
               node = void 0;
-              _context3.prev = 5;
-              _context3.next = 8;
+              _context2.prev = 5;
+              _context2.next = 8;
               return _regenerator2.default.awrap(ipfs.files.add(obj.Data));
 
             case 8:
-              node = _context3.sent;
-              _context3.next = 15;
+              node = _context2.sent;
+              _context2.next = 15;
               break;
 
             case 11:
-              _context3.prev = 11;
-              _context3.t0 = _context3['catch'](5);
+              _context2.prev = 11;
+              _context2.t0 = _context2['catch'](5);
 
-              if (!_context3.t0) {
-                _context3.next = 15;
+              if (!_context2.t0) {
+                _context2.next = 15;
                 break;
               }
 
-              throw _context3.t0;
+              throw _context2.t0;
 
             case 15:
-              return _context3.abrupt('return', node[0].hash);
+              return _context2.abrupt('return', node[0].hash);
 
             case 16:
             case 'end':
-              return _context3.stop();
+              return _context2.stop();
           }
         }
       }, null, this, [[5, 11]]);
     }
 
     /**
-     * convenient method to add JSON and send it for persistance storage.
+     * add a JSON to local IPFS instance, sends a message to paratii.config.ipfs.remoteIPFSNode to pin the mesage
      * @param  {object}  data JSON object to store
-     * @return {string}      returns ipfs multihash of the stored object.
-     * @example let result = await paratiiIPFS.addAndPinJSON(data)
+     * @return {Promise} resolves in the hash of the added file, after confirmation from the remove node
+     * @example let hash = await paratii.ipfs.addAndPinJSON(data)
      */
 
   }, {
@@ -382,15 +394,15 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
       var _this3 = this;
 
       var hash, pinFile, pinEv;
-      return _regenerator2.default.async(function addAndPinJSON$(_context4) {
+      return _regenerator2.default.async(function addAndPinJSON$(_context3) {
         while (1) {
-          switch (_context4.prev = _context4.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
-              _context4.next = 2;
+              _context3.next = 2;
               return _regenerator2.default.awrap(this.addJSON(data));
 
             case 2:
-              hash = _context4.sent;
+              hash = _context3.sent;
 
               pinFile = function pinFile() {
                 var pinEv = _this3.uploader.pinFile(hash, { author: _this3.config.account.address });
@@ -414,11 +426,11 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
                 pinEv = pinFile();
               });
 
-              return _context4.abrupt('return', hash);
+              return _context3.abrupt('return', hash);
 
             case 7:
             case 'end':
-              return _context4.stop();
+              return _context3.stop();
           }
         }
       }, null, this);
@@ -427,49 +439,49 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     * gets a JSON object stored in IPFS
     * @param  {string}  multihash ipfs multihash of the object
     * @return {Promise}           requested Object
-    * @example let jsonObj = await paratiiIPFS.getJSON('some-multihash')
+    * @example let jsonObj = await paratii.ipfs.getJSON('some-multihash')
     */
 
   }, {
     key: 'getJSON',
     value: function getJSON(multihash) {
       var ipfs, node;
-      return _regenerator2.default.async(function getJSON$(_context5) {
+      return _regenerator2.default.async(function getJSON$(_context4) {
         while (1) {
-          switch (_context5.prev = _context5.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
-              _context5.next = 2;
+              _context4.next = 2;
               return _regenerator2.default.awrap(this.getIPFSInstance());
 
             case 2:
-              ipfs = _context5.sent;
+              ipfs = _context4.sent;
               node = void 0;
-              _context5.prev = 4;
-              _context5.next = 7;
+              _context4.prev = 4;
+              _context4.next = 7;
               return _regenerator2.default.awrap(ipfs.files.cat(multihash));
 
             case 7:
-              node = _context5.sent;
-              _context5.next = 14;
+              node = _context4.sent;
+              _context4.next = 14;
               break;
 
             case 10:
-              _context5.prev = 10;
-              _context5.t0 = _context5['catch'](4);
+              _context4.prev = 10;
+              _context4.t0 = _context4['catch'](4);
 
-              if (!_context5.t0) {
-                _context5.next = 14;
+              if (!_context4.t0) {
+                _context4.next = 14;
                 break;
               }
 
-              throw _context5.t0;
+              throw _context4.t0;
 
             case 14:
-              return _context5.abrupt('return', JSON.parse(node.toString()));
+              return _context4.abrupt('return', JSON.parse(node.toString()));
 
             case 15:
             case 'end':
-              return _context5.stop();
+              return _context4.stop();
           }
         }
       }, null, this, [[4, 10]]);
@@ -477,47 +489,21 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
 
     /**
      * Starts the IPFS node
-     * @param  {Function} callback callback function
-     * @return {?}            DON'T KNOW?
-     * @example ?
-     */
-    // TODO: return a promise
-
-  }, {
-    key: 'start',
-    value: function start() {
-      var _this4 = this;
-
-      return new _promise2.default(function (resolve, reject) {
-        if (_this4.ipfs && _this4.ipfs.isOnline()) {
-          console.log('IPFS is already running');
-          return resolve(_this4.ipfs);
-        }
-
-        _this4.getIPFSInstance().then(function (ipfs) {
-          resolve(ipfs);
-        });
-      });
-    }
-
-    /**
-     * Stops the IPFS node.
-     * @param  {Function} callback callback function
-     * @return {?}            DON'T KNOW?
-     * @example ?
+     * @return {Promise} that resolves in an IPFS instance
+     * @example paratii.ipfs.start()
      */
 
   }, {
     key: 'stop',
     value: function stop() {
-      var _this5 = this;
+      var _this4 = this;
 
       return new _promise2.default(function (resolve, reject) {
-        if (!_this5.ipfs || !_this5.ipfs.isOnline()) {
+        if (!_this4.ipfs || !_this4.ipfs.isOnline()) {
           resolve();
         }
-        if (_this5.ipfs) {
-          _this5.ipfs.stop(function () {
+        if (_this4.ipfs) {
+          _this4.ipfs.stop(function () {
             (0, _setImmediate3.default)(function () {
               resolve();
             });
