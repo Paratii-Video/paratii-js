@@ -87,7 +87,7 @@ var ParatiiCore = exports.ParatiiCore = function () {
 
               i = _context.t1.value;
               vid = vids[i];
-              videoId = vid._id;
+              videoId = vid.id || vid._id;
               _context.next = 11;
               return _regenerator2.default.awrap(this.vids.update(videoId, { owner: newAccount }));
 

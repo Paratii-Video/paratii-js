@@ -38,7 +38,7 @@ export class ParatiiCore {
     const vids = await this.vids.search({owner: oldAccount})
     for (let i in vids) {
       let vid = vids[i]
-      let videoId = vid._id
+      let videoId = vid.id || vid._id
       await this.vids.update(videoId, {owner: newAccount})
       let didVideoApply = await this.config.paratii.eth.tcr.didVideoApply(videoId)
       if (didVideoApply) {
