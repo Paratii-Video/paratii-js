@@ -19,7 +19,7 @@ const Resumable = require('resumablejs')
  * @extends EventEmitter
  * @param {ParatiiIPFSUploaderSchema} opts
  */
-export class ParatiiIPFSUploader extends EventEmitter {
+export class Uploader extends EventEmitter {
   /**
   * @typedef {Array} ParatiiIPFSUploaderSchema
   * @property {?ipfsSchema} ipfs
@@ -40,11 +40,21 @@ export class ParatiiIPFSUploader extends EventEmitter {
   }
 
   /**
+   * ????
+   * @param  {?} ev ?
+   * @return {?}    ?
+
+   */
+  onDrop (ev) {
+  }
+
+  /**
    * Upload a file over XHR to the transcoder. To be called with an event emitter as the last argument
    * @param  {Object} file       file to upload
    * @param  {string} hashedFile hash of the file ??
    * @param  {EventEmitter} ev         event emitter
    * @example this.xhrUpload(file, hashedFile, ev)
+
    */
   xhrUpload (file, hashedFile, ev) {
     let r = new Resumable({
@@ -77,6 +87,39 @@ export class ParatiiIPFSUploader extends EventEmitter {
     setTimeout(() => {
       r.upload()
     }, 1)
+  }
+
+  /**
+   * uploads a single file to *local* IPFS node
+   * @param {File} file HTML5 File Object.
+   * @returns {EventEmitter} checkout the upload function below for details.
+   * @example let uploaderEv = paratiiIPFS.uploader.add(files)
+
+   */
+  add (file) {
+    let files
+    if (Array.isArray(file)) {
+      files = file
+    } else {
+      files = [file]
+    }
+
+    let result = []
+
+    for (let i = 0; i < files.length; i++) {
+      // check if File is actually available or not.
+      // if not it means we're not in the browser land.
+      if (typeof File !== 'undefined') {
+        if (files[i] instanceof File) {
+          result.push(this.html5FileToPull(files[i]))
+        } else {
+          result.push(this.fsFileToPull(files[i]))
+        }
+      } else {
+        result.push(this.fsFileToPull(files[i]))
+      }
+    }
+    return this.upload(result)
   }
 
   /**
@@ -332,7 +375,7 @@ export class ParatiiIPFSUploader extends EventEmitter {
    * @param  {EventEmitter} ev the transcoding job EventEmitter
    * @return {function}    returns various events based on transcoder response.
    * @example ?
-   * @private
+
    */
   _transcoderRespHander (ev, fileHash) {
     return (peerId, command) => {
@@ -391,7 +434,7 @@ export class ParatiiIPFSUploader extends EventEmitter {
 
    */
   addAndTranscode (files) {
-    let ev = this._ipfs.add(files)
+    let ev = this.add(files)
     // ev.on('done', this._signalTranscoder.bind(this))
     ev.on('done', (files) => {
       this._signalTranscoder(files, ev)
@@ -404,7 +447,7 @@ export class ParatiiIPFSUploader extends EventEmitter {
    * @param  {Object} files [description]
    * @param  {Object} ev    [description]
    * @return {Object}       [description]
-   * @private
+
    */
   _signalTranscoder (files, ev) {
     let file
@@ -528,12 +571,12 @@ export class ParatiiIPFSUploader extends EventEmitter {
 
     const schema = joi.object({
       author: joi.string().default('0x'), // ETH/PTI address of the file owner
-      remoteIPFSNode: joi.string().default(this.config.ipfs.defaultTranscoder),
-      remoteIPFSNodeId: joi.any().default(Multiaddr(this.config.ipfs.defaultTranscoder).getPeerId()),
+      transcoder: joi.string().default(this.config.ipfs.defaultTranscoder),
+      transcoderId: joi.any().default(Multiaddr(this.config.ipfs.defaultTranscoder).getPeerId()),
       size: joi.number().default(0)
     }).unknown()
 
-    this._ipfs.log(`Signaling remote IPFS node to pin ${fileHash}`)
+    this._ipfs.log(`Signaling transcoder to pin ${fileHash}`)
 
     const result = joi.validate(options, schema)
     const error = result.error
@@ -550,7 +593,7 @@ export class ParatiiIPFSUploader extends EventEmitter {
     let msg = this._ipfs.protocol.createCommand('pin', {hash: fileHash, author: opts.author, size: opts.size})
     // FIXME : This is for dev, so we just signal our transcoder node.
     // This needs to be dynamic later on.
-    this._node.swarm.connect(opts.remoteIPFSNode, (err, success) => {
+    this._node.swarm.connect(opts.transcoder, (err, success) => {
       if (err) return ev.emit('pin:error', err)
 
       this._node.swarm.peers((err, peers) => {
@@ -559,7 +602,7 @@ export class ParatiiIPFSUploader extends EventEmitter {
         peers.map((peer) => {
           try {
             this._ipfs.log('peer.peer.toB58String(): ', peer.peer.toB58String())
-            if (peer.peer.toB58String() === opts.remoteIPFSNodeId) {
+            if (peer.peer.toB58String() === opts.transcoderId) {
               this._ipfs.log(`sending pin msg to ${peer.peer._idB58String} with request to pin ${fileHash}`)
               this._ipfs.protocol.network.sendMessage(peer.peer, msg, (err) => {
                 if (err) {
@@ -584,7 +627,7 @@ export class ParatiiIPFSUploader extends EventEmitter {
    * [_pinResponseHandler description]
    * @param  {Object} ev [description]
    * @return {Object}    [description]
-   * @private
+
    */
   _pinResponseHandler (ev) {
     return (peerId, command) => {

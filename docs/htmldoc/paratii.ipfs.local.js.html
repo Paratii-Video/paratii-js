@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="Paratii.html">Paratii</a></li><li><a href="ParatiiCore.html">ParatiiCore</a></li><li><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></li><li><a href="ParatiiCoreVids.html">ParatiiCoreVids</a></li><li><a href="ParatiiDb.html">ParatiiDb</a></li><li><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></li><li><a href="ParatiiDbVids.html">ParatiiDbVids</a></li><li><a href="ParatiiEth.html">ParatiiEth</a></li><li><a href="ParatiiEthEvents.html">ParatiiEthEvents</a></li><li><a href="ParatiiEthTcr.html">ParatiiEthTcr</a></li><li><a href="ParatiiEthUsers.html">ParatiiEthUsers</a></li><li><a href="ParatiiEthVids.html">ParatiiEthVids</a></li><li><a href="ParatiiEthVouchers.html">ParatiiEthVouchers</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li><li><a href="ParatiiIPFSLocal.html">ParatiiIPFSLocal</a></li><li><a href="ParatiiIPFSRemote.html">ParatiiIPFSRemote</a></li><li><a href="ParatiiIPFSUploader.html">ParatiiIPFSUploader</a></li><li><a href="ParatiiTranscoder.html">ParatiiTranscoder</a></li>
+					<li><a href="Paratii.html">Paratii</a></li><li><a href="ParatiiCore.html">ParatiiCore</a></li><li><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></li><li><a href="ParatiiCoreVids.html">ParatiiCoreVids</a></li><li><a href="ParatiiDb.html">ParatiiDb</a></li><li><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></li><li><a href="ParatiiDbVids.html">ParatiiDbVids</a></li><li><a href="ParatiiEth.html">ParatiiEth</a></li><li><a href="ParatiiEthEvents.html">ParatiiEthEvents</a></li><li><a href="ParatiiEthTcr.html">ParatiiEthTcr</a></li><li><a href="ParatiiEthUsers.html">ParatiiEthUsers</a></li><li><a href="ParatiiEthVids.html">ParatiiEthVids</a></li><li><a href="ParatiiEthVouchers.html">ParatiiEthVouchers</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li><li><a href="ParatiiIPFSLocal.html">ParatiiIPFSLocal</a></li><li><a href="ParatiiIPFSRemote.html">ParatiiIPFSRemote</a></li><li><a href="ParatiiTranscoder.html">ParatiiTranscoder</a></li><li><a href="Uploader.html">Uploader</a></li>
 				</ul>
 			</li>
 			
@@ -77,16 +77,14 @@
 <section>
     <article>
         <pre
-            class="sunlight-highlight-javascript ">/* global ArrayBuffer */
+            class="sunlight-highlight-javascript ">/* global File, ArrayBuffer */
 'use strict'
 
-import { ipfsSchema } from './schemas.js'
 import { EventEmitter } from 'events'
-import joi from 'joi'
 import Protocol from 'paratii-protocol'
-// const pull = require('pull-stream')
-// const pullFilereader = require('pull-filereader')
-// const toPull = require('stream-to-pull-stream')
+const pull = require('pull-stream')
+const pullFilereader = require('pull-filereader')
+const toPull = require('stream-to-pull-stream')
 const fs = require('fs')
 const path = require('path')
 const { eachSeries, nextTick } = require('async')
@@ -105,38 +103,142 @@ export class ParatiiIPFSLocal extends EventEmitter {
   * @property {?ipfsSchema} ipfs
   * @property {?Object} ParatiiIPFS
   */
-  constructor (opts) {
+  constructor (config) {
     super()
-    const schema = joi.object({
-      ipfs: ipfsSchema,
-      paratiiIPFS: joi.object().optional()
-    //   onReadyHook: joi.array().ordered().default([]),
-    //   protocol: joi.string().default(null),
-    })
-    const result = joi.validate(opts, schema, {allowUnknown: true})
-    if (result.error) throw result.error
-    this.config = result.value
-    this._ipfs = this.config.paratiiIPFS // this is the paratii.ipfs.js
+    // const schema = joi.object({
+    //   ipfs: ipfsSchema,
+    //   paratiiIPFS: joi.object().optional()
+    // //   onReadyHook: joi.array().ordered().default([]),
+    // //   protocol: joi.string().default(null),
+    // })
+    // const result = joi.validate(opts, schema, {allowUnknown: true})
+    // if (result.error) throw result.error
+    // this.config = result.value
+    this.config = config
+    this._ipfs = this.config.ipfsInstance
   }
+  // /**
+  //  * Adds the file to ipfs
+  //  * @param  {ReadStream}  fileStream ReadStream of the file. Can be created with fs.createReadStream(path)
+  //  * @return {Promise}            data about the added file (path,multihash,size)
+  //  * @example
+  //  * let path = 'test/data/some-file.txt'
+  //  * let fileStream = fs.createReadStream(path)
+  //  * let result = await paratiiIPFS.add(fileStream)
+  //  */
+  // async add (fileStream) {
+  //   let ipfs = await this.getIPFSInstance()
+  //   return ipfs.files.add(fileStream)
+  // }
   /**
-   * Adds the file to ipfs
-   * @param  {ReadStream}  fileStream ReadStream of the file. Can be created with fs.createReadStream(path)
-   * @return {Promise}            data about the added file (path,multihash,size)
-   * @example
-   * let path = 'test/data/some-file.txt'
-   * let fileStream = fs.createReadStream(path)
-   * let result = await paratiiIPFS.add(fileStream)
+   * uploads a single file to *local* IPFS node
+   * @param {File} file HTML5 File Object.
+   * @returns {EventEmitter} checkout the upload function below for details.
+   * @example let uploaderEv = paratiiIPFS.uploader.add(files)
+
    */
-  async add (fileStream) {
-    let ipfs = await this.getIPFSInstance()
-    return ipfs.files.add(fileStream)
+  add (file) {
+    let files
+    if (Array.isArray(file)) {
+      files = file
+    } else {
+      files = [file]
+    }
+
+    let result = []
+
+    for (let i = 0; i &lt; files.length; i++) {
+      // check if File is actually available or not.
+      // if not it means we're not in the browser land.
+      if (typeof File !== 'undefined') {
+        if (files[i] instanceof File) {
+          result.push(this.html5FileToPull(files[i]))
+        } else {
+          result.push(this.fsFileToPull(files[i]))
+        }
+      } else {
+        result.push(this.fsFileToPull(files[i]))
+      }
+    }
+    return this.upload(result)
   }
+
+  /**
+   * upload an Array of files as is to the local IPFS node
+   * @param  {Array} files    HTML5 File Object Array.
+   * @return {EventEmitter} returns EventEmitter with the following events:
+   *    - 'start': uploader started.
+   *    - 'progress': (chunkLength, progressPercent)
+   *    - 'fileReady': (file) triggered when a file is uploaded locally.
+   *    - 'done': (files) triggered when the uploader is done locally.
+   *    - 'error': (err) triggered whenever an error occurs.
+   * @example ?
+
+   */
+  upload (files) {
+    let meta = {} // holds File metadata.
+    let ev = new EventEmitter()
+
+    this.start().then(() => {
+      // trigger onStart callback
+      ev.emit('start')
+      if (files &amp;&amp; files[0] &amp;&amp; files[0].size > this.config.ipfs.maxFileSize) {
+        ev.emit('error', `file size is larger than the allowed ${this.config.ipfs.maxFileSize / 1024 / 1024}MB`)
+        return
+      }
+
+      pull(
+        pull.values(files),
+        pull.through((file) => {
+          this._ipfs.log('Adding ', file)
+          meta.fileSize = file.size
+          meta.total = 0
+        }),
+        pull.asyncMap((file, cb) => pull(
+          pull.values([{
+            path: file.name,
+            // content: pullFilereader(file)
+            content: pull(
+              file._pullStream,
+              pull.through((chunk) => ev.emit('progress2', chunk.length, Math.floor((meta.total += chunk.length) * 1.0 / meta.fileSize * 100)))
+            )
+          }]),
+          this._node.files.addPullStream({chunkerOptions: {maxChunkSize: this.config.ipfs.chunkSize}}), // default size 262144
+          pull.collect((err, res) => {
+            if (err) {
+              return ev.emit('error', err)
+            }
+
+            const hashedFile = res[0]
+            this._ipfs.log('Adding %s finished as %s, size: %s', hashedFile.path, hashedFile.hash, hashedFile.size)
+
+            if (file._html5File) {
+              this.xhrUpload(file, hashedFile, ev)
+            } else {
+              ev.emit('fileReady', hashedFile)
+            }
+
+            cb(null, hashedFile)
+          })
+        )),
+        pull.collect((err, hashedFiles) => {
+          if (err) {
+            ev.emit('error', err)
+          }
+          this._ipfs.log('uploader is DONE')
+          ev.emit('done', hashedFiles)
+        })
+      )
+    })
+
+    return ev
+  }
+
   /**
    * upload an entire directory to IPFS
    * @param  {string}   dirPath path to directory
    * @return {Promise}           returns the {multihash, path, size} for the uploaded folder.
    * @example ?
-
    */
   addDirectory (dirPath) {
     return new Promise((resolve, reject) => {
@@ -194,6 +296,19 @@ export class ParatiiIPFSLocal extends EventEmitter {
         })
       })
     })
+  }
+  /**
+   * get file from ipfs
+   * @param  {string}  hash ipfs multihash of the file
+   * @return {Promise}      the file (path,content)
+   * @example
+   * let result = await paratiiIPFS.add(fileStream)
+   * let hash = result[0].hash
+   * let fileContent = await paratiiIPFS.get(hash)
+   */
+  async get (hash) {
+    let ipfs = await this.getIPFSInstance()
+    return ipfs.files.get(hash)
   }
 
   /**
@@ -305,7 +420,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
               let peerInfo = id
               this.id = id
               this.log(`[IPFS] id:  ${peerInfo}`)
-              let ptiAddress = this.config.account.address || 'no_address'
+              let ptiAddress = (this.config.paratii &amp;&amp; this.config.paratii.eth.getAccount()) || 'no_address'
               this.protocol = new Protocol(
                 ipfs._libp2pNode,
                 ipfs._repo.blocks,
@@ -313,9 +428,9 @@ export class ParatiiIPFSLocal extends EventEmitter {
                 ptiAddress
               )
 
-              this.remote._node = ipfs
-              this.local._node = ipfs
-              this.transcoder._node = ipfs
+              this._ipfs.remote._node = ipfs
+              this._ipfs.local._node = ipfs
+              this._ipfs.transcoder._node = ipfs
 
               this.protocol.notifications.on('message:new', (peerId, msg) => {
                 this.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg)
@@ -371,6 +486,44 @@ export class ParatiiIPFSLocal extends EventEmitter {
 
     return node[0].hash
   }
+
+  /**
+   * returns a generic File Object with a Pull Stream from an HTML5 File
+   * @param  {File} file  HTML5 File Object
+   * @return {Object}      generic file object.
+   * @example ?
+
+   */
+  html5FileToPull (file) {
+    return {
+      name: file.name,
+      size: file.size,
+      path: file.path,
+      _html5File: file,
+      _pullStream: pullFilereader(file)
+    }
+  }
+
+  /**
+   * returns a generic file Object from a file path
+   * @param  {string} filePath Path to file.
+   * @return {Object} generic file object.
+   * @example ?
+
+   */
+  fsFileToPull (filePath) {
+    let stats = fs.statSync(filePath)
+    if (stats) {
+      return {
+        name: path.basename(filePath),
+        size: stats.size,
+        _pullStream: toPull(fs.createReadStream(filePath))
+      }
+    } else {
+      return null
+    }
+  }
+
   /**
    * log messages on the console if verbose is set
    * @param  {string} msg text to log
@@ -446,7 +599,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2018-04-11T12:26:46+02:00
+		on 2018-04-11T14:44:50+02:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="Paratii.html">Paratii</a></li><li><a href="ParatiiCore.html">ParatiiCore</a></li><li><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></li><li><a href="ParatiiCoreVids.html">ParatiiCoreVids</a></li><li><a href="ParatiiDb.html">ParatiiDb</a></li><li><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></li><li><a href="ParatiiDbVids.html">ParatiiDbVids</a></li><li><a href="ParatiiEth.html">ParatiiEth</a></li><li><a href="ParatiiEthEvents.html">ParatiiEthEvents</a></li><li><a href="ParatiiEthTcr.html">ParatiiEthTcr</a></li><li><a href="ParatiiEthUsers.html">ParatiiEthUsers</a></li><li><a href="ParatiiEthVids.html">ParatiiEthVids</a></li><li><a href="ParatiiEthVouchers.html">ParatiiEthVouchers</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li><li><a href="ParatiiIPFSLocal.html">ParatiiIPFSLocal</a></li><li><a href="ParatiiIPFSRemote.html">ParatiiIPFSRemote</a></li><li><a href="ParatiiIPFSUploader.html">ParatiiIPFSUploader</a></li><li><a href="ParatiiTranscoder.html">ParatiiTranscoder</a></li>
+					<li><a href="Paratii.html">Paratii</a></li><li><a href="ParatiiCore.html">ParatiiCore</a></li><li><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></li><li><a href="ParatiiCoreVids.html">ParatiiCoreVids</a></li><li><a href="ParatiiDb.html">ParatiiDb</a></li><li><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></li><li><a href="ParatiiDbVids.html">ParatiiDbVids</a></li><li><a href="ParatiiEth.html">ParatiiEth</a></li><li><a href="ParatiiEthEvents.html">ParatiiEthEvents</a></li><li><a href="ParatiiEthTcr.html">ParatiiEthTcr</a></li><li><a href="ParatiiEthUsers.html">ParatiiEthUsers</a></li><li><a href="ParatiiEthVids.html">ParatiiEthVids</a></li><li><a href="ParatiiEthVouchers.html">ParatiiEthVouchers</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li><li><a href="ParatiiIPFSLocal.html">ParatiiIPFSLocal</a></li><li><a href="ParatiiIPFSRemote.html">ParatiiIPFSRemote</a></li><li><a href="ParatiiTranscoder.html">ParatiiTranscoder</a></li><li><a href="Uploader.html">Uploader</a></li>
 				</ul>
 			</li>
 			
@@ -255,7 +255,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="add"><span class="type-signature">&lt;async> </span>add(fileStream)</h4>
+    <h4 class="name" id="add"><span class="type-signature"></span>add(file)</h4>
     
     
 </dt>
@@ -263,7 +263,7 @@
 
     
     <div class="description">
-        Adds the file to ipfs
+        uploads a single file to *local* IPFS node
     </div>
     
 
@@ -298,13 +298,13 @@
 
         <tr>
             
-                <td class="name"><code>fileStream</code></td>
+                <td class="name"><code>file</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">ReadStream</span>
+<span class="param-type">File</span>
 
 
 
@@ -315,7 +315,7 @@
 
             
 
-            <td class="description last">ReadStream of the file. Can be created with fs.createReadStream(path)</td>
+            <td class="description last">HTML5 File Object.</td>
         </tr>
 
     
@@ -388,7 +388,7 @@
     
             
 <div class="param-desc">
-    data about the added file (path,multihash,size)
+    checkout the upload function below for details.
 </div>
 
 
@@ -399,7 +399,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Promise</span>
+<span class="param-type">EventEmitter</span>
 
 
 
@@ -412,9 +412,7 @@
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">let path = &#x27;test/data/some-file.txt&#x27;
-let fileStream = fs.createReadStream(path)
-let result = await paratiiIPFS.add(fileStream)</pre>
+    <pre class="sunlight-highlight-javascript">let uploaderEv = paratiiIPFS.uploader.add(files)</pre>
 
 
     
@@ -913,6 +911,342 @@ let result = await paratiiIPFS.add(fileStream)</pre>
             
 <hr>
 <dt>
+    <h4 class="name" id="fsFileToPull"><span class="type-signature"></span>fsFileToPull(filePath)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        returns a generic file Object from a file path
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>filePath</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Path to file.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.ipfs.local.js.html">paratii.ipfs.local.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    generic file object.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">?</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="get"><span class="type-signature">&lt;async> </span>get(hash)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        get file from ipfs
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>hash</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">ipfs multihash of the file</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.ipfs.local.js.html">paratii.ipfs.local.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    the file (path,content)
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let result = await paratiiIPFS.add(fileStream)
+let hash = result[0].hash
+let fileContent = await paratiiIPFS.get(hash)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
     <h4 class="name" id="getIPFSInstance"><span class="type-signature"></span>getIPFSInstance()</h4>
     
     
@@ -1188,6 +1522,173 @@ let result = await paratiiIPFS.add(fileStream)</pre>
         <h5>Example</h5>
         
     <pre class="sunlight-highlight-javascript">let jsonObj = await paratii.ipfs.getJSON(&#x27;some-multihash&#x27;)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="html5FileToPull"><span class="type-signature"></span>html5FileToPull(file)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        returns a generic File Object with a Pull Stream from an HTML5 File
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>file</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">File</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">HTML5 File Object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.ipfs.local.js.html">paratii.ipfs.local.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    generic file object.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">?</pre>
 
 
     
@@ -1562,6 +2063,178 @@ let result = await paratiiIPFS.add(fileStream)</pre>
             
 <hr>
 <dt>
+    <h4 class="name" id="upload"><span class="type-signature"></span>upload(files)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        upload an Array of files as is to the local IPFS node
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>files</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">HTML5 File Object Array.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.ipfs.local.js.html">paratii.ipfs.local.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    returns EventEmitter with the following events:
+   - 'start': uploader started.
+   - 'progress': (chunkLength, progressPercent)
+   - 'fileReady': (file) triggered when a file is uploaded locally.
+   - 'done': (files) triggered when the uploader is done locally.
+   - 'error': (err) triggered whenever an error occurs.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">EventEmitter</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">?</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
     <h4 class="name" id="warn"><span class="type-signature"></span>warn(msg)</h4>
     
     
@@ -1763,7 +2436,7 @@ let result = await paratiiIPFS.add(fileStream)</pre>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2018-04-11T12:26:46+02:00
+		on 2018-04-11T14:44:50+02:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
