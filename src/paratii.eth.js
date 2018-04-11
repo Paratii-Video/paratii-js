@@ -112,7 +112,7 @@ export class ParatiiEth {
    */
   getAccount () {
     const wallet = this.web3.eth.accounts.wallet
-    return wallet[0].address
+    return wallet.length > 0 && wallet[0].address
   }
 
   /**

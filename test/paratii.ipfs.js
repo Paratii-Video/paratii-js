@@ -17,18 +17,8 @@ describe('ParatiiIPFS: :', function () {
     })
   })
 
-  // afterEach((done) => {
-  //   paratiiIPFS.stop(() => {
-  //     delete paratiiIPFS.ipfs
-  //     setImmediate(() => {
-  //       assert.isNotOk(paratiiIPFS.ipfs)
-  //       done()
-  //     })
-  //   })
-  // })
-
   afterEach(async () => {
-    await paratiiIPFS.stop()
+    await paratiiIPFS.local.stop()
     delete paratiiIPFS.ipfs
     assert.isNotOk(paratiiIPFS.ipfs)
   })
@@ -37,14 +27,16 @@ describe('ParatiiIPFS: :', function () {
     assert.isOk(paratiiIPFS)
     done()
   })
-  it('ipfs.start() should return a promise', () => {
-    assert.isOk(paratiiIPFS.start() instanceof Promise)
+  it('ipfs.start() should return a promise', async () => {
+    let p = paratiiIPFS.local.start()
+    assert.isOk(p instanceof Promise)
+    await p
   })
   it('ipfs.stop() should return a promise', () => {
-    assert.isOk(paratiiIPFS.stop() instanceof Promise)
+    assert.isOk(paratiiIPFS.local.stop() instanceof Promise)
   })
   it('should create an instance without trouble', (done) => {
-    paratiiIPFS.getIPFSInstance().then((ipfs) => {
+    paratiiIPFS.local.getIPFSInstance().then((ipfs) => {
       assert.isOk(paratiiIPFS)
       assert.isOk(ipfs)
       assert.isTrue(ipfs.isOnline())
@@ -55,18 +47,19 @@ describe('ParatiiIPFS: :', function () {
   it('should allow for simple add() and get() of files', async function () {
     let path = 'test/data/some-file.txt'
     let fileStream = fs.createReadStream(path)
-    let result = await paratiiIPFS.add(fileStream)
+    let result = await paratiiIPFS.local.add(fileStream)
     assert.isOk(result)
+    console.log(result)
     let hash = result[0].hash
-    let fileContent = await paratiiIPFS.get(hash)
+    let fileContent = await paratiiIPFS.local.get(hash)
     assert.equal(String(fileContent[0].content), 'with some content\n')
   })
 
   it('put a JSON object and get it back', async function () {
-    let multihash = await paratiiIPFS.addJSON({test: 1})
+    let multihash = await paratiiIPFS.local.addJSON({test: 1})
     assert.isOk(multihash)
 
-    let data = await paratiiIPFS.getJSON(multihash)
+    let data = await paratiiIPFS.local.getJSON(multihash)
     assert.isOk(data)
     expect(JSON.stringify(data)).to.equal(JSON.stringify({test: 1}))
   })
@@ -74,6 +67,6 @@ describe('ParatiiIPFS: :', function () {
   it('should exist and work as an attribute on the Paratii object', async function () {
     let paratii = await new Paratii()
     assert.isOk(paratii.ipfs)
-    assert.isOk(await paratii.ipfs.getIPFSInstance())
+    assert.isOk(await paratii.ipfs.local.getIPFSInstance())
   })
 })

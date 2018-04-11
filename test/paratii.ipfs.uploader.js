@@ -11,22 +11,13 @@ describe('ParatiiIPFS Uploader :', function () {
 
   beforeEach(() => {
     paratiiIPFS = new ParatiiIPFS({
-      ipfs: {repo: '/tmp/paratii-alpha-' + String(Math.random())}
+      ipfs: {repo: '/tmp/paratii-alpha-' + String(Math.random())},
+      verbose: true
     })
   })
 
-  // afterEach((done) => {
-  //   paratiiIPFS.stop(() => {
-  //     delete paratiiIPFS.ipfs
-  //     setImmediate(() => {
-  //       assert.isNotOk(paratiiIPFS.ipfs)
-  //       done()
-  //     })
-  //   })
-  // })
-
   afterEach(async () => {
-    await paratiiIPFS.stop()
+    await paratiiIPFS.local.stop()
     delete paratiiIPFS.ipfs
     assert.isNotOk(paratiiIPFS.ipfs)
   })
@@ -34,29 +25,19 @@ describe('ParatiiIPFS Uploader :', function () {
   // skip till i fix underlying libp2p issue.
   it.skip('should be able to getMetaData from Transcoder', (done) => {
     let testHash = 'QmTkuJTcQhtQm8bPzF1hQmhrDPsdLs28soUZQEUx7t9pBJ'
-    paratiiIPFS.uploader.getMetaData(testHash, {}).then((data) => {
+    paratiiIPFS.transcoder.getMetaData(testHash, {}).then((data) => {
       assert.isOk(data)
       console.log(data)
       done()
     }).catch(done)
-    // ev.once('getMetaData:error', (err, hash) => {
-    //   if (err) {
-    //     console.log('getMetaData ERROR ', err)
-    //     return done(err)
-    //   }
-    // })
-    //
-    // ev.once('getMetaData:done', (hash, data) => {
-    // })
   })
 
   // FIXME : this requires a browser to run.
   // I'm trying to mock the FileReader but it's glitchy so far :(
   it('should allow for file upload', (done) => {
     let file = 'test/data/some-file.txt'
-
     let files = [file]
-    let uploaderEv = paratiiIPFS.uploader.add(files)
+    let uploaderEv = paratiiIPFS.local.add(files)
 
     uploaderEv.once('start', () => {
       // console.log('uploader started')
@@ -81,8 +62,8 @@ describe('ParatiiIPFS Uploader :', function () {
 
   it('should add a directory to IPFS', async function () {
     let testDir = 'test/data'
-    await paratiiIPFS.getIPFSInstance()
-    let response = await paratiiIPFS.uploader.addDirectory(testDir)
+    await paratiiIPFS.local.start()
+    let response = await paratiiIPFS.local.addDirectory(testDir)
     assert.isOk(response)
     assert.isOk(response.hash)
     // NOTE THIS WILL Trigger an error if the director test/data content changes.
@@ -91,7 +72,7 @@ describe('ParatiiIPFS Uploader :', function () {
 
   it('addAndTranscode() should work as expected', (done) => {
     let files = []
-    let ev = paratiiIPFS.uploader.addAndTranscode(files)
+    let ev = paratiiIPFS.transcoder.addAndTranscode(files)
     ev.once('transcoding:done', (resp) => {
       assert.isOk(resp)
       assert.isOk(resp.test)
@@ -101,7 +82,7 @@ describe('ParatiiIPFS Uploader :', function () {
   })
 
   it('should be able to pin a JSON Object', (done) => {
-    paratiiIPFS.addJSON({test: 1}).then((multihash) => {
+    paratiiIPFS.local.addJSON({test: 1}).then((multihash) => {
       assert.isOk(multihash)
       let ev = paratiiIPFS.uploader.pinFile(multihash)
       ev.once('pin:error', done)
