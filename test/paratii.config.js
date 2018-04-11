@@ -152,6 +152,18 @@ describe('Paratii configuration:', function () {
   })
 })
 
+it('if the registry address has wrong format, paratii should throw a meaningful errors', async function () {
+  let paratii = new Paratii({
+    account: testAccount,
+    eth: {
+      registryAddress: '0xa8Bb9e5Db29FA338545aAF6b53D4AaE2fb320075'
+    }
+  })
+
+  await assert.isRejected(paratii.eth.deployContracts(), Error, /Provided address "0xa8Bb9e5Db29FA338545aAF6b53D4AaE2fb320075" is invalid, the capitalization checksum test failed, or its an indrect IBAN address which can't be converted./g)
+  await assert.isRejected(paratii.eth.getContract('Likes'), Error, /Provided address "0xa8Bb9e5Db29FA338545aAF6b53D4AaE2fb320075" is invalid, the capitalization checksum test failed, or its an indrect IBAN address which can't be converted./g)
+})
+
 it('if the registry address doesn\'t exist, paratii should throw a meaningful error', async function () {
   let paratii = new Paratii({
     account: testAccount,
@@ -160,17 +172,23 @@ it('if the registry address doesn\'t exist, paratii should throw a meaningful er
     }
   })
 
-  console.log(paratii.eth.getRegistryAddress())
   // await paratii.eth.deployContracts()
+  await paratii.eth.getContract('Likes')
 
-  // await paratii.eth.getContract('Likes')
+  console.log(paratii.eth.getRegistryAddress())
 })
 
-it('Paratii should throw a meaningful error if no blockchain is available', async function () {
+it('paratii.eth.getContract() should throw a meaningful error if no blockchain is available', async function () {
   let paratii = new Paratii({
     eth: { provider: 'http://localhost:8000' }, // wrong port
     account: testAccount
   })
 
-  paratii.eth.deployContracts()
+  try {
+    let c = await paratii.eth.deployContract('Registry')
+    console.log(c)
+  } catch (e) {
+    console.log(e)
+  }
+  // assert.isRejected(await paratii.eth.getContract('Registry'), Error, /msg/g)
 })
