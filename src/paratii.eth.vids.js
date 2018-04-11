@@ -280,7 +280,7 @@ export class ParatiiEthVids {
    */
   async doesLike (videoId) {
     let contract = await this.getLikesContract()
-    let address = this.eth.config.account.address
+    let address = this.eth.getAccount()
     let likeInfo = await contract.methods.userLikesVideo(address, videoId).call()
 
     return likeInfo
@@ -294,7 +294,7 @@ export class ParatiiEthVids {
    */
   async doesDislike (videoId) {
     let contract = await this.getLikesContract()
-    let address = this.eth.config.account.address
+    let address = this.eth.getAccount()
     let likeInfo = await contract.methods.userDislikesVideo(address, videoId).call()
 
     return likeInfo

@@ -64,7 +64,7 @@ global.Buffer = global.Buffer || require('buffer').Buffer;
  * @param {ParatiiIPFSSchema} config configuration object to initialize Paratii object
  * @property {Uploader} uploader Paratii IPFS uploader interface
  */
-/* global File */
+/* global File, ArrayBuffer */
 
 var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   (0, _inherits3.default)(ParatiiIPFS, _EventEmitter);
