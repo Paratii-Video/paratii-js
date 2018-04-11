@@ -61,6 +61,8 @@ var _paratiiTranscoder = require('./paratii.transcoder.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// import { PromiseEventEmitter } from './utils.js'
+
 global.Buffer = global.Buffer || require('buffer').Buffer;
 
 /**
@@ -213,7 +215,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   }, {
     key: '_getAccount',
     value: function _getAccount() {
-      return this.config.paratii && this.config.paratii.eth.getAccount();
+      return this.config.paratii && this.config.paratii.eth.getAccount() || 'unknown';
     }
     /**
      *  adds a JSON structure to the local node and signals remote node to pin it

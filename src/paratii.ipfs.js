@@ -6,6 +6,7 @@ import { EventEmitter } from 'events'
 import { ParatiiIPFSRemote } from './paratii.ipfs.remote.js'
 import { ParatiiIPFSLocal } from './paratii.ipfs.local.js'
 import { ParatiiTranscoder } from './paratii.transcoder.js'
+// import { PromiseEventEmitter } from './utils.js'
 
 global.Buffer = global.Buffer || require('buffer').Buffer
 
@@ -105,7 +106,7 @@ export class ParatiiIPFS extends EventEmitter {
   }
 
   _getAccount () {
-    return (this.config.paratii && this.config.paratii.eth.getAccount())
+    return (this.config.paratii && this.config.paratii.eth.getAccount()) || 'unknown'
   }
   /**
    *  adds a JSON structure to the local node and signals remote node to pin it
@@ -114,6 +115,7 @@ export class ParatiiIPFS extends EventEmitter {
    * @example let result = await paratiiIPFS.addAndPinJSON(data)
    */
   async addAndPinJSON (data) {
+    // let p = new PromiseEventEmitter()
     let hash = await this.addJSON(data)
     let pinFile = () => {
       let pinEv = this.remote.pinFile(hash,
