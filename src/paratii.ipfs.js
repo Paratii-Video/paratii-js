@@ -115,32 +115,35 @@ export class ParatiiIPFS extends EventEmitter {
    * @example let result = await paratiiIPFS.addAndPinJSON(data)
    */
   async addAndPinJSON (data) {
-    let p = new PromiseEventEmitter()
-    let hash = await this.local.addJSON(data)
-    let pinFile = () => {
-      let pinEv = this.remote.pinFile(hash,
-        { author: this._getAccount() }
-      )
+    return new PromiseEventEmitter(async (resolve, reject) => {
+      let hash = await this.local.addJSON(data)
+      let pinFile = () => {
+        let pinEv = this.remote.pinFile(hash,
+          { author: this._getAccount() }
+        )
+        pinEv.on('pin:error', (err) => {
+          console.warn('pin:error:', hash, ' : ', err)
+          pinEv.removeAllListeners()
+        })
+        pinEv.on('pin:done', (hash) => {
+          this.log('pin:done:', hash)
+          pinEv.removeAllListeners()
+        })
+        return pinEv
+      }
+
+      let pinEv = pinFile()
+
       pinEv.on('pin:error', (err) => {
         console.warn('pin:error:', hash, ' : ', err)
-        pinEv.removeAllListeners()
+        console.log('trying again')
+        pinEv = pinFile()
       })
+
       pinEv.on('pin:done', (hash) => {
-        this.log('pin:done:', hash)
-        pinEv.removeAllListeners()
+        resolve(hash)
       })
-      return pinEv
-    }
-
-    let pinEv = pinFile()
-
-    pinEv.on('pin:error', (err) => {
-      console.warn('pin:error:', hash, ' : ', err)
-      console.log('trying again')
-      pinEv = pinFile()
     })
-
-    return hash
   }
   /**
    * log messages on the console if verbose is set

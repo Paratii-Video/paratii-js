@@ -159,11 +159,11 @@ export class ParatiiIPFSRemote extends EventEmitter {
     })
   }
   /**
-   * [pinFile description]
-   * @param  {Object} fileHash [description]
+   * Signal the remote node to pin a File
+   * @param  {Object} fileHash hash of the file to pin
    * @param  {Object} options  [description]
-   * @return {Object}          [description]
-
+   * @return {Promise}  a Promise/EventEmitter that resolves inthe hash of the pinned file
+   *
    */
   pinFile (fileHash, options) {
     if (options === undefined) {

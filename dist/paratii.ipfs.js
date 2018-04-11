@@ -233,7 +233,9 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
                           pinEv = pinFile();
                         });
 
-                        return _context.abrupt('return', hash);
+                        pinEv.on('pin:done', function (hash) {
+                          resolve(hash);
+                        });
 
                       case 7:
                       case 'end':
