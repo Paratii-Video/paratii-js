@@ -18,7 +18,7 @@ describe('ParatiiIPFS: :', function () {
   })
 
   afterEach(async () => {
-    await paratiiIPFS.local.stop()
+    await paratiiIPFS.stop()
     delete paratiiIPFS.ipfs
     assert.isNotOk(paratiiIPFS.ipfs)
   })
@@ -28,15 +28,16 @@ describe('ParatiiIPFS: :', function () {
     done()
   })
   it('ipfs.start() should return a promise', async () => {
-    let p = paratiiIPFS.local.start()
+    let p = paratiiIPFS.start()
     assert.isOk(p instanceof Promise)
     await p
   })
   it('ipfs.stop() should return a promise', () => {
-    assert.isOk(paratiiIPFS.local.stop() instanceof Promise)
+    assert.isOk(paratiiIPFS.stop() instanceof Promise)
   })
+
   it('should create an instance without trouble', (done) => {
-    paratiiIPFS.local.getIPFSInstance().then((ipfs) => {
+    paratiiIPFS.getIPFSInstance().then((ipfs) => {
       assert.isOk(paratiiIPFS)
       assert.isOk(ipfs)
       assert.isTrue(ipfs.isOnline())
@@ -47,7 +48,7 @@ describe('ParatiiIPFS: :', function () {
   it('should allow for simple add() and get() of files', async function () {
     let path = 'test/data/some-file.txt'
     let fileStream = fs.createReadStream(path)
-    let result = await paratiiIPFS.local.add(fileStream)
+    let result = await paratiiIPFS.local.add(path)
     assert.isOk(result)
     console.log(result)
     let hash = result[0].hash
@@ -67,6 +68,6 @@ describe('ParatiiIPFS: :', function () {
   it('should exist and work as an attribute on the Paratii object', async function () {
     let paratii = await new Paratii()
     assert.isOk(paratii.ipfs)
-    assert.isOk(await paratii.ipfs.local.getIPFSInstance())
+    assert.isOk(await paratii.ipfs.getIPFSInstance())
   })
 })

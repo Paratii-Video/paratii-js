@@ -6,7 +6,7 @@ import { EventEmitter } from 'events'
 import { ParatiiIPFSRemote } from './paratii.ipfs.remote.js'
 import { ParatiiIPFSLocal } from './paratii.ipfs.local.js'
 import { ParatiiTranscoder } from './paratii.transcoder.js'
-import { Uploader } from './paratii.ipfs.uploader.old.js'
+// import { Uploader } from './paratii.ipfs.uploader.old.js'
 global.Buffer = global.Buffer || require('buffer').Buffer
 
 /**
@@ -37,7 +37,7 @@ export class ParatiiIPFS extends EventEmitter {
     this.local = new ParatiiIPFSLocal(config)
     this.remote = new ParatiiIPFSRemote({ipfs: this.config.ipfs, paratiiIPFS: this})
     this.transcoder = new ParatiiTranscoder({ipfs: this.config.ipfs, paratiiIPFS: this})
-    this.uploader = new Uploader({ipfs: this.config.ipfs, paratiiIPFS: this})
+    // this.uploader = new Uploader({ipfs: this.config.ipfs, paratiiIPFS: this})
   }
   /**
    * get an ipfs instance of jsipfs. Singleton pattern
@@ -101,7 +101,7 @@ export class ParatiiIPFS extends EventEmitter {
                 ptiAddress
               )
 
-              this.uploader._node = ipfs
+              // this.uploader._node = ipfs
               this._node = ipfs
               this.remote._node = ipfs
               // this.uploader.setOptions({
@@ -162,6 +162,43 @@ export class ParatiiIPFS extends EventEmitter {
     }
 
     return node[0].hash
+  }
+
+  /**
+   * Starts the IPFS node
+   * @return {Promise} that resolves in an IPFS instance
+   * @example paratii.ipfs.start()
+   */
+  start () {
+    return new Promise((resolve, reject) => {
+      if (this.ipfs && this.ipfs.isOnline()) {
+        console.log('IPFS is already running')
+        return resolve(this.ipfs)
+      }
+
+      this.getIPFSInstance().then(function (ipfs) {
+        resolve(ipfs)
+      })
+    })
+  }
+
+  /**
+   * Stops the IPFS node.
+   * @example paratii.ipfs.stop()
+   */
+  stop () {
+    return new Promise((resolve, reject) => {
+      if (!this.ipfs || !this.ipfs.isOnline()) {
+        resolve()
+      }
+      if (this.ipfs) {
+        this.ipfs.stop(() => {
+          setImmediate(() => {
+            resolve()
+          })
+        })
+      }
+    })
   }
   /**
    * convenient method to add JSON and send it for persistance storage.
@@ -230,37 +267,37 @@ export class ParatiiIPFS extends EventEmitter {
     }
   }
 
-  /**
-   * add a JSON to local IPFS instance, sends a message to paratii.config.ipfs.remoteIPFSNode to pin the mesage
-   * @param  {object}  data JSON object to store
-   * @return {Promise} resolves in the hash of the added file, after confirmation from the remove node
-   * @example let hash = await paratii.ipfs.addAndPinJSON(data)
-   */
-  async addAndPinJSON (data) {
-    let hash = await this.addJSON(data)
-    let pinFile = () => {
-      let pinEv = this.remote.pinFile(hash,
-        { author: this.config.account.address }
-      )
-      pinEv.on('pin:error', (err) => {
-        console.warn('pin:error:', hash, ' : ', err)
-        pinEv.removeAllListeners()
-      })
-      pinEv.on('pin:done', (hash) => {
-        this.log('pin:done:', hash)
-        pinEv.removeAllListeners()
-      })
-      return pinEv
-    }
-
-    let pinEv = pinFile()
-
-    pinEv.on('pin:error', (err) => {
-      console.warn('pin:error:', hash, ' : ', err)
-      console.log('trying again')
-      pinEv = pinFile()
-    })
-
-    return hash
-  }
+  // /**
+  //  * add a JSON to local IPFS instance, sends a message to paratii.config.ipfs.remoteIPFSNode to pin the mesage
+  //  * @param  {object}  data JSON object to store
+  //  * @return {Promise} resolves in the hash of the added file, after confirmation from the remove node
+  //  * @example let hash = await paratii.ipfs.addAndPinJSON(data)
+  //  */
+  // async addAndPinJSON (data) {
+  //   let hash = await this.addJSON(data)
+  //   let pinFile = () => {
+  //     let pinEv = this.remote.pinFile(hash,
+  //       { author: this.config.account.address }
+  //     )
+  //     pinEv.on('pin:error', (err) => {
+  //       console.warn('pin:error:', hash, ' : ', err)
+  //       pinEv.removeAllListeners()
+  //     })
+  //     pinEv.on('pin:done', (hash) => {
+  //       this.log('pin:done:', hash)
+  //       pinEv.removeAllListeners()
+  //     })
+  //     return pinEv
+  //   }
+  //
+  //   let pinEv = pinFile()
+  //
+  //   pinEv.on('pin:error', (err) => {
+  //     console.warn('pin:error:', hash, ' : ', err)
+  //     console.log('trying again')
+  //     pinEv = pinFile()
+  //   })
+  //
+  //   return hash
+  // }
 }

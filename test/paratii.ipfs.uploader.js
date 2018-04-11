@@ -17,7 +17,7 @@ describe('ParatiiIPFS Uploader :', function () {
   })
 
   afterEach(async () => {
-    await paratiiIPFS.local.stop()
+    await paratiiIPFS.stop()
     delete paratiiIPFS.ipfs
     assert.isNotOk(paratiiIPFS.ipfs)
   })
@@ -62,7 +62,7 @@ describe('ParatiiIPFS Uploader :', function () {
 
   it('should add a directory to IPFS', async function () {
     let testDir = 'test/data'
-    await paratiiIPFS.local.start()
+    await paratiiIPFS.start()
     let response = await paratiiIPFS.local.addDirectory(testDir)
     assert.isOk(response)
     assert.isOk(response.hash)

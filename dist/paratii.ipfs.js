@@ -5,6 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ParatiiIPFS = undefined;
 
+var _setImmediate2 = require('babel-runtime/core-js/set-immediate');
+
+var _setImmediate3 = _interopRequireDefault(_setImmediate2);
+
 var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
@@ -55,17 +59,16 @@ var _paratiiIpfsLocal = require('./paratii.ipfs.local.js');
 
 var _paratiiTranscoder = require('./paratii.transcoder.js');
 
-var _paratiiIpfsUploaderOld = require('./paratii.ipfs.uploader.old.js');
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/* global ArrayBuffer */
+// import { Uploader } from './paratii.ipfs.uploader.old.js'
 global.Buffer = global.Buffer || require('buffer').Buffer;
 
 /**
  * Contains functions to interact with the IPFS instance.
  * @param {ParatiiIPFSSchema} config configuration object to initialize Paratii object
  */
+/* global ArrayBuffer */
 
 var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   (0, _inherits3.default)(ParatiiIPFS, _EventEmitter);
@@ -96,7 +99,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     _this.local = new _paratiiIpfsLocal.ParatiiIPFSLocal(config);
     _this.remote = new _paratiiIpfsRemote.ParatiiIPFSRemote({ ipfs: _this.config.ipfs, paratiiIPFS: _this });
     _this.transcoder = new _paratiiTranscoder.ParatiiTranscoder({ ipfs: _this.config.ipfs, paratiiIPFS: _this });
-    _this.uploader = new _paratiiIpfsUploaderOld.Uploader({ ipfs: _this.config.ipfs, paratiiIPFS: _this });
+    // this.uploader = new Uploader({ipfs: this.config.ipfs, paratiiIPFS: this})
     return _this;
   }
   /**
@@ -166,7 +169,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
                 // add ETH Address here.
                 ptiAddress);
 
-                _this2.uploader._node = ipfs;
+                // this.uploader._node = ipfs
                 _this2._node = ipfs;
                 _this2.remote._node = ipfs;
                 // this.uploader.setOptions({
@@ -262,6 +265,53 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
         }
       }, null, this, [[5, 11]]);
     }
+
+    /**
+     * Starts the IPFS node
+     * @return {Promise} that resolves in an IPFS instance
+     * @example paratii.ipfs.start()
+     */
+
+  }, {
+    key: 'start',
+    value: function start() {
+      var _this3 = this;
+
+      return new _promise2.default(function (resolve, reject) {
+        if (_this3.ipfs && _this3.ipfs.isOnline()) {
+          console.log('IPFS is already running');
+          return resolve(_this3.ipfs);
+        }
+
+        _this3.getIPFSInstance().then(function (ipfs) {
+          resolve(ipfs);
+        });
+      });
+    }
+
+    /**
+     * Stops the IPFS node.
+     * @example paratii.ipfs.stop()
+     */
+
+  }, {
+    key: 'stop',
+    value: function stop() {
+      var _this4 = this;
+
+      return new _promise2.default(function (resolve, reject) {
+        if (!_this4.ipfs || !_this4.ipfs.isOnline()) {
+          resolve();
+        }
+        if (_this4.ipfs) {
+          _this4.ipfs.stop(function () {
+            (0, _setImmediate3.default)(function () {
+              resolve();
+            });
+          });
+        }
+      });
+    }
     /**
      * convenient method to add JSON and send it for persistance storage.
      * @param  {object}  data JSON object to store
@@ -272,7 +322,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   }, {
     key: 'addAndPinJSON',
     value: function addAndPinJSON(data) {
-      var _this3 = this;
+      var _this5 = this;
 
       var hash, pinFile, pinEv;
       return _regenerator2.default.async(function addAndPinJSON$(_context2) {
@@ -286,13 +336,13 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
               hash = _context2.sent;
 
               pinFile = function pinFile() {
-                var pinEv = _this3.uploader.pinFile(hash, { author: _this3.config.account.address });
+                var pinEv = _this5.uploader.pinFile(hash, { author: _this5.config.account.address });
                 pinEv.on('pin:error', function (err) {
                   console.warn('pin:error:', hash, ' : ', err);
                   pinEv.removeAllListeners();
                 });
                 pinEv.on('pin:done', function (hash) {
-                  _this3.log('pin:done:', hash);
+                  _this5.log('pin:done:', hash);
                   pinEv.removeAllListeners();
                 });
                 return pinEv;

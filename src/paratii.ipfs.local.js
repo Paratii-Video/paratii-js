@@ -38,19 +38,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
     this.config = config
     this._ipfs = this.config.ipfsInstance
   }
-  // /**
-  //  * Adds the file to ipfs
-  //  * @param  {ReadStream}  fileStream ReadStream of the file. Can be created with fs.createReadStream(path)
-  //  * @return {Promise}            data about the added file (path,multihash,size)
-  //  * @example
-  //  * let path = 'test/data/some-file.txt'
-  //  * let fileStream = fs.createReadStream(path)
-  //  * let result = await paratiiIPFS.add(fileStream)
-  //  */
-  // async add (fileStream) {
-  //   let ipfs = await this.getIPFSInstance()
-  //   return ipfs.files.add(fileStream)
-  // }
+
   /**
    * uploads a single file to *local* IPFS node
    * @param {File} file HTML5 File Object.
@@ -59,29 +47,33 @@ export class ParatiiIPFSLocal extends EventEmitter {
 
    */
   add (file) {
-    let files
-    if (Array.isArray(file)) {
-      files = file
-    } else {
-      files = [file]
-    }
+    return new Promise((resolve, reject) => {
+      let files
+      if (Array.isArray(file)) {
+        files = file
+      } else {
+        files = [file]
+      }
 
-    let result = []
+      let result = []
 
-    for (let i = 0; i < files.length; i++) {
-      // check if File is actually available or not.
-      // if not it means we're not in the browser land.
-      if (typeof File !== 'undefined') {
-        if (files[i] instanceof File) {
-          result.push(this.html5FileToPull(files[i]))
+      for (let i = 0; i < files.length; i++) {
+        // check if File is actually available or not.
+        // if not it means we're not in the browser land.
+        if (typeof File !== 'undefined') {
+          if (files[i] instanceof File) {
+            result.push(this.html5FileToPull(files[i]))
+          } else {
+            result.push(this.fsFileToPull(files[i]))
+          }
         } else {
           result.push(this.fsFileToPull(files[i]))
         }
-      } else {
-        result.push(this.fsFileToPull(files[i]))
       }
-    }
-    return this.upload(result)
+      const ev = this.upload(result)
+      ev.on('done', (hashedFiles) => resolve(hashedFiles))
+      ev.on('error', (err) => reject(err))
+    })
   }
 
   /**
@@ -94,13 +86,12 @@ export class ParatiiIPFSLocal extends EventEmitter {
    *    - 'done': (files) triggered when the uploader is done locally.
    *    - 'error': (err) triggered whenever an error occurs.
    * @example ?
-
    */
   upload (files) {
     let meta = {} // holds File metadata.
     let ev = new EventEmitter()
 
-    this.start().then(() => {
+    this._ipfs.start().then(() => {
       // trigger onStart callback
       ev.emit('start')
       if (files && files[0] && files[0].size > this.config.ipfs.maxFileSize) {
@@ -124,7 +115,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
               pull.through((chunk) => ev.emit('progress2', chunk.length, Math.floor((meta.total += chunk.length) * 1.0 / meta.fileSize * 100)))
             )
           }]),
-          this._node.files.addPullStream({chunkerOptions: {maxChunkSize: this.config.ipfs.chunkSize}}), // default size 262144
+          this._ipfs._node.files.addPullStream({chunkerOptions: {maxChunkSize: this.config.ipfs.chunkSize}}), // default size 262144
           pull.collect((err, res) => {
             if (err) {
               return ev.emit('error', err)
@@ -167,7 +158,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
       let resp = null
       // this._ipfs.log('adding ', dirPath, ' to IPFS')
 
-      const addStream = this._node.files.addReadableStream()
+      const addStream = this._ipfs._node.files.addReadableStream()
       addStream.on('data', (file) => {
         // this._ipfs.log('dirPath ', dirPath)
         // this._ipfs.log('file Added ', file)
@@ -228,7 +219,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
    * let fileContent = await paratiiIPFS.get(hash)
    */
   async get (hash) {
-    let ipfs = await this.getIPFSInstance()
+    let ipfs = await this._ipfs.getIPFSInstance()
     return ipfs.files.get(hash)
   }
 
@@ -239,7 +230,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
   * @example let jsonObj = await paratii.ipfs.getJSON('some-multihash')
   */
   async getJSON (multihash) {
-    let ipfs = await this.getIPFSInstance()
+    let ipfs = await this._ipfs.getIPFSInstance()
     let node
     try {
       node = await ipfs.files.cat(multihash)
@@ -250,138 +241,101 @@ export class ParatiiIPFSLocal extends EventEmitter {
     return JSON.parse(node.toString())
   }
 
-  /**
-   * Starts the IPFS node
-   * @return {Promise} that resolves in an IPFS instance
-   * @example paratii.ipfs.start()
-   */
-  start () {
-    return new Promise((resolve, reject) => {
-      if (this.ipfs && this.ipfs.isOnline()) {
-        console.log('IPFS is already running')
-        return resolve(this.ipfs)
-      }
-
-      this.getIPFSInstance().then(function (ipfs) {
-        resolve(ipfs)
-      })
-    })
-  }
-
-  /**
-   * Stops the IPFS node.
-   * @example paratii.ipfs.stop()
-   */
-  stop () {
-    return new Promise((resolve, reject) => {
-      if (!this.ipfs || !this.ipfs.isOnline()) {
-        resolve()
-      }
-      if (this.ipfs) {
-        this.ipfs.stop(() => {
-          setImmediate(() => {
-            resolve()
-          })
-        })
-      }
-    })
-  }
-
-  /**
-   * get an ipfs instance of jsipfs. Singleton pattern
-   * @return {Object} Ipfs instance
-   * @example ipfs = await paratii.ipfs.getIPFSInstance()
-   */
-  getIPFSInstance () {
-    return new Promise((resolve, reject) => {
-      if (this.ipfs) {
-        resolve(this.ipfs)
-      } else {
-        let config = this.config
-        // there will be no joi in IPFS (pun indended)
-        import(/* webpackChunkName: 'ipfs' */ 'ipfs') // eslint-disable-line
-        .then((Ipfs) => {
-          let ipfs = new Ipfs({
-            bitswap: {
-              // maxMessageSize: 256 * 1024
-              maxMessageSize: this.config.ipfs['bitswap.maxMessageSize']
-            },
-            start: true,
-            repo: config.ipfs.repo || '/tmp/test-repo-' + String(Math.random()),
-            config: {
-              Addresses: {
-                Swarm: this.config.ipfs.swarm
-                // [
-                //   '/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star',
-                //   '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/'
-                // ]
-              },
-              Bootstrap: this.config.ipfs.bootstrap
-              // [
-              //   '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
-              // ]
-            }
-          })
-
-          this.ipfs = ipfs
-
-          ipfs.on('ready', () => {
-            this.log('[IPFS] node Ready.')
-
-            ipfs._bitswap.notifications.on('receivedNewBlock', (peerId, block) => {
-              this.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length)
-              this.log('---------[IPFS] bitswap LedgerMap ---------------------')
-              ipfs._bitswap.engine.ledgerMap.forEach((ledger, peerId, ledgerMap) => {
-                this.log(`${peerId} : ${JSON.stringify(ledger.accounting)}\n`)
-              })
-              this.log('-------------------------------------------------------')
-            })
-
-            ipfs.id().then((id) => {
-              let peerInfo = id
-              this.id = id
-              this.log(`[IPFS] id:  ${peerInfo}`)
-              let ptiAddress = (this.config.paratii && this.config.paratii.eth.getAccount()) || 'no_address'
-              this.protocol = new Protocol(
-                ipfs._libp2pNode,
-                ipfs._repo.blocks,
-                // add ETH Address here.
-                ptiAddress
-              )
-
-              this._ipfs.remote._node = ipfs
-              this._ipfs.local._node = ipfs
-              this._ipfs.transcoder._node = ipfs
-
-              this.protocol.notifications.on('message:new', (peerId, msg) => {
-                this.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg)
-              })
-              // emit all commands.
-              // NOTE : this will be changed once protocol upgrades are ready.
-              this.protocol.notifications.on('command', (peerId, command) => {
-                this.emit('protocol:incoming', peerId, command)
-              })
-
-              this.ipfs = ipfs
-              this.protocol.start(() => {
-                setTimeout(() => {
-                  resolve(ipfs)
-                }, 10)
-              })
-            })
-          })
-
-          ipfs.on('error', (err) => {
-            if (err) {
-              // this.log('IPFS node ', ipfs)
-              this.error('[IPFS] Error ', err)
-              reject(err)
-            }
-          })
-        })
-      }
-    })
-  }
+  // /**
+  //  * get an ipfs instance of jsipfs. Singleton pattern
+  //  * @return {Object} Ipfs instance
+  //  * @example ipfs = await paratii.ipfs.getIPFSInstance()
+  //  */
+  // getIPFSInstance () {
+  //   return new Promise((resolve, reject) => {
+  //     if (this.ipfs) {
+  //       resolve(this.ipfs)
+  //     } else {
+  //       let config = this.config
+  //       // there will be no joi in IPFS (pun indended)
+  //       import(/* webpackChunkName: 'ipfs' */ 'ipfs') // eslint-disable-line
+  //       .then((Ipfs) => {
+  //         let ipfs = new Ipfs({
+  //           bitswap: {
+  //             // maxMessageSize: 256 * 1024
+  //             maxMessageSize: this.config.ipfs['bitswap.maxMessageSize']
+  //           },
+  //           start: true,
+  //           repo: config.ipfs.repo || '/tmp/test-repo-' + String(Math.random()),
+  //           config: {
+  //             Addresses: {
+  //               Swarm: this.config.ipfs.swarm
+  //               // [
+  //               //   '/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star',
+  //               //   '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/'
+  //               // ]
+  //             },
+  //             Bootstrap: this.config.ipfs.bootstrap
+  //             // [
+  //             //   '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
+  //             // ]
+  //           }
+  //         })
+  //
+  //         this.ipfs = ipfs
+  //
+  //         ipfs.on('ready', () => {
+  //           this.log('[IPFS] node Ready.')
+  //
+  //           ipfs._bitswap.notifications.on('receivedNewBlock', (peerId, block) => {
+  //             this.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length)
+  //             this.log('---------[IPFS] bitswap LedgerMap ---------------------')
+  //             ipfs._bitswap.engine.ledgerMap.forEach((ledger, peerId, ledgerMap) => {
+  //               this.log(`${peerId} : ${JSON.stringify(ledger.accounting)}\n`)
+  //             })
+  //             this.log('-------------------------------------------------------')
+  //           })
+  //
+  //           ipfs.id().then((id) => {
+  //             let peerInfo = id
+  //             this.id = id
+  //             this.log(`[IPFS] id:  ${peerInfo}`)
+  //             let ptiAddress = (this.config.paratii && this.config.paratii.eth.getAccount()) || 'no_address'
+  //             this.protocol = new Protocol(
+  //               ipfs._libp2pNode,
+  //               ipfs._repo.blocks,
+  //               // add ETH Address here.
+  //               ptiAddress
+  //             )
+  //
+  //             this._ipfs.remote._node = ipfs
+  //             this._ipfs.local._node = ipfs
+  //             this._ipfs.transcoder._node = ipfs
+  //
+  //             this.protocol.notifications.on('message:new', (peerId, msg) => {
+  //               this.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg)
+  //             })
+  //             // emit all commands.
+  //             // NOTE : this will be changed once protocol upgrades are ready.
+  //             this.protocol.notifications.on('command', (peerId, command) => {
+  //               this.emit('protocol:incoming', peerId, command)
+  //             })
+  //
+  //             this.ipfs = ipfs
+  //             this.protocol.start(() => {
+  //               setTimeout(() => {
+  //                 resolve(ipfs)
+  //               }, 10)
+  //             })
+  //           })
+  //         })
+  //
+  //         ipfs.on('error', (err) => {
+  //           if (err) {
+  //             // this.log('IPFS node ', ipfs)
+  //             this.error('[IPFS] Error ', err)
+  //             reject(err)
+  //           }
+  //         })
+  //       })
+  //     }
+  //   })
+  // }
   /**
    * adds a data Object to the IPFS local instance
    * @param  {Object}  data JSON object to store
@@ -389,10 +343,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
    * @example let result = await paratiiIPFS.addJSON(data)
    */
   async addJSON (data) {
-    let ipfs = await this.getIPFSInstance()
-    // if (!this.ipfs || !this.ipfs.isOnline()) {
-    //   throw new Error('IPFS node is not ready, please trigger getIPFSInstance first')
-    // }
+    let ipfs = await this._ipfs.getIPFSInstance()
     const obj = {
       Data: Buffer.from(JSON.stringify(data)),
       Links: []
