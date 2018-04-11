@@ -152,7 +152,7 @@ describe('Paratii configuration:', function () {
   })
 })
 
-it('if the registry address isn\'t correct, paratii should throw a meaningful error', async function () {
+it('paratii.eth.getContract() should throw a meaningful error if the registry address isn\'t correct', async function () {
   let paratii = new Paratii({
     account: testAccount,
     eth: {
