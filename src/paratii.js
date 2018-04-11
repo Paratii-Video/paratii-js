@@ -2,6 +2,7 @@ import { ParatiiCore } from './paratii.core.js'
 import { ParatiiDb } from './paratii.db.js'
 import { ParatiiEth } from './paratii.eth.js'
 import { ParatiiIPFS } from './paratii.ipfs.js'
+import { ParatiiTranscoder } from './paratii.transcoder.js'
 import { ipfsSchema, ethSchema, accountSchema, dbSchema } from './schemas.js'
 
 const joi = require('joi')
@@ -19,6 +20,7 @@ const utils = require('./utils.js')
  * @property {ParatiiEth} eth interact with the Ethereum blockchain
  * @property {ParatiiIPFS} ipfs interact with the IPFS instance
  * @property {ParatiiDb} db interact with the Paratii Index
+ * @property {ParatiiTranscoder} transcoder commands for transcoding files
  * @example paratii = new Paratii({
  *  eth: {
  *    provider': 'http://localhost:8545'
@@ -56,6 +58,7 @@ class Paratii extends ParatiiCore {
     // this.core = new ParatiiCore(this.config)
     this.db = new ParatiiDb(this.config)
     this.ipfs = new ParatiiIPFS(this.config)
+    this.transcoder = new ParatiiTranscoder(this.config)
   }
   /**
    * Set the ethereum address what will be used to sign all transactions

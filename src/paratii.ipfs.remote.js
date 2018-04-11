@@ -176,7 +176,6 @@ export class ParatiiIPFSRemote extends EventEmitter {
     // This needs to be dynamic later on.
     this._node.swarm.connect(opts.transcoder, (err, success) => {
       if (err) return ev.emit('pin:error', err)
-      console.log(4)
       this._node.swarm.peers((err, peers) => {
         this._ipfs.log('peers: ', peers)
         if (err) return ev.emit('pin:error', err)

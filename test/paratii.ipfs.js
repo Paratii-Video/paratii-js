@@ -27,13 +27,16 @@ describe('ParatiiIPFS: :', function () {
     assert.isOk(paratiiIPFS)
     done()
   })
+
   it('ipfs.start() should return a promise', async () => {
     let p = paratiiIPFS.start()
     assert.isOk(p instanceof Promise)
     await p
   })
-  it('ipfs.stop() should return a promise', () => {
-    assert.isOk(paratiiIPFS.stop() instanceof Promise)
+  it('ipfs.stop() should return a promise', async () => {
+    let p = paratiiIPFS.stop()
+    assert.isOk(p instanceof Promise)
+    await p
   })
 
   it('should create an instance without trouble', (done) => {
@@ -69,5 +72,10 @@ describe('ParatiiIPFS: :', function () {
     let paratii = await new Paratii()
     assert.isOk(paratii.ipfs)
     assert.isOk(await paratii.ipfs.getIPFSInstance())
+  })
+  it('addAndPinJSON should work', async () => {
+    let paratii = await new Paratii()
+    let result = await paratii.ipfs.addAndPinJSON({test: 1})
+    assert.isOk(result)
   })
 })

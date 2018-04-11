@@ -233,7 +233,6 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
       // This needs to be dynamic later on.
       this._node.swarm.connect(opts.transcoder, function (err, success) {
         if (err) return ev.emit('pin:error', err);
-        console.log(4);
         _this4._node.swarm.peers(function (err, peers) {
           _this4._ipfs.log('peers: ', peers);
           if (err) return ev.emit('pin:error', err);

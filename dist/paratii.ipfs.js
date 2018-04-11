@@ -9,6 +9,10 @@ var _setImmediate2 = require('babel-runtime/core-js/set-immediate');
 
 var _setImmediate3 = _interopRequireDefault(_setImmediate2);
 
+var _promise = require('babel-runtime/core-js/promise');
+
+var _promise2 = _interopRequireDefault(_promise);
+
 var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
@@ -16,10 +20,6 @@ var _regenerator2 = _interopRequireDefault(_regenerator);
 var _stringify = require('babel-runtime/core-js/json/stringify');
 
 var _stringify2 = _interopRequireDefault(_stringify);
-
-var _promise = require('babel-runtime/core-js/promise');
-
-var _promise2 = _interopRequireDefault(_promise);
 
 var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
 
@@ -61,12 +61,13 @@ var _paratiiTranscoder = require('./paratii.transcoder.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import { Uploader } from './paratii.ipfs.uploader.old.js'
 global.Buffer = global.Buffer || require('buffer').Buffer;
 
 /**
- * Contains functions to interact with the IPFS instance.
+ * Contains functions to interact with the IPFS instance
  * @param {ParatiiIPFSSchema} config configuration object to initialize Paratii object
+ * @property {ParatiiIPFSLocal} local operations on the local node
+ * @property {ParatiiIPFSRemote} remote operations on remote node
  */
 /* global ArrayBuffer */
 
@@ -99,121 +100,18 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     _this.local = new _paratiiIpfsLocal.ParatiiIPFSLocal(config);
     _this.remote = new _paratiiIpfsRemote.ParatiiIPFSRemote({ ipfs: _this.config.ipfs, paratiiIPFS: _this });
     _this.transcoder = new _paratiiTranscoder.ParatiiTranscoder({ ipfs: _this.config.ipfs, paratiiIPFS: _this });
-    // this.uploader = new Uploader({ipfs: this.config.ipfs, paratiiIPFS: this})
     return _this;
   }
+
   /**
-   * get an ipfs instance of jsipfs. Singleton pattern
-   * @return {Object} Ipfs instance
-   * @example ipfs = await paratii.ipfs.getIPFSInstance()
+   * adds a data Object to the IPFS local instance
+   * @param  {Object} data JSON object to store
+   * @return {Promise} promise with the ipfs multihash
+   * @example let result = await paratiiIPFS.addJSON(data)
    */
 
 
   (0, _createClass3.default)(ParatiiIPFS, [{
-    key: 'getIPFSInstance',
-    value: function getIPFSInstance() {
-      var _this2 = this;
-
-      return new _promise2.default(function (resolve, reject) {
-        if (_this2.ipfs) {
-          resolve(_this2.ipfs);
-        } else {
-          var config = _this2.config;
-          // there will be no joi in IPFS (pun indended)
-          _promise2.default.resolve().then(function () {
-            return require('ipfs');
-          }) // eslint-disable-line
-          .then(function (Ipfs) {
-            var ipfs = new Ipfs({
-              bitswap: {
-                // maxMessageSize: 256 * 1024
-                maxMessageSize: _this2.config.ipfs['bitswap.maxMessageSize']
-              },
-              start: true,
-              repo: config.ipfs.repo || '/tmp/test-repo-' + String(Math.random()),
-              config: {
-                Addresses: {
-                  Swarm: _this2.config.ipfs.swarm
-                  // [
-                  //   '/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star',
-                  //   '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/'
-                  // ]
-                },
-                Bootstrap: _this2.config.ipfs.bootstrap
-                // [
-                //   '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
-                // ]
-              }
-            });
-
-            _this2.ipfs = ipfs;
-
-            ipfs.on('ready', function () {
-              _this2.log('[IPFS] node Ready.');
-
-              ipfs._bitswap.notifications.on('receivedNewBlock', function (peerId, block) {
-                _this2.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length);
-                _this2.log('---------[IPFS] bitswap LedgerMap ---------------------');
-                ipfs._bitswap.engine.ledgerMap.forEach(function (ledger, peerId, ledgerMap) {
-                  _this2.log(peerId + ' : ' + (0, _stringify2.default)(ledger.accounting) + '\n');
-                });
-                _this2.log('-------------------------------------------------------');
-              });
-
-              ipfs.id().then(function (id) {
-                var peerInfo = id;
-                _this2.id = id;
-                _this2.log('[IPFS] id:  ' + peerInfo);
-                var ptiAddress = _this2.config.account.address || 'no_address';
-                _this2.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
-                // add ETH Address here.
-                ptiAddress);
-
-                // this.uploader._node = ipfs
-                _this2._node = ipfs;
-                _this2.remote._node = ipfs;
-                // this.uploader.setOptions({
-                //   node: ipfs,
-                //   chunkSize: 128 * 1024
-                // })
-
-                _this2.protocol.notifications.on('message:new', function (peerId, msg) {
-                  _this2.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
-                });
-                // emit all commands.
-                // NOTE : this will be changed once protocol upgrades are ready.
-                _this2.protocol.notifications.on('command', function (peerId, command) {
-                  _this2.emit('protocol:incoming', peerId, command);
-                });
-
-                _this2.ipfs = ipfs;
-                _this2.protocol.start(function () {
-                  setTimeout(function () {
-                    resolve(ipfs);
-                  }, 10);
-                });
-              });
-            });
-
-            ipfs.on('error', function (err) {
-              if (err) {
-                // this.log('IPFS node ', ipfs)
-                _this2.error('[IPFS] Error ', err);
-                reject(err);
-              }
-            });
-          });
-        }
-      });
-    }
-    /**
-     * adds a data Object to the IPFS local instance
-     * @param  {Object}  data JSON object to store
-     * @return {Promise}      promise with the ipfs multihash
-     * @example let result = await paratiiIPFS.addJSON(data)
-     */
-
-  }, {
     key: 'addJSON',
     value: function addJSON(data) {
       var ipfs, obj, node;
@@ -275,15 +173,15 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   }, {
     key: 'start',
     value: function start() {
-      var _this3 = this;
+      var _this2 = this;
 
       return new _promise2.default(function (resolve, reject) {
-        if (_this3.ipfs && _this3.ipfs.isOnline()) {
+        if (_this2.ipfs && _this2.ipfs.isOnline()) {
           console.log('IPFS is already running');
-          return resolve(_this3.ipfs);
+          return resolve(_this2.ipfs);
         }
 
-        _this3.getIPFSInstance().then(function (ipfs) {
+        _this2.getIPFSInstance().then(function (ipfs) {
           resolve(ipfs);
         });
       });
@@ -297,14 +195,14 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   }, {
     key: 'stop',
     value: function stop() {
-      var _this4 = this;
+      var _this3 = this;
 
       return new _promise2.default(function (resolve, reject) {
-        if (!_this4.ipfs || !_this4.ipfs.isOnline()) {
+        if (!_this3.ipfs || !_this3.ipfs.isOnline()) {
           resolve();
         }
-        if (_this4.ipfs) {
-          _this4.ipfs.stop(function () {
+        if (_this3.ipfs) {
+          _this3.ipfs.stop(function () {
             (0, _setImmediate3.default)(function () {
               resolve();
             });
@@ -322,7 +220,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   }, {
     key: 'addAndPinJSON',
     value: function addAndPinJSON(data) {
-      var _this5 = this;
+      var _this4 = this;
 
       var hash, pinFile, pinEv;
       return _regenerator2.default.async(function addAndPinJSON$(_context2) {
@@ -336,13 +234,13 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
               hash = _context2.sent;
 
               pinFile = function pinFile() {
-                var pinEv = _this5.uploader.pinFile(hash, { author: _this5.config.account.address });
+                var pinEv = _this4.remote.pinFile(hash, { author: _this4.config.account.address });
                 pinEv.on('pin:error', function (err) {
                   console.warn('pin:error:', hash, ' : ', err);
                   pinEv.removeAllListeners();
                 });
                 pinEv.on('pin:done', function (hash) {
-                  _this5.log('pin:done:', hash);
+                  _this4.log('pin:done:', hash);
                   pinEv.removeAllListeners();
                 });
                 return pinEv;
@@ -414,41 +312,105 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
         (_console3 = console).error.apply(_console3, arguments);
       }
     }
+    /**
+     * get an ipfs instance of jsipfs. Singleton pattern
+     * @return {Object} Ipfs instance
+     * @example ipfs = await paratii.ipfs.getIPFSInstance()
+     * @private
+     */
 
-    // /**
-    //  * add a JSON to local IPFS instance, sends a message to paratii.config.ipfs.remoteIPFSNode to pin the mesage
-    //  * @param  {object}  data JSON object to store
-    //  * @return {Promise} resolves in the hash of the added file, after confirmation from the remove node
-    //  * @example let hash = await paratii.ipfs.addAndPinJSON(data)
-    //  */
-    // async addAndPinJSON (data) {
-    //   let hash = await this.addJSON(data)
-    //   let pinFile = () => {
-    //     let pinEv = this.remote.pinFile(hash,
-    //       { author: this.config.account.address }
-    //     )
-    //     pinEv.on('pin:error', (err) => {
-    //       console.warn('pin:error:', hash, ' : ', err)
-    //       pinEv.removeAllListeners()
-    //     })
-    //     pinEv.on('pin:done', (hash) => {
-    //       this.log('pin:done:', hash)
-    //       pinEv.removeAllListeners()
-    //     })
-    //     return pinEv
-    //   }
-    //
-    //   let pinEv = pinFile()
-    //
-    //   pinEv.on('pin:error', (err) => {
-    //     console.warn('pin:error:', hash, ' : ', err)
-    //     console.log('trying again')
-    //     pinEv = pinFile()
-    //   })
-    //
-    //   return hash
-    // }
+  }, {
+    key: 'getIPFSInstance',
+    value: function getIPFSInstance() {
+      var _this5 = this;
 
+      return new _promise2.default(function (resolve, reject) {
+        if (_this5.ipfs) {
+          resolve(_this5.ipfs);
+        } else {
+          var config = _this5.config;
+          // there will be no joi in IPFS (pun indended)
+          _promise2.default.resolve().then(function () {
+            return require('ipfs');
+          }) // eslint-disable-line
+          .then(function (Ipfs) {
+            var ipfs = new Ipfs({
+              bitswap: {
+                // maxMessageSize: 256 * 1024
+                maxMessageSize: _this5.config.ipfs['bitswap.maxMessageSize']
+              },
+              start: true,
+              repo: config.ipfs.repo || '/tmp/test-repo-' + String(Math.random()),
+              config: {
+                Addresses: {
+                  Swarm: _this5.config.ipfs.swarm
+                  // [
+                  //   '/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star',
+                  //   '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/'
+                  // ]
+                },
+                Bootstrap: _this5.config.ipfs.bootstrap
+                // [
+                //   '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
+                // ]
+              }
+            });
+
+            _this5.ipfs = ipfs;
+
+            ipfs.on('ready', function () {
+              _this5.log('[IPFS] node Ready.');
+
+              ipfs._bitswap.notifications.on('receivedNewBlock', function (peerId, block) {
+                _this5.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length);
+                _this5.log('---------[IPFS] bitswap LedgerMap ---------------------');
+                ipfs._bitswap.engine.ledgerMap.forEach(function (ledger, peerId, ledgerMap) {
+                  _this5.log(peerId + ' : ' + (0, _stringify2.default)(ledger.accounting) + '\n');
+                });
+                _this5.log('-------------------------------------------------------');
+              });
+
+              ipfs.id().then(function (id) {
+                var peerInfo = id;
+                _this5.id = id;
+                _this5.log('[IPFS] id:  ' + peerInfo);
+                var ptiAddress = _this5.config.account.address || 'no_address';
+                _this5.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
+                // add ETH Address here.
+                ptiAddress);
+
+                _this5._node = ipfs;
+                _this5.remote._node = ipfs;
+
+                _this5.protocol.notifications.on('message:new', function (peerId, msg) {
+                  _this5.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
+                });
+                // emit all commands.
+                // NOTE : this will be changed once protocol upgrades are ready.
+                _this5.protocol.notifications.on('command', function (peerId, command) {
+                  _this5.emit('protocol:incoming', peerId, command);
+                });
+
+                _this5.ipfs = ipfs;
+                _this5.protocol.start(function () {
+                  setTimeout(function () {
+                    resolve(ipfs);
+                  }, 10);
+                });
+              });
+            });
+
+            ipfs.on('error', function (err) {
+              if (err) {
+                // this.log('IPFS node ', ipfs)
+                _this5.error('[IPFS] Error ', err);
+                reject(err);
+              }
+            });
+          });
+        }
+      });
+    }
   }]);
   return ParatiiIPFS;
 }(_events.EventEmitter);
