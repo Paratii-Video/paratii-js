@@ -9,6 +9,14 @@ var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
+var _promise = require('babel-runtime/core-js/promise');
+
+var _promise2 = _interopRequireDefault(_promise);
+
 var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -29,6 +37,10 @@ var _inherits2 = require('babel-runtime/helpers/inherits');
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
+var _paratiiProtocol = require('paratii-protocol');
+
+var _paratiiProtocol2 = _interopRequireDefault(_paratiiProtocol);
+
 var _schemas = require('./schemas.js');
 
 var _joi = require('joi');
@@ -47,14 +59,13 @@ var _paratiiIpfsUploaderOld = require('./paratii.ipfs.uploader.old.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+/* global ArrayBuffer */
 global.Buffer = global.Buffer || require('buffer').Buffer;
 
 /**
  * Contains functions to interact with the IPFS instance.
  * @param {ParatiiIPFSSchema} config configuration object to initialize Paratii object
  */
-/* global ArrayBuffer */
-// import Protocol from 'paratii-protocol'
 
 var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   (0, _inherits3.default)(ParatiiIPFS, _EventEmitter);
@@ -89,14 +100,230 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     return _this;
   }
   /**
-   * log messages on the console if verbose is set
-   * @param  {string} msg text to log
-   * @example
-   * paratii.ipfs.log("some-text")
+   * get an ipfs instance of jsipfs. Singleton pattern
+   * @return {Object} Ipfs instance
+   * @example ipfs = await paratii.ipfs.getIPFSInstance()
    */
 
 
   (0, _createClass3.default)(ParatiiIPFS, [{
+    key: 'getIPFSInstance',
+    value: function getIPFSInstance() {
+      var _this2 = this;
+
+      return new _promise2.default(function (resolve, reject) {
+        if (_this2.ipfs) {
+          resolve(_this2.ipfs);
+        } else {
+          var config = _this2.config;
+          // there will be no joi in IPFS (pun indended)
+          _promise2.default.resolve().then(function () {
+            return require('ipfs');
+          }) // eslint-disable-line
+          .then(function (Ipfs) {
+            var ipfs = new Ipfs({
+              bitswap: {
+                // maxMessageSize: 256 * 1024
+                maxMessageSize: _this2.config.ipfs['bitswap.maxMessageSize']
+              },
+              start: true,
+              repo: config.ipfs.repo || '/tmp/test-repo-' + String(Math.random()),
+              config: {
+                Addresses: {
+                  Swarm: _this2.config.ipfs.swarm
+                  // [
+                  //   '/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star',
+                  //   '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/'
+                  // ]
+                },
+                Bootstrap: _this2.config.ipfs.bootstrap
+                // [
+                //   '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
+                // ]
+              }
+            });
+
+            _this2.ipfs = ipfs;
+
+            ipfs.on('ready', function () {
+              _this2.log('[IPFS] node Ready.');
+
+              ipfs._bitswap.notifications.on('receivedNewBlock', function (peerId, block) {
+                _this2.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length);
+                _this2.log('---------[IPFS] bitswap LedgerMap ---------------------');
+                ipfs._bitswap.engine.ledgerMap.forEach(function (ledger, peerId, ledgerMap) {
+                  _this2.log(peerId + ' : ' + (0, _stringify2.default)(ledger.accounting) + '\n');
+                });
+                _this2.log('-------------------------------------------------------');
+              });
+
+              ipfs.id().then(function (id) {
+                var peerInfo = id;
+                _this2.id = id;
+                _this2.log('[IPFS] id:  ' + peerInfo);
+                var ptiAddress = _this2.config.account.address || 'no_address';
+                _this2.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
+                // add ETH Address here.
+                ptiAddress);
+
+                _this2.uploader._node = ipfs;
+                _this2._node = ipfs;
+                _this2.remote._node = ipfs;
+                // this.uploader.setOptions({
+                //   node: ipfs,
+                //   chunkSize: 128 * 1024
+                // })
+
+                _this2.protocol.notifications.on('message:new', function (peerId, msg) {
+                  _this2.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
+                });
+                // emit all commands.
+                // NOTE : this will be changed once protocol upgrades are ready.
+                _this2.protocol.notifications.on('command', function (peerId, command) {
+                  _this2.emit('protocol:incoming', peerId, command);
+                });
+
+                _this2.ipfs = ipfs;
+                _this2.protocol.start(function () {
+                  setTimeout(function () {
+                    resolve(ipfs);
+                  }, 10);
+                });
+              });
+            });
+
+            ipfs.on('error', function (err) {
+              if (err) {
+                // this.log('IPFS node ', ipfs)
+                _this2.error('[IPFS] Error ', err);
+                reject(err);
+              }
+            });
+          });
+        }
+      });
+    }
+    /**
+     * adds a data Object to the IPFS local instance
+     * @param  {Object}  data JSON object to store
+     * @return {Promise}      promise with the ipfs multihash
+     * @example let result = await paratiiIPFS.addJSON(data)
+     */
+
+  }, {
+    key: 'addJSON',
+    value: function addJSON(data) {
+      var ipfs, obj, node;
+      return _regenerator2.default.async(function addJSON$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return _regenerator2.default.awrap(this.getIPFSInstance());
+
+            case 2:
+              ipfs = _context.sent;
+
+              // if (!this.ipfs || !this.ipfs.isOnline()) {
+              //   throw new Error('IPFS node is not ready, please trigger getIPFSInstance first')
+              // }
+              obj = {
+                Data: Buffer.from((0, _stringify2.default)(data)),
+                Links: []
+              };
+              node = void 0;
+              _context.prev = 5;
+              _context.next = 8;
+              return _regenerator2.default.awrap(ipfs.files.add(obj.Data));
+
+            case 8:
+              node = _context.sent;
+              _context.next = 15;
+              break;
+
+            case 11:
+              _context.prev = 11;
+              _context.t0 = _context['catch'](5);
+
+              if (!_context.t0) {
+                _context.next = 15;
+                break;
+              }
+
+              throw _context.t0;
+
+            case 15:
+              return _context.abrupt('return', node[0].hash);
+
+            case 16:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, null, this, [[5, 11]]);
+    }
+    /**
+     * convenient method to add JSON and send it for persistance storage.
+     * @param  {object}  data JSON object to store
+     * @return {string}      returns ipfs multihash of the stored object.
+     * @example let result = await paratiiIPFS.addAndPinJSON(data)
+     */
+
+  }, {
+    key: 'addAndPinJSON',
+    value: function addAndPinJSON(data) {
+      var _this3 = this;
+
+      var hash, pinFile, pinEv;
+      return _regenerator2.default.async(function addAndPinJSON$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.next = 2;
+              return _regenerator2.default.awrap(this.addJSON(data));
+
+            case 2:
+              hash = _context2.sent;
+
+              pinFile = function pinFile() {
+                var pinEv = _this3.uploader.pinFile(hash, { author: _this3.config.account.address });
+                pinEv.on('pin:error', function (err) {
+                  console.warn('pin:error:', hash, ' : ', err);
+                  pinEv.removeAllListeners();
+                });
+                pinEv.on('pin:done', function (hash) {
+                  _this3.log('pin:done:', hash);
+                  pinEv.removeAllListeners();
+                });
+                return pinEv;
+              };
+
+              pinEv = pinFile();
+
+
+              pinEv.on('pin:error', function (err) {
+                console.warn('pin:error:', hash, ' : ', err);
+                console.log('trying again');
+                pinEv = pinFile();
+              });
+
+              return _context2.abrupt('return', hash);
+
+            case 7:
+            case 'end':
+              return _context2.stop();
+          }
+        }
+      }, null, this);
+    }
+    /**
+     * log messages on the console if verbose is set
+     * @param  {string} msg text to log
+     * @example
+     * paratii.ipfs.log("some-text")
+     */
+
+  }, {
     key: 'log',
     value: function log() {
       if (this.config.verbose) {
@@ -138,60 +365,40 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
       }
     }
 
-    /**
-     * add a JSON to local IPFS instance, sends a message to paratii.config.ipfs.remoteIPFSNode to pin the mesage
-     * @param  {object}  data JSON object to store
-     * @return {Promise} resolves in the hash of the added file, after confirmation from the remove node
-     * @example let hash = await paratii.ipfs.addAndPinJSON(data)
-     */
+    // /**
+    //  * add a JSON to local IPFS instance, sends a message to paratii.config.ipfs.remoteIPFSNode to pin the mesage
+    //  * @param  {object}  data JSON object to store
+    //  * @return {Promise} resolves in the hash of the added file, after confirmation from the remove node
+    //  * @example let hash = await paratii.ipfs.addAndPinJSON(data)
+    //  */
+    // async addAndPinJSON (data) {
+    //   let hash = await this.addJSON(data)
+    //   let pinFile = () => {
+    //     let pinEv = this.remote.pinFile(hash,
+    //       { author: this.config.account.address }
+    //     )
+    //     pinEv.on('pin:error', (err) => {
+    //       console.warn('pin:error:', hash, ' : ', err)
+    //       pinEv.removeAllListeners()
+    //     })
+    //     pinEv.on('pin:done', (hash) => {
+    //       this.log('pin:done:', hash)
+    //       pinEv.removeAllListeners()
+    //     })
+    //     return pinEv
+    //   }
+    //
+    //   let pinEv = pinFile()
+    //
+    //   pinEv.on('pin:error', (err) => {
+    //     console.warn('pin:error:', hash, ' : ', err)
+    //     console.log('trying again')
+    //     pinEv = pinFile()
+    //   })
+    //
+    //   return hash
+    // }
 
-  }, {
-    key: 'addAndPinJSON',
-    value: function addAndPinJSON(data) {
-      var _this2 = this;
-
-      var hash, pinFile, pinEv;
-      return _regenerator2.default.async(function addAndPinJSON$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              _context.next = 2;
-              return _regenerator2.default.awrap(this.addJSON(data));
-
-            case 2:
-              hash = _context.sent;
-
-              pinFile = function pinFile() {
-                var pinEv = _this2.remote.pinFile(hash, { author: _this2.config.account.address });
-                pinEv.on('pin:error', function (err) {
-                  console.warn('pin:error:', hash, ' : ', err);
-                  pinEv.removeAllListeners();
-                });
-                pinEv.on('pin:done', function (hash) {
-                  _this2.log('pin:done:', hash);
-                  pinEv.removeAllListeners();
-                });
-                return pinEv;
-              };
-
-              pinEv = pinFile();
-
-
-              pinEv.on('pin:error', function (err) {
-                console.warn('pin:error:', hash, ' : ', err);
-                console.log('trying again');
-                pinEv = pinFile();
-              });
-
-              return _context.abrupt('return', hash);
-
-            case 7:
-            case 'end':
-              return _context.stop();
-          }
-        }
-      }, null, this);
-    }
   }]);
   return ParatiiIPFS;
 }(_events.EventEmitter);

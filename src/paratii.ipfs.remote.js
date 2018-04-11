@@ -79,7 +79,7 @@ export class ParatiiIPFSRemote extends EventEmitter {
         ev = new EventEmitter()
       }
       this._ipfs.start().then(() => {
-        let msg = this._ipfs.local.protocol.createCommand('getMetaData', {hash: fileHash})
+        let msg = this._ipfs.protocol.createCommand('getMetaData', {hash: fileHash})
         // FIXME : This is for dev, so we just signal our transcoder node.
         // This needs to be dynamic later on.
         this._ipfs.ipfs.swarm.connect(opts.transcoder, (err, success) => {
@@ -95,7 +95,7 @@ export class ParatiiIPFSRemote extends EventEmitter {
               this._ipfs.log('peerID : ', peer.peer.id.toB58String(), opts.transcoderId, peer.peer.id.toB58String() === opts.transcoder)
               if (peer.peer.id.toB58String() === opts.transcoderId) {
                 this._ipfs.log(`sending getMetaData msg to ${peer.peer.id.toB58String()} with request to transcode ${fileHash}`)
-                this._ipfs.local.protocol.network.sendMessage(peer.peer.id, msg, (err) => {
+                this._ipfs.protocol.network.sendMessage(peer.peer.id, msg, (err) => {
                   if (err) {
                     ev.emit('getMetaData:error', err)
                     return ev
@@ -171,24 +171,21 @@ export class ParatiiIPFSRemote extends EventEmitter {
       ev = new EventEmitter()
     }
 
-    let msg = this._ipfs.local.protocol.createCommand('pin', {hash: fileHash, author: opts.author, size: opts.size})
+    let msg = this._ipfs.protocol.createCommand('pin', {hash: fileHash, author: opts.author, size: opts.size})
     // FIXME : This is for dev, so we just signal our transcoder node.
     // This needs to be dynamic later on.
     this._node.swarm.connect(opts.transcoder, (err, success) => {
-      console.log(3)
       if (err) return ev.emit('pin:error', err)
       console.log(4)
       this._node.swarm.peers((err, peers) => {
-        console.log(5)
         this._ipfs.log('peers: ', peers)
         if (err) return ev.emit('pin:error', err)
         peers.map((peer) => {
-          console.log(6)
           try {
             this._ipfs.log('peer.peer.toB58String(): ', peer.peer.toB58String())
             if (peer.peer.toB58String() === opts.transcoderId) {
               this._ipfs.log(`sending pin msg to ${peer.peer._idB58String} with request to pin ${fileHash}`)
-              this._ipfs.local.protocol.network.sendMessage(peer.peer, msg, (err) => {
+              this._ipfs.protocol.network.sendMessage(peer.peer, msg, (err) => {
                 if (err) {
                   ev.emit('pin:error', err)
                   console.log(err)

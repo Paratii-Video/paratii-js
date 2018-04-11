@@ -132,7 +132,7 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
           ev = new _events.EventEmitter();
         }
         _this3._ipfs.start().then(function () {
-          var msg = _this3._ipfs.local.protocol.createCommand('getMetaData', { hash: fileHash });
+          var msg = _this3._ipfs.protocol.createCommand('getMetaData', { hash: fileHash });
           // FIXME : This is for dev, so we just signal our transcoder node.
           // This needs to be dynamic later on.
           _this3._ipfs.ipfs.swarm.connect(opts.transcoder, function (err, success) {
@@ -148,7 +148,7 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
                 _this3._ipfs.log('peerID : ', peer.peer.id.toB58String(), opts.transcoderId, peer.peer.id.toB58String() === opts.transcoder);
                 if (peer.peer.id.toB58String() === opts.transcoderId) {
                   _this3._ipfs.log('sending getMetaData msg to ' + peer.peer.id.toB58String() + ' with request to transcode ' + fileHash);
-                  _this3._ipfs.local.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
+                  _this3._ipfs.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
                     if (err) {
                       ev.emit('getMetaData:error', err);
                       return ev;
@@ -228,24 +228,21 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
         ev = new _events.EventEmitter();
       }
 
-      var msg = this._ipfs.local.protocol.createCommand('pin', { hash: fileHash, author: opts.author, size: opts.size });
+      var msg = this._ipfs.protocol.createCommand('pin', { hash: fileHash, author: opts.author, size: opts.size });
       // FIXME : This is for dev, so we just signal our transcoder node.
       // This needs to be dynamic later on.
       this._node.swarm.connect(opts.transcoder, function (err, success) {
-        console.log(3);
         if (err) return ev.emit('pin:error', err);
         console.log(4);
         _this4._node.swarm.peers(function (err, peers) {
-          console.log(5);
           _this4._ipfs.log('peers: ', peers);
           if (err) return ev.emit('pin:error', err);
           peers.map(function (peer) {
-            console.log(6);
             try {
               _this4._ipfs.log('peer.peer.toB58String(): ', peer.peer.toB58String());
               if (peer.peer.toB58String() === opts.transcoderId) {
                 _this4._ipfs.log('sending pin msg to ' + peer.peer._idB58String + ' with request to pin ' + fileHash);
-                _this4._ipfs.local.protocol.network.sendMessage(peer.peer, msg, function (err) {
+                _this4._ipfs.protocol.network.sendMessage(peer.peer, msg, function (err) {
                   if (err) {
                     ev.emit('pin:error', err);
                     console.log(err);

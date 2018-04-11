@@ -82,7 +82,7 @@ describe('ParatiiIPFS Uploader :', function () {
   })
 
   it('should be able to pin a JSON Object', (done) => {
-    paratiiIPFS.local.addJSON({test: 1}).then((multihash) => {
+    paratiiIPFS.addJSON({test: 1}).then((multihash) => {
       assert.isOk(multihash)
       let ev = paratiiIPFS.remote.pinFile(multihash)
       ev.once('pin:error', done)

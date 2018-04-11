@@ -1,14 +1,25 @@
-/* global File, ArrayBuffer */
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Uploader = undefined;
+exports.ParatiiIPFS = undefined;
+
+var _setImmediate2 = require('babel-runtime/core-js/set-immediate');
+
+var _setImmediate3 = _interopRequireDefault(_setImmediate2);
+
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
 
 var _promise = require('babel-runtime/core-js/promise');
 
 var _promise2 = _interopRequireDefault(_promise);
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
 
 var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
 
@@ -30,808 +41,490 @@ var _inherits2 = require('babel-runtime/helpers/inherits');
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
-var _schemas = require('./schemas.js');
+var _paratiiProtocol = require('paratii-protocol');
 
-var _events = require('events');
+var _paratiiProtocol2 = _interopRequireDefault(_paratiiProtocol);
+
+var _schemas = require('./schemas.js');
 
 var _joi = require('joi');
 
 var _joi2 = _interopRequireDefault(_joi);
 
+var _events = require('events');
+
+var _paratiiIpfsUploader = require('./paratii.ipfs.uploader.js');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var pull = require('pull-stream');
-var pullFilereader = require('pull-filereader');
-var toPull = require('stream-to-pull-stream');
-var fs = require('fs');
-var path = require('path');
-
-var _require = require('async'),
-    eachSeries = _require.eachSeries,
-    nextTick = _require.nextTick;
-
-var once = require('once');
-var Multiaddr = require('multiaddr');
-var Resumable = require('resumablejs');
+global.Buffer = global.Buffer || require('buffer').Buffer;
 
 /**
- * IPFS UPLOADER : Paratii IPFS uploader interface.
- * @extends EventEmitter
- * @param {ParatiiIPFSUploaderSchema} opts
+ * Contains functions to interact with the IPFS instance.
+ * @param {ParatiiIPFSSchema} config configuration object to initialize Paratii object
+ * @property {Uploader} uploader Paratii IPFS uploader interface
  */
 
-var Uploader = exports.Uploader = function (_EventEmitter) {
-  (0, _inherits3.default)(Uploader, _EventEmitter);
+var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
+  (0, _inherits3.default)(ParatiiIPFS, _EventEmitter);
 
   /**
-  * @typedef {Array} ParatiiIPFSUploaderSchema
+  * @typedef {Array} ParatiiIPFSSchema
   * @property {?ipfsSchema} ipfs
-  * @property {?Object} ParatiiIPFS
+  * @property {?accountSchema} account
+  * @property {?boolean} verbose
   */
-  function Uploader(opts) {
-    (0, _classCallCheck3.default)(this, Uploader);
+  function ParatiiIPFS(config) {
+    (0, _classCallCheck3.default)(this, ParatiiIPFS);
 
-    var _this = (0, _possibleConstructorReturn3.default)(this, (Uploader.__proto__ || (0, _getPrototypeOf2.default)(Uploader)).call(this));
+    var _this = (0, _possibleConstructorReturn3.default)(this, (ParatiiIPFS.__proto__ || (0, _getPrototypeOf2.default)(ParatiiIPFS)).call(this));
 
     var schema = _joi2.default.object({
       ipfs: _schemas.ipfsSchema,
-      paratiiIPFS: _joi2.default.object().optional()
+      account: _schemas.accountSchema,
+      verbose: _joi2.default.bool().default(false)
       //   onReadyHook: joi.array().ordered().default([]),
       //   protocol: joi.string().default(null),
     });
-    var result = _joi2.default.validate(opts, schema, { allowUnknown: true });
+
+    var result = _joi2.default.validate(config, schema, { allowUnknown: true });
     if (result.error) throw result.error;
-    _this.config = result.value;
-    _this._ipfs = _this.config.paratiiIPFS; // this is the paratii.ipfs.js
+    _this.config = config;
+    _this.config.ipfs = result.value.ipfs;
+    _this.config.account = result.value.account;
+    _this.uploader = new _paratiiIpfsUploader.Uploader({ ipfs: _this.config.ipfs, paratiiIPFS: _this });
     return _this;
   }
-
   /**
-   * ????
-   * @param  {?} ev ?
-   * @return {?}    ?
+   * Adds the file to ipfs
+   * @param  {ReadStream}  fileStream ReadStream of the file. Can be created with fs.createReadStream(path)
+   * @return {Promise}            data about the added file (path,multihash,size)
+   * @example
+   * let path = 'test/data/some-file.txt'
+   * let fileStream = fs.createReadStream(path)
+   * let result = await paratiiIPFS.add(fileStream)
+   */
+
+
+  (0, _createClass3.default)(ParatiiIPFS, [{
+    key: 'add',
+    value: function add(fileStream) {
+      var ipfs;
+      return _regenerator2.default.async(function add$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return _regenerator2.default.awrap(this.getIPFSInstance());
+
+            case 2:
+              ipfs = _context.sent;
+              return _context.abrupt('return', ipfs.files.add(fileStream));
+
+            case 4:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, null, this);
+    }
+    /**
+     * get file from ipfs
+     * @param  {string}  hash ipfs multihash of the file
+     * @return {Promise}      the file (path,content)
+     * @example
+     * let result = await paratiiIPFS.add(fileStream)
+     * let hash = result[0].hash
+     * let fileContent = await paratiiIPFS.get(hash)
+     */
+
+  }, {
+    key: 'get',
+    value: function get(hash) {
+      var ipfs;
+      return _regenerator2.default.async(function get$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.next = 2;
+              return _regenerator2.default.awrap(this.getIPFSInstance());
+
+            case 2:
+              ipfs = _context2.sent;
+              return _context2.abrupt('return', ipfs.files.get(hash));
+
+            case 4:
+            case 'end':
+              return _context2.stop();
+          }
+        }
+      }, null, this);
+    }
+    /**
+     * log messages on the console if verbose is set
+     * @param  {string} msg text to log
+     * @example
+     * paratii.ipfs.log("some-text")
+     */
+
+  }, {
+    key: 'log',
+    value: function log() {
+      if (this.config.verbose) {
+        var _console;
+
+        (_console = console).log.apply(_console, arguments);
+      }
+    }
+    /**
+     * log warns on the console if verbose is set
+     * @param  {string} msg warn text
+     * @example
+     * paratii.ipfs.warn("some-text")
+     */
+
+  }, {
+    key: 'warn',
+    value: function warn() {
+      if (this.config.verbose) {
+        var _console2;
+
+        (_console2 = console).warn.apply(_console2, arguments);
+      }
+    }
+    /**
+    * log errors on the console if verbose is set
+    * @param  {string} msg error message
+    * @example
+    * paratii.ipfs.error("some-text")
     */
 
-
-  (0, _createClass3.default)(Uploader, [{
-    key: 'onDrop',
-    value: function onDrop(ev) {}
-
-    /**
-     * Upload a file over XHR to the transcoder. To be called with an event emitter as the last argument
-     * @param  {Object} file       file to upload
-     * @param  {string} hashedFile hash of the file ??
-     * @param  {EventEmitter} ev         event emitter
-     * @example this.xhrUpload(file, hashedFile, ev)
-      */
-
   }, {
-    key: 'xhrUpload',
-    value: function xhrUpload(file, hashedFile, ev) {
-      var r = new Resumable({
-        target: this.config.ipfs.transcoderDropUrl + '/' + hashedFile.hash,
-        chunkSize: this.config.ipfs.xhrChunkSize,
-        simultaneousUploads: 4,
-        testChunks: false,
-        throttleProgressCallbacks: 1,
-        maxFileSize: this.config.ipfs.maxFileSize
-      });
+    key: 'error',
+    value: function error() {
+      if (this.config.verbose) {
+        var _console3;
 
-      r.on('fileAdded', function (file, ev) {
-        console.log('file ', file, 'added');
-      });
-
-      r.on('fileProgress', function (file) {
-        ev.emit('progress', r.progress() * 100);
-      });
-
-      r.on('complete', function () {
-        ev.emit('fileReady', hashedFile);
-      });
-
-      r.on('error', function (err, file) {
-        console.error('file ', file, 'err ', err);
-      });
-
-      r.addFile(file._html5File);
-
-      setTimeout(function () {
-        r.upload();
-      }, 1);
-    }
-
-    /**
-     * uploads a single file to *local* IPFS node
-     * @param {File} file HTML5 File Object.
-     * @returns {EventEmitter} checkout the upload function below for details.
-     * @example let uploaderEv = paratiiIPFS.uploader.add(files)
-      */
-
-  }, {
-    key: 'add',
-    value: function add(file) {
-      var files = void 0;
-      if (Array.isArray(file)) {
-        files = file;
-      } else {
-        files = [file];
-      }
-
-      var result = [];
-
-      for (var i = 0; i < files.length; i++) {
-        // check if File is actually available or not.
-        // if not it means we're not in the browser land.
-        if (typeof File !== 'undefined') {
-          if (files[i] instanceof File) {
-            result.push(this.html5FileToPull(files[i]));
-          } else {
-            result.push(this.fsFileToPull(files[i]));
-          }
-        } else {
-          result.push(this.fsFileToPull(files[i]));
-        }
-      }
-      return this.upload(result);
-    }
-
-    /**
-     * returns a generic File Object with a Pull Stream from an HTML5 File
-     * @param  {File} file  HTML5 File Object
-     * @return {Object}      generic file object.
-     * @example ?
-      */
-
-  }, {
-    key: 'html5FileToPull',
-    value: function html5FileToPull(file) {
-      return {
-        name: file.name,
-        size: file.size,
-        path: file.path,
-        _html5File: file,
-        _pullStream: pullFilereader(file)
-      };
-    }
-
-    /**
-     * returns a generic file Object from a file path
-     * @param  {string} filePath Path to file.
-     * @return {Object} generic file object.
-     * @example ?
-      */
-
-  }, {
-    key: 'fsFileToPull',
-    value: function fsFileToPull(filePath) {
-      var stats = fs.statSync(filePath);
-      if (stats) {
-        return {
-          name: path.basename(filePath),
-          size: stats.size,
-          _pullStream: toPull(fs.createReadStream(filePath))
-        };
-      } else {
-        return null;
+        (_console3 = console).error.apply(_console3, arguments);
       }
     }
-
     /**
-     * upload an Array of files as is to the local IPFS node
-     * @param  {Array} files    HTML5 File Object Array.
-     * @return {EventEmitter} returns EventEmitter with the following events:
-     *    - 'start': uploader started.
-     *    - 'progress': (chunkLength, progressPercent)
-     *    - 'fileReady': (file) triggered when a file is uploaded locally.
-     *    - 'done': (files) triggered when the uploader is done locally.
-     *    - 'error': (err) triggered whenever an error occurs.
-     * @example ?
-      */
+     * get an ipfs instance of jsipfs. Singleton pattern
+     * @return {Object} Ipfs instance
+     * @example ipfs = await paratii.ipfs.getIPFSInstance()
+     */
 
   }, {
-    key: 'upload',
-    value: function upload(files) {
+    key: 'getIPFSInstance',
+    value: function getIPFSInstance() {
       var _this2 = this;
 
-      var meta = {}; // holds File metadata.
-      var ev = new _events.EventEmitter();
+      return new _promise2.default(function (resolve, reject) {
+        if (_this2.ipfs) {
+          resolve(_this2.ipfs);
+        } else {
+          var config = _this2.config;
+          // there will be no joi in IPFS (pun indended)
+          _promise2.default.resolve().then(function () {
+            return require('ipfs');
+          }) // eslint-disable-line
+          .then(function (Ipfs) {
+            var ipfs = new Ipfs({
+              bitswap: {
+                // maxMessageSize: 256 * 1024
+                maxMessageSize: _this2.config.ipfs['bitswap.maxMessageSize']
+              },
+              start: true,
+              repo: config.ipfs.repo || '/tmp/test-repo-' + String(Math.random()),
+              config: {
+                Addresses: {
+                  Swarm: _this2.config.ipfs.swarm
+                  // [
+                  //   '/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star',
+                  //   '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/'
+                  // ]
+                },
+                Bootstrap: _this2.config.ipfs.bootstrap
+                // [
+                //   '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
+                // ]
+              }
+            });
 
-      this._ipfs.start().then(function () {
-        // trigger onStart callback
-        ev.emit('start');
-        if (files && files[0] && files[0].size > _this2.config.ipfs.maxFileSize) {
-          ev.emit('error', 'file size is larger than the allowed ' + _this2.config.ipfs.maxFileSize / 1024 / 1024 + 'MB');
-          return;
+            _this2.ipfs = ipfs;
+
+            ipfs.on('ready', function () {
+              _this2.log('[IPFS] node Ready.');
+
+              ipfs._bitswap.notifications.on('receivedNewBlock', function (peerId, block) {
+                _this2.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length);
+                _this2.log('---------[IPFS] bitswap LedgerMap ---------------------');
+                ipfs._bitswap.engine.ledgerMap.forEach(function (ledger, peerId, ledgerMap) {
+                  _this2.log(peerId + ' : ' + (0, _stringify2.default)(ledger.accounting) + '\n');
+                });
+                _this2.log('-------------------------------------------------------');
+              });
+
+              ipfs.id().then(function (id) {
+                var peerInfo = id;
+                _this2.id = id;
+                _this2.log('[IPFS] id:  ' + peerInfo);
+                var ptiAddress = _this2.config.account.address || 'no_address';
+                _this2.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
+                // add ETH Address here.
+                ptiAddress);
+
+                _this2.uploader._node = ipfs;
+                // this.uploader.setOptions({
+                //   node: ipfs,
+                //   chunkSize: 128 * 1024
+                // })
+
+                _this2.protocol.notifications.on('message:new', function (peerId, msg) {
+                  _this2.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
+                });
+                // emit all commands.
+                // NOTE : this will be changed once protocol upgrades are ready.
+                _this2.protocol.notifications.on('command', function (peerId, command) {
+                  _this2.emit('protocol:incoming', peerId, command);
+                });
+
+                _this2.ipfs = ipfs;
+                _this2.protocol.start(function () {
+                  setTimeout(function () {
+                    resolve(ipfs);
+                  }, 10);
+                });
+              });
+            });
+
+            ipfs.on('error', function (err) {
+              if (err) {
+                // this.log('IPFS node ', ipfs)
+                _this2.error('[IPFS] Error ', err);
+                reject(err);
+              }
+            });
+          });
         }
-
-        pull(pull.values(files), pull.through(function (file) {
-          _this2._ipfs.log('Adding ', file);
-          meta.fileSize = file.size;
-          meta.total = 0;
-        }), pull.asyncMap(function (file, cb) {
-          return pull(pull.values([{
-            path: file.name,
-            // content: pullFilereader(file)
-            content: pull(file._pullStream, pull.through(function (chunk) {
-              return ev.emit('progress2', chunk.length, Math.floor((meta.total += chunk.length) * 1.0 / meta.fileSize * 100));
-            }))
-          }]), _this2._node.files.addPullStream({ chunkerOptions: { maxChunkSize: _this2.config.ipfs.chunkSize } }), // default size 262144
-          pull.collect(function (err, res) {
-            if (err) {
-              return ev.emit('error', err);
-            }
-
-            var hashedFile = res[0];
-            _this2._ipfs.log('Adding %s finished as %s, size: %s', hashedFile.path, hashedFile.hash, hashedFile.size);
-
-            if (file._html5File) {
-              _this2.xhrUpload(file, hashedFile, ev);
-            } else {
-              ev.emit('fileReady', hashedFile);
-            }
-
-            cb(null, hashedFile);
-          }));
-        }), pull.collect(function (err, hashedFiles) {
-          if (err) {
-            ev.emit('error', err);
-          }
-          _this2._ipfs.log('uploader is DONE');
-          ev.emit('done', hashedFiles);
-        }));
       });
+    }
+    /**
+     * adds a data Object to the IPFS local instance
+     * @param  {Object}  data JSON object to store
+     * @return {Promise}      promise with the ipfs multihash
+     * @example let result = await paratiiIPFS.addJSON(data)
+     */
 
-      return ev;
+  }, {
+    key: 'addJSON',
+    value: function addJSON(data) {
+      var ipfs, obj, node;
+      return _regenerator2.default.async(function addJSON$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.next = 2;
+              return _regenerator2.default.awrap(this.getIPFSInstance());
+
+            case 2:
+              ipfs = _context3.sent;
+
+              // if (!this.ipfs || !this.ipfs.isOnline()) {
+              //   throw new Error('IPFS node is not ready, please trigger getIPFSInstance first')
+              // }
+              obj = {
+                Data: Buffer.from((0, _stringify2.default)(data)),
+                Links: []
+              };
+              node = void 0;
+              _context3.prev = 5;
+              _context3.next = 8;
+              return _regenerator2.default.awrap(ipfs.files.add(obj.Data));
+
+            case 8:
+              node = _context3.sent;
+              _context3.next = 15;
+              break;
+
+            case 11:
+              _context3.prev = 11;
+              _context3.t0 = _context3['catch'](5);
+
+              if (!_context3.t0) {
+                _context3.next = 15;
+                break;
+              }
+
+              throw _context3.t0;
+
+            case 15:
+              return _context3.abrupt('return', node[0].hash);
+
+            case 16:
+            case 'end':
+              return _context3.stop();
+          }
+        }
+      }, null, this, [[5, 11]]);
     }
 
     /**
-     * upload an entire directory to IPFS
-     * @param  {string}   dirPath path to directory
-     * @return {Promise}           returns the {multihash, path, size} for the uploaded folder.
-     * @example ?
-      */
+     * convenient method to add JSON and send it for persistance storage.
+     * @param  {object}  data JSON object to store
+     * @return {string}      returns ipfs multihash of the stored object.
+     * @example let result = await paratiiIPFS.addAndPinJSON(data)
+     */
 
   }, {
-    key: 'addDirectory',
-    value: function addDirectory(dirPath) {
+    key: 'addAndPinJSON',
+    value: function addAndPinJSON(data) {
       var _this3 = this;
 
-      return new _promise2.default(function (resolve, reject) {
-        // cb = once(cb)
-        var resp = null;
-        // this._ipfs.log('adding ', dirPath, ' to IPFS')
+      var hash, pinFile, pinEv;
+      return _regenerator2.default.async(function addAndPinJSON$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.next = 2;
+              return _regenerator2.default.awrap(this.addJSON(data));
 
-        var addStream = _this3._node.files.addReadableStream();
-        addStream.on('data', function (file) {
-          // this._ipfs.log('dirPath ', dirPath)
-          // this._ipfs.log('file Added ', file)
-          if (file.path === dirPath) {
-            // this._ipfs.log('this is the hash to return ')
-            resp = file;
-            nextTick(function () {
-              return resolve(resp);
-            });
-          }
-        });
+            case 2:
+              hash = _context4.sent;
 
-        addStream.on('end', function () {
-          // this._ipfs.log('addStream ended')
-          // nextTick(() => cb(null, resp))
-        });
-
-        fs.readdir(dirPath, function (err, files) {
-          if (err) return reject(err);
-          eachSeries(files, function (file, next) {
-            next = once(next);
-            try {
-              _this3._ipfs.log('reading file ', file);
-              var rStream = fs.createReadStream(path.join(dirPath, file));
-              rStream.on('error', function (err) {
-                if (err) {
-                  _this3._ipfs.error('rStream Error ', err);
-                  return next();
-                }
-              });
-              if (rStream) {
-                addStream.write({
-                  path: path.join(dirPath, file),
-                  content: rStream
+              pinFile = function pinFile() {
+                var pinEv = _this3.uploader.pinFile(hash, { author: _this3.config.account.address });
+                pinEv.on('pin:error', function (err) {
+                  console.warn('pin:error:', hash, ' : ', err);
+                  pinEv.removeAllListeners();
                 });
+                pinEv.on('pin:done', function (hash) {
+                  _this3.log('pin:done:', hash);
+                  pinEv.removeAllListeners();
+                });
+                return pinEv;
+              };
+
+              pinEv = pinFile();
+
+
+              pinEv.on('pin:error', function (err) {
+                console.warn('pin:error:', hash, ' : ', err);
+                console.log('trying again');
+                pinEv = pinFile();
+              });
+
+              return _context4.abrupt('return', hash);
+
+            case 7:
+            case 'end':
+              return _context4.stop();
+          }
+        }
+      }, null, this);
+    }
+    /**
+    * gets a JSON object stored in IPFS
+    * @param  {string}  multihash ipfs multihash of the object
+    * @return {Promise}           requested Object
+    * @example let jsonObj = await paratiiIPFS.getJSON('some-multihash')
+    */
+
+  }, {
+    key: 'getJSON',
+    value: function getJSON(multihash) {
+      var ipfs, node;
+      return _regenerator2.default.async(function getJSON$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              _context5.next = 2;
+              return _regenerator2.default.awrap(this.getIPFSInstance());
+
+            case 2:
+              ipfs = _context5.sent;
+              node = void 0;
+              _context5.prev = 4;
+              _context5.next = 7;
+              return _regenerator2.default.awrap(ipfs.files.cat(multihash));
+
+            case 7:
+              node = _context5.sent;
+              _context5.next = 14;
+              break;
+
+            case 10:
+              _context5.prev = 10;
+              _context5.t0 = _context5['catch'](4);
+
+              if (!_context5.t0) {
+                _context5.next = 14;
+                break;
               }
-            } catch (e) {
-              if (e) {
-                _this3._ipfs.error('createReadStream Error: ', e);
-              }
-            } finally {}
-            // next()
-            nextTick(function () {
-              return next();
-            });
-          }, function (err) {
-            if (err) return reject(err);
-            // addStream.destroy()
-            addStream.end();
-          });
-        });
-      });
+
+              throw _context5.t0;
+
+            case 14:
+              return _context5.abrupt('return', JSON.parse(node.toString()));
+
+            case 15:
+            case 'end':
+              return _context5.stop();
+          }
+        }
+      }, null, this, [[4, 10]]);
     }
 
     /**
-     * signals transcoder(s) to transcode fileHash
-     * @param  {string} fileHash IPFS file hash.
-     * @param  {Object} options  ref: https://github.com/Paratii-Video/paratii-lib/blob/master/docs/paratii-ipfs.md#ipfsuploadertranscodefilehash-options
-     * @return {EventEmitter} returns EventEmitter with the following events:
-     *    - 'uploader:progress': (hash, chunkSize, percent) client to transcoder upload progress.
-     *    - 'transcoding:started': (hash, author)
-     *    - 'transcoding:progress': (hash, size, percent)
-     *    - 'transcoding:downsample:ready' (hash, size)
-     *    - 'transcoding:done': (hash, transcoderResult) triggered when the transcoder is done - returns the hash of the transcoded file
-     *    - 'transcoder:error': (err) triggered whenever an error occurs.
+     * Starts the IPFS node
+     * @param  {Function} callback callback function
+     * @return {?}            DON'T KNOW?
      * @example ?
-      */
+     */
+    // TODO: return a promise
 
   }, {
-    key: 'transcode',
-    value: function transcode(fileHash, options) {
+    key: 'start',
+    value: function start() {
       var _this4 = this;
 
-      var schema = _joi2.default.object({
-        author: _joi2.default.string().default('0x'), // ETH/PTI address of the file owner
-        transcoder: _joi2.default.string().default(this.config.ipfs.defaultTranscoder),
-        transcoderId: _joi2.default.any().default(Multiaddr(this.config.ipfs.defaultTranscoder).getPeerId())
-      }).unknown();
+      return new _promise2.default(function (resolve, reject) {
+        if (_this4.ipfs && _this4.ipfs.isOnline()) {
+          console.log('IPFS is already running');
+          return resolve(_this4.ipfs);
+        }
 
-      this._ipfs.log('Signaling transcoder...');
-
-      var result = _joi2.default.validate(options, schema);
-      var error = result.error;
-      if (error) throw error;
-      var opts = result.value;
-
-      var ev = void 0;
-      if (opts.ev) {
-        ev = opts.ev;
-      } else {
-        ev = new _events.EventEmitter();
-      }
-
-      if (fileHash === '') {
-        // empty hash for testing eventemitter
-        ev.emit('transcoding:done', { test: 1 });
-        return ev;
-      }
-      var msg = this._ipfs.protocol.createCommand('transcode', { hash: fileHash, author: opts.author, size: opts.size });
-      // FIXME : This is for dev, so we just signal our transcoder node.
-      // This needs to be dynamic later on.
-      this._node.swarm.connect(opts.transcoder, function (err, success) {
-        if (err) return ev.emit('transcoding:error', err);
-
-        opts.transcoderId = opts.transcoderId || Multiaddr(opts.transcoder).getPeerId();
-        _this4._ipfs.log('transcoderId: ', opts.transcoderId);
-        _this4._node.swarm.peers(function (err, peers) {
-          _this4._ipfs.log('peers: ', peers);
-          if (err) return ev.emit('transcoding:error', err);
-          peers.map(function (peer) {
-            try {
-              _this4._ipfs.log('peerID : ', peer.peer.toB58String(), opts.transcoderId, peer.peer.toB58String() === opts.transcoder);
-              if (peer.peer.toB58String() === opts.transcoderId) {
-                _this4._ipfs.log('sending transcode msg to ' + peer.peer.toB58String() + ' with request to transcode ' + fileHash);
-                _this4._ipfs.protocol.network.sendMessage(peer.peer, msg, function (err) {
-                  if (err) {
-                    ev.emit('transcoding:error', err);
-                    return ev;
-                  }
-                });
-              }
-            } catch (e) {
-              console.log('PEER ERROR :', e, peer);
-            }
-          });
-
-          // paratii transcoder signal.
-          _this4._ipfs.on('protocol:incoming', _this4._transcoderRespHander(ev, fileHash));
+        _this4.getIPFSInstance().then(function (ipfs) {
+          resolve(ipfs);
         });
       });
-      return ev;
     }
 
     /**
-     * handles responses from the paratii-protocol in case of transcoding.
-     * @param  {EventEmitter} ev the transcoding job EventEmitter
-     * @return {function}    returns various events based on transcoder response.
+     * Stops the IPFS node.
+     * @param  {Function} callback callback function
+     * @return {?}            DON'T KNOW?
      * @example ?
-      */
+     */
 
   }, {
-    key: '_transcoderRespHander',
-    value: function _transcoderRespHander(ev, fileHash) {
+    key: 'stop',
+    value: function stop() {
       var _this5 = this;
 
-      return function (peerId, command) {
-        _this5._ipfs.log('paratii protocol: Received command ', command.payload.toString(), 'args: ', command.args.toString());
-        var commandStr = command.payload.toString();
-        var argsObj = void 0;
-        try {
-          argsObj = JSON.parse(command.args.toString());
-        } catch (e) {
-          _this5._ipfs.error('couldn\'t parse args, ', command.args.toString());
-        }
-
-        switch (commandStr) {
-          case 'transcoding:error':
-            console.log('DEBUG TRANSCODER ERROR: fileHash: ', fileHash, ' , errHash: ', argsObj.hash);
-            if (argsObj.hash === fileHash) {
-              ev.emit('transcoding:error', argsObj.err);
-            }
-            break;
-          case 'transcoding:started':
-            if (argsObj.hash === fileHash) {
-              ev.emit('transcoding:started', argsObj.hash, argsObj.author);
-            }
-            break;
-          case 'transcoding:progress':
-            if (argsObj.hash === fileHash) {
-              ev.emit('transcoding:progress', argsObj.hash, argsObj.size, argsObj.percent);
-            }
-            break;
-          case 'uploader:progress':
-            if (argsObj.hash === fileHash) {
-              ev.emit('uploader:progress', argsObj.hash, argsObj.chunkSize, argsObj.percent);
-            }
-            break;
-          case 'transcoding:downsample:ready':
-            if (argsObj.hash === fileHash) {
-              ev.emit('transcoding:downsample:ready', argsObj.hash, argsObj.size);
-            }
-            break;
-          case 'transcoding:done':
-            if (argsObj.hash === fileHash) {
-              var result = JSON.parse(argsObj.result.toString());
-              ev.emit('transcoding:done', argsObj.hash, result);
-            }
-            break;
-          default:
-            if (argsObj.hash === fileHash) {
-              _this5._ipfs.log('unknown command : ', commandStr);
-            }
-        }
-      };
-    }
-    /**
-     * convenience method for adding and transcoding files
-     * @param {Array} files Array of HTML5 File Objects
-      */
-
-  }, {
-    key: 'addAndTranscode',
-    value: function addAndTranscode(files) {
-      var _this6 = this;
-
-      var ev = this.add(files);
-      // ev.on('done', this._signalTranscoder.bind(this))
-      ev.on('done', function (files) {
-        _this6._signalTranscoder(files, ev);
-      });
-      return ev;
-    }
-    /**
-     * [_signalTranscoder description]
-     * TODO RIVEDI I TIPI
-     * @param  {Object} files [description]
-     * @param  {Object} ev    [description]
-     * @return {Object}       [description]
-      */
-
-  }, {
-    key: '_signalTranscoder',
-    value: function _signalTranscoder(files, ev) {
-      var file = void 0;
-      if (Array.isArray(files)) {
-        if (files.length < 1) {
-          // FIXME THIS NEEDS TO BE REMOVED
-          file = { hash: '' // testing something ...
-            // this._ipfs.log('_signalTranscoder Got an empty Array. files: ', files)
-            // return
-          };
-        } else {
-          file = files[0];
-        }
-      } else {
-        file = files;
-      }
-
-      if (!ev) {
-        ev = new _events.EventEmitter();
-      }
-
-      this.transcode(file.hash, {
-        author: '0x', // author address,
-        ev: ev
-      });
-    }
-    /**
-     * [getMetaData description]
-     * @param  {Object} fileHash [description]
-     * @param  {Object} options  [description]
-     * @return {Object}          [description]
-      */
-
-  }, {
-    key: 'getMetaData',
-    value: function getMetaData(fileHash, options) {
-      var _this7 = this;
-
       return new _promise2.default(function (resolve, reject) {
-        var schema = _joi2.default.object({
-          transcoder: _joi2.default.string().default(_this7.config.ipfs.defaultTranscoder),
-          transcoderId: _joi2.default.any().default(Multiaddr(_this7.config.ipfs.defaultTranscoder).getPeerId())
-        }).unknown();
-
-        _this7._ipfs.log('Signaling transcoder getMetaData...');
-        var result = _joi2.default.validate(options, schema);
-        var error = result.error;
-        if (error) reject(error);
-        var opts = result.value;
-        console.log('opts: ', opts);
-        var ev = void 0;
-        if (opts.ev) {
-          ev = opts.ev;
-        } else {
-          ev = new _events.EventEmitter();
+        if (!_this5.ipfs || !_this5.ipfs.isOnline()) {
+          resolve();
         }
-        _this7._ipfs.start().then(function () {
-          var msg = _this7._ipfs.protocol.createCommand('getMetaData', { hash: fileHash });
-          // FIXME : This is for dev, so we just signal our transcoder node.
-          // This needs to be dynamic later on.
-          _this7._ipfs.ipfs.swarm.connect(opts.transcoder, function (err, success) {
-            if (err) return reject(err);
-
-            opts.transcoderId = opts.transcoderId || Multiaddr(opts.transcoder).getPeerId();
-            _this7._ipfs.log('transcoderId: ', opts.transcoderId);
-            _this7._node.swarm.peers(function (err, peers) {
-              _this7._ipfs.log('peers: ', peers);
-              if (err) return reject(err);
-
-              peers.map(function (peer) {
-                _this7._ipfs.log('peerID : ', peer.peer.id.toB58String(), opts.transcoderId, peer.peer.id.toB58String() === opts.transcoder);
-                if (peer.peer.id.toB58String() === opts.transcoderId) {
-                  _this7._ipfs.log('sending getMetaData msg to ' + peer.peer.id.toB58String() + ' with request to transcode ' + fileHash);
-                  _this7._ipfs.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
-                    if (err) {
-                      ev.emit('getMetaData:error', err);
-                      return ev;
-                    }
-                  });
-                }
-              });
-
-              // paratii getMetaData signal.
-              _this7._ipfs.on('protocol:incoming', function (peerId, command) {
-                _this7._ipfs.log('paratii protocol: Received command ', command.payload.toString(), 'args: ', command.args.toString());
-                var commandStr = command.payload.toString();
-                var argsObj = void 0;
-                try {
-                  argsObj = JSON.parse(command.args.toString());
-                } catch (e) {
-                  _this7._ipfs.error('couldn\'t parse args, ', command.args.toString());
-                }
-
-                switch (commandStr) {
-                  case 'getMetaData:error':
-                    if (argsObj.hash === fileHash) {
-                      console.log('DEBUG getMetaData ERROR: fileHash: ', fileHash, ' , errHash: ', argsObj.hash);
-                      reject(argsObj.err);
-                    }
-                    break;
-                  case 'getMetaData:done':
-                    if (argsObj.hash === fileHash) {
-                      console.log('data: ', argsObj.data);
-                      var _result = argsObj.data;
-                      resolve(_result);
-                    }
-                    break;
-                  default:
-                    _this7._ipfs.log('unknown command : ', commandStr);
-                }
-              });
+        if (_this5.ipfs) {
+          _this5.ipfs.stop(function () {
+            (0, _setImmediate3.default)(function () {
+              resolve();
             });
           });
-        });
+        }
       });
     }
-    /**
-     * [pinFile description]
-     * @param  {Object} fileHash [description]
-     * @param  {Object} options  [description]
-     * @return {Object}          [description]
-      */
-
-  }, {
-    key: 'pinFile',
-    value: function pinFile(fileHash, options) {
-      var _this8 = this;
-
-      if (options === undefined) options = {};
-
-      var schema = _joi2.default.object({
-        author: _joi2.default.string().default('0x'), // ETH/PTI address of the file owner
-        transcoder: _joi2.default.string().default(this.config.ipfs.defaultTranscoder),
-        transcoderId: _joi2.default.any().default(Multiaddr(this.config.ipfs.defaultTranscoder).getPeerId()),
-        size: _joi2.default.number().default(0)
-      }).unknown();
-
-      this._ipfs.log('Signaling transcoder to pin ' + fileHash);
-
-      var result = _joi2.default.validate(options, schema);
-      var error = result.error;
-      if (error) throw error;
-      var opts = result.value;
-
-      var ev = void 0;
-      if (opts.ev) {
-        ev = opts.ev;
-      } else {
-        ev = new _events.EventEmitter();
-      }
-
-      var msg = this._ipfs.protocol.createCommand('pin', { hash: fileHash, author: opts.author, size: opts.size });
-      // FIXME : This is for dev, so we just signal our transcoder node.
-      // This needs to be dynamic later on.
-      this._node.swarm.connect(opts.transcoder, function (err, success) {
-        if (err) return ev.emit('pin:error', err);
-
-        _this8._node.swarm.peers(function (err, peers) {
-          _this8._ipfs.log('peers: ', peers);
-          if (err) return ev.emit('pin:error', err);
-          peers.map(function (peer) {
-            try {
-              _this8._ipfs.log('peer.peer.toB58String(): ', peer.peer.toB58String());
-              if (peer.peer.toB58String() === opts.transcoderId) {
-                _this8._ipfs.log('sending pin msg to ' + peer.peer._idB58String + ' with request to pin ' + fileHash);
-                _this8._ipfs.protocol.network.sendMessage(peer.peer, msg, function (err) {
-                  if (err) {
-                    ev.emit('pin:error', err);
-                    return ev;
-                  }
-                });
-              }
-            } catch (e) {
-              console.log('PEER ERROR :', e, peer);
-            }
-          });
-
-          // paratii pinning response.
-          _this8._ipfs.on('protocol:incoming', _this8._pinResponseHandler(ev));
-        });
-      });
-
-      return ev;
-    }
-    /**
-     * [_pinResponseHandler description]
-     * @param  {Object} ev [description]
-     * @return {Object}    [description]
-      */
-
-  }, {
-    key: '_pinResponseHandler',
-    value: function _pinResponseHandler(ev) {
-      var _this9 = this;
-
-      return function (peerId, command) {
-        _this9._ipfs.log('paratii protocol: Received command ', command.payload.toString(), 'args: ', command.args.toString());
-        var commandStr = command.payload.toString();
-        var argsObj = void 0;
-        try {
-          argsObj = JSON.parse(command.args.toString());
-        } catch (e) {
-          _this9._ipfs.log('couldn\'t parse args, ', command.args.toString());
-        }
-
-        switch (commandStr) {
-          case 'pin:error':
-            ev.emit('pin:error', argsObj.err);
-            break;
-          case 'pin:progress':
-            ev.emit('pin:progress', argsObj.hash, argsObj.chunkSize, argsObj.percent);
-            break;
-          case 'pin:done':
-            ev.emit('pin:done', argsObj.hash);
-            break;
-          default:
-            _this9._ipfs.log('unknown command : ', commandStr);
-        }
-      };
-    }
-
-    // grabYt (url, onResponse, callback) {
-    //   let starttime
-    //   let fileSize
-    //   let video = ytdl(url)
-    //   video.once('response', () => {
-    //     this._ipfs.log(`starting ${url}`)
-    //     starttime = Date.now()
-    //     onResponse(null, starttime)
-    //   })
-    //
-    //   video.on('error', (err) => {
-    //     onResponse(err)
-    //   })
-    //
-    //   video.on('progress', (chunkLength, downloaded, total) => {
-    //     fileSize = total
-    //     // const floatDownloaded = downloaded / total
-    //     // const downloadedMinutes = (Date.now() - starttime) / 1000 / 60
-    //     // readline.cursorTo(process.stdout, 0)
-    //     // process.stdout.write(`${(floatDownloaded * 100).toFixed(2)}% downloaded`)
-    //     // process.stdout.write(`(${(downloaded / 1024 / 1024).toFixed(2)}MB of ${(total / 1024 / 1024).toFixed(2)}MB)\n`)
-    //     // process.stdout.write(`running for: ${downloadedMinutes.toFixed(2)}minutes`)
-    //     // process.stdout.write(`, estimated time left: ${(downloadedMinutes / floatDownloaded - downloadedMinutes).toFixed(2)}minutes `)
-    //     // readline.moveCursor(process.stdout, 0, -1)
-    //   })
-    //
-    //   video.on('end', () => {
-    //     process.stdout.write('\n\n')
-    //     // cb(null, output)
-    //   })
-    //
-    //   var total = 0
-    //   function updateProgress (chunkLength) {
-    //     total += chunkLength
-    //     this._ipfs.log('Progress \t', total, ' / ', fileSize, ' = ', Math.floor((total / fileSize) * 100))
-    //   }
-    //
-    //   pull(
-    //     pull.values([{
-    //       path: url,
-    //       content: pull(
-    //         toPull(video),
-    //         pull.through((chunk) => updateProgress(chunk.length))
-    //       )
-    //     }]),
-    //     this._node.files.addPullStream({chunkerOptions: {maxChunkSize: this._chunkSize}}), // default size 262144
-    //     this._signalTranscoderPull(callback)
-    //   )
-    // }
-    //
-    // grabVimeo (url, onResponse, callback) {
-    //   let starttime
-    //   // let total = 0
-    //   let video = vidl(url, {quality: '720p'})
-    //
-    //   video.once('response', () => {
-    //     this._ipfs.log(`starting ${url}`)
-    //     starttime = Date.now()
-    //     onResponse(null, starttime)
-    //   })
-    //
-    //   video.on('data', (chunk) => {
-    //     // total += chunk.length / 1024 / 1024
-    //   })
-    //
-    //   video.on('end', () => {
-    //     // process.stdout.write('\n\n')
-    //     // cb(null, output)
-    //   })
-    //
-    //   function updateProgress (chunkLength) {
-    //     // this._ipfs.log('Progress \t', total, ' / ', fileSize, ' = ', Math.floor((total / fileSize) * 100))
-    //   }
-    //
-    //   pull(
-    //     pull.values([{
-    //       path: url,
-    //       content: pull(
-    //         toPull(video),
-    //         pull.through((chunk) => updateProgress(chunk.length))
-    //       )
-    //     }]),
-    //     this._node.files.addPullStream({chunkerOptions: {maxChunkSize: this._chunkSize}}), // default size 262144
-    //     this._signalTranscoderPull(callback)
-    //   )
-    // }
-    //
-
   }]);
-  return Uploader;
+  return ParatiiIPFS;
 }(_events.EventEmitter);
