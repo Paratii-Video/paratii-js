@@ -35,28 +35,30 @@ describe('ParatiiIPFS Uploader :', function () {
   // FIXME : this requires a browser to run.
   // I'm trying to mock the FileReader but it's glitchy so far :(
   it('should allow for file upload', (done) => {
-    let file = 'test/data/some-file.txt'
-    let files = [file]
-    let uploaderEv = paratiiIPFS.local.add(files)
+    let filePath = 'test/data/some-file.txt'
+    let files = [paratiiIPFS.local.fsFileToPull(filePath)]
+    paratiiIPFS.start().then(() => {
+      let uploaderEv = paratiiIPFS.local.upload(files)
 
-    uploaderEv.once('start', () => {
+      uploaderEv.once('start', () => {
       // console.log('uploader started')
-    })
+      })
 
-    uploaderEv.on('progress', (chunkLength, percent) => {
-      console.log('progress: ', percent)
-    })
+      uploaderEv.on('progress', (chunkLength, percent) => {
+        console.log('progress: ', percent)
+      })
 
-    uploaderEv.on('fileReady', (file) => {
-      console.log('got fileReady ', file)
-    })
+      uploaderEv.on('fileReady', (file) => {
+        console.log('got fileReady ', file)
+      })
 
-    uploaderEv.once('done', (files) => {
-      console.log('uploader done, ', files)
-      assert.isOk(files)
-      expect(files).to.have.lengthOf(1)
-      expect(files[0].hash).to.equal('QmS8yinWCD1vm7WJx34tg81FpjEXbdYXf3Y5XcCeh29C6K')
-      done()
+      uploaderEv.once('done', (files) => {
+        console.log('uploader done, ', files)
+        assert.isOk(files)
+        expect(files).to.have.lengthOf(1)
+        expect(files[0].hash).to.equal('QmS8yinWCD1vm7WJx34tg81FpjEXbdYXf3Y5XcCeh29C6K')
+        done()
+      })
     })
   })
 

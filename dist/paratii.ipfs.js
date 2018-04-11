@@ -65,10 +65,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 global.Buffer = global.Buffer || require('buffer').Buffer;
 
 /**
- * Contains functions to interact with the IPFS instance
+ * Contains functions to interact with the IPFS instance.
  * @param {ParatiiIPFSSchema} config configuration object to initialize Paratii object
- * @property {ParatiiIPFSLocal} operations on the local node
- * @property {ParatiiIPFSRemote} operations on remote node
  */
 /* global ArrayBuffer */
 
