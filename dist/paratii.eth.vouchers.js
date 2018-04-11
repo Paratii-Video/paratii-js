@@ -312,7 +312,7 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
               claimant = (0, _utils.getInfoFromLogs)(tx, 'LogRedeemVoucher', '_claimant', 1);
               amount = (0, _utils.getInfoFromLogs)(tx, 'LogRedeemVoucher', '_amount', 1);
 
-              if (!(claimant === this.eth.config.account.address)) {
+              if (!(claimant === this.eth.getAccount())) {
                 _context5.next = 32;
                 break;
               }
