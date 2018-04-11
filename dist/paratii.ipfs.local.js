@@ -40,9 +40,10 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _events = require('events');
 
+var _utils = require('./utils.js');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import Protocol from 'paratii-protocol'
 var pull = require('pull-stream');
 var pullFilereader = require('pull-filereader');
 var toPull = require('stream-to-pull-stream');
@@ -54,8 +55,6 @@ var _require = require('async'),
     nextTick = _require.nextTick;
 
 var once = require('once');
-// const Multiaddr = require('multiaddr')
-// const Resumable = require('resumablejs')
 
 /**
  * IPFS UPLOADER : Paratii IPFS uploader interface.
@@ -103,7 +102,8 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
     value: function add(file) {
       var _this2 = this;
 
-      return new _promise2.default(function (resolve, reject) {
+      var p = new _utils.PromiseEventEmitter(function (resolve, reject) {
+        // return new Promise((resolve, reject) => {
         var files = void 0;
         if (Array.isArray(file)) {
           files = file;
@@ -112,7 +112,6 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
         }
 
         var result = [];
-
         for (var i = 0; i < files.length; i++) {
           // check if File is actually available or not.
           // if not it means we're not in the browser land.
@@ -126,7 +125,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
             result.push(_this2.fsFileToPull(files[i]));
           }
         }
-        var ev = _this2.upload(result);
+        var ev = _this2.upload(result, _this2);
         ev.on('done', function (hashedFiles) {
           return resolve(hashedFiles);
         });
@@ -134,6 +133,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
           return reject(err);
         });
       });
+      return p;
     }
 
     /**
@@ -150,11 +150,13 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
 
   }, {
     key: 'upload',
-    value: function upload(files) {
+    value: function upload(files, ev) {
       var _this3 = this;
 
       var meta = {}; // holds File metadata.
-      var ev = new _events.EventEmitter();
+      if (!ev) {
+        ev = new _events.EventEmitter();
+      }
 
       this._ipfs.start().then(function () {
         // trigger onStart callback

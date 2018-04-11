@@ -5,6 +5,14 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ParatiiIPFS = undefined;
 
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
 var _setImmediate2 = require('babel-runtime/core-js/set-immediate');
 
 var _setImmediate3 = _interopRequireDefault(_setImmediate2);
@@ -12,14 +20,6 @@ var _setImmediate3 = _interopRequireDefault(_setImmediate2);
 var _promise = require('babel-runtime/core-js/promise');
 
 var _promise2 = _interopRequireDefault(_promise);
-
-var _regenerator = require('babel-runtime/regenerator');
-
-var _regenerator2 = _interopRequireDefault(_regenerator);
-
-var _stringify = require('babel-runtime/core-js/json/stringify');
-
-var _stringify2 = _interopRequireDefault(_stringify);
 
 var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
 
@@ -59,10 +59,11 @@ var _paratiiIpfsLocal = require('./paratii.ipfs.local.js');
 
 var _paratiiTranscoder = require('./paratii.transcoder.js');
 
+var _utils = require('./utils.js');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import { PromiseEventEmitter } from './utils.js'
-
+/* global ArrayBuffer */
 global.Buffer = global.Buffer || require('buffer').Buffer;
 
 /**
@@ -71,7 +72,6 @@ global.Buffer = global.Buffer || require('buffer').Buffer;
  * @property {ParatiiIPFSLocal} local operations on the local node
  * @property {ParatiiIPFSRemote} remote operations on remote node
  */
-/* global ArrayBuffer */
 
 var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   (0, _inherits3.default)(ParatiiIPFS, _EventEmitter);
@@ -105,74 +105,40 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     return _this;
   }
 
+  // /**
+  //  * adds a data Object to the IPFS local instance
+  //  * @param  {Object} data JSON object to store
+  //  * @return {Promise} promise with the ipfs multihash
+  //  * @example let result = await paratiiIPFS.addJSON(data)
+  //  */
+  // async addJSON (data) {
+  //   let ipfs = await this.getIPFSInstance()
+  //   // if (!this.ipfs || !this.ipfs.isOnline()) {
+  //   //   throw new Error('IPFS node is not ready, please trigger getIPFSInstance first')
+  //   // }
+  //   const obj = {
+  //     Data: Buffer.from(JSON.stringify(data)),
+  //     Links: []
+  //   }
+  //   let node
+  //   try {
+  //     // node = await ipfs.object.put(obj)
+  //     node = await ipfs.files.add(obj.Data)
+  //   } catch (e) {
+  //     if (e) throw e
+  //   }
+  //
+  //   return node[0].hash
+  // }
+
   /**
-   * adds a data Object to the IPFS local instance
-   * @param  {Object} data JSON object to store
-   * @return {Promise} promise with the ipfs multihash
-   * @example let result = await paratiiIPFS.addJSON(data)
+   * Starts the IPFS node
+   * @return {Promise} that resolves in an IPFS instance
+   * @example paratii.ipfs.start()
    */
 
 
   (0, _createClass3.default)(ParatiiIPFS, [{
-    key: 'addJSON',
-    value: function addJSON(data) {
-      var ipfs, obj, node;
-      return _regenerator2.default.async(function addJSON$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              _context.next = 2;
-              return _regenerator2.default.awrap(this.getIPFSInstance());
-
-            case 2:
-              ipfs = _context.sent;
-
-              // if (!this.ipfs || !this.ipfs.isOnline()) {
-              //   throw new Error('IPFS node is not ready, please trigger getIPFSInstance first')
-              // }
-              obj = {
-                Data: Buffer.from((0, _stringify2.default)(data)),
-                Links: []
-              };
-              node = void 0;
-              _context.prev = 5;
-              _context.next = 8;
-              return _regenerator2.default.awrap(ipfs.files.add(obj.Data));
-
-            case 8:
-              node = _context.sent;
-              _context.next = 15;
-              break;
-
-            case 11:
-              _context.prev = 11;
-              _context.t0 = _context['catch'](5);
-
-              if (!_context.t0) {
-                _context.next = 15;
-                break;
-              }
-
-              throw _context.t0;
-
-            case 15:
-              return _context.abrupt('return', node[0].hash);
-
-            case 16:
-            case 'end':
-              return _context.stop();
-          }
-        }
-      }, null, this, [[5, 11]]);
-    }
-
-    /**
-     * Starts the IPFS node
-     * @return {Promise} that resolves in an IPFS instance
-     * @example paratii.ipfs.start()
-     */
-
-  }, {
     key: 'start',
     value: function start() {
       var _this2 = this;
@@ -229,42 +195,55 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     value: function addAndPinJSON(data) {
       var _this4 = this;
 
-      var hash, pinFile, pinEv;
       return _regenerator2.default.async(function addAndPinJSON$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              _context2.next = 2;
-              return _regenerator2.default.awrap(this.addJSON(data));
+              return _context2.abrupt('return', new _utils.PromiseEventEmitter(function _callee(resolve, reject) {
+                var hash, pinFile, pinEv;
+                return _regenerator2.default.async(function _callee$(_context) {
+                  while (1) {
+                    switch (_context.prev = _context.next) {
+                      case 0:
+                        _context.next = 2;
+                        return _regenerator2.default.awrap(_this4.local.addJSON(data));
 
-            case 2:
-              hash = _context2.sent;
+                      case 2:
+                        hash = _context.sent;
 
-              pinFile = function pinFile() {
-                var pinEv = _this4.remote.pinFile(hash, { author: _this4._getAccount() });
-                pinEv.on('pin:error', function (err) {
-                  console.warn('pin:error:', hash, ' : ', err);
-                  pinEv.removeAllListeners();
-                });
-                pinEv.on('pin:done', function (hash) {
-                  _this4.log('pin:done:', hash);
-                  pinEv.removeAllListeners();
-                });
-                return pinEv;
-              };
+                        pinFile = function pinFile() {
+                          var pinEv = _this4.remote.pinFile(hash, { author: _this4._getAccount() });
+                          pinEv.on('pin:error', function (err) {
+                            console.warn('pin:error:', hash, ' : ', err);
+                            pinEv.removeAllListeners();
+                          });
+                          pinEv.on('pin:done', function (hash) {
+                            _this4.log('pin:done:', hash);
+                            pinEv.removeAllListeners();
+                          });
+                          return pinEv;
+                        };
 
-              pinEv = pinFile();
+                        pinEv = pinFile();
 
 
-              pinEv.on('pin:error', function (err) {
-                console.warn('pin:error:', hash, ' : ', err);
-                console.log('trying again');
-                pinEv = pinFile();
-              });
+                        pinEv.on('pin:error', function (err) {
+                          console.warn('pin:error:', hash, ' : ', err);
+                          console.log('trying again');
+                          pinEv = pinFile();
+                        });
 
-              return _context2.abrupt('return', hash);
+                        return _context.abrupt('return', hash);
 
-            case 7:
+                      case 7:
+                      case 'end':
+                        return _context.stop();
+                    }
+                  }
+                }, null, _this4);
+              }));
+
+            case 1:
             case 'end':
               return _context2.stop();
           }
@@ -417,6 +396,24 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
           });
         }
       });
+    }
+
+    /**
+     * adds a file to local IPFS node and signals transcoder to transcode it
+     * @param {Array} files Array of HTML5 File Objects
+     * @returns An EventEmitter
+     */
+
+  }, {
+    key: 'addAndTranscode',
+    value: function addAndTranscode(files) {
+      var _this6 = this;
+
+      var ev = this.local.add(files);
+      ev.on('done', function (files) {
+        _this6.config.paratii.transcoder._signalTranscoder(files, ev);
+      });
+      return ev;
     }
   }]);
   return ParatiiIPFS;

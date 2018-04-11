@@ -69,7 +69,7 @@ export class PromiseEventEmitter extends EventEmitter {
 
     // Add downstream resolve and reject listeners
   then (resolveHandler, rejectHandler) {
-    var promise = new Promise()
+    var promise = new PromiseEventEmitter()
 
         // When a `resolve` event upstream is fired, execute the `resolveHandler`
         // and pass the `resolve` event downstream with the result

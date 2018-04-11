@@ -40,15 +40,8 @@ var _joi2 = _interopRequireDefault(_joi);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import pull from 'pull-stream'
-// import once from 'once'
-// const pullFilereader = require('pull-filereader')
-// const toPull = require('stream-to-pull-stream')
-// const fs = require('fs')
-// const path = require('path')
-// const { eachSeries, nextTick } = require('async')
+var Resumable = require('resumablejs');
 var Multiaddr = require('multiaddr');
-// const Resumable = require('resumablejs')
 
 /**
  * IPFS UPLOADER : Paratii IPFS uploader interface.
@@ -83,22 +76,47 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
   }
 
   /**
-   * convenience method for adding and transcoding files
-   * @param {Array} files Array of HTML5 File Objects
-    */
+    * Upload a file over XHR to the transcoder. To be called with an event emitter as the last argument
+    * @param  {Object} file       file to upload
+    * @param  {string} hashedFile hash of the file ??
+    * @param  {EventEmitter} ev         event emitter
+    * @example this.xhrUpload(file, hashedFile, ev)
+     */
 
 
   (0, _createClass3.default)(ParatiiIPFSRemote, [{
-    key: 'addAndTranscode',
-    value: function addAndTranscode(files) {
-      var _this2 = this;
-
-      var ev = this.add(files);
-      // ev.on('done', this._signalTranscoder.bind(this))
-      ev.on('done', function (files) {
-        _this2._signalTranscoder(files, ev);
+    key: 'xhrUpload',
+    value: function xhrUpload(file, hashedFile, ev) {
+      var r = new Resumable({
+        target: this.config.ipfs.transcoderDropUrl + '/' + hashedFile.hash,
+        chunkSize: this.config.ipfs.xhrChunkSize,
+        simultaneousUploads: 4,
+        testChunks: false,
+        throttleProgressCallbacks: 1,
+        maxFileSize: this.config.ipfs.maxFileSize
       });
-      return ev;
+
+      r.on('fileAdded', function (file, ev) {
+        console.log('file ', file, 'added');
+      });
+
+      r.on('fileProgress', function (file) {
+        ev.emit('progress', r.progress() * 100);
+      });
+
+      r.on('complete', function () {
+        ev.emit('fileReady', hashedFile);
+      });
+
+      r.on('error', function (err, file) {
+        console.error('file ', file, 'err ', err);
+      });
+
+      r.addFile(file._html5File);
+
+      setTimeout(function () {
+        r.upload();
+      }, 1);
     }
 
     /**
@@ -106,20 +124,21 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
      * @param  {Object} fileHash [description]
      * @param  {Object} options  [description]
      * @return {Object}          [description]
-      */
+     * @private
+     */
 
   }, {
     key: 'getMetaData',
     value: function getMetaData(fileHash, options) {
-      var _this3 = this;
+      var _this2 = this;
 
       return new _promise2.default(function (resolve, reject) {
         var schema = _joi2.default.object({
-          transcoder: _joi2.default.string().default(_this3.config.ipfs.defaultTranscoder),
-          transcoderId: _joi2.default.any().default(Multiaddr(_this3.config.ipfs.defaultTranscoder).getPeerId())
+          transcoder: _joi2.default.string().default(_this2.config.ipfs.defaultTranscoder),
+          transcoderId: _joi2.default.any().default(Multiaddr(_this2.config.ipfs.defaultTranscoder).getPeerId())
         }).unknown();
 
-        _this3._ipfs.log('Signaling transcoder getMetaData...');
+        _this2._ipfs.log('Signaling transcoder getMetaData...');
         var result = _joi2.default.validate(options, schema);
         var error = result.error;
         if (error) reject(error);
@@ -131,24 +150,24 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
         } else {
           ev = new _events.EventEmitter();
         }
-        _this3._ipfs.start().then(function () {
-          var msg = _this3._ipfs.protocol.createCommand('getMetaData', { hash: fileHash });
+        _this2._ipfs.start().then(function () {
+          var msg = _this2._ipfs.protocol.createCommand('getMetaData', { hash: fileHash });
           // FIXME : This is for dev, so we just signal our transcoder node.
           // This needs to be dynamic later on.
-          _this3._ipfs.ipfs.swarm.connect(opts.transcoder, function (err, success) {
+          _this2._ipfs.ipfs.swarm.connect(opts.transcoder, function (err, success) {
             if (err) return reject(err);
 
             opts.transcoderId = opts.transcoderId || Multiaddr(opts.transcoder).getPeerId();
-            _this3._ipfs.log('transcoderId: ', opts.transcoderId);
-            _this3._node.swarm.peers(function (err, peers) {
-              _this3._ipfs.log('peers: ', peers);
+            _this2._ipfs.log('transcoderId: ', opts.transcoderId);
+            _this2._node.swarm.peers(function (err, peers) {
+              _this2._ipfs.log('peers: ', peers);
               if (err) return reject(err);
 
               peers.map(function (peer) {
-                _this3._ipfs.log('peerID : ', peer.peer.id.toB58String(), opts.transcoderId, peer.peer.id.toB58String() === opts.transcoder);
+                _this2._ipfs.log('peerID : ', peer.peer.id.toB58String(), opts.transcoderId, peer.peer.id.toB58String() === opts.transcoder);
                 if (peer.peer.id.toB58String() === opts.transcoderId) {
-                  _this3._ipfs.log('sending getMetaData msg to ' + peer.peer.id.toB58String() + ' with request to transcode ' + fileHash);
-                  _this3._ipfs.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
+                  _this2._ipfs.log('sending getMetaData msg to ' + peer.peer.id.toB58String() + ' with request to transcode ' + fileHash);
+                  _this2._ipfs.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
                     if (err) {
                       ev.emit('getMetaData:error', err);
                       return ev;
@@ -158,14 +177,14 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
               });
 
               // paratii getMetaData signal.
-              _this3._ipfs.on('protocol:incoming', function (peerId, command) {
-                _this3._ipfs.log('paratii protocol: Received command ', command.payload.toString(), 'args: ', command.args.toString());
+              _this2._ipfs.on('protocol:incoming', function (peerId, command) {
+                _this2._ipfs.log('paratii protocol: Received command ', command.payload.toString(), 'args: ', command.args.toString());
                 var commandStr = command.payload.toString();
                 var argsObj = void 0;
                 try {
                   argsObj = JSON.parse(command.args.toString());
                 } catch (e) {
-                  _this3._ipfs.error('couldn\'t parse args, ', command.args.toString());
+                  _this2._ipfs.error('couldn\'t parse args, ', command.args.toString());
                 }
 
                 switch (commandStr) {
@@ -183,7 +202,7 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
                     }
                     break;
                   default:
-                    _this3._ipfs.log('unknown command : ', commandStr);
+                    _this2._ipfs.log('unknown command : ', commandStr);
                 }
               });
             });
@@ -192,16 +211,17 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
       });
     }
     /**
-     * [pinFile description]
-     * @param  {Object} fileHash [description]
+     * Signal the remote node to pin a File
+     * @param  {Object} fileHash hash of the file to pin
      * @param  {Object} options  [description]
-     * @return {Object}          [description]
-      */
+     * @return {Promise}  a Promise/EventEmitter that resolves inthe hash of the pinned file
+     *
+     */
 
   }, {
     key: 'pinFile',
     value: function pinFile(fileHash, options) {
-      var _this4 = this;
+      var _this3 = this;
 
       if (options === undefined) {
         options = {};
@@ -233,15 +253,15 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
       // This needs to be dynamic later on.
       this._node.swarm.connect(opts.transcoder, function (err, success) {
         if (err) return ev.emit('pin:error', err);
-        _this4._node.swarm.peers(function (err, peers) {
-          _this4._ipfs.log('peers: ', peers);
+        _this3._node.swarm.peers(function (err, peers) {
+          _this3._ipfs.log('peers: ', peers);
           if (err) return ev.emit('pin:error', err);
           peers.map(function (peer) {
             try {
-              _this4._ipfs.log('peer.peer.toB58String(): ', peer.peer.toB58String());
+              _this3._ipfs.log('peer.peer.toB58String(): ', peer.peer.toB58String());
               if (peer.peer.toB58String() === opts.transcoderId) {
-                _this4._ipfs.log('sending pin msg to ' + peer.peer._idB58String + ' with request to pin ' + fileHash);
-                _this4._ipfs.protocol.network.sendMessage(peer.peer, msg, function (err) {
+                _this3._ipfs.log('sending pin msg to ' + peer.peer._idB58String + ' with request to pin ' + fileHash);
+                _this3._ipfs.protocol.network.sendMessage(peer.peer, msg, function (err) {
                   if (err) {
                     ev.emit('pin:error', err);
                     console.log(err);
@@ -255,7 +275,7 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
           });
 
           // paratii pinning response.
-          _this4._ipfs.on('protocol:incoming', _this4._pinResponseHandler(ev));
+          _this3._ipfs.on('protocol:incoming', _this3._pinResponseHandler(ev));
         });
       });
 
@@ -265,21 +285,22 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
      * [_pinResponseHandler description]
      * @param  {Object} ev [description]
      * @return {Object}    [description]
-      */
+     * @private
+     */
 
   }, {
     key: '_pinResponseHandler',
     value: function _pinResponseHandler(ev) {
-      var _this5 = this;
+      var _this4 = this;
 
       return function (peerId, command) {
-        _this5._ipfs.log('paratii protocol: Received command ', command.payload.toString(), 'args: ', command.args.toString());
+        _this4._ipfs.log('paratii protocol: Received command ', command.payload.toString(), 'args: ', command.args.toString());
         var commandStr = command.payload.toString();
         var argsObj = void 0;
         try {
           argsObj = JSON.parse(command.args.toString());
         } catch (e) {
-          _this5._ipfs.log('couldn\'t parse args, ', command.args.toString());
+          _this4._ipfs.log('couldn\'t parse args, ', command.args.toString());
         }
 
         switch (commandStr) {
@@ -293,7 +314,7 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
             ev.emit('pin:done', argsObj.hash);
             break;
           default:
-            _this5._ipfs.log('unknown command : ', commandStr);
+            _this4._ipfs.log('unknown command : ', commandStr);
         }
       };
     }

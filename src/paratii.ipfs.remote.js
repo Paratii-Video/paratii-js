@@ -3,15 +3,8 @@
 import { ipfsSchema } from './schemas.js'
 import { EventEmitter } from 'events'
 import joi from 'joi'
-// import pull from 'pull-stream'
-// import once from 'once'
-// const pullFilereader = require('pull-filereader')
-// const toPull = require('stream-to-pull-stream')
-// const fs = require('fs')
-// const path = require('path')
-// const { eachSeries, nextTick } = require('async')
+const Resumable = require('resumablejs')
 const Multiaddr = require('multiaddr')
-// const Resumable = require('resumablejs')
 
 /**
  * IPFS UPLOADER : Paratii IPFS uploader interface.
@@ -39,17 +32,44 @@ export class ParatiiIPFSRemote extends EventEmitter {
   }
 
   /**
-   * convenience method for adding and transcoding files
-   * @param {Array} files Array of HTML5 File Objects
+    * Upload a file over XHR to the transcoder. To be called with an event emitter as the last argument
+    * @param  {Object} file       file to upload
+    * @param  {string} hashedFile hash of the file ??
+    * @param  {EventEmitter} ev         event emitter
+    * @example this.xhrUpload(file, hashedFile, ev)
 
-   */
-  addAndTranscode (files) {
-    let ev = this.add(files)
-    // ev.on('done', this._signalTranscoder.bind(this))
-    ev.on('done', (files) => {
-      this._signalTranscoder(files, ev)
+    */
+  xhrUpload (file, hashedFile, ev) {
+    let r = new Resumable({
+      target: `${this.config.ipfs.transcoderDropUrl}/${hashedFile.hash}`,
+      chunkSize: this.config.ipfs.xhrChunkSize,
+      simultaneousUploads: 4,
+      testChunks: false,
+      throttleProgressCallbacks: 1,
+      maxFileSize: this.config.ipfs.maxFileSize
     })
-    return ev
+
+    r.on('fileAdded', (file, ev) => {
+      console.log('file ', file, 'added')
+    })
+
+    r.on('fileProgress', (file) => {
+      ev.emit('progress', r.progress() * 100)
+    })
+
+    r.on('complete', () => {
+      ev.emit('fileReady', hashedFile)
+    })
+
+    r.on('error', (err, file) => {
+      console.error('file ', file, 'err ', err)
+    })
+
+    r.addFile(file._html5File)
+
+    setTimeout(() => {
+      r.upload()
+    }, 1)
   }
 
   /**
@@ -57,7 +77,7 @@ export class ParatiiIPFSRemote extends EventEmitter {
    * @param  {Object} fileHash [description]
    * @param  {Object} options  [description]
    * @return {Object}          [description]
-
+   * @private
    */
   getMetaData (fileHash, options) {
     return new Promise((resolve, reject) => {
@@ -208,7 +228,7 @@ export class ParatiiIPFSRemote extends EventEmitter {
    * [_pinResponseHandler description]
    * @param  {Object} ev [description]
    * @return {Object}    [description]
-
+   * @private
    */
   _pinResponseHandler (ev) {
     return (peerId, command) => {

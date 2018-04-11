@@ -2,7 +2,7 @@
 'use strict'
 
 import { EventEmitter } from 'events'
-// import Protocol from 'paratii-protocol'
+import { PromiseEventEmitter } from './utils.js'
 const pull = require('pull-stream')
 const pullFilereader = require('pull-filereader')
 const toPull = require('stream-to-pull-stream')
@@ -10,8 +10,6 @@ const fs = require('fs')
 const path = require('path')
 const { eachSeries, nextTick } = require('async')
 const once = require('once')
-// const Multiaddr = require('multiaddr')
-// const Resumable = require('resumablejs')
 
 /**
  * IPFS UPLOADER : Paratii IPFS uploader interface.
@@ -47,7 +45,8 @@ export class ParatiiIPFSLocal extends EventEmitter {
 
    */
   add (file) {
-    return new Promise((resolve, reject) => {
+    const p = new PromiseEventEmitter((resolve, reject) => {
+      // return new Promise((resolve, reject) => {
       let files
       if (Array.isArray(file)) {
         files = file
@@ -56,10 +55,9 @@ export class ParatiiIPFSLocal extends EventEmitter {
       }
 
       let result = []
-
       for (let i = 0; i < files.length; i++) {
-        // check if File is actually available or not.
-        // if not it means we're not in the browser land.
+          // check if File is actually available or not.
+          // if not it means we're not in the browser land.
         if (typeof File !== 'undefined') {
           if (files[i] instanceof File) {
             result.push(this.html5FileToPull(files[i]))
@@ -70,10 +68,11 @@ export class ParatiiIPFSLocal extends EventEmitter {
           result.push(this.fsFileToPull(files[i]))
         }
       }
-      const ev = this.upload(result)
+      const ev = this.upload(result, this)
       ev.on('done', (hashedFiles) => resolve(hashedFiles))
       ev.on('error', (err) => reject(err))
     })
+    return p
   }
 
   /**
@@ -87,9 +86,11 @@ export class ParatiiIPFSLocal extends EventEmitter {
    *    - 'error': (err) triggered whenever an error occurs.
    * @example ?
    */
-  upload (files) {
+  upload (files, ev) {
     let meta = {} // holds File metadata.
-    let ev = new EventEmitter()
+    if (!ev) {
+      ev = new EventEmitter()
+    }
 
     this._ipfs.start().then(() => {
       // trigger onStart callback

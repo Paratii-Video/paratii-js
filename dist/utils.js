@@ -5,10 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.PromiseEventEmitter = exports.NULL_ADDRESS = undefined;
 
-var _promise = require('babel-runtime/core-js/promise');
-
-var _promise2 = _interopRequireDefault(_promise);
-
 var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -123,7 +119,7 @@ var PromiseEventEmitter = exports.PromiseEventEmitter = function (_EventEmitter)
   (0, _createClass3.default)(PromiseEventEmitter, [{
     key: 'then',
     value: function then(resolveHandler, rejectHandler) {
-      var promise = new _promise2.default();
+      var promise = new PromiseEventEmitter();
 
       // When a `resolve` event upstream is fired, execute the `resolveHandler`
       // and pass the `resolve` event downstream with the result
