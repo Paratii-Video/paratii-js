@@ -279,7 +279,9 @@ export class ParatiiEth {
       let address = await registry.methods.getContract(name).call()
       return address
     } catch (err) {
-      throw err
+      if (err.message === 'Couldn\'t decode address from ABI: 0x') {
+        throw Error('The registry address is not correct')
+      } else { throw err }
     }
   }
 

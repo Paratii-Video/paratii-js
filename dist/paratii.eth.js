@@ -564,9 +564,18 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 17:
               _context6.prev = 17;
               _context6.t0 = _context6['catch'](5);
+
+              if (!(_context6.t0.message === 'Couldn\'t decode address from ABI: 0x')) {
+                _context6.next = 23;
+                break;
+              }
+
+              throw Error('The registry address is not correct');
+
+            case 23:
               throw _context6.t0;
 
-            case 20:
+            case 24:
             case 'end':
               return _context6.stop();
           }
