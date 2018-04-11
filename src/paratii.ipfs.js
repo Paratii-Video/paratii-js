@@ -103,8 +103,12 @@ export class ParatiiIPFS extends EventEmitter {
       }
     })
   }
+
+  _getAccount () {
+    return (this.config.paratii && this.config.paratii.eth.getAccount())
+  }
   /**
-   * convenient method to add JSON and send it for persistance storage.
+   *  adds a JSON structure to the local node and signals remote node to pin it
    * @param  {object}  data JSON object to store
    * @return {string}      returns ipfs multihash of the stored object.
    * @example let result = await paratiiIPFS.addAndPinJSON(data)
@@ -113,7 +117,7 @@ export class ParatiiIPFS extends EventEmitter {
     let hash = await this.addJSON(data)
     let pinFile = () => {
       let pinEv = this.remote.pinFile(hash,
-        { author: this.config.account.address }
+        { author: this._getAccount() }
       )
       pinEv.on('pin:error', (err) => {
         console.warn('pin:error:', hash, ' : ', err)

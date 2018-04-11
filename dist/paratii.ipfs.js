@@ -210,8 +210,13 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
         }
       });
     }
+  }, {
+    key: '_getAccount',
+    value: function _getAccount() {
+      return this.config.paratii && this.config.paratii.eth.getAccount();
+    }
     /**
-     * convenient method to add JSON and send it for persistance storage.
+     *  adds a JSON structure to the local node and signals remote node to pin it
      * @param  {object}  data JSON object to store
      * @return {string}      returns ipfs multihash of the stored object.
      * @example let result = await paratiiIPFS.addAndPinJSON(data)
@@ -234,7 +239,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
               hash = _context2.sent;
 
               pinFile = function pinFile() {
-                var pinEv = _this4.remote.pinFile(hash, { author: _this4.config.account.address });
+                var pinEv = _this4.remote.pinFile(hash, { author: _this4._getAccount() });
                 pinEv.on('pin:error', function (err) {
                   console.warn('pin:error:', hash, ' : ', err);
                   pinEv.removeAllListeners();
