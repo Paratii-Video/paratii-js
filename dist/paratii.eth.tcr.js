@@ -361,7 +361,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 26:
               _context6.next = 28;
-              return _regenerator2.default.awrap(token.methods.allowance(this.eth.config.account.address, tcrPlaceholder.options.address).call());
+              return _regenerator2.default.awrap(token.methods.allowance(this.eth.getAccount(), tcrPlaceholder.options.address).call());
 
             case 28:
               allowance = _context6.sent;
