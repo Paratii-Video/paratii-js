@@ -2,7 +2,7 @@
 'use strict'
 
 import { EventEmitter } from 'events'
-import Protocol from 'paratii-protocol'
+// import Protocol from 'paratii-protocol'
 const pull = require('pull-stream')
 const pullFilereader = require('pull-filereader')
 const toPull = require('stream-to-pull-stream')

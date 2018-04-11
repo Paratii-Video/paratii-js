@@ -5,7 +5,7 @@ import Paratii from '../src/paratii.js'
 import { ParatiiIPFS } from '../src/paratii.ipfs.js'
 import { assert, expect } from 'chai'
 // const FileApi = require('file-api')
-const fs = require('fs')
+// const fs = require('fs')
 
 describe('ParatiiIPFS: :', function () {
   let paratiiIPFS
@@ -47,7 +47,7 @@ describe('ParatiiIPFS: :', function () {
 
   it('should allow for simple add() and get() of files', async function () {
     let path = 'test/data/some-file.txt'
-    let fileStream = fs.createReadStream(path)
+    // let fileStream = fs.createReadStream(path)
     let result = await paratiiIPFS.local.add(path)
     assert.isOk(result)
     console.log(result)
