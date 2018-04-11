@@ -163,21 +163,13 @@ it('paratii.eth.getContract() should throw a meaningful error if the registry ad
   await assert.isRejected(paratii.eth.getContract('Likes'), Error, /The registry address is not correct/g)
 })
 
-// WIP
-// it('paratii.eth.getContract() should throw a meaningful error if no blockchain is available', async function () {
-//   let paratii = new Paratii({
-//     eth: { provider: 'http://localhost:8000',
-//       registryAddress: '0xC83003a9B5c2C5bcce29f9c9Ee34b4ef246c781C'}, // wrong port
-//     account: testAccount
-//   })
-//
-//   try {
-//     let c = await paratii.eth.getContract('Likes')
-//     console.log('CONTRACT-------------')
-//     console.log(c)
-//   } catch (e) {
-//     console.log('ERROR-------------')
-//     console.log(e)
-//   }
-//   // assert.isRejected(await paratii.eth.getContract('Registry'), Error, /msg/g)
-// })
+it('paratii.eth.getContract() should throw a meaningful error if no blockchain is available', async function () {
+  let paratii = new Paratii({
+    eth: { provider: 'http://localhost:8000',
+      registryAddress: '0xC83003a9B5c2C5bcce29f9c9Ee34b4ef246c781C'}, // wrong port
+    account: testAccount
+  })
+  await paratii.eth.deployContracts()
+  // await assert.isRejected(paratii.eth.deployContracts(), Error, /You aren't connected to any Ethereum node/g)
+  await assert.isRejected(paratii.eth.getContract('Likes'), Error, /You aren't connected to any Ethereum node/g)
+})

@@ -281,7 +281,13 @@ export class ParatiiEth {
     } catch (err) {
       if (err.message === 'Couldn\'t decode address from ABI: 0x') {
         throw Error('The registry address is not correct')
-      } else { throw err }
+      } else {
+        if (err.message === 'Invalid JSON RPC response: ""') {
+          throw Error('You aren\'t connected to any Ethereum node')
+        } else {
+          throw err
+        }
+      }
     }
   }
 
