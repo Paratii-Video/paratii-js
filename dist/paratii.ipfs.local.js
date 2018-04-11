@@ -423,7 +423,8 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
      * @param  {File} file  HTML5 File Object
      * @return {Object}      generic file object.
      * @example ?
-      */
+     * @private
+     */
 
   }, {
     key: 'html5FileToPull',
@@ -442,7 +443,8 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
      * @param  {string} filePath Path to file.
      * @return {Object} generic file object.
      * @example ?
-      */
+     * @private
+     */
 
   }, {
     key: 'fsFileToPull',
@@ -464,6 +466,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
      * @param  {string} msg text to log
      * @example
      * paratii.ipfs.log("some-text")
+     * @private
      */
 
   }, {
@@ -480,6 +483,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
      * @param  {string} msg warn text
      * @example
      * paratii.ipfs.warn("some-text")
+     * @private
      */
 
   }, {
@@ -496,6 +500,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
     * @param  {string} msg error message
     * @example
     * paratii.ipfs.error("some-text")
+     * @private
     */
 
   }, {

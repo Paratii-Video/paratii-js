@@ -270,7 +270,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
    * @param  {File} file  HTML5 File Object
    * @return {Object}      generic file object.
    * @example ?
-
+   * @private
    */
   html5FileToPull (file) {
     return {
@@ -287,7 +287,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
    * @param  {string} filePath Path to file.
    * @return {Object} generic file object.
    * @example ?
-
+   * @private
    */
   fsFileToPull (filePath) {
     let stats = fs.statSync(filePath)
@@ -307,6 +307,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
    * @param  {string} msg text to log
    * @example
    * paratii.ipfs.log("some-text")
+   * @private
    */
   log (...msg) {
     if (this.config.verbose) {
@@ -318,6 +319,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
    * @param  {string} msg warn text
    * @example
    * paratii.ipfs.warn("some-text")
+   * @private
    */
   warn (...msg) {
     if (this.config.verbose) {
@@ -329,6 +331,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
   * @param  {string} msg error message
   * @example
   * paratii.ipfs.error("some-text")
+   * @private
   */
   error (...msg) {
     if (this.config.verbose) {

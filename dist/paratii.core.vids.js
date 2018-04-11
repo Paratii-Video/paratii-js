@@ -336,7 +336,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 }
               });
               _context4.next = 7;
-              return _regenerator2.default.awrap(this.config.paratii.ipfs.addJSON(optionsIpfs));
+              return _regenerator2.default.awrap(this.config.paratii.ipfs.local.addJSON(optionsIpfs));
 
             case 7:
               hash = _context4.sent;
