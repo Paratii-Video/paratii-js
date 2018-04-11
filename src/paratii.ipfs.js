@@ -46,7 +46,7 @@ export class ParatiiIPFS extends EventEmitter {
   //  * adds a data Object to the IPFS local instance
   //  * @param  {Object} data JSON object to store
   //  * @return {Promise} promise with the ipfs multihash
-  //  * @example let result = await paratiiIPFS.addJSON(data)
+  //  * @example let result = await paratiiIPFS.local.addJSON(data)
   //  */
   // async addJSON (data) {
   //   let ipfs = await this.getIPFSInstance()

@@ -80,7 +80,7 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
                 }
               });
               _context.next = 7;
-              return _regenerator2.default.awrap(this.config.paratii.ipfs.addJSON(optionsIpfs));
+              return _regenerator2.default.awrap(this.config.paratii.ipfs.local.addJSON(optionsIpfs));
 
             case 7:
               hash = _context.sent;
