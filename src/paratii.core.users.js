@@ -92,10 +92,8 @@ export class ParatiiCoreUsers {
 
   /**
    * migrate all contract data for  paratii.config.account to a new account
-   * @alias migrateAccount
    * @param newAccount Address of new account
    * @async
-   * @memberof Paratii
    */
   async migrateAccount (newAccount) {
     // migrate the videos

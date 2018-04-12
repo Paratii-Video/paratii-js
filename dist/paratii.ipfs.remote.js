@@ -77,18 +77,21 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
 
   /**
     * Upload a file over XHR to the transcoder. To be called with an event emitter as the last argument
-    * @param  {Object} file       file to upload
-    * @param  {string} hashedFile hash of the file ??
-    * @param  {EventEmitter} ev         event emitter
-    * @example this.xhrUpload(file, hashedFile, ev)
+    * @param  {Object} file file to upload
+    * @param  {string} hash IPFS multi-hash of the file
+    * @param  {?EventEmitter} ev optional event emitter
+    * @example this.xhrUpload(file, hashedFile)
      */
 
 
   (0, _createClass3.default)(ParatiiIPFSRemote, [{
     key: 'xhrUpload',
-    value: function xhrUpload(file, hashedFile, ev) {
+    value: function xhrUpload(file, hash, ev) {
+      if (!ev) {
+        ev = new _events.EventEmitter();
+      }
       var r = new Resumable({
-        target: this.config.ipfs.transcoderDropUrl + '/' + hashedFile.hash,
+        target: this.config.ipfs.transcoderDropUrl + '/' + hash,
         chunkSize: this.config.ipfs.xhrChunkSize,
         simultaneousUploads: 4,
         testChunks: false,
@@ -105,7 +108,7 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
       });
 
       r.on('complete', function () {
-        ev.emit('fileReady', hashedFile);
+        ev.emit('fileReady', file);
       });
 
       r.on('error', function (err, file) {
@@ -215,7 +218,7 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
      * @param  {Object} fileHash hash of the file to pin
      * @param  {Object} options  [description]
      * @return {Promise}  a Promise/EventEmitter that resolves inthe hash of the pinned file
-     *
+     * @example paratii.ipfs.remote.pinFile('QmQP5SJzEBKy1uAGASDfEPqeFJ3HUbEp4eZzxvTLdZZYwB')
      */
 
   }, {

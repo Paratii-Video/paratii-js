@@ -8,6 +8,11 @@ More information about the Paratii Project can be found on [paratii.video](http:
 
 ## Installation
 
+You can install `paratii-js` from npmjs.org using:
+
+    npm install paratii-js
+
+
 ## How to use it
 
 Here is a code snippet which will upload a video to Paratii and transcode it:

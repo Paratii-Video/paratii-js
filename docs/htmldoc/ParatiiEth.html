@@ -81,7 +81,8 @@
         ParatiiEth
         </h2>
         
-            <div class="class-description">contains functions to interact with the Ethereum blockchain and the Paratii contracts deployed there.</div>
+            <div class="class-description">contains functions to interact with the Ethereum blockchain and the Paratii contracts.
+See <a href="Paratii.html">Paratii</a></div>
         
     
 </header>
@@ -369,6 +370,14 @@
     
 
     
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">let paratii = new Paratii()
+// paratii.eth is an instance of ParatiiEth; let&#x27;s check the PTI balance of an account
+paratii.eth.balanceOf(&#x27;0xCbe4f07b343171ac37055B25a5266f48f6945b7d&#x27;, &#x27;PTI&#x27;)</pre>
+
+
+    
 </dd>
 
     
@@ -393,7 +402,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="balanceOf"><span class="type-signature">&lt;async> </span>balanceOf(address, symbol)</h4>
+    <h4 class="name" id="balanceOf"><span class="type-signature">&lt;async> </span>balanceOf(address [, symbol])</h4>
     
     
 </dt>
@@ -487,9 +496,9 @@ When called without a second argument, returns information about all relevant ba
             
                 <td class="attributes">
                 
-
+                    &lt;optional><br>
                 
-                    &lt;nullable><br>
+
                 
 
                 
@@ -593,13 +602,14 @@ When called without a second argument, returns information about all relevant ba
         
 
     
-        <h5>Examples</h5>
+        <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">paratii.eth.balanceOf(&#x27;some-address&#x27;, &#x27;ETH&#x27;) // returns the ETH balance of the given address</pre>
-
-    <pre class="sunlight-highlight-javascript">paratii.eth.balanceOf(&#x27;some-address&#x27;, &#x27;PTI&#x27;) // returns the PTI balance of the given address</pre>
-
-    <pre class="sunlight-highlight-javascript">paratii.eth.balanceOf(&#x27;some-address&#x27;) // returns both the PTI and the ETH balance of the given address</pre>
+    <pre class="sunlight-highlight-javascript">// returns the ETH balance of the given address
+await paratii.eth.balanceOf(&#x27;some-address&#x27;, &#x27;ETH&#x27;)
+// returns the PTI balance of the given address
+await paratii.eth.balanceOf(&#x27;some-address&#x27;, &#x27;PTI&#x27;)
+// returns both the PTI and the ETH balance of the given address
+await paratii.eth.balanceOf(&#x27;some-address&#x27;)</pre>
 
 
     
@@ -808,9 +818,12 @@ When called without a second argument, returns information about all relevant ba
         
 
     
-        <h5>Example</h5>
+        <h5>Examples</h5>
         
     <pre class="sunlight-highlight-javascript">paratii.eth.deployContract(&#x27;ParatiiToken&#x27;)</pre>
+
+    <pre class="sunlight-highlight-javascript">let paratiiRegistryAddress = await paratii.eth.getRegistryAddress()
+let likes = await this.deployContract(&#x27;Likes&#x27;, paratiiRegistryAddress)</pre>
 
 
     
@@ -828,7 +841,7 @@ When called without a second argument, returns information about all relevant ba
 
     
     <div class="description">
-        deploy all the contracts on the blockchain
+        deploy all Paratii contracts on the blockchain, and register them the registry contract
     </div>
     
 
@@ -925,11 +938,10 @@ When called without a second argument, returns information about all relevant ba
         
 
     
-        <h5>Examples</h5>
+        <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">let contracts = await paratii.eth.deployContracts()</pre>
-
-    <pre class="sunlight-highlight-javascript">let likes = await this.deployContract(&#x27;Likes&#x27;, paratiiRegistryAddress)</pre>
+    <pre class="sunlight-highlight-javascript">let contracts = await paratii.eth.deployContracts()
+for (contractName in contracts) { console.log(contracts[contractName])}</pre>
 
 
     
@@ -1390,626 +1402,6 @@ When called without a second argument, returns information about all relevant ba
             
 <hr>
 <dt>
-    <h4 class="name" id="getRegistryAddress"><span class="type-signature"></span>getRegistryAddress()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        get the address of the Registry contract on the blockchain
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.eth.js.html">paratii.eth.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    address on the blockchain
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">let registryAddress = paratii.eth.getRegistryAddress()</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="requireContract"><span class="type-signature"></span>requireContract(contractName)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        creates the javascript contract object from the json file
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>contractName</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">name of the contract</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.eth.js.html">paratii.eth.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    Contract Object
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">paratii.eth.requireContract(&#x27;ParatiiToken&#x27;)</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="setAccount"><span class="type-signature"></span>setAccount(address, privateKey, mnemonic)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        creates an account using the private key or, if not present, using the mnemonic
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>address</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">public address</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>privateKey</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">private key related to the previous public address</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>mnemonic</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">mnemonic related to the previous public address</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.eth.js.html">paratii.eth.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h5>Examples</h5>
-        
-    <pre class="sunlight-highlight-javascript">paratii.eth.setAccount(&#x27;some-address&#x27;,&#x27;some-private-key&#x27;)</pre>
-
-    <pre class="sunlight-highlight-javascript">paratii.eth.setAccount(&#x27;some-address&#x27;,&#x27;some-mnemonic&#x27;)</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="setRegistryAddress"><span class="type-signature"></span>setRegistryAddress(registryAddress)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        set the address of the Registry contract on the blockchain
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>registryAddress</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">new address</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.eth.js.html">paratii.eth.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">await paratii.eth.setRegistryAddress(&#x27;some-address&#x27;)</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
     <h4 class="name" id="transfer"><span class="type-signature">&lt;async> </span>transfer(beneficiary, amount, symbol, description)</h4>
     
     
@@ -2331,7 +1723,7 @@ When called without a second argument, returns information about all relevant ba
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2018-04-11T17:37:35+02:00
+		on 2018-04-12T11:18:47+02:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

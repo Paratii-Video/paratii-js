@@ -398,7 +398,8 @@ and utilities to interact with the Paratii index.</div>
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">paratii = new Paratii({
+    <pre class="sunlight-highlight-javascript">import Paratii from &#x27;paratii-js&#x27;
+paratii = new Paratii({
  eth: {
    provider&#x27;: &#x27;http://localhost:8545&#x27;
   },
@@ -433,137 +434,6 @@ and utilities to interact with the Paratii index.</div>
             
 <hr>
 <dt>
-    <h4 class="name" id="migrateAccount"><span class="type-signature">&lt;async> </span>migrateAccount(newAccount)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        migrate all contract data for  paratii.config.account to a new account
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>newAccount</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Address of new account</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.core.users.js.html">paratii.core.users.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
     <h4 class="name" id="diagnose"><span class="type-signature">&lt;async> </span>diagnose()</h4>
     
     
@@ -572,7 +442,7 @@ and utilities to interact with the Paratii index.</div>
 
     
     <div class="description">
-        return an array of strings with diagnostic info
+        Get some diagnostic info about the state of the system
     </div>
     
 
@@ -647,7 +517,7 @@ and utilities to interact with the Paratii index.</div>
     
             
 <div class="param-desc">
-    array of strings with diagnostic info
+    that resolves in an array of strings with diagnostic info
 </div>
 
 
@@ -671,7 +541,8 @@ and utilities to interact with the Paratii index.</div>
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">paratii.diagnose()</pre>
+    <pre class="sunlight-highlight-javascript">let diagnosticInfo = await paratii.diagnose()
+console.log(diagnosticInfo)</pre>
 
 
     
@@ -681,7 +552,7 @@ and utilities to interact with the Paratii index.</div>
             
 <hr>
 <dt>
-    <h4 class="name" id="setAccount"><span class="type-signature"></span>setAccount(address, privateKey)</h4>
+    <h4 class="name" id="getAccount"><span class="type-signature"></span>getAccount()</h4>
     
     
 </dt>
@@ -689,7 +560,7 @@ and utilities to interact with the Paratii index.</div>
 
     
     <div class="description">
-        Set the ethereum address what will be used to sign all transactions
+        Gets the ethereum address that is used to sign all the transactions
     </div>
     
 
@@ -698,100 +569,6 @@ and utilities to interact with the Paratii index.</div>
     
 
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Argument</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>address</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">address of the operator/user</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>privateKey</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-                    &lt;nullable><br>
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">private key of the operator/user</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
     
 
     
@@ -858,7 +635,7 @@ and utilities to interact with the Paratii index.</div>
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">paratii.setAccount(&#x27;some-user-id&#x27;,&#x27;some-user-pub-key&#x27;)</pre>
+    <pre class="sunlight-highlight-javascript">paratii.getAccount()</pre>
 
 
     
@@ -868,7 +645,7 @@ and utilities to interact with the Paratii index.</div>
             
 <hr>
 <dt>
-    <h4 class="name" id="setRegistryAddress"><span class="type-signature"></span>setRegistryAddress(address)</h4>
+    <h4 class="name" id="getRegistryAddress"><span class="type-signature"></span>getRegistryAddress(address)</h4>
     
     
 </dt>
@@ -876,7 +653,7 @@ and utilities to interact with the Paratii index.</div>
 
     
     <div class="description">
-        Set the address of the ParatiiRegistry contract
+        Sets the address of the ParatiiRegistry contract
     </div>
     
 
@@ -1001,7 +778,375 @@ and utilities to interact with the Paratii index.</div>
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">paratii.setRegistryAddress(&#x27;some-address&#x27;)</pre>
+    <pre class="sunlight-highlight-javascript">paratii.getRegistryAddress()</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setAccount"><span class="type-signature"></span>setAccount(address, privateKey, mnemonic)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Sets the account that will be used to sign all transactions
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>address</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">public address</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>privateKey</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">private key related to the previous public address</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>mnemonic</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">mnemonic related to the previous public address</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.js.html">paratii.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Examples</h5>
+        
+    <pre class="sunlight-highlight-javascript">paratii.eth.setAccount(null,&#x27;some-private-key&#x27;)</pre>
+
+    <pre class="sunlight-highlight-javascript">paratii.eth.setAccount(&#x27;some-address&#x27;, null, &#x27;some-mnemonic&#x27;)</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setRegistryAddress"><span class="type-signature"></span>setRegistryAddress(address)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Sets the address of the ParatiiRegistry contract
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>address</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">address of the ParatiiRegistry contract</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="paratii.js.html">paratii.js</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">paratii.eth.setRegistryAddress(&#x27;0x12345&#x27;)</pre>
 
 
     
@@ -1057,7 +1202,7 @@ and utilities to interact with the Paratii index.</div>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2018-04-11T17:37:35+02:00
+		on 2018-04-12T11:18:47+02:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

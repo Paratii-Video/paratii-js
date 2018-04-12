@@ -171,10 +171,8 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
 
     /**
      * migrate all contract data for  paratii.config.account to a new account
-     * @alias migrateAccount
      * @param newAccount Address of new account
      * @async
-     * @memberof Paratii
      */
 
   }, {

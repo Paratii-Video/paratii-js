@@ -145,7 +145,8 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
      *    - 'fileReady': (file) triggered when a file is uploaded locally.
      *    - 'done': (files) triggered when the uploader is done locally.
      *    - 'error': (err) triggered whenever an error occurs.
-     * @example ?
+     * @example paratii.ipfs.local.upload('path/to/file')
+     * TODO: this is not "local" only, it calls xhrupload in case we are dealing with an html5 file!
      */
 
   }, {
@@ -173,7 +174,6 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
         }), pull.asyncMap(function (file, cb) {
           return pull(pull.values([{
             path: file.name,
-            // content: pullFilereader(file)
             content: pull(file._pullStream, pull.through(function (chunk) {
               return ev.emit('progress2', chunk.length, Math.floor((meta.total += chunk.length) * 1.0 / meta.fileSize * 100));
             }))
@@ -187,7 +187,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
             _this3._ipfs.log('Adding %s finished as %s, size: %s', hashedFile.path, hashedFile.hash, hashedFile.size);
 
             if (file._html5File) {
-              _this3.xhrUpload(file, hashedFile, ev);
+              _this3.remote.xhrUpload(file, hashedFile.hash, ev);
             } else {
               ev.emit('fileReady', hashedFile);
             }
@@ -420,7 +420,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
 
     /**
      * returns a generic File Object with a Pull Stream from an HTML5 File
-     * @param  {File} file  HTML5 File Object
+     * @param  {File} file HTML5 File Object
      * @return {Object}      generic file object.
      * @example ?
      * @private
