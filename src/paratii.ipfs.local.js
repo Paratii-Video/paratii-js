@@ -125,7 +125,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
             this._ipfs.log('Adding %s finished as %s, size: %s', hashedFile.path, hashedFile.hash, hashedFile.size)
 
             if (file._html5File) {
-              this.remote.xhrUpload(file, hashedFile.hash, ev)
+              this._ipfs.remote.xhrUpload(file, hashedFile.hash, ev)
             } else {
               ev.emit('fileReady', hashedFile)
             }
