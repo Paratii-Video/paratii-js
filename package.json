@@ -19,7 +19,7 @@
     "lint": "standard",
     "lint-fix": "standard --fix",
     "node": "node",
-    "docs": "jsdoc --configure .jsdoc.json --readme ./README.md --destination ./docs/htmldoc",
+    "docs": "jsdoc --configure .jsdoc.json --readme docs/JSDOC-INDEX.md --destination ./docs/htmldoc",
     "git-add-dist": "git add dist"
   },
   "dependencies": {
