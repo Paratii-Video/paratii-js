@@ -213,7 +213,7 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
 
             case 13:
               _context3.next = 15;
-              return _regenerator2.default.awrap(paratii.eth.tcr.didVideoApply(vid.id));
+              return _regenerator2.default.awrap(paratii.eth.tcr.didVideoApply(videoId));
 
             case 15:
               didVideoApply = _context3.sent;
