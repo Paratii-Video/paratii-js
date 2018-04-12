@@ -39,6 +39,3 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               rsync -rv -e "ssh -o StrictHostKeyChecking=no" ./docs/htmldoc/ paratii@docs.paratii.video:/var/www/docs.paratii.video/htmldoc
             fi
-            if [ "${CIRCLE_BRANCH}" == "dev" ]; then
-              rsync -rv -e "ssh -o StrictHostKeyChecking=no" ./docs/htmldoc/ paratii@docs.paratii.video:/var/www/docs.paratii.video/htmldoc
-            fi
