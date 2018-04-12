@@ -125,7 +125,7 @@ export class ParatiiEth {
    * Get the contract instance specified
    * @param {string} name the name of the token
    * @return {Promise} Object representing the contract
-   * @example paratii.eth.getContract('ParatiiToken')
+   * @example await paratii.eth.getContract('ParatiiToken')
    */
   async getContract (name) {
     let contract = this.contracts[name]
@@ -171,7 +171,7 @@ export class ParatiiEth {
    * @param  {string}  name name of the contract
    * @param  {Object}  args configuration for the contract (strings or numbers). It is allowed to pass more than one parameter
    * @return {Promise}      the deployed contract
-   * @example paratii.eth.deployContract('ParatiiToken')
+   * @example await paratii.eth.deployContract('ParatiiToken')
    * @example let paratiiRegistryAddress = await paratii.eth.getRegistryAddress()
    * let likes = await this.deployContract('Likes', paratiiRegistryAddress)
    */
@@ -248,7 +248,7 @@ export class ParatiiEth {
 
   /**
    * Set the provider on all the contracts
-   * @example paratii.eth.setContractsProvider()
+   * @example await paratii.eth.setContractsProvider()
    * @private
    */
   async setContractsProvider () {
@@ -279,7 +279,7 @@ export class ParatiiEth {
  * get the address of the contract on the blockchain
  * @param  {string}  name name of the contract
  * @return {Promise}      Contract address on the blockchain (String)
- * @example paratii.eth.getContractAddress('ParatiiToken')
+ * @example await paratii.eth.getContractAddress('ParatiiToken')
  */
   async getContractAddress (name) {
     let registryAddress = this.getRegistryAddress()
@@ -366,7 +366,7 @@ export class ParatiiEth {
    * @param  {number}  amount      amount of ETH to be sent
    * @param  {?string}  description  description of the transaction (will be written in the blockchain)
    * @return {Promise}             information about the transaction recording the transfer
-   * @example return paratii.eth._transferETH('some-address', 20, 'an-optional-description')
+   * @example await paratii.eth._transferETH('some-address', 20, 'an-optional-description')
    * @private
    */
   async _transferETH (beneficiary, amount, description) {
@@ -397,7 +397,7 @@ export class ParatiiEth {
    * @param  {string}  beneficiary ETH address
    * @param  {number}  amount      amount of PTI to be sent
    * @return {Promise}             information about the transaction recording the transfer
-   * @example return paratii.eth._transferPTI('some-address', 20)
+   * @example await paratii.eth._transferPTI('some-address', 20)
    * @private
    */
   async _transferPTI (beneficiary, amount) {

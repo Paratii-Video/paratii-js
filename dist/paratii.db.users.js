@@ -38,7 +38,7 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
    * retrieve data about the user
    * @param  {string}  userId user univocal id
    * @return {Promise}        data about the user
-   * @example paratii.db.users.get('some-user-id')
+   * @example await paratii.db.users.get('some-user-id')
    */
 
 
@@ -72,7 +72,7 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
      * get information about all the videos of the user
      * @param  {string}  userId univocal user identifier
      * @return {Promise}        Collection of all the videos of the user
-     * @example paratii.db.users.videos('some-user-id')
+     * @example await paratii.db.users.videos('some-user-id')
      */
 
   }, {
