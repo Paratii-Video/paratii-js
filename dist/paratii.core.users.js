@@ -55,7 +55,7 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
    *              email: 'some@email.com',
    *              ...
    *             })
-    */
+   */
   // FIXME: do some joi validation here
 
 
@@ -101,7 +101,7 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
      * @param  {string} id user univocal id
      * @return {Object}    data about the user
      * @example paratii.users.get('some-user-id')
-     */
+    */
 
   }, {
     key: 'get',
@@ -114,7 +114,7 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
      * @param  {Object}  options updated data i.e. { name: 'A new user name' }
      * @return {Promise}         updated data about the user
      * @example paratii.users.update('some-user-id', {name: 'A new user name'})
-      */
+     */
 
   }, {
     key: 'update',
