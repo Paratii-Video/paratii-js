@@ -86,8 +86,8 @@ export class ParatiiEth {
    * @param {string} mnemonic   mnemonic related to the previous public address
    * @example paratii.eth.setAccount('some-address','some-private-key')
    * @example paratii.eth.setAccount('some-address','some-mnemonic')
-   * @private
    * SEE paratii.setAccount()
+   * @private
    */
   setAccount (address, privateKey, mnemonic) {
     const wallet = this.web3.eth.accounts.wallet

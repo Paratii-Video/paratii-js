@@ -1,5 +1,12 @@
 /**
  * eth.events implements a part of the API of the EventEmitter, that can be used to manage subscriptions to Ethereum events.
+ * Available events:
+ * - TransferPTI
+ * - TransferETH
+ * - CreateVideo
+ * - UpdateVideo
+ * - RemoveVideo
+ * - BuyVideo
  * @param {Object} config configuration object to initialize Paratii object
  */
 export class ParatiiEthEvents {
@@ -68,7 +75,7 @@ export class ParatiiEthEvents {
    * @param  {string} eventType Event type
    * @return {Object}           Event Object
    * @example let structuredEvent = this._getStructuredEvent('some-event')
-
+   * @private
    */
   _getStructuredEvent (eventType) {
     let structuredEvent = {}
@@ -94,7 +101,6 @@ export class ParatiiEthEvents {
    * @param  {Function}  options   function called when the events occurs
    * @param  {?}  listener  optional ?
    * @return {Promise}           [description]
-
    */
   async addListener (eventType, options, listener) {
     if (this._isFunction(options)) {
@@ -110,7 +116,7 @@ export class ParatiiEthEvents {
    * @param  {Object}  listener  [description]
    * @param  {Object}  options   [description]
    * @return {Promise}           [description]
-
+   * @private
    */
   async _addListener (eventType, listener, options) {
     let structuredEvent = this._getStructuredEvent(eventType)
@@ -150,7 +156,7 @@ export class ParatiiEthEvents {
    * TODO RIVEDI I TIPI
    * @param  {Object}  functionToCheck [description]
    * @return {Boolean}                 [description]
-
+   * @private
    */
   _isFunction (functionToCheck) {
     var getType = {}
@@ -161,7 +167,7 @@ export class ParatiiEthEvents {
    * TODO RIVEDI I TIPI
    * @param {Object} eventType    [description]
    * @param {Object} subscription [description]
-
+   * @private
    */
   addSubscription (eventType, subscription) {
     if (!this._subscriptions[eventType]) {
@@ -181,7 +187,7 @@ export class ParatiiEthEvents {
    * TODO RIVEDI I TIPI
    * @param  {Object} eventType [description]
    * @return {Object}           [description]
-
+   * @private
    */
   removeAllSubscriptions (eventType) {
     if (eventType === undefined) {

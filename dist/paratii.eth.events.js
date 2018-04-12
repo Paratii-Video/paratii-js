@@ -21,6 +21,13 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 /**
  * eth.events implements a part of the API of the EventEmitter, that can be used to manage subscriptions to Ethereum events.
+ * Available events:
+ * - TransferPTI
+ * - TransferETH
+ * - CreateVideo
+ * - UpdateVideo
+ * - RemoveVideo
+ * - BuyVideo
  * @param {Object} config configuration object to initialize Paratii object
  */
 var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
@@ -91,7 +98,8 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
    * @param  {string} eventType Event type
    * @return {Object}           Event Object
    * @example let structuredEvent = this._getStructuredEvent('some-event')
-    */
+   * @private
+   */
 
 
   (0, _createClass3.default)(ParatiiEthEvents, [{
@@ -120,7 +128,7 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
      * @param  {Function}  options   function called when the events occurs
      * @param  {?}  listener  optional ?
      * @return {Promise}           [description]
-      */
+     */
 
   }, {
     key: 'addListener',
@@ -153,7 +161,8 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
      * @param  {Object}  listener  [description]
      * @param  {Object}  options   [description]
      * @return {Promise}           [description]
-      */
+     * @private
+     */
 
   }, {
     key: '_addListener',
@@ -221,7 +230,8 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
      * TODO RIVEDI I TIPI
      * @param  {Object}  functionToCheck [description]
      * @return {Boolean}                 [description]
-      */
+     * @private
+     */
 
   }, {
     key: '_isFunction',
@@ -234,7 +244,8 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
      * TODO RIVEDI I TIPI
      * @param {Object} eventType    [description]
      * @param {Object} subscription [description]
-      */
+     * @private
+     */
 
   }, {
     key: 'addSubscription',
@@ -256,7 +267,8 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
      * TODO RIVEDI I TIPI
      * @param  {Object} eventType [description]
      * @return {Object}           [description]
-      */
+     * @private
+     */
 
   }, {
     key: 'removeAllSubscriptions',
