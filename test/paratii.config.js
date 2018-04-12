@@ -165,8 +165,8 @@ it('paratii.eth.getContract() should throw a meaningful error if the registry ad
 
 it('paratii.eth.getContract() should throw a meaningful error if no blockchain is available', async function () {
   let paratii = new Paratii({
-    eth: { provider: 'http://localhost:8000',
-      registryAddress: '0xC83003a9B5c2C5bcce29f9c9Ee34b4ef246c781C'}, // wrong port
+    eth: { provider: 'http://localhost:8000', // wrong port
+      registryAddress: '0xC83003a9B5c2C5bcce29f9c9Ee34b4ef246c781C'},
     account: testAccount
   })
 
