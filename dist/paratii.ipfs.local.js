@@ -10,13 +10,13 @@ var _stringify = require('babel-runtime/core-js/json/stringify');
 
 var _stringify2 = _interopRequireDefault(_stringify);
 
-var _regenerator = require('babel-runtime/regenerator');
-
-var _regenerator2 = _interopRequireDefault(_regenerator);
-
 var _promise = require('babel-runtime/core-js/promise');
 
 var _promise2 = _interopRequireDefault(_promise);
+
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
 
 var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
 
@@ -90,7 +90,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
   }
 
   /**
-   * uploads a single file to *local* IPFS node
+   * adds single file to local IPFS node
    * @param {File} file HTML5 File Object.
    * @returns {EventEmitter} checkout the upload function below for details.
    * @example let uploaderEv = paratiiIPFS.uploader.add(files)
@@ -100,9 +100,53 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
   (0, _createClass3.default)(ParatiiIPFSLocal, [{
     key: 'add',
     value: function add(file) {
+      return _regenerator2.default.async(function add$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              file = this._massageFileArgs(file);
+              _context.next = 3;
+              return _regenerator2.default.awrap(this._ipfs.start());
+
+            case 3:
+              return _context.abrupt('return', this._ipfs._node.files.add(file));
+
+            case 4:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, null, this);
+    }
+  }, {
+    key: '_massageFileArgs',
+    value: function _massageFileArgs(file) {
+      if (typeof File !== 'undefined') {
+        if (file instanceof File) {
+          file = this.html5FileToPull(file);
+        } else {
+          file = this.fsFileToPull(file);
+        }
+      } else {
+        file = this.fsFileToPull(file);
+      }
+      return file;
+    }
+
+    /**
+     * adds a file or array of files to local IPFS node - like add, but returns an eventemitter
+     * for tracking progress
+     * @param {File|File[]} file HTML5 File Object.
+     * @returns {EventEmitter} checkout the upload function below for details.
+     * @example let uploaderEv = paratiiIPFS.uploader.add(files)
+     */
+
+  }, {
+    key: 'upload',
+    value: function upload(file) {
       var _this2 = this;
 
-      var p = new _utils.PromiseEventEmitter(function (resolve, reject) {
+      return new _utils.PromiseEventEmitter(function (resolve, reject) {
         // return new Promise((resolve, reject) => {
         var files = void 0;
         if (Array.isArray(file)) {
@@ -125,7 +169,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
             result.push(_this2.fsFileToPull(files[i]));
           }
         }
-        var ev = _this2.upload(result, _this2);
+        var ev = _this2._upload(result, _this2);
         ev.on('done', function (hashedFiles) {
           return resolve(hashedFiles);
         });
@@ -133,7 +177,6 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
           return reject(err);
         });
       });
-      return p;
     }
 
     /**
@@ -150,8 +193,8 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
      */
 
   }, {
-    key: 'upload',
-    value: function upload(files, ev) {
+    key: '_upload',
+    value: function _upload(files, ev) {
       var _this3 = this;
 
       var meta = {}; // holds File metadata.
@@ -186,11 +229,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
             var hashedFile = res[0];
             _this3._ipfs.log('Adding %s finished as %s, size: %s', hashedFile.path, hashedFile.hash, hashedFile.size);
 
-            if (file._html5File) {
-              _this3._ipfs.remote.xhrUpload(file, hashedFile.hash, ev);
-            } else {
-              ev.emit('fileReady', hashedFile);
-            }
+            ev.emit('fileReady', file, hashedFile);
 
             cb(null, hashedFile);
           }));
@@ -205,7 +244,20 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
 
       return ev;
     }
+  }, {
+    key: 'addAndxhrUpload',
+    value: function addAndxhrUpload(file) {
+      var _this4 = this;
 
+      var ev = this.upload(file);
+      ev.on('fileReady', function (file, hashedFile) {
+        if (file._html5File) {
+          _this4._ipfs.remote.xhrUpload(file, hashedFile.hash, ev);
+        } else {
+          throw Error('sorry, can only upload html5 files with xhr');
+        }
+      });
+    }
     /**
      * upload an entire directory to IPFS
      * @param  {string}   dirPath path to directory
@@ -216,14 +268,14 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
   }, {
     key: 'addDirectory',
     value: function addDirectory(dirPath) {
-      var _this4 = this;
+      var _this5 = this;
 
       return new _promise2.default(function (resolve, reject) {
         // cb = once(cb)
         var resp = null;
         // this._ipfs.log('adding ', dirPath, ' to IPFS')
 
-        var addStream = _this4._ipfs._node.files.addReadableStream();
+        var addStream = _this5._ipfs._node.files.addReadableStream();
         addStream.on('data', function (file) {
           // this._ipfs.log('dirPath ', dirPath)
           // this._ipfs.log('file Added ', file)
@@ -246,11 +298,11 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
           eachSeries(files, function (file, next) {
             next = once(next);
             try {
-              _this4._ipfs.log('reading file ', file);
+              _this5._ipfs.log('reading file ', file);
               var rStream = fs.createReadStream(path.join(dirPath, file));
               rStream.on('error', function (err) {
                 if (err) {
-                  _this4._ipfs.error('rStream Error ', err);
+                  _this5._ipfs.error('rStream Error ', err);
                   return next();
                 }
               });
@@ -262,7 +314,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
               }
             } catch (e) {
               if (e) {
-                _this4._ipfs.error('createReadStream Error: ', e);
+                _this5._ipfs.error('createReadStream Error: ', e);
               }
             } finally {}
             // next()
@@ -291,20 +343,20 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
     key: 'get',
     value: function get(hash) {
       var ipfs;
-      return _regenerator2.default.async(function get$(_context) {
+      return _regenerator2.default.async(function get$(_context2) {
         while (1) {
-          switch (_context.prev = _context.next) {
+          switch (_context2.prev = _context2.next) {
             case 0:
-              _context.next = 2;
+              _context2.next = 2;
               return _regenerator2.default.awrap(this._ipfs.getIPFSInstance());
 
             case 2:
-              ipfs = _context.sent;
-              return _context.abrupt('return', ipfs.files.get(hash));
+              ipfs = _context2.sent;
+              return _context2.abrupt('return', ipfs.files.get(hash));
 
             case 4:
             case 'end':
-              return _context.stop();
+              return _context2.stop();
           }
         }
       }, null, this);
@@ -321,42 +373,42 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
     key: 'getJSON',
     value: function getJSON(multihash) {
       var ipfs, node;
-      return _regenerator2.default.async(function getJSON$(_context2) {
+      return _regenerator2.default.async(function getJSON$(_context3) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
-              _context2.next = 2;
+              _context3.next = 2;
               return _regenerator2.default.awrap(this._ipfs.getIPFSInstance());
 
             case 2:
-              ipfs = _context2.sent;
+              ipfs = _context3.sent;
               node = void 0;
-              _context2.prev = 4;
-              _context2.next = 7;
+              _context3.prev = 4;
+              _context3.next = 7;
               return _regenerator2.default.awrap(ipfs.files.cat(multihash));
 
             case 7:
-              node = _context2.sent;
-              _context2.next = 14;
+              node = _context3.sent;
+              _context3.next = 14;
               break;
 
             case 10:
-              _context2.prev = 10;
-              _context2.t0 = _context2['catch'](4);
+              _context3.prev = 10;
+              _context3.t0 = _context3['catch'](4);
 
-              if (!_context2.t0) {
-                _context2.next = 14;
+              if (!_context3.t0) {
+                _context3.next = 14;
                 break;
               }
 
-              throw _context2.t0;
+              throw _context3.t0;
 
             case 14:
-              return _context2.abrupt('return', JSON.parse(node.toString()));
+              return _context3.abrupt('return', JSON.parse(node.toString()));
 
             case 15:
             case 'end':
-              return _context2.stop();
+              return _context3.stop();
           }
         }
       }, null, this, [[4, 10]]);
@@ -373,46 +425,46 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
     key: 'addJSON',
     value: function addJSON(data) {
       var ipfs, obj, node;
-      return _regenerator2.default.async(function addJSON$(_context3) {
+      return _regenerator2.default.async(function addJSON$(_context4) {
         while (1) {
-          switch (_context3.prev = _context3.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
-              _context3.next = 2;
+              _context4.next = 2;
               return _regenerator2.default.awrap(this._ipfs.getIPFSInstance());
 
             case 2:
-              ipfs = _context3.sent;
+              ipfs = _context4.sent;
               obj = {
                 Data: Buffer.from((0, _stringify2.default)(data)),
                 Links: []
               };
               node = void 0;
-              _context3.prev = 5;
-              _context3.next = 8;
+              _context4.prev = 5;
+              _context4.next = 8;
               return _regenerator2.default.awrap(ipfs.files.add(obj.Data));
 
             case 8:
-              node = _context3.sent;
-              _context3.next = 15;
+              node = _context4.sent;
+              _context4.next = 15;
               break;
 
             case 11:
-              _context3.prev = 11;
-              _context3.t0 = _context3['catch'](5);
+              _context4.prev = 11;
+              _context4.t0 = _context4['catch'](5);
 
-              if (!_context3.t0) {
-                _context3.next = 15;
+              if (!_context4.t0) {
+                _context4.next = 15;
                 break;
               }
 
-              throw _context3.t0;
+              throw _context4.t0;
 
             case 15:
-              return _context3.abrupt('return', node[0].hash);
+              return _context4.abrupt('return', node[0].hash);
 
             case 16:
             case 'end':
-              return _context3.stop();
+              return _context4.stop();
           }
         }
       }, null, this, [[5, 11]]);

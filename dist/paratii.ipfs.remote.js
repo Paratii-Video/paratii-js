@@ -42,7 +42,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Resumable = require('resumablejs');
 var Multiaddr = require('multiaddr');
-
 /**
  * IPFS UPLOADER : Paratii IPFS uploader interface.
  * @extends EventEmitter
@@ -76,15 +75,58 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
   }
 
   /**
-    * Upload a file over XHR to the transcoder. To be called with an event emitter as the last argument
-    * @param  {Object} file file to upload
-    * @param  {string} hash IPFS multi-hash of the file
-    * @param  {?EventEmitter} ev optional event emitter
-    * @example this.xhrUpload(file, hashedFile)
-     */
+   * Upload a file over XHR to the transcoder. To be called with an event emitter as the last argument
+   * @param  {Object} file       file to upload
+   * @param  {String} hashedFile hash of the file ??
+   * @param  {EventEmitter} ev         event emitter
+   * @example this.xhrUpload(file, hashedFile, ev)
+   * @memberof paratii.ipfs.uploader
+   */
 
 
   (0, _createClass3.default)(ParatiiIPFSRemote, [{
+    key: 'xhrUpload2',
+    value: function xhrUpload2(file, hashedFile, ev) {
+      var r = new Resumable({
+        target: this.config.ipfs.transcoderDropUrl + '/' + hashedFile.hash,
+        chunkSize: this.config.ipfs.xhrChunkSize,
+        simultaneousUploads: 4,
+        testChunks: false,
+        throttleProgressCallbacks: 1,
+        maxFileSize: this.config.ipfs.maxFileSize
+      });
+      r.on('fileAdded', function (file, ev) {
+        console.log('file ', file, 'added');
+      });
+
+      r.on('fileProgress', function (file) {
+        ev.emit('progress', r.progress() * 100);
+      });
+
+      r.on('complete', function () {
+        ev.emit('fileReady', hashedFile);
+      });
+
+      r.on('error', function (err, file) {
+        console.error('file ', file, 'err ', err);
+      });
+
+      r.addFile(file._html5File);
+
+      setTimeout(function () {
+        r.upload();
+      }, 1);
+    }
+
+    /**
+      * Upload a file over XHR to the transcoder. To be called with an event emitter as the last argument
+      * @param  {Object} file file to upload
+      * @param  {string} hash IPFS multi-hash of the file
+      * @param  {?EventEmitter} ev optional event emitter
+      * @example this.xhrUpload(file, hashedFile)
+       */
+
+  }, {
     key: 'xhrUpload',
     value: function xhrUpload(file, hash, ev) {
       if (!ev) {
@@ -98,9 +140,8 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
         throttleProgressCallbacks: 1,
         maxFileSize: this.config.ipfs.maxFileSize
       });
-
       r.on('fileAdded', function (file, ev) {
-        console.log('file ', file, 'added');
+        console.log('file ', file.fileName, 'added');
       });
 
       r.on('fileProgress', function (file) {
@@ -120,6 +161,7 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
       setTimeout(function () {
         r.upload();
       }, 1);
+      return ev;
     }
 
     /**
@@ -146,7 +188,6 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
         var error = result.error;
         if (error) reject(error);
         var opts = result.value;
-        console.log('opts: ', opts);
         var ev = void 0;
         if (opts.ev) {
           ev = opts.ev;
