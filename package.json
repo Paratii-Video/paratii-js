@@ -20,7 +20,7 @@
     "lint-fix": "standard --fix",
     "node": "node",
     "docs": "jsdoc --configure .jsdoc.json --readme ./README.md --destination ./docs/htmldoc",
-    "git-add-docs-and-dist": "git add docs dist"
+    "git-add-dist": "git add dist"
   },
   "dependencies": {
     "async": "^2.6.0",
@@ -110,6 +110,6 @@
     "build",
     "build-browser",
     "docs",
-    "git-add-docs-and-dist"
+    "git-add-dist"
   ]
 }
