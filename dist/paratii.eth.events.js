@@ -21,14 +21,21 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 /**
  * eth.events implements a part of the API of the EventEmitter, that can be used to manage subscriptions to Ethereum events.
- * Available events:
- * - TransferPTI
- * - TransferETH
- * - CreateVideo
- * - UpdateVideo
- * - RemoveVideo
- * - BuyVideo
+ * Available events: <br>
+ * - TransferPTI, triggered when PTI are transfered through the ParatiiToken contract <br>
+ * - TransferETH, triggered when ETH are transfered through the SendEther contract <br>
+ * - CreateVideo, triggered when a video is created through the Videos contract <br>
+ * - UpdateVideo, triggered when a video is updated through the Videos contract <br>
+ * - RemoveVideo, triggered when a video is removed through the Videos contract <br>
+ * - BuyVideo, triggered when a video is bought through the Store contract <br>
+ * - CreateUser, triggered when a user is created through the Users contract <br>
+ * - CreateVoucher, triggered when a voucher is created through the Vouchers contract <br>
+ * - RemoveUser, triggered when a user is removed through the Users contract <br>
+ * - ReedemVoucher, triggered when a voucher is reedemed through the Vouchers contract <br>
+ * - RemoveVoucher, triggered when a voucher is removed through the Vouchers contract <br>
+ * - Application, triggered when a video applies through the TcrPlaceholder contract <br>
  * @param {Object} config configuration object to initialize Paratii object
+ * - NewVideoWhitelisted, triggered when a video is whitelisted through the TcrPlaceholder contract
  */
 var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
   function ParatiiEthEvents(config) {
@@ -97,7 +104,7 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
    * parse event from simple string to an object
    * @param  {string} eventType Event type
    * @return {Object}           Event Object
-   * @example let structuredEvent = this._getStructuredEvent('some-event')
+   * @example let structuredEvent = this._getStructuredEvent('RemoveVoucher')
    * @private
    */
 
@@ -123,11 +130,18 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
       return structuredEvent;
     }
     /**
-     * subscribe to the specified event
-     * @param  {string}  eventType type of the event
-     * @param  {Function}  options   function called when the events occurs
-     * @param  {?}  listener  optional ?
-     * @return {Promise}           [description]
+     * subscribe to the specified event. Can be called with or without options
+     * @param  {string}  eventType string representing the event
+     * @param  {Object}  options   optional data
+     * @param  {Function}  listener  function that is triggered when the events occurs
+     * @return {Promise}           EventEmitter of that subscription
+     * @example await paratii.eth.events.addListener('CreateVideo', options, function (log) {
+     *    helper.logEvents(log, '📼  CreateVideo Event at Videos contract events')
+     *    creatingVideoQueue.push(log)
+     *    if (log.returnValues.ipfsData && log.returnValues.ipfsData !== '') {
+     *      gettingVideoMetaQueue.push(log)
+     *    }
+     *  })
      */
 
   }, {
@@ -155,12 +169,11 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
       }, null, this);
     }
     /**
-     * [_addListener description]
-     * TODO RIVEDI I TIPI
-     * @param  {Object}  eventType [description]
-     * @param  {Object}  listener  [description]
-     * @param  {Object}  options   [description]
-     * @return {Promise}           [description]
+     * subscribe to the specified event.
+     * @param  {string}  eventType string representing the event
+     * @param  {function}  listener  function that is triggered when the events occurs
+     * @param  {Object}  options   optional data
+     * @return {Promise}           EventEmitter of that subscription
      * @private
      */
 
@@ -226,10 +239,9 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
       }, null, this);
     }
     /**
-     * [_isFunction description]
-     * TODO RIVEDI I TIPI
-     * @param  {Object}  functionToCheck [description]
-     * @return {Boolean}                 [description]
+     * Helper function
+     * @param  {Object}  functionToCheck
+     * @return {Boolean}                 trye if functionToCheck is a function, false otherwise
      * @private
      */
 
@@ -240,10 +252,10 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
       return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
     }
     /**
-     * [addSubscription description]
-     * TODO RIVEDI I TIPI
-     * @param {Object} eventType    [description]
-     * @param {Object} subscription [description]
+     * adds subscription to the array of all the subscriptions
+     * @param {Object} eventType    event
+     * @param {Object} subscription event emitter related to that event
+     * @return EventEmitter of that subscription
      * @private
      */
 
@@ -263,10 +275,10 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
       return subscription;
     }
     /**
-     * [removeAllSubscriptions description]
-     * TODO RIVEDI I TIPI
-     * @param  {Object} eventType [description]
-     * @return {Object}           [description]
+     * Should remove all subscriptions
+     * @todo it doens't work
+     * @param  {Object} eventType event
+     * @return {Object}           ?
      * @private
      */
 
