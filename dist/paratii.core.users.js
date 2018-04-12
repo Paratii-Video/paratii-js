@@ -178,7 +178,7 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
   }, {
     key: 'migrateAccount',
     value: function migrateAccount(newAccount) {
-      var paratii, oldAccount, vids, i, vid, videoId, didVideoApply, ptiBalance;
+      var paratii, oldAccount, search, vids, i, vid, videoId, didVideoApply, ptiBalance;
       return _regenerator2.default.async(function migrateAccount$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -190,16 +190,16 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
               return _regenerator2.default.awrap(paratii.vids.search({ owner: oldAccount }));
 
             case 4:
-              vids = _context3.sent;
-              _context3.t0 = _regenerator2.default.keys(vids);
+              search = _context3.sent;
+              vids = search.results;
+              i = 0;
 
-            case 6:
-              if ((_context3.t1 = _context3.t0()).done) {
-                _context3.next = 20;
+            case 7:
+              if (!(i < vids.length)) {
+                _context3.next = 21;
                 break;
               }
 
-              i = _context3.t1.value;
               vid = vids[i];
               videoId = vid.id || vid._id;
               _context3.next = 12;
@@ -221,19 +221,20 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
               return _regenerator2.default.awrap(paratii.eth.tcr.exit(videoId));
 
             case 18:
-              _context3.next = 6;
+              i++;
+              _context3.next = 7;
               break;
 
-            case 20:
-              _context3.next = 22;
+            case 21:
+              _context3.next = 23;
               return _regenerator2.default.awrap(paratii.eth.balanceOf(oldAccount, 'PTI'));
 
-            case 22:
+            case 23:
               ptiBalance = _context3.sent;
-              _context3.next = 25;
+              _context3.next = 26;
               return _regenerator2.default.awrap(paratii.eth.transfer(newAccount, ptiBalance, 'PTI'));
 
-            case 25:
+            case 26:
             case 'end':
               return _context3.stop();
           }
