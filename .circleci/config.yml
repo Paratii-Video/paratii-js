@@ -33,3 +33,14 @@ jobs:
           command: yarn parity
           background: true
       - run: yarn test
+      - run: yarn docs
+      - deploy:
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              ./deploy.sh production
+              rsync -rv ./docs/htmldoc/ paratii@docs.paratii.video:/var/www/docs.paratii.video/htmldoc
+            fi
+            if [ "${CIRCLE_BRANCH}" == "dev" ]; then
+              ./deploy.sh staging
+              rsync -rv ./docs/htmldoc/ paratii@docs.paratii.video:/var/www/docs.paratii.video/htmldoc
+            fi
