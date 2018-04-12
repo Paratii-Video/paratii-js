@@ -37,8 +37,8 @@ jobs:
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              rsync -rv ./docs/htmldoc/ paratii@docs.paratii.video:/var/www/docs.paratii.video/htmldoc
+              rsync -rv -e "ssh -o StrictHostKeyChecking=no" ./docs/htmldoc/ paratii@docs.paratii.video:/var/www/docs.paratii.video/htmldoc
             fi
             if [ "${CIRCLE_BRANCH}" == "dev" ]; then
-              rsync -rv ./docs/htmldoc/ paratii@docs.paratii.video:/var/www/docs.paratii.video/htmldoc
+              rsync -rv -e "ssh -o StrictHostKeyChecking=no" ./docs/htmldoc/ paratii@docs.paratii.video:/var/www/docs.paratii.video/htmldoc
             fi
