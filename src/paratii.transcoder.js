@@ -35,15 +35,13 @@ export class ParatiiTranscoder extends EventEmitter {
    * signals transcoder(s) to transcode fileHash
    * @param  {string} fileHash IPFS file hash.
    * @param  {Object} options  ref: https://github.com/Paratii-Video/paratii-lib/blob/master/docs/paratii-ipfs.md#ipfsuploadertranscodefilehash-options
-   * @return {EventEmitter} returns EventEmitter with the following events:
-   *    - 'uploader:progress': (hash, chunkSize, percent) client to transcoder upload progress.
-   *    - 'transcoding:started': (hash, author)
-   *    - 'transcoding:progress': (hash, size, percent)
-   *    - 'transcoding:downsample:ready' (hash, size)
-   *    - 'transcoding:done': (hash, transcoderResult) triggered when the transcoder is done - returns the hash of the transcoded file
-   *    - 'transcoder:error': (err) triggered whenever an error occurs.
-   * @example ?
-
+   * @return {EvenEmitter} EventEmitter with the following events:<br>
+   *    - 'uploader:progress': (hash, chunkSize, percent) client to transcoder upload progress.<br>
+   *    - 'transcoding:started': (hash, author)<br>
+   *    - 'transcoding:progress': (hash, size, percent)<br>
+   *    - 'transcoding:downsample:ready' (hash, size)<br>
+   *    - 'transcoding:done': (hash, transcoderResult) triggered when the transcoder is done - returns the hash of the transcoded file<br>
+   *    - 'transcoder:error': (err) triggered whenever an error occurs.<br>
    */
   transcode (fileHash, options) {
     const schema = joi.object({
@@ -294,102 +292,6 @@ export class ParatiiTranscoder extends EventEmitter {
         })
       })
     })
-  }
-  /**
-   * [pinFile description]
-   * @param  {Object} fileHash [description]
-   * @param  {Object} options  [description]
-   * @return {Object}          [description]
-
-   */
-  pinFile (fileHash, options) {
-    if (options === undefined) options = {}
-
-    const schema = joi.object({
-      author: joi.string().default('0x'), // ETH/PTI address of the file owner
-      remoteIPFSNode: joi.string().default(this.config.ipfs.defaultTranscoder),
-      remoteIPFSNodeId: joi.any().default(Multiaddr(this.config.ipfs.defaultTranscoder).getPeerId()),
-      size: joi.number().default(0)
-    }).unknown()
-
-    this._ipfs.log(`Signaling remote IPFS node to pin ${fileHash}`)
-
-    const result = joi.validate(options, schema)
-    const error = result.error
-    if (error) throw error
-    let opts = result.value
-
-    let ev
-    if (opts.ev) {
-      ev = opts.ev
-    } else {
-      ev = new EventEmitter()
-    }
-
-    let msg = this._ipfs.protocol.createCommand('pin', {hash: fileHash, author: opts.author, size: opts.size})
-    // FIXME : This is for dev, so we just signal our transcoder node.
-    // This needs to be dynamic later on.
-    this._node.swarm.connect(opts.remoteIPFSNode, (err, success) => {
-      if (err) return ev.emit('pin:error', err)
-
-      this._node.swarm.peers((err, peers) => {
-        this._ipfs.log('peers: ', peers)
-        if (err) return ev.emit('pin:error', err)
-        peers.map((peer) => {
-          try {
-            this._ipfs.log('peer.peer.toB58String(): ', peer.peer.toB58String())
-            if (peer.peer.toB58String() === opts.remoteIPFSNodeId) {
-              this._ipfs.log(`sending pin msg to ${peer.peer._idB58String} with request to pin ${fileHash}`)
-              this._ipfs.protocol.network.sendMessage(peer.peer, msg, (err) => {
-                if (err) {
-                  ev.emit('pin:error', err)
-                  return ev
-                }
-              })
-            }
-          } catch (e) {
-            console.log('PEER ERROR :', e, peer)
-          }
-        })
-
-        // paratii pinning response.
-        this._ipfs.on('protocol:incoming', this._pinResponseHandler(ev))
-      })
-    })
-
-    return ev
-  }
-  /**
-   * [_pinResponseHandler description]
-   * @param  {Object} ev [description]
-   * @return {Object}    [description]
-   * @private
-   */
-  _pinResponseHandler (ev) {
-    return (peerId, command) => {
-      this._ipfs.log('paratii protocol: Received command ', command.payload.toString(), 'args: ', command.args.toString())
-      let commandStr = command.payload.toString()
-      let argsObj
-      try {
-        argsObj = JSON.parse(command.args.toString())
-      } catch (e) {
-        this._ipfs.log('couldn\'t parse args, ', command.args.toString())
-      }
-
-      switch (commandStr) {
-        case 'pin:error':
-          ev.emit('pin:error', argsObj.err)
-          break
-        case 'pin:progress':
-          ev.emit('pin:progress', argsObj.hash, argsObj.chunkSize, argsObj.percent)
-          break
-        case 'pin:done':
-          ev.emit('pin:done', argsObj.hash)
-          break
-        default:
-          this._ipfs.log('unknown command : ', commandStr)
-      }
-    }
   }
 
   // grabYt (url, onResponse, callback) {

@@ -120,8 +120,8 @@ var ParatiiEth = exports.ParatiiEth = function () {
    * @param {string} mnemonic   mnemonic related to the previous public address
    * @example paratii.eth.setAccount('some-address','some-private-key')
    * @example paratii.eth.setAccount('some-address','some-mnemonic')
-   * @private
    * SEE paratii.setAccount()
+   * @private
    */
 
 
@@ -476,8 +476,10 @@ var ParatiiEth = exports.ParatiiEth = function () {
     }
     /**
      * return all the contracts
-     * @return {Promise} all the contracts
+     * @return {Promise}
      * @example let contracts = await paratii.eth.getContracts()
+     * @example let contracts = await paratii.eth.deployContracts()
+     * for (contractName in contracts) { console.log(contracts[contractName])}
      */
 
   }, {

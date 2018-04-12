@@ -86,8 +86,8 @@ export class ParatiiEth {
    * @param {string} mnemonic   mnemonic related to the previous public address
    * @example paratii.eth.setAccount('some-address','some-private-key')
    * @example paratii.eth.setAccount('some-address','some-mnemonic')
-   * @private
    * SEE paratii.setAccount()
+   * @private
    */
   setAccount (address, privateKey, mnemonic) {
     const wallet = this.web3.eth.accounts.wallet
@@ -259,8 +259,10 @@ export class ParatiiEth {
   }
   /**
    * return all the contracts
-   * @return {Promise} all the contracts
+   * @return {Promise}
    * @example let contracts = await paratii.eth.getContracts()
+   * @example let contracts = await paratii.eth.deployContracts()
+   * for (contractName in contracts) { console.log(contracts[contractName])}
    */
   async getContracts () {
     for (var name in this.contracts) {

@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="Paratii.html">Paratii</a></li><li><a href="ParatiiCore.html">ParatiiCore</a></li><li><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></li><li><a href="ParatiiCoreVids.html">ParatiiCoreVids</a></li><li><a href="ParatiiDb.html">ParatiiDb</a></li><li><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></li><li><a href="ParatiiDbVids.html">ParatiiDbVids</a></li><li><a href="ParatiiEth.html">ParatiiEth</a></li><li><a href="ParatiiEthEvents.html">ParatiiEthEvents</a></li><li><a href="ParatiiEthTcr.html">ParatiiEthTcr</a></li><li><a href="ParatiiEthUsers.html">ParatiiEthUsers</a></li><li><a href="ParatiiEthVids.html">ParatiiEthVids</a></li><li><a href="ParatiiEthVouchers.html">ParatiiEthVouchers</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li><li><a href="ParatiiIPFSLocal.html">ParatiiIPFSLocal</a></li><li><a href="ParatiiIPFSRemote.html">ParatiiIPFSRemote</a></li><li><a href="ParatiiTranscoder.html">ParatiiTranscoder</a></li>
+					<li><a href="Paratii.html">Paratii</a></li><li><a href="ParatiiCoreUsers.html">ParatiiCoreUsers</a></li><li><a href="ParatiiCoreVids.html">ParatiiCoreVids</a></li><li><a href="ParatiiDb.html">ParatiiDb</a></li><li><a href="ParatiiDbUsers.html">ParatiiDbUsers</a></li><li><a href="ParatiiDbVids.html">ParatiiDbVids</a></li><li><a href="ParatiiEth.html">ParatiiEth</a></li><li><a href="ParatiiEthEvents.html">ParatiiEthEvents</a></li><li><a href="ParatiiEthTcr.html">ParatiiEthTcr</a></li><li><a href="ParatiiEthUsers.html">ParatiiEthUsers</a></li><li><a href="ParatiiEthVids.html">ParatiiEthVids</a></li><li><a href="ParatiiEthVouchers.html">ParatiiEthVouchers</a></li><li><a href="ParatiiIPFS.html">ParatiiIPFS</a></li><li><a href="ParatiiIPFSLocal.html">ParatiiIPFSLocal</a></li><li><a href="ParatiiIPFSRemote.html">ParatiiIPFSRemote</a></li><li><a href="ParatiiTranscoder.html">ParatiiTranscoder</a></li>
 				</ul>
 			</li>
 			
@@ -577,191 +577,6 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="pinFile"><span class="type-signature"></span>pinFile(fileHash, options)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        [pinFile description]
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>fileHash</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">[description]</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>options</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">[description]</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="paratii.transcoder.js.html">paratii.transcoder.js</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    [description]
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
     <h4 class="name" id="transcode"><span class="type-signature"></span>transcode(fileHash, options)</h4>
     
     
@@ -919,13 +734,13 @@
     
             
 <div class="param-desc">
-    returns EventEmitter with the following events:
-   - 'uploader:progress': (hash, chunkSize, percent) client to transcoder upload progress.
-   - 'transcoding:started': (hash, author)
-   - 'transcoding:progress': (hash, size, percent)
-   - 'transcoding:downsample:ready' (hash, size)
-   - 'transcoding:done': (hash, transcoderResult) triggered when the transcoder is done - returns the hash of the transcoded file
-   - 'transcoder:error': (err) triggered whenever an error occurs.
+    EventEmitter with the following events:<br>
+   - 'uploader:progress': (hash, chunkSize, percent) client to transcoder upload progress.<br>
+   - 'transcoding:started': (hash, author)<br>
+   - 'transcoding:progress': (hash, size, percent)<br>
+   - 'transcoding:downsample:ready' (hash, size)<br>
+   - 'transcoding:done': (hash, transcoderResult) triggered when the transcoder is done - returns the hash of the transcoded file<br>
+   - 'transcoder:error': (err) triggered whenever an error occurs.<br>
 </div>
 
 
@@ -936,7 +751,7 @@
     </dt>
     <dd>
         
-<span class="param-type">EventEmitter</span>
+<span class="param-type">EvenEmitter</span>
 
 
 
@@ -945,12 +760,6 @@
 
 
         
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">?</pre>
-
 
     
 </dd>
@@ -1005,7 +814,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2018-04-12T11:18:47+02:00
+		on 2018-04-12T15:55:56+02:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

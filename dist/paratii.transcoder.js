@@ -78,15 +78,14 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
    * signals transcoder(s) to transcode fileHash
    * @param  {string} fileHash IPFS file hash.
    * @param  {Object} options  ref: https://github.com/Paratii-Video/paratii-lib/blob/master/docs/paratii-ipfs.md#ipfsuploadertranscodefilehash-options
-   * @return {EventEmitter} returns EventEmitter with the following events:
-   *    - 'uploader:progress': (hash, chunkSize, percent) client to transcoder upload progress.
-   *    - 'transcoding:started': (hash, author)
-   *    - 'transcoding:progress': (hash, size, percent)
-   *    - 'transcoding:downsample:ready' (hash, size)
-   *    - 'transcoding:done': (hash, transcoderResult) triggered when the transcoder is done - returns the hash of the transcoded file
-   *    - 'transcoder:error': (err) triggered whenever an error occurs.
-   * @example ?
-    */
+   * @return {EvenEmitter} EventEmitter with the following events:<br>
+   *    - 'uploader:progress': (hash, chunkSize, percent) client to transcoder upload progress.<br>
+   *    - 'transcoding:started': (hash, author)<br>
+   *    - 'transcoding:progress': (hash, size, percent)<br>
+   *    - 'transcoding:downsample:ready' (hash, size)<br>
+   *    - 'transcoding:done': (hash, transcoderResult) triggered when the transcoder is done - returns the hash of the transcoded file<br>
+   *    - 'transcoder:error': (err) triggered whenever an error occurs.<br>
+   */
 
 
   (0, _createClass3.default)(ParatiiTranscoder, [{
@@ -359,111 +358,6 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
           });
         });
       });
-    }
-    /**
-     * [pinFile description]
-     * @param  {Object} fileHash [description]
-     * @param  {Object} options  [description]
-     * @return {Object}          [description]
-      */
-
-  }, {
-    key: 'pinFile',
-    value: function pinFile(fileHash, options) {
-      var _this6 = this;
-
-      if (options === undefined) options = {};
-
-      var schema = _joi2.default.object({
-        author: _joi2.default.string().default('0x'), // ETH/PTI address of the file owner
-        remoteIPFSNode: _joi2.default.string().default(this.config.ipfs.defaultTranscoder),
-        remoteIPFSNodeId: _joi2.default.any().default(Multiaddr(this.config.ipfs.defaultTranscoder).getPeerId()),
-        size: _joi2.default.number().default(0)
-      }).unknown();
-
-      this._ipfs.log('Signaling remote IPFS node to pin ' + fileHash);
-
-      var result = _joi2.default.validate(options, schema);
-      var error = result.error;
-      if (error) throw error;
-      var opts = result.value;
-
-      var ev = void 0;
-      if (opts.ev) {
-        ev = opts.ev;
-      } else {
-        ev = new _events.EventEmitter();
-      }
-
-      var msg = this._ipfs.protocol.createCommand('pin', { hash: fileHash, author: opts.author, size: opts.size });
-      // FIXME : This is for dev, so we just signal our transcoder node.
-      // This needs to be dynamic later on.
-      this._node.swarm.connect(opts.remoteIPFSNode, function (err, success) {
-        if (err) return ev.emit('pin:error', err);
-
-        _this6._node.swarm.peers(function (err, peers) {
-          _this6._ipfs.log('peers: ', peers);
-          if (err) return ev.emit('pin:error', err);
-          peers.map(function (peer) {
-            try {
-              _this6._ipfs.log('peer.peer.toB58String(): ', peer.peer.toB58String());
-              if (peer.peer.toB58String() === opts.remoteIPFSNodeId) {
-                _this6._ipfs.log('sending pin msg to ' + peer.peer._idB58String + ' with request to pin ' + fileHash);
-                _this6._ipfs.protocol.network.sendMessage(peer.peer, msg, function (err) {
-                  if (err) {
-                    ev.emit('pin:error', err);
-                    return ev;
-                  }
-                });
-              }
-            } catch (e) {
-              console.log('PEER ERROR :', e, peer);
-            }
-          });
-
-          // paratii pinning response.
-          _this6._ipfs.on('protocol:incoming', _this6._pinResponseHandler(ev));
-        });
-      });
-
-      return ev;
-    }
-    /**
-     * [_pinResponseHandler description]
-     * @param  {Object} ev [description]
-     * @return {Object}    [description]
-     * @private
-     */
-
-  }, {
-    key: '_pinResponseHandler',
-    value: function _pinResponseHandler(ev) {
-      var _this7 = this;
-
-      return function (peerId, command) {
-        _this7._ipfs.log('paratii protocol: Received command ', command.payload.toString(), 'args: ', command.args.toString());
-        var commandStr = command.payload.toString();
-        var argsObj = void 0;
-        try {
-          argsObj = JSON.parse(command.args.toString());
-        } catch (e) {
-          _this7._ipfs.log('couldn\'t parse args, ', command.args.toString());
-        }
-
-        switch (commandStr) {
-          case 'pin:error':
-            ev.emit('pin:error', argsObj.err);
-            break;
-          case 'pin:progress':
-            ev.emit('pin:progress', argsObj.hash, argsObj.chunkSize, argsObj.percent);
-            break;
-          case 'pin:done':
-            ev.emit('pin:done', argsObj.hash);
-            break;
-          default:
-            _this7._ipfs.log('unknown command : ', commandStr);
-        }
-      };
     }
 
     // grabYt (url, onResponse, callback) {
