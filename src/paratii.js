@@ -81,25 +81,6 @@ class Paratii extends ParatiiCore {
     this.eth.getAccount()
   }
   /**
-   * Sets the address of the ParatiiRegistry contract
-   * @param {string} address address of the ParatiiRegistry contract
-   * @example paratii.eth.setRegistryAddress('0x0D6B5A54F940BF3D52E438CaB785981aAeFDf40C')
-   * // the address must be a valid ethereum address
-  */
-  setRegistryAddress (address) {
-    return this.eth.setRegistryAddress(address)
-  }
-
-  /**
-   * Sets the address of the ParatiiRegistry contract
-   * @param {string} address address of the ParatiiRegistry contract
-   * @example paratii.getRegistryAddress()
-  */
-  getRegistryAddress (address) {
-    return this.eth.getRegistryAddress()
-  }
-
-  /**
    * Get some diagnostic info about the state of the system
    * @return {Promise} that resolves in an array of strings with diagnostic info
    * @example let diagnosticInfo = await paratii.diagnose()

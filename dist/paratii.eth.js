@@ -598,23 +598,23 @@ var ParatiiEth = exports.ParatiiEth = function () {
     }
 
     /**
-     * get the address of the Registry contract on the blockchain
-     * @return {string} address on the blockchain
-     * @example let registryAddress = paratii.eth.getRegistryAddress()
-     * @private
-     */
+     * Gets the address of the ParatiiRegistry contract
+     * @param {string} address address of the ParatiiRegistry contract
+     * @example paratii.getRegistryAddress()
+    */
 
   }, {
     key: 'getRegistryAddress',
     value: function getRegistryAddress() {
       return this.config.eth.registryAddress;
     }
+
     /**
-     * set the address of the Registry contract on the blockchain
-     * @param {string} registryAddress new address
-     * @example await paratii.eth.setRegistryAddress('some-address')
-     * @private
-     */
+     * Sets the address of the ParatiiRegistry contract
+     * @param {string} address address of the ParatiiRegistry contract
+     * @example paratii.eth.setRegistryAddress('0x0D6B5A54F940BF3D52E438CaB785981aAeFDf40C')
+     * // the address must be a valid ethereum address
+    */
 
   }, {
     key: 'setRegistryAddress',
@@ -625,6 +625,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
         contract.options.address = undefined;
       }
     }
+
     /**
     * When called with a second argument, returns the balance of that Token.<br>
     * When called without a second argument, returns information about all relevant balances.
