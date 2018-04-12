@@ -50,7 +50,7 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
    * @return {Promise}         the id of the newly created user
    * @example
    *            await paratii.users.create({
-   *              id: 'some-user-id',
+   *              id: 'some-user-id', //must be a valid ethereum address
    *              name: 'A user name',
    *              email: 'some@email.com',
    *              ...
@@ -113,7 +113,7 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
      * @param  {string}  userId  user univocal id
      * @param  {Object}  options updated data i.e. { name: 'A new user name' }
      * @return {Promise}         updated data about the user
-     * @example await paratii.users.update('some-user-id', {name: 'A new user name'})
+     * @example let updatedData = await paratii.users.update('some-user-id', {name: 'A new user name'})
      */
 
   }, {

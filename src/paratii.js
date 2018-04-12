@@ -75,7 +75,7 @@ class Paratii extends ParatiiCore {
   }
   /**
    * Gets the ethereum address that is used to sign all the transactions
-   * @example paratii.getAccount()
+   * @example let account = paratii.getAccount()
    */
   getAccount () {
     this.eth.getAccount()
@@ -83,7 +83,8 @@ class Paratii extends ParatiiCore {
   /**
    * Sets the address of the ParatiiRegistry contract
    * @param {string} address address of the ParatiiRegistry contract
-   * @example paratii.eth.setRegistryAddress('0x12345')
+   * @example paratii.eth.setRegistryAddress('0x0D6B5A54F940BF3D52E438CaB785981aAeFDf40C')
+   * // the address must be a valid ethereum address
   */
   setRegistryAddress (address) {
     return this.eth.setRegistryAddress(address)
