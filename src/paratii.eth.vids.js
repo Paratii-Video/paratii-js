@@ -52,7 +52,7 @@ export class ParatiiEthVids {
    * Creates a random id
    * @return {string} id created
    * @example let id = paratii.eth.vids.makeId()
-
+   * @private
    */
   makeId () {
     // create a fresh ID
@@ -69,7 +69,6 @@ export class ParatiiEthVids {
    *                                    owner: 'some-address',
    *                                    ipfsHash: 'some-hash'
    *                          })
-
    */
   async create (options, retry = 1) {
     const schema = joi.object({
@@ -131,8 +130,7 @@ export class ParatiiEthVids {
    * get data about the video
    * @param  {string}  videoId univocal video id
    * @return {Promise}         data about the video
-   * @example let video = eth.vids.get('0x12345')
-
+   * @example let video = await eth.vids.get('0x12345')
    */
   async get (videoId) {
     let contract = await this.getVideoRegistry()
@@ -152,14 +150,12 @@ export class ParatiiEthVids {
   }
 /**
  * record a like/dislike to the video on the blockchain
- * TODO RIVEDI I TIPI
  * @param  {Object}  options data about the video to like
  * @param {string} options.videoId univocal video id
  * @param {Boolean} options.liked true/false
  * @return {Promise}         transaction recording the like
  * @example await paratii.eth.vids.sendLike({ videoId: 'some-id', liked: true })
  * @example await paratii.eth.vids.sendLike({ videoId: 'some-id', liked: false })
-
  */
   async sendLike (options) {
     const schema = joi.object({
@@ -201,7 +197,6 @@ export class ParatiiEthVids {
  * @param {string} options.ipfsData ipfs multihash
  * @return {Promise}         transaction recording the view
  * @example await paratii.eth.vids.view({viewer:'some-user-id',videoId: 'some-video-id'})
-
  */
   async view (options) {
     const schema = joi.object({
@@ -231,7 +226,6 @@ export class ParatiiEthVids {
    * @param {string} options.videoId  univocal video identifier
    * @return {Promise}         true if the current user already viewed the video, false otherwise
    * @example let result = await paratii.eth.vids.userViewedVideo({viewer:'some-user-id',videoId: 'some-video-id'})
-
    */
   async userViewedVideo (options) {
     const schema = joi.object({
@@ -255,8 +249,7 @@ export class ParatiiEthVids {
    * Writes a like for the video on the blockchain (contract Likes), and negates a dislike for the video, if it exists.
    * @param  {string}  videoId univocal video identifier randomly generated
    * @return {Promise}          transaction recording the like
-   * @example let result = paratii.eth.vids.like('some-id')
-
+   * @example let result = await paratii.eth.vids.like('some-id')
    */
   async like (videoId) {
     await this.sendLike({ videoId: videoId, liked: true })
@@ -265,8 +258,7 @@ export class ParatiiEthVids {
    * Writes a dislike for the video on the blockchain (contract Likes), and negates a like for the video, if it exists.
    * @param  {string}  videoId univocal video identifier randomly generated
    * @return {Promise}          transaction recording the dislike
-   * @example let result = paratii.eth.vids.dislike('some-id')
-
+   * @example let result = await paratii.eth.vids.dislike('some-id')
    */
   async dislike (videoId) {
     await this.sendLike({ videoId: videoId, liked: false })
@@ -275,8 +267,7 @@ export class ParatiiEthVids {
    * Check if the current user has already liked the video
    * @param  {string}  videoId univocal video identifier randomly generated
    * @return {Promise}          true if the current user already liked the video, false otherwise
-   * @example let result = paratii.eth.vids.doesLike('some-id')
-
+   * @example let result = await paratii.eth.vids.doesLike('some-id')
    */
   async doesLike (videoId) {
     let contract = await this.getLikesContract()
@@ -289,8 +280,7 @@ export class ParatiiEthVids {
    * Check if the current user has already disliked the video.
    * @param  {string}  videoId univocal video identifier randomly generated
    * @return {Promise}          true if the current user already disliked the video, false otherwise
-   * @example let result = paratii.eth.vids.doesDislike('some-id')
-
+   * @example let result = await paratii.eth.vids.doesDislike('some-id')
    */
   async doesDislike (videoId) {
     let contract = await this.getLikesContract()
@@ -305,8 +295,7 @@ export class ParatiiEthVids {
    * @param  {string}  videoId      univocal video identifier
    * @param  {Object}  options      key value pairs of properties and new values e.g. ({title: 'another-title'})
    * @return {Promise}              Updated video informations
-   * @example paratii.eth.vids.update('some-video-id', {title: 'another-title'})
-
+   * @example await paratii.eth.vids.update('some-video-id', {title: 'another-title'})
    */
   async update (videoId, options) {
     options.id = videoId
@@ -321,7 +310,7 @@ export class ParatiiEthVids {
    * delete the video from the blockchain
    * @param  {string}  videoId univocal video identifier randomly generated
    * @return {Promise}         transaction recording the remove action
-   * @example let tx = paratii.eth.vids.delete('some-id')
+   * @example let tx = await paratii.eth.vids.delete('some-id')
    */
   async delete (videoId) {
     let contract = await this.getVideoRegistry()

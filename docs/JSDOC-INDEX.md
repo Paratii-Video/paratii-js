@@ -29,3 +29,8 @@ See this [Demo Application](https://github.com/geckoslair/ParatiiJSDemo)
 We intend to provide the package on `npmjs.org` for easy download once it is in a more stable version. Until that time, you can add the the package as a dependency in your `package.json`. If you use yarn, the command is:
 
     yarn add github:Paratii-Video/paratii-js
+
+# Documentation  
+
+Methods and configuration are documented on this site - a good place to start is  [https:/docs.paratii.video/Paratii.html](https://docs.paratii.video/Paratii.html).
+More discursive documentation can be found in the repository on [https://github.com/Paratii-Video/paratii-js](https://github.com/Paratii-Video/paratii-js/blob/dev/README.md)

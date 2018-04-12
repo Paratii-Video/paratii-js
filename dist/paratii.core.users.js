@@ -49,8 +49,8 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
    * @param  {userSchema}  options information about the video ( id, name, email ... )
    * @return {Promise}         the id of the newly created user
    * @example
-   *            paratii.users.create({
-   *              id: 'some-user-id',
+   *            await paratii.users.create({
+   *              id: 'some-user-id', //must be a valid ethereum address
    *              name: 'A user name',
    *              email: 'some@email.com',
    *              ...
@@ -113,7 +113,7 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
      * @param  {string}  userId  user univocal id
      * @param  {Object}  options updated data i.e. { name: 'A new user name' }
      * @return {Promise}         updated data about the user
-     * @example paratii.users.update('some-user-id', {name: 'A new user name'})
+     * @example let updatedData = await paratii.users.update('some-user-id', {name: 'A new user name'})
      */
 
   }, {
@@ -172,7 +172,7 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
     /**
      * migrate all contract data for  paratii.config.account to a new account
      * @param newAccount Address of new account
-     * @async
+     * @private
      */
 
   }, {

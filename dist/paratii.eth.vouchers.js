@@ -80,7 +80,7 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
      * @param {number} options.amount amount of PTI in wei of this voucher
      * @return {Promise}         the voucher id
      * @example await paratii.eth.vouchers.create({ voucherCode: 'some-id', amount: 10 })
-      */
+     */
 
   }, {
     key: 'create',
@@ -171,7 +171,8 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
     }
     /**
      * throws a test error
-      */
+     * @private
+     */
 
   }, {
     key: 'test',
@@ -196,7 +197,7 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
      * @param  {number}  amount amount of every voucher
      * @return {Promise}        Object containing every voucher created
      * @example let vouchers = await paratii.eth.vouchers.createVouchers(10, 10)
-      */
+     */
 
   }, {
     key: 'createVouchers',
@@ -244,7 +245,7 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
      * @param  {string}  voucherCode univocal voucher code
      * @return {Promise}             true if everything goes well, otherwise throws an error
      * @example await paratii.eth.vouchers.redeem('some-code')
-      */
+     */
 
   }, {
     key: 'redeem',

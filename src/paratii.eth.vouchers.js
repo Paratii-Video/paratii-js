@@ -29,7 +29,6 @@ export class ParatiiEthVouchers {
    * @param {number} options.amount amount of PTI in wei of this voucher
    * @return {Promise}         the voucher id
    * @example await paratii.eth.vouchers.create({ voucherCode: 'some-id', amount: 10 })
-
    */
   async create (options) {
     const schema = joi.object({
@@ -71,7 +70,7 @@ export class ParatiiEthVouchers {
   }
   /**
    * throws a test error
-
+   * @private
    */
   async test () {
     throw Error('test error message')
@@ -83,7 +82,6 @@ export class ParatiiEthVouchers {
     * @param  {number}  amount amount of every voucher
     * @return {Promise}        Object containing every voucher created
     * @example let vouchers = await paratii.eth.vouchers.createVouchers(10, 10)
-
     */
   async createVouchers (number, amount) {
     let i
@@ -101,7 +99,6 @@ export class ParatiiEthVouchers {
    * @param  {string}  voucherCode univocal voucher code
    * @return {Promise}             true if everything goes well, otherwise throws an error
    * @example await paratii.eth.vouchers.redeem('some-code')
-
    */
   async redeem (voucherCode) {
     let contract = await this.getVouchersContract()

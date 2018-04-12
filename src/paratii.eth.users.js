@@ -12,6 +12,7 @@ export class ParatiiEthUsers {
   /**
    * Get the contract instance of the user contract
    * @return {Promise}  Object representing the contract
+   * @example let usersContract =  await paratii.eth.users.getRegistry()
    */
   async getRegistry () {
     return this.eth.getContract('Users')
