@@ -11,6 +11,7 @@ import joi from 'joi'
  * @property {ParatiiCoreUsers} users operations on users
  * @property {Paratii} paratii main Paratii Object
  */
+// test
 export class ParatiiCore {
   /**
   * @typedef {Array} ParatiiCoreSchema
