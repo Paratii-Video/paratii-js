@@ -36,30 +36,4 @@ export class ParatiiCore {
     this.users = new ParatiiCoreUsers(this.config)
     this.paratii = this.config.paratii
   }
-
-  /**
-   * migrate all contract data for  paratii.config.account to a new account
-   * @param {Object} newAccount Address of new account
-   * @private
-   */
-  async migrateAccount (newAccount) {
-    // migrate the videos
-    const paratii = this.config.paratii
-    const oldAccount = this.config.account.address
-    const vids = await this.vids.search({owner: oldAccount})
-    for (let i in vids) {
-      let vid = vids[i]
-      await this.vids.update(vid.id, {owner: newAccount})
-      let didVideoApply = await paratii.eth.tcr.didVideoApply(vid.id)
-      if (didVideoApply) {
-        // removing video from statke
-        await paratii.eth.tcr.exit(vid.id)
-      }
-    }
-
-    // transfer all  PTI to the new account
-    let ptiBalance = await paratii.eth.balanceOf(oldAccount, 'PTI')
-    await paratii.eth.transfer(newAccount, ptiBalance, 'PTI')
-    // FIXME: need to call tc.apply(vid.id) with newAccount as sender (how to do that?)
-  }
 }

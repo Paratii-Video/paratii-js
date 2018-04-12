@@ -116,6 +116,17 @@ var Paratii = function (_ParatiiCore) {
       this.eth.setAccount(address, privateKey);
     }
     /**
+     * get the ethereum address what is used to sign all the transactions
+     * @example paratii.getAccount()
+     * @memberof paratii
+     */
+
+  }, {
+    key: 'getAccount',
+    value: function getAccount() {
+      this.eth.getAccount();
+    }
+    /**
      * Set the address of the ParatiiRegistry contract
      * @param {string} address address of the ParatiiRegistry contract
      * @example paratii.setRegistryAddress('some-address')

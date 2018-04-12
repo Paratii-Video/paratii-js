@@ -6,7 +6,6 @@ import { assert } from 'chai'
 describe('deployContracts:', function () {
   it('should deploy and register all contracts', async function () {
     let paratii = new Paratii({account: testAccount})
-
     let contracts = await paratii.eth.deployContracts()
     let paratiiRegistry = await paratii.eth.getContract('Registry')
     assert.equal(contracts.Registry.options.address, paratiiRegistry.options.address)
