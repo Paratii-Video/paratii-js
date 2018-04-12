@@ -187,7 +187,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
             _this3._ipfs.log('Adding %s finished as %s, size: %s', hashedFile.path, hashedFile.hash, hashedFile.size);
 
             if (file._html5File) {
-              _this3.remote.xhrUpload(file, hashedFile.hash, ev);
+              _this3._ipfs.remote.xhrUpload(file, hashedFile.hash, ev);
             } else {
               ev.emit('fileReady', hashedFile);
             }

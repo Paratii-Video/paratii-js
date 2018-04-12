@@ -192,49 +192,55 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
             case 4:
               search = _context3.sent;
               vids = search.results;
+
+              if (!vids) {
+                _context3.next = 22;
+                break;
+              }
+
               i = 0;
 
-            case 7:
+            case 8:
               if (!(i < vids.length)) {
-                _context3.next = 21;
+                _context3.next = 22;
                 break;
               }
 
               vid = vids[i];
               videoId = vid.id || vid._id;
-              _context3.next = 12;
+              _context3.next = 13;
               return _regenerator2.default.awrap(paratii.vids.update(videoId, { owner: newAccount }));
 
-            case 12:
-              _context3.next = 14;
+            case 13:
+              _context3.next = 15;
               return _regenerator2.default.awrap(paratii.eth.tcr.didVideoApply(vid.id));
 
-            case 14:
+            case 15:
               didVideoApply = _context3.sent;
 
               if (!didVideoApply) {
-                _context3.next = 18;
+                _context3.next = 19;
                 break;
               }
 
-              _context3.next = 18;
+              _context3.next = 19;
               return _regenerator2.default.awrap(paratii.eth.tcr.exit(videoId));
 
-            case 18:
+            case 19:
               i++;
-              _context3.next = 7;
+              _context3.next = 8;
               break;
 
-            case 21:
-              _context3.next = 23;
+            case 22:
+              _context3.next = 24;
               return _regenerator2.default.awrap(paratii.eth.balanceOf(oldAccount, 'PTI'));
 
-            case 23:
+            case 24:
               ptiBalance = _context3.sent;
-              _context3.next = 26;
+              _context3.next = 27;
               return _regenerator2.default.awrap(paratii.eth.transfer(newAccount, ptiBalance, 'PTI'));
 
-            case 26:
+            case 27:
             case 'end':
               return _context3.stop();
           }
