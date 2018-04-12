@@ -35,7 +35,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
   /**
    * get TCR contract instance.
-   * @return {Promise} Contract instance.
+   * @return {Promise} The TCR Contract instance.
    * @example let contract = await paratii.eth.tcr.getTcrContract()
    */
 

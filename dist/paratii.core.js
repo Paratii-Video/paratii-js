@@ -28,6 +28,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @property {ParatiiCoreVids} vids operations on videos
  * @property {ParatiiCoreUsers} users operations on users
  * @property {Paratii} paratii main Paratii Object
+ * @private
  */
 var ParatiiCore =
 /**
@@ -37,6 +38,7 @@ var ParatiiCore =
 * @property {?dbSchema} db
 * @property {?ipfsSchema} ipfs
 * @property {?Object} paratii
+* @private
 */
 exports.ParatiiCore = function ParatiiCore(config) {
   (0, _classCallCheck3.default)(this, ParatiiCore);

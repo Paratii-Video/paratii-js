@@ -37,7 +37,7 @@ node_modules/
 jspm_packages/
 
 # Documentation directory
-docs/
+docs/htmldoc/
 
 # Typescript v1 declaration files
 typings/

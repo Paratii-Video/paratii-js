@@ -192,7 +192,7 @@ export class ParatiiCoreVids {
         optionsIpfs[key] = options[key]
       }
     })
-    let hash = await this.config.paratii.ipfs.addJSON(optionsIpfs)
+    let hash = await this.config.paratii.ipfs.local.addJSON(optionsIpfs)
     optionsBlockchain['ipfsData'] = hash
     return this.config.paratii.eth.vids.view(optionsBlockchain)
   }

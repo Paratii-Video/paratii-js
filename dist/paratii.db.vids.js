@@ -26,7 +26,6 @@ var fetch = require('isomorphic-fetch');
 /**
  * ParatiiDbUsers contains functionalities regarding the videos to interact with the Paratii Blockchain Index
  * @param {Object} config object to initialize Paratii object
-
  */
 
 var ParatiiDbVids = exports.ParatiiDbVids = function () {
@@ -41,7 +40,7 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
    * @param  {string}  videoId univocal video identifier randomly generated
    * @return {Promise}         data about the video
    * @example paratii.db.vids.get('some-video-id')
-    */
+   */
 
 
   (0, _createClass3.default)(ParatiiDbVids, [{
@@ -83,7 +82,7 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
      * - uploader.name
      * - uploader.address
      * - tags
-      */
+     */
 
   }, {
     key: 'search',

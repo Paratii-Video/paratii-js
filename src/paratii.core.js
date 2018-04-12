@@ -10,6 +10,7 @@ import joi from 'joi'
  * @property {ParatiiCoreVids} vids operations on videos
  * @property {ParatiiCoreUsers} users operations on users
  * @property {Paratii} paratii main Paratii Object
+ * @private
  */
 export class ParatiiCore {
   /**
@@ -19,6 +20,7 @@ export class ParatiiCore {
   * @property {?dbSchema} db
   * @property {?ipfsSchema} ipfs
   * @property {?Object} paratii
+  * @private
  */
   constructor (config) {
     const schema = joi.object({
