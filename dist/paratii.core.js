@@ -29,7 +29,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @property {ParatiiCoreUsers} users operations on users
  * @property {Paratii} paratii main Paratii Object
  */
-// test
 var ParatiiCore =
 /**
 * @typedef {Array} ParatiiCoreSchema
