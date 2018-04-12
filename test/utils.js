@@ -83,8 +83,38 @@ const vidsFixture = [
     ipfsHashOrig: ''
   }
 ]
+
+const searchVidsFixture =
+  {
+    results: [
+      {
+        id: 'id-2',
+        owner: address,
+        title: 'some title 2',
+        description: 'A long description',
+        price: 0,
+        ipfsData: 'QmUUMpwyWBbJKeNCbwDySXJCay5TBBuur3c59m1ajQufmn',
+        ipfsHash: 'some-hash',
+        ipfsHashOrig: ''
+      },
+      {
+        id: 'id-3',
+        owner: address,
+        title: 'another-title',
+        description: 'A long description',
+        price: 0,
+        ipfsData: 'QmUUMpwyWBbJKeNCbwDySXJCay5TBBuur3c59m1ajQufmn',
+        ipfsHash: 'some-hash',
+        ipfsHashOrig: ''
+      }
+    ],
+    query: {owner: address},
+    total: 2
+  }
+
 const mockDb = function () {
   const vids = vidsFixture
+  const search = searchVidsFixture
   nock.cleanAll()
   nock.enableNetConnect()
   nock('https://db.paratii.video')
@@ -96,7 +126,7 @@ const mockDb = function () {
     .get('/api/v1/videos/id-3')
     .reply(200, vids[2])
     .get('/api/v1/videos/?owner=0xCbe4f07b343171ac37055B25a5266f48f6945b7d')
-    .reply(200, [vids[1], vids[2]])
+    .reply(200, search)
 }
 
 export {
@@ -110,6 +140,7 @@ export {
   mnemonic23,
   mockDb,
   vidsFixture,
+  searchVidsFixture,
   voucherAmount11,
   voucherAmountInitial11,
   voucherCode11,

@@ -96,18 +96,20 @@ export class ParatiiCoreUsers {
     // migrate the videos
     const paratii = this.config.paratii
     const oldAccount = this.config.account.address
-    const vids = await paratii.vids.search({owner: oldAccount})
-    for (let i in vids) {
-      let vid = vids[i]
-      let videoId = vid.id || vid._id
-      await paratii.vids.update(videoId, {owner: newAccount})
-      let didVideoApply = await paratii.eth.tcr.didVideoApply(vid.id)
-      if (didVideoApply) {
-        // removing video from statke
-        await paratii.eth.tcr.exit(videoId)
+    const search = await paratii.vids.search({owner: oldAccount})
+    const vids = search.results
+    if (vids) {
+      for (let i = 0; i < vids.length; i++) {
+        const vid = vids[i]
+        let videoId = vid.id || vid._id
+        await paratii.vids.update(videoId, {owner: newAccount})
+        let didVideoApply = await paratii.eth.tcr.didVideoApply(videoId)
+        if (didVideoApply) {
+          // removing video from stake
+          await paratii.eth.tcr.exit(videoId)
+        }
       }
     }
-
     // transfer all  PTI to the new account
     let ptiBalance = await paratii.eth.balanceOf(oldAccount, 'PTI')
     await paratii.eth.transfer(newAccount, ptiBalance, 'PTI')

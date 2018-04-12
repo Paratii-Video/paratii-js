@@ -1,5 +1,5 @@
 import { Paratii } from '../src/paratii.js'
-import { vidsFixture, mockDb, testAccount, address, address23 } from './utils.js'
+import { searchVidsFixture, mockDb, testAccount, address, address23 } from './utils.js'
 import { assert } from 'chai'
 
 describe('paratii API: :', function () {
@@ -20,9 +20,8 @@ describe('paratii API: :', function () {
 
   it('migrateAccount should work', async function () {
     // migrate all assets from default account address to address23
-    let id1 = vidsFixture[1].id
-    let id2 = vidsFixture[2].id
-
+    let id1 = searchVidsFixture.results[0].id || searchVidsFixture.results[0]._id
+    let id2 = searchVidsFixture.results[1].id || searchVidsFixture.results[1]._id
     // we first register some data so we can check later if the migration worked
     let result = await paratii.eth.tcr.checkEligiblityAndApply(id1, paratii.eth.web3.utils.toWei('5'))
     // result = await paratii.eth.tcr.apply(id1, paratii.eth.web3.utils.toWei('5'))
