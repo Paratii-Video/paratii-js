@@ -66,6 +66,7 @@ var dbSchema = joi.object({
 }).default();
 
 /**
+ * @todo some description are still not written
  * @typedef {Array} videoSchema
  * @property {?string} id univocal video identifier randomly generated
  * @property {?string} author author of the video
@@ -73,22 +74,22 @@ var dbSchema = joi.object({
  * @property {?string} duration duration of the video
  * @property {?string} filename filename of the video
  * @property {number} filesize size of the video
- * @property {?string} free ?
+ * @property {?string}
  * @property {?string} ipfsHashOrig original ipfs multihash of the video
  * @property {?string} ipfsHash ipfs multihash of the video
  * @property {string} owner owner of the video
  * @property {?number} price price of the video
  * @property {?string} title title of the video
  * @property {Array} thumbnails thumbnails of the video
- * @property {?Object} storageStatus ?
- * @property {string} storageStatus.name ?
- * @property {?Object} storageStatus.data ?
- * @property {?Object} transcodingStatus ?
- * @property {string} transcodingStatus.name ?
- * @property {?Object} transcodingStatus.data ?
- * @property {?Object} uploadStatus ?
- * @property {string} uploadStatus.name ?
- * @property {?Object} uploadStatus.data ?
+ * @property {?Object} storageStatus
+ * @property {string} storageStatus.name
+ * @property {?Object} storageStatus.data
+ * @property {?Object} transcodingStatus
+ * @property {string} transcodingStatus.name
+ * @property {?Object} transcodingStatus.data
+ * @property {?Object} uploadStatus
+ * @property {string} uploadStatus.name
+ * @property {?Object} uploadStatus.data
  */
 var videoSchema = joi.object({
   id: joi.string().default(null),

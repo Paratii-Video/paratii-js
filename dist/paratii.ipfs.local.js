@@ -94,7 +94,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
    * @param {File} file HTML5 File Object.
    * @returns {EventEmitter} checkout the upload function below for details.
    * @example let uploaderEv = paratiiIPFS.uploader.add(files)
-    */
+   */
 
 
   (0, _createClass3.default)(ParatiiIPFSLocal, [{

@@ -42,7 +42,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var Web3 = require('web3');
 // const joi = require('joi')
 /**
- * contains functions to interact with the Ethereum blockchain and the Paratii contracts.
+ * contains functions to interact with the Ethereum blockchain and the Paratii contracts.<br>
  * See {@link Paratii}
  * @param {ParatiiEthSchema} config configuration object to initialize Paratii object
  * @property {ParatiiCoreVids} vids operations on videos
@@ -151,8 +151,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
     /**
      * Get the account
-     * @example getAccount()
-     * @memberof paratii.eth
+     * @example let acc = paratii.eth.getAccount()
      * @private
      */
 
