@@ -151,8 +151,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
     /**
      * Get the account
-     * @example getAccount()
-     * @memberof paratii.eth
+     * @example let acc = paratii.eth.getAccount()
      * @private
      */
 

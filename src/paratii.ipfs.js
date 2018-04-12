@@ -108,6 +108,7 @@ export class ParatiiIPFS extends EventEmitter {
   _getAccount () {
     return (this.config.paratii && this.config.paratii.eth.getAccount()) || 'unknown'
   }
+
   /**
    *  adds a JSON structure to the local node and signals remote node to pin it
    * @param  {object}  data JSON object to store
