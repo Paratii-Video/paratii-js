@@ -169,7 +169,7 @@ it('paratii.eth.getContract() should throw a meaningful error if no blockchain i
       registryAddress: '0xC83003a9B5c2C5bcce29f9c9Ee34b4ef246c781C'}, // wrong port
     account: testAccount
   })
-  await paratii.eth.deployContracts()
-  // await assert.isRejected(paratii.eth.deployContracts(), Error, /You aren't connected to any Ethereum node/g)
+
   await assert.isRejected(paratii.eth.getContract('Likes'), Error, /You aren't connected to any Ethereum node/g)
+  await assert.isRejected(paratii.eth.getContracts(), Error, /You aren't connected to any Ethereum node/g)
 })

@@ -161,6 +161,7 @@ export class ParatiiEth {
       let msg = 'You need an Ethereum account to write information to the blockchain - you can use .setAccount(address, [privateKey]) or specify it when creating the object'
       throw Error(msg)
     }
+
     let contract = await this.getContract(name)
 
     let deployedContract = await contract.deploy({arguments: args}).send()
