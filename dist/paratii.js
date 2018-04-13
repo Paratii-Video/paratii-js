@@ -125,7 +125,7 @@ var Paratii = function (_ParatiiCore) {
     }
     /**
      * Gets the ethereum address that is used to sign all the transactions
-     * @example paratii.getAccount()
+     * @example let account = paratii.getAccount()
      */
 
   }, {
@@ -133,30 +133,6 @@ var Paratii = function (_ParatiiCore) {
     value: function getAccount() {
       this.eth.getAccount();
     }
-    /**
-     * Sets the address of the ParatiiRegistry contract
-     * @param {string} address address of the ParatiiRegistry contract
-     * @example paratii.eth.setRegistryAddress('0x12345')
-    */
-
-  }, {
-    key: 'setRegistryAddress',
-    value: function setRegistryAddress(address) {
-      return this.eth.setRegistryAddress(address);
-    }
-
-    /**
-     * Sets the address of the ParatiiRegistry contract
-     * @param {string} address address of the ParatiiRegistry contract
-     * @example paratii.getRegistryAddress()
-    */
-
-  }, {
-    key: 'getRegistryAddress',
-    value: function getRegistryAddress(address) {
-      return this.eth.getRegistryAddress();
-    }
-
     /**
      * Get some diagnostic info about the state of the system
      * @return {Promise} that resolves in an array of strings with diagnostic info

@@ -12,7 +12,7 @@ describe('ParatiiIPFSLocal:', function () {
   beforeEach(() => {
     paratiiIPFS = new ParatiiIPFS({
       ipfs: {repo: '/tmp/paratii-alpha-' + String(Math.random())},
-      verbose: true
+      verbose: false
     })
   })
 

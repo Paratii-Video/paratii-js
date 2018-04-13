@@ -166,7 +166,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
      * Get the contract instance specified
      * @param {string} name the name of the token
      * @return {Promise} Object representing the contract
-     * @example paratii.eth.getContract('ParatiiToken')
+     * @example await paratii.eth.getContract('ParatiiToken')
      */
 
   }, {
@@ -244,7 +244,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
      * @param  {string}  name name of the contract
      * @param  {Object}  args configuration for the contract (strings or numbers). It is allowed to pass more than one parameter
      * @return {Promise}      the deployed contract
-     * @example paratii.eth.deployContract('ParatiiToken')
+     * @example await paratii.eth.deployContract('ParatiiToken')
      * @example let paratiiRegistryAddress = await paratii.eth.getRegistryAddress()
      * let likes = await this.deployContract('Likes', paratiiRegistryAddress)
      */
@@ -450,7 +450,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
     /**
      * Set the provider on all the contracts
-     * @example paratii.eth.setContractsProvider()
+     * @example await paratii.eth.setContractsProvider()
      * @private
      */
 
@@ -533,7 +533,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
      * get the address of the contract on the blockchain
      * @param  {string}  name name of the contract
      * @return {Promise}      Contract address on the blockchain (String)
-     * @example paratii.eth.getContractAddress('ParatiiToken')
+     * @example await paratii.eth.getContractAddress('ParatiiToken')
      */
 
   }, {
@@ -587,9 +587,26 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 17:
               _context6.prev = 17;
               _context6.t0 = _context6['catch'](5);
+
+              if (!(_context6.t0.message === 'Couldn\'t decode address from ABI: 0x')) {
+                _context6.next = 23;
+                break;
+              }
+
+              throw Error('The registry address is not correct: ' + this.getRegistryAddress());
+
+            case 23:
+              if (!(_context6.t0.message === 'Invalid JSON RPC response: ""')) {
+                _context6.next = 27;
+                break;
+              }
+
+              throw Error('Cannot connect to Ethereum at ' + this.config.eth.provider + '? ' + _context6.t0.message);
+
+            case 27:
               throw _context6.t0;
 
-            case 20:
+            case 28:
             case 'end':
               return _context6.stop();
           }
@@ -598,23 +615,23 @@ var ParatiiEth = exports.ParatiiEth = function () {
     }
 
     /**
-     * get the address of the Registry contract on the blockchain
-     * @return {string} address on the blockchain
-     * @example let registryAddress = paratii.eth.getRegistryAddress()
-     * @private
-     */
+     * Gets the address of the ParatiiRegistry contract
+     * @param {string} address address of the ParatiiRegistry contract
+     * @example paratii.getRegistryAddress()
+    */
 
   }, {
     key: 'getRegistryAddress',
     value: function getRegistryAddress() {
       return this.config.eth.registryAddress;
     }
+
     /**
-     * set the address of the Registry contract on the blockchain
-     * @param {string} registryAddress new address
-     * @example await paratii.eth.setRegistryAddress('some-address')
-     * @private
-     */
+     * Sets the address of the ParatiiRegistry contract
+     * @param {string} address address of the ParatiiRegistry contract
+     * @example paratii.eth.setRegistryAddress('0x0D6B5A54F940BF3D52E438CaB785981aAeFDf40C')
+     * // the address must be a valid ethereum address
+    */
 
   }, {
     key: 'setRegistryAddress',
@@ -625,6 +642,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
         contract.options.address = undefined;
       }
     }
+
     /**
     * When called with a second argument, returns the balance of that Token.<br>
     * When called without a second argument, returns information about all relevant balances.
@@ -715,7 +733,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
      * @param  {number}  amount      amount of ETH to be sent
      * @param  {?string}  description  description of the transaction (will be written in the blockchain)
      * @return {Promise}             information about the transaction recording the transfer
-     * @example return paratii.eth._transferETH('some-address', 20, 'an-optional-description')
+     * @example await paratii.eth._transferETH('some-address', 20, 'an-optional-description')
      * @private
      */
 
@@ -782,7 +800,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
      * @param  {string}  beneficiary ETH address
      * @param  {number}  amount      amount of PTI to be sent
      * @return {Promise}             information about the transaction recording the transfer
-     * @example return paratii.eth._transferPTI('some-address', 20)
+     * @example await paratii.eth._transferPTI('some-address', 20)
      * @private
      */
 

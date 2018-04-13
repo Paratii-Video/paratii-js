@@ -49,8 +49,8 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
    * @param  {userSchema}  options information about the video ( id, name, email ... )
    * @return {Promise}         the id of the newly created user
    * @example
-   *            paratii.users.create({
-   *              id: 'some-user-id',
+   *            await paratii.users.create({
+   *              id: 'some-user-id', //must be a valid ethereum address
    *              name: 'A user name',
    *              email: 'some@email.com',
    *              ...
@@ -113,7 +113,7 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
      * @param  {string}  userId  user univocal id
      * @param  {Object}  options updated data i.e. { name: 'A new user name' }
      * @return {Promise}         updated data about the user
-     * @example paratii.users.update('some-user-id', {name: 'A new user name'})
+     * @example let updatedData = await paratii.users.update('some-user-id', {name: 'A new user name'})
      */
 
   }, {
@@ -172,13 +172,13 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
     /**
      * migrate all contract data for  paratii.config.account to a new account
      * @param newAccount Address of new account
-     * @async
+     * @private
      */
 
   }, {
     key: 'migrateAccount',
     value: function migrateAccount(newAccount) {
-      var paratii, oldAccount, vids, i, vid, videoId, didVideoApply, ptiBalance;
+      var paratii, oldAccount, search, vids, i, vid, videoId, didVideoApply, ptiBalance;
       return _regenerator2.default.async(function migrateAccount$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -190,50 +190,57 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
               return _regenerator2.default.awrap(paratii.vids.search({ owner: oldAccount }));
 
             case 4:
-              vids = _context3.sent;
-              _context3.t0 = _regenerator2.default.keys(vids);
+              search = _context3.sent;
+              vids = search.results;
 
-            case 6:
-              if ((_context3.t1 = _context3.t0()).done) {
-                _context3.next = 20;
+              if (!vids) {
+                _context3.next = 22;
                 break;
               }
 
-              i = _context3.t1.value;
+              i = 0;
+
+            case 8:
+              if (!(i < vids.length)) {
+                _context3.next = 22;
+                break;
+              }
+
               vid = vids[i];
               videoId = vid.id || vid._id;
-              _context3.next = 12;
+              _context3.next = 13;
               return _regenerator2.default.awrap(paratii.vids.update(videoId, { owner: newAccount }));
 
-            case 12:
-              _context3.next = 14;
-              return _regenerator2.default.awrap(paratii.eth.tcr.didVideoApply(vid.id));
+            case 13:
+              _context3.next = 15;
+              return _regenerator2.default.awrap(paratii.eth.tcr.didVideoApply(videoId));
 
-            case 14:
+            case 15:
               didVideoApply = _context3.sent;
 
               if (!didVideoApply) {
-                _context3.next = 18;
+                _context3.next = 19;
                 break;
               }
 
-              _context3.next = 18;
+              _context3.next = 19;
               return _regenerator2.default.awrap(paratii.eth.tcr.exit(videoId));
 
-            case 18:
-              _context3.next = 6;
+            case 19:
+              i++;
+              _context3.next = 8;
               break;
 
-            case 20:
-              _context3.next = 22;
+            case 22:
+              _context3.next = 24;
               return _regenerator2.default.awrap(paratii.eth.balanceOf(oldAccount, 'PTI'));
 
-            case 22:
+            case 24:
               ptiBalance = _context3.sent;
-              _context3.next = 25;
+              _context3.next = 27;
               return _regenerator2.default.awrap(paratii.eth.transfer(newAccount, ptiBalance, 'PTI'));
 
-            case 25:
+            case 27:
             case 'end':
               return _context3.stop();
           }

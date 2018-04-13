@@ -90,7 +90,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     var schema = _joi2.default.object({
       ipfs: _schemas.ipfsSchema,
       account: _schemas.accountSchema,
-      verbose: _joi2.default.bool().default(true)
+      verbose: _joi2.default.bool().default(false)
     });
 
     var result = _joi2.default.validate(config, schema, { allowUnknown: true });

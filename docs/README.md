@@ -9,7 +9,7 @@ It is still very much under development, and most of the things in this document
 
 The paratii library is divided into the following modules:
 
-* [`paratii.core`](./paratii-core.md) for methods that operate transversally over different submodules.
+* [`paratii`](./paratii-core.md) for methods that operate transversally over different submodules.
 * [`paratii.config`](./paratii-config.md) configuration of the paratii object
 * [`paratii.eth`](./paratii-eth.md) for interaction with the blockchain
 * [`paratii.ipfs`](./paratii-ipfs.md) for interaction with IPFS

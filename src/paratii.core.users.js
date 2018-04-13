@@ -21,8 +21,8 @@ export class ParatiiCoreUsers {
    * @param  {userSchema}  options information about the video ( id, name, email ... )
    * @return {Promise}         the id of the newly created user
    * @example
-   *            paratii.users.create({
-   *              id: 'some-user-id',
+   *            await paratii.users.create({
+   *              id: 'some-user-id', //must be a valid ethereum address
    *              name: 'A user name',
    *              email: 'some@email.com',
    *              ...
@@ -60,7 +60,7 @@ export class ParatiiCoreUsers {
    * @param  {string}  userId  user univocal id
    * @param  {Object}  options updated data i.e. { name: 'A new user name' }
    * @return {Promise}         updated data about the user
-   * @example paratii.users.update('some-user-id', {name: 'A new user name'})
+   * @example let updatedData = await paratii.users.update('some-user-id', {name: 'A new user name'})
    */
   async update (userId, options) {
     const schema = joi.object({
@@ -90,24 +90,26 @@ export class ParatiiCoreUsers {
   /**
    * migrate all contract data for  paratii.config.account to a new account
    * @param newAccount Address of new account
-   * @async
+   * @private
    */
   async migrateAccount (newAccount) {
     // migrate the videos
     const paratii = this.config.paratii
     const oldAccount = this.config.account.address
-    const vids = await paratii.vids.search({owner: oldAccount})
-    for (let i in vids) {
-      let vid = vids[i]
-      let videoId = vid.id || vid._id
-      await paratii.vids.update(videoId, {owner: newAccount})
-      let didVideoApply = await paratii.eth.tcr.didVideoApply(vid.id)
-      if (didVideoApply) {
-        // removing video from statke
-        await paratii.eth.tcr.exit(videoId)
+    const search = await paratii.vids.search({owner: oldAccount})
+    const vids = search.results
+    if (vids) {
+      for (let i = 0; i < vids.length; i++) {
+        const vid = vids[i]
+        let videoId = vid.id || vid._id
+        await paratii.vids.update(videoId, {owner: newAccount})
+        let didVideoApply = await paratii.eth.tcr.didVideoApply(videoId)
+        if (didVideoApply) {
+          // removing video from stake
+          await paratii.eth.tcr.exit(videoId)
+        }
       }
     }
-
     // transfer all  PTI to the new account
     let ptiBalance = await paratii.eth.balanceOf(oldAccount, 'PTI')
     await paratii.eth.transfer(newAccount, ptiBalance, 'PTI')

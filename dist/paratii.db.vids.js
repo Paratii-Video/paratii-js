@@ -39,7 +39,7 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
    * Get information about this video from the db
    * @param  {string}  videoId univocal video identifier randomly generated
    * @return {Promise}         data about the video
-   * @example paratii.db.vids.get('some-video-id')
+   * @example await paratii.db.vids.get('some-video-id')
    */
 
 
@@ -74,7 +74,7 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
      * Get the data of the video
      * @param  {Object} options data about the video and (optional) owner i.e {'keyword':'titleOfTheVideo'}
      * @return {Promise}        data about the video
-     * @example paratii.db.vids.search({keyword : 'titleOftheVideo'})
+     * @example await paratii.db.vids.search({keyword : 'titleOftheVideo'})
      * the keyword value can be one from the following list
      * - video title
      * - description

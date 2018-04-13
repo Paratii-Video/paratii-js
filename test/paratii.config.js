@@ -151,3 +151,25 @@ describe('Paratii configuration:', function () {
     await paratii.eth.deployContract('Registry')
   })
 })
+
+it('paratii.eth.getContract() should throw a meaningful error if the registry address isn\'t correct', async function () {
+  let paratii = new Paratii({
+    account: testAccount,
+    eth: {
+      registryAddress: '0xDf6164EfD12678bF6A7d5A1Ddf73C831493F6574'
+    }
+  })
+
+  await assert.isRejected(paratii.eth.getContract('Likes'), Error, /The registry address is not correct/g)
+})
+
+it('paratii.eth.getContract() should throw a meaningful error if no blockchain is available', async function () {
+  let paratii = new Paratii({
+    eth: { provider: 'http://localhost:8000', // wrong port
+      registryAddress: '0xC83003a9B5c2C5bcce29f9c9Ee34b4ef246c781C'},
+    account: testAccount
+  })
+
+  await assert.isRejected(paratii.eth.getContract('Likes'), Error, /Cannot connect/g)
+  await assert.isRejected(paratii.eth.getContracts(), Error, /Cannot connect/g)
+})
