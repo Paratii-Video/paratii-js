@@ -593,7 +593,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
                 break;
               }
 
-              throw Error('The registry address is not correct');
+              throw Error('The registry address is not correct: ' + this.getRegistryAddress());
 
             case 23:
               if (!(_context6.t0.message === 'Invalid JSON RPC response: ""')) {
@@ -601,7 +601,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
                 break;
               }
 
-              throw Error('You aren\'t connected to any Ethereum node');
+              throw Error('Cannot connect to Ethereum at ' + this.config.eth.provider + '? ' + _context6.t0.message);
 
             case 27:
               throw _context6.t0;

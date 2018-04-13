@@ -299,10 +299,10 @@ export class ParatiiEth {
       return address
     } catch (err) {
       if (err.message === 'Couldn\'t decode address from ABI: 0x') {
-        throw Error('The registry address is not correct')
+        throw Error(`The registry address is not correct: ${this.getRegistryAddress()}`)
       } else {
         if (err.message === 'Invalid JSON RPC response: ""') {
-          throw Error('You aren\'t connected to any Ethereum node')
+          throw Error(`Cannot connect to Ethereum at ${this.config.eth.provider}? ${err.message}`)
         } else {
           throw err
         }

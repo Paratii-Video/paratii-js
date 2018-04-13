@@ -170,6 +170,6 @@ it('paratii.eth.getContract() should throw a meaningful error if no blockchain i
     account: testAccount
   })
 
-  await assert.isRejected(paratii.eth.getContract('Likes'), Error, /You aren't connected to any Ethereum node/g)
-  await assert.isRejected(paratii.eth.getContracts(), Error, /You aren't connected to any Ethereum node/g)
+  await assert.isRejected(paratii.eth.getContract('Likes'), Error, /Cannot connect/g)
+  await assert.isRejected(paratii.eth.getContracts(), Error, /Cannot connect/g)
 })
