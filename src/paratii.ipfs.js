@@ -28,7 +28,7 @@ export class ParatiiIPFS extends EventEmitter {
     const schema = joi.object({
       ipfs: ipfsSchema,
       account: accountSchema,
-      verbose: joi.bool().default(false)
+      verbose: joi.bool().default(true)
     })
 
     const result = joi.validate(config, schema, {allowUnknown: true})
