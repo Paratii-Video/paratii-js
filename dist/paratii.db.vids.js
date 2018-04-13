@@ -98,7 +98,7 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
                 'keyword': joi.string().empty(),
                 'offset': joi.string().empty(),
                 'limit': joi.string().empty(),
-                'staked': joi.string().empty()
+                'staked': joi.boolean().empty()
               });
               result = joi.validate(options, schema);
               error = result.error;

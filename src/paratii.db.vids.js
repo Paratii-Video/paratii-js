@@ -46,7 +46,7 @@ export class ParatiiDbVids {
       'keyword': joi.string().empty(),
       'offset': joi.string().empty(),
       'limit': joi.string().empty(),
-      'staked': joi.string().empty()
+      'staked': joi.boolean().empty()
     })
 
     const result = joi.validate(options, schema)
