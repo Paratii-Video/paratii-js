@@ -54,7 +54,7 @@ export class ParatiiDbVids {
     if (error) throw error
     let k = ''
     for (let keyword in options) {
-      k = `${keyword}=${options[keyword]}`
+      k += `${keyword}=${options[keyword]}`
     }
     if (k !== '') {
       k = `?${k}`

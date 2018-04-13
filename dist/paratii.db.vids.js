@@ -114,7 +114,7 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
               k = '';
 
               for (keyword in options) {
-                k = keyword + '=' + options[keyword];
+                k += keyword + '=' + options[keyword];
               }
               if (k !== '') {
                 k = '?' + k;
