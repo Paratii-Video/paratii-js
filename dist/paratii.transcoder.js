@@ -71,6 +71,8 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
     if (result.error) throw result.error;
     _this.config = result.value;
     _this._ipfs = _this.config.paratiiIPFS; // this is the paratii.ipfs.js
+    _this._node = _this._ipfs.ipfs;
+    // console.log('this._ipfs:', this._ipfs)
     return _this;
   }
 
@@ -99,7 +101,7 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
         transcoderId: _joi2.default.any().default(Multiaddr(this.config.ipfs.defaultTranscoder).getPeerId())
       }).unknown();
 
-      this._ipfs.log('Signaling transcoder...');
+      this._ipfs.log('Signaling transcoder...', fileHash);
 
       var result = _joi2.default.validate(options, schema);
       var error = result.error;
@@ -118,36 +120,41 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
         ev.emit('transcoding:done', { test: 1 });
         return ev;
       }
-      var msg = this._ipfs.protocol.createCommand('transcode', { hash: fileHash, author: opts.author, size: opts.size });
+      var msg = this._ipfs.protocol.createCommand('transcode', {
+        hash: fileHash, author: opts.author, size: opts.size
+      });
       // FIXME : This is for dev, so we just signal our transcoder node.
       // This needs to be dynamic later on.
-      this._node.swarm.connect(opts.transcoder, function (err, success) {
-        if (err) return ev.emit('transcoding:error', err);
-
-        opts.transcoderId = opts.transcoderId || Multiaddr(opts.transcoder).getPeerId();
-        _this2._ipfs.log('transcoderId: ', opts.transcoderId);
-        _this2._node.swarm.peers(function (err, peers) {
-          _this2._ipfs.log('peers: ', peers);
+      this._ipfs.getIPFSInstance().then(function (_ipfs) {
+        _this2._node = _ipfs;
+        _this2._node.swarm.connect(opts.transcoder, function (err, success) {
           if (err) return ev.emit('transcoding:error', err);
-          peers.map(function (peer) {
-            try {
-              _this2._ipfs.log('peerID : ', peer.peer.toB58String(), opts.transcoderId, peer.peer.toB58String() === opts.transcoder);
-              if (peer.peer.toB58String() === opts.transcoderId) {
-                _this2._ipfs.log('sending transcode msg to ' + peer.peer.toB58String() + ' with request to transcode ' + fileHash);
-                _this2._ipfs.protocol.network.sendMessage(peer.peer, msg, function (err) {
-                  if (err) {
-                    ev.emit('transcoding:error', err);
-                    return ev;
-                  }
-                });
-              }
-            } catch (e) {
-              console.log('PEER ERROR :', e, peer);
-            }
-          });
 
-          // paratii transcoder signal.
-          _this2._ipfs.on('protocol:incoming', _this2._transcoderRespHander(ev, fileHash));
+          opts.transcoderId = opts.transcoderId || Multiaddr(opts.transcoder).getPeerId();
+          _this2._ipfs.log('transcoderId: ', opts.transcoderId);
+          _this2._node.swarm.peers(function (err, peers) {
+            _this2._ipfs.log('peers: ', peers);
+            if (err) return ev.emit('transcoding:error', err);
+            peers.map(function (peer) {
+              try {
+                _this2._ipfs.log('peerID : ', peer.peer.toB58String(), opts.transcoderId, peer.peer.toB58String() === opts.transcoder);
+                if (peer.peer.toB58String() === opts.transcoderId) {
+                  _this2._ipfs.log('sending transcode msg to ' + peer.peer.toB58String() + ' with request to transcode ' + fileHash);
+                  _this2._ipfs.protocol.network.sendMessage(peer.peer, msg, function (err) {
+                    if (err) {
+                      ev.emit('transcoding:error', err);
+                      return ev;
+                    }
+                  });
+                }
+              } catch (e) {
+                console.log('PEER ERROR :', e, peer);
+              }
+            });
+
+            // paratii transcoder signal.
+            _this2._ipfs.on('protocol:incoming', _this2._transcoderRespHander(ev, fileHash));
+          });
         });
       });
       return ev;
@@ -180,7 +187,7 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
           case 'transcoding:error':
             console.log('DEBUG TRANSCODER ERROR: fileHash: ', fileHash, ' , errHash: ', argsObj.hash);
             if (argsObj.hash === fileHash) {
-              ev.emit('transcoding:error', argsObj.err);
+              ev.emit('transcoding:error', argsObj);
             }
             break;
           case 'transcoding:started':

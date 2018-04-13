@@ -2,7 +2,7 @@
 'use strict'
 
 import { EventEmitter } from 'events'
-import { PromiseEventEmitter } from './utils.js'
+// import { PromiseEventEmitter } from './utils.js'
 const pull = require('pull-stream')
 const pullFilereader = require('pull-filereader')
 const toPull = require('stream-to-pull-stream')
@@ -125,7 +125,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
             this._ipfs.log('Adding %s finished as %s, size: %s', hashedFile.path, hashedFile.hash, hashedFile.size)
 
             if (file._html5File) {
-              this._ipfs.remote.xhrUpload(file, hashedFile.hash, ev)
+              this._ipfs.remote.xhrUpload(file, hashedFile, ev)
             } else {
               ev.emit('fileReady', hashedFile)
             }

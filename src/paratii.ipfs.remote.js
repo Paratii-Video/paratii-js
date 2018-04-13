@@ -39,12 +39,13 @@ export class ParatiiIPFSRemote extends EventEmitter {
     * @example this.xhrUpload(file, hashedFile)
 
     */
-  xhrUpload (file, hash, ev) {
+  xhrUpload (file, hashedFile, ev) {
     if (!ev) {
       ev = new EventEmitter()
     }
+    console.log('xhrUpload: ', hashedFile.hash)
     let r = new Resumable({
-      target: `${this.config.ipfs.transcoderDropUrl}/${hash}`,
+      target: `${this.config.ipfs.transcoderDropUrl}/${hashedFile.hash}`,
       chunkSize: this.config.ipfs.xhrChunkSize,
       simultaneousUploads: 4,
       testChunks: false,
@@ -60,8 +61,8 @@ export class ParatiiIPFSRemote extends EventEmitter {
       ev.emit('progress', r.progress() * 100)
     })
 
-    r.on('complete', () => {
-      ev.emit('fileReady', file)
+    r.on('fileAdded', (file) => {
+      ev.emit('fileReady', hashedFile)
     })
 
     r.on('error', (err, file) => {

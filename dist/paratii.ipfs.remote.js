@@ -86,12 +86,13 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
 
   (0, _createClass3.default)(ParatiiIPFSRemote, [{
     key: 'xhrUpload',
-    value: function xhrUpload(file, hash, ev) {
+    value: function xhrUpload(file, hashedFile, ev) {
       if (!ev) {
         ev = new _events.EventEmitter();
       }
+      console.log('xhrUpload: ', hashedFile.hash);
       var r = new Resumable({
-        target: this.config.ipfs.transcoderDropUrl + '/' + hash,
+        target: this.config.ipfs.transcoderDropUrl + '/' + hashedFile.hash,
         chunkSize: this.config.ipfs.xhrChunkSize,
         simultaneousUploads: 4,
         testChunks: false,
@@ -107,8 +108,8 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
         ev.emit('progress', r.progress() * 100);
       });
 
-      r.on('complete', function () {
-        ev.emit('fileReady', file);
+      r.on('fileAdded', function (file) {
+        ev.emit('fileReady', hashedFile);
       });
 
       r.on('error', function (err, file) {
