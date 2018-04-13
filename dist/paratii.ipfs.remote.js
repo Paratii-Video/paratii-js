@@ -108,7 +108,7 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
         ev.emit('progress', r.progress() * 100);
       });
 
-      r.on('fileAdded', function (file) {
+      r.on('complete', function () {
         ev.emit('fileReady', hashedFile);
       });
 

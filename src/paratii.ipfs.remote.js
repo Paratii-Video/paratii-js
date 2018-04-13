@@ -61,7 +61,7 @@ export class ParatiiIPFSRemote extends EventEmitter {
       ev.emit('progress', r.progress() * 100)
     })
 
-    r.on('fileAdded', (file) => {
+    r.on('complete', () => {
       ev.emit('fileReady', hashedFile)
     })
 
