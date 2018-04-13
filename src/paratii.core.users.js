@@ -21,13 +21,12 @@ export class ParatiiCoreUsers {
    * @param  {userSchema}  options information about the video ( id, name, email ... )
    * @return {Promise}         the id of the newly created user
    * @example
-   *            paratii.users.create({
-   *              id: 'some-user-id',
+   *            await paratii.users.create({
+   *              id: 'some-user-id', //must be a valid ethereum address
    *              name: 'A user name',
    *              email: 'some@email.com',
    *              ...
    *             })
-
    */
   // FIXME: do some joi validation here
   async create (options) {
@@ -42,7 +41,7 @@ export class ParatiiCoreUsers {
         optionsIpfs[key] = options[key]
       }
     })
-    let hash = await this.config.paratii.ipfs.addJSON(optionsIpfs)
+    let hash = await this.config.paratii.ipfs.local.addJSON(optionsIpfs)
     optionsBlockchain['ipfsData'] = hash
     return this.config.paratii.eth.users.create(optionsBlockchain)
   }
@@ -52,7 +51,6 @@ export class ParatiiCoreUsers {
    * @param  {string} id user univocal id
    * @return {Object}    data about the user
    * @example paratii.users.get('some-user-id')
-
   */
   get (id) {
     return this.config.paratii.db.users.get(id)
@@ -62,8 +60,7 @@ export class ParatiiCoreUsers {
    * @param  {string}  userId  user univocal id
    * @param  {Object}  options updated data i.e. { name: 'A new user name' }
    * @return {Promise}         updated data about the user
-   * @example paratii.users.update('some-user-id', {name: 'A new user name'})
-
+   * @example let updatedData = await paratii.users.update('some-user-id', {name: 'A new user name'})
    */
   async update (userId, options) {
     const schema = joi.object({
@@ -92,10 +89,8 @@ export class ParatiiCoreUsers {
 
   /**
    * migrate all contract data for  paratii.config.account to a new account
-   * @alias migrateAccount
    * @param newAccount Address of new account
-   * @async
-   * @memberof Paratii
+   * @private
    */
   async migrateAccount (newAccount) {
     // migrate the videos

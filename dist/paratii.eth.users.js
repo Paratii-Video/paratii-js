@@ -36,6 +36,7 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
   /**
    * Get the contract instance of the user contract
    * @return {Promise}  Object representing the contract
+   * @example let usersContract =  await paratii.eth.users.getRegistry()
    */
 
 

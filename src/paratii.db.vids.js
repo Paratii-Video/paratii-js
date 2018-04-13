@@ -5,7 +5,6 @@ const fetch = require('isomorphic-fetch')
 /**
  * ParatiiDbUsers contains functionalities regarding the videos to interact with the Paratii Blockchain Index
  * @param {Object} config object to initialize Paratii object
-
  */
 export class ParatiiDbVids {
   constructor (config) {
@@ -16,8 +15,7 @@ export class ParatiiDbVids {
    * Get information about this video from the db
    * @param  {string}  videoId univocal video identifier randomly generated
    * @return {Promise}         data about the video
-   * @example paratii.db.vids.get('some-video-id')
-
+   * @example await paratii.db.vids.get('some-video-id')
    */
   async get (videoId) {
     let videos = await fetch(this.config.db.provider + this.apiVideos + videoId, {
@@ -32,7 +30,7 @@ export class ParatiiDbVids {
    * Get the data of the video
    * @param  {Object} options data about the video and (optional) owner i.e {'keyword':'titleOfTheVideo'}
    * @return {Promise}        data about the video
-   * @example paratii.db.vids.search({keyword : 'titleOftheVideo'})
+   * @example await paratii.db.vids.search({keyword : 'titleOftheVideo'})
    * the keyword value can be one from the following list
    * - video title
    * - description
@@ -40,7 +38,6 @@ export class ParatiiDbVids {
    * - uploader.name
    * - uploader.address
    * - tags
-
    */
   async search (options) {
     // FIXME: does not handle combinations of parameters yet

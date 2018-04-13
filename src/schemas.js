@@ -34,6 +34,7 @@ const ethSchema = joi.object({
   * @property {?number} xhrChunkSize max chunk size for the express uploader
   * @property {?number} maxFileSize max size for an original video (default to 300MB)
   * @property {?string} defaultTranscoder the default multiaddress of the main paratii-node
+  * @property {?string} remoteIFPFSNode the default multiaddress of the main paratii-node
   * @property {?string} transcoderDropUrl url for the express uploader
  */
 const ipfsSchema = joi.object({
@@ -55,6 +56,7 @@ const ipfsSchema = joi.object({
   xhrChunkSize: joi.number().default(1 * 1024 * 1024),
   maxFileSize: joi.number().default(300 * 1024 * 1024),
   defaultTranscoder: joi.string().default('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'),
+  remoteIPFSNode: joi.string().default('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'),
   transcoderDropUrl: joi.string().default('https://uploader.paratii.video/api/v1/transcode')
 
 }).default()
@@ -68,6 +70,7 @@ const dbSchema = joi.object({
 }).default()
 
  /**
+  * @todo some description are still not written
   * @typedef {Array} videoSchema
   * @property {?string} id univocal video identifier randomly generated
   * @property {?string} author author of the video
@@ -75,22 +78,22 @@ const dbSchema = joi.object({
   * @property {?string} duration duration of the video
   * @property {?string} filename filename of the video
   * @property {number} filesize size of the video
-  * @property {?string} free ?
+  * @property {?string}
   * @property {?string} ipfsHashOrig original ipfs multihash of the video
   * @property {?string} ipfsHash ipfs multihash of the video
   * @property {string} owner owner of the video
   * @property {?number} price price of the video
   * @property {?string} title title of the video
   * @property {Array} thumbnails thumbnails of the video
-  * @property {?Object} storageStatus ?
-  * @property {string} storageStatus.name ?
-  * @property {?Object} storageStatus.data ?
-  * @property {?Object} transcodingStatus ?
-  * @property {string} transcodingStatus.name ?
-  * @property {?Object} transcodingStatus.data ?
-  * @property {?Object} uploadStatus ?
-  * @property {string} uploadStatus.name ?
-  * @property {?Object} uploadStatus.data ?
+  * @property {?Object} storageStatus
+  * @property {string} storageStatus.name
+  * @property {?Object} storageStatus.data
+  * @property {?Object} transcodingStatus
+  * @property {string} transcodingStatus.name
+  * @property {?Object} transcodingStatus.data
+  * @property {?Object} uploadStatus
+  * @property {string} uploadStatus.name
+  * @property {?Object} uploadStatus.data
   */
 const videoSchema = joi.object({
   id: joi.string().default(null),

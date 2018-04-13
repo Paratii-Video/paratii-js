@@ -130,7 +130,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
      * @param  {string} videoId univocal video identifier randomly generated
      * @return {Object}         information about the transaction recording the like
      * @example paratii.core.vids.like('some-video-id')
-      */
+     */
 
   }, {
     key: 'like',
@@ -142,7 +142,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
      * @param  {string} videoId univocal video identifier randomly generated
      * @return {Object}         information about the transaction recording the dislike
      * @example paratii.core.vids.dislike('some-video-id')
-      */
+     */
 
   }, {
     key: 'dislike',
@@ -154,7 +154,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
      * @param  {string} videoId univocal video identifier randomly generated
      * @return {Boolean}         true if the current user already liked the video, false otherwise
      * @example paratii.core.vids.doesLike('some-video-id')
-      */
+     */
 
   }, {
     key: 'doesLike',
@@ -167,7 +167,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
      * @param  {string}  videoId univocal video identifier randomly generated
      * @return {Boolean}         true if the current user already viewed the video, false otherwise
      * @example paratii.core.vids.hasViewedVideo('some-user-id','some-video-id')
-      */
+     */
 
   }, {
     key: 'hasViewedVideo',
@@ -179,7 +179,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
      * @param  {string} videoId univocal video identifier randomly generated
      * @return {Boolean}         true if the current user already disliked the video, false otherwise
      * @example paratii.core.vids.doesDislike('some-video-id')
-     */
+    */
 
   }, {
     key: 'doesDislike',
@@ -194,8 +194,8 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
      * @param  {Object}  options      key value pairs of properties and new values e.g. ({title: 'another-title'})
      * @param  {Object}  dataToUpdate optional. old data of the video. If not passed to the method, it will fetch the data itself using the videoId
      * @return {Promise}              Updated video informations
-     * @example paratii.core.vids.update('some-video-id', {title: 'another-title'})
-      */
+     * @example await paratii.core.vids.update('some-video-id', {title: 'another-title'})
+     */
 
   }, {
     key: 'update',
@@ -265,8 +265,8 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
      * @param  {Object}  options video informations
      * @return {Promise}         updated/new video informations
      * @example
-     * paratii.vids.upsert({ id: 'some-video-id', owner: 'some-user-id', title: 'videoTitle'}) //insert a new video
-      */
+     * await paratii.vids.upsert({ id: 'some-video-id', owner: 'some-user-id', title: 'videoTitle'}) //insert a new video
+     */
 
   }, {
     key: 'upsert',
@@ -313,7 +313,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
      * @param  {Object}  options should contain keys viewer (address of the viewer) and videoId (univocal video identifier)
      * @return {Promise}         information about the transaction recording the view
      * @example paratii.core.vids.view({viewer:'some-user-id',videoId: 'some-video-id'})
-      */
+     */
 
   }, {
     key: 'view',
@@ -336,7 +336,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
                 }
               });
               _context4.next = 7;
-              return _regenerator2.default.awrap(this.config.paratii.ipfs.addJSON(optionsIpfs));
+              return _regenerator2.default.awrap(this.config.paratii.ipfs.local.addJSON(optionsIpfs));
 
             case 7:
               hash = _context4.sent;
@@ -355,8 +355,8 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
      * Get the data of the video identified by videoId
      * @param  {string}  videoId univocal video identifier randomly generated
      * @return {Promise}         data about the video
-     * @example paratii.core.vids.get('some-video-id')
-      */
+     * @example await paratii.core.vids.get('some-video-id')
+     */
 
   }, {
     key: 'get',
@@ -386,7 +386,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
      * - uploader.name
      * - uploader.address
      * - tags
-      */
+     */
 
   }, {
     key: 'search',

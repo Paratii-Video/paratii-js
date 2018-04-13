@@ -3,9 +3,34 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.PromiseEventEmitter = exports.NULL_ADDRESS = undefined;
+
+var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
 exports.add0x = add0x;
 exports.getInfoFromLogs = getInfoFromLogs;
 exports.makeId = makeId;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 var assert = require('assert');
 var NULL_ADDRESS = exports.NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -59,3 +84,81 @@ function makeId() {
 
   return text;
 }
+
+// borrowed from: https://gist.github.com/dmvaldman/12a7e46be6c3097aae31
+var EventEmitter = require('events').EventEmitter;
+
+var PromiseEventEmitter = exports.PromiseEventEmitter = function (_EventEmitter) {
+  (0, _inherits3.default)(PromiseEventEmitter, _EventEmitter);
+
+  // Define a Promise with a function taking two parameters:
+  // a `resolve` function and `reject` function
+  function PromiseEventEmitter(executor) {
+    (0, _classCallCheck3.default)(this, PromiseEventEmitter);
+
+    // Extend the EventEmitter super class
+
+    // When `resolve` is called with a value, it emits a `resolve` event
+    // passing the value downstream. Similarly for `reject`
+    var _this = (0, _possibleConstructorReturn3.default)(this, (PromiseEventEmitter.__proto__ || (0, _getPrototypeOf2.default)(PromiseEventEmitter)).call(this));
+
+    var resolve = function resolve(value) {
+      _this.emit('resolve', value);
+    };
+    var reject = function reject(reason) {
+      _this.emit('reject', reason);
+    };
+
+    if (executor) executor(resolve, reject);
+    return _this;
+  }
+
+  // Add downstream resolve and reject listeners
+
+
+  (0, _createClass3.default)(PromiseEventEmitter, [{
+    key: 'then',
+    value: function then(resolveHandler, rejectHandler) {
+      var promise = new PromiseEventEmitter();
+
+      // When a `resolve` event upstream is fired, execute the `resolveHandler`
+      // and pass the `resolve` event downstream with the result
+      if (resolveHandler) {
+        var resolve = function resolve(data) {
+          var result = resolveHandler(data);
+          promise.emit('resolve', result);
+        };
+
+        this.on('resolve', resolve);
+      }
+
+      // When a `reject` event upstream is fired, execute the `rejectHandler`
+      // and pass the `reject` event downstream with the result
+      if (rejectHandler) {
+        var reject = function reject(data) {
+          var result = rejectHandler(data);
+          promise.emit('reject', result);
+        };
+
+        this.on('reject', reject);
+      } else {
+        // Downstream listeners always listen to `reject` so that an
+        // eventual `catch` can intercept them
+        this.on('reject', function (data) {
+          promise.emit('reject', data);
+        });
+      }
+
+      return promise;
+    }
+
+    // Handle an error from a rejected Promise upstream
+
+  }, {
+    key: 'catch',
+    value: function _catch(handler) {
+      this.on('reject', handler);
+    }
+  }]);
+  return PromiseEventEmitter;
+}(EventEmitter);

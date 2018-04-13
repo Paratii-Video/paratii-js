@@ -49,3 +49,59 @@ export function makeId () {
 
   return text
 }
+
+// borrowed from: https://gist.github.com/dmvaldman/12a7e46be6c3097aae31
+var EventEmitter = require('events').EventEmitter
+
+export class PromiseEventEmitter extends EventEmitter {
+    // Define a Promise with a function taking two parameters:
+    // a `resolve` function and `reject` function
+  constructor (executor) {
+    super() // Extend the EventEmitter super class
+
+        // When `resolve` is called with a value, it emits a `resolve` event
+        // passing the value downstream. Similarly for `reject`
+    var resolve = (value) => { this.emit('resolve', value) }
+    var reject = (reason) => { this.emit('reject', reason) }
+
+    if (executor) executor(resolve, reject)
+  }
+
+    // Add downstream resolve and reject listeners
+  then (resolveHandler, rejectHandler) {
+    var promise = new PromiseEventEmitter()
+
+        // When a `resolve` event upstream is fired, execute the `resolveHandler`
+        // and pass the `resolve` event downstream with the result
+    if (resolveHandler) {
+      var resolve = (data) => {
+        var result = resolveHandler(data)
+        promise.emit('resolve', result)
+      }
+
+      this.on('resolve', resolve)
+    }
+
+        // When a `reject` event upstream is fired, execute the `rejectHandler`
+        // and pass the `reject` event downstream with the result
+    if (rejectHandler) {
+      var reject = (data) => {
+        var result = rejectHandler(data)
+        promise.emit('reject', result)
+      }
+
+      this.on('reject', reject)
+    } else {
+            // Downstream listeners always listen to `reject` so that an
+            // eventual `catch` can intercept them
+      this.on('reject', (data) => { promise.emit('reject', data) })
+    }
+
+    return promise
+  }
+
+    // Handle an error from a rejected Promise upstream
+  catch (handler) {
+    this.on('reject', handler)
+  }
+}
