@@ -40,10 +40,9 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 
 var _events = require('events');
 
-var _utils = require('./utils.js');
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// import { PromiseEventEmitter } from './utils.js'
 var pull = require('pull-stream');
 var pullFilereader = require('pull-filereader');
 var toPull = require('stream-to-pull-stream');
@@ -100,40 +99,34 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
   (0, _createClass3.default)(ParatiiIPFSLocal, [{
     key: 'add',
     value: function add(file) {
-      var _this2 = this;
+      var emitter = new _events.EventEmitter();
+      var files = void 0;
+      if (Array.isArray(file)) {
+        files = file;
+      } else {
+        files = [file];
+      }
 
-      var p = new _utils.PromiseEventEmitter(function (resolve, reject) {
-        // return new Promise((resolve, reject) => {
-        var files = void 0;
-        if (Array.isArray(file)) {
-          files = file;
-        } else {
-          files = [file];
-        }
-
-        var result = [];
-        for (var i = 0; i < files.length; i++) {
-          // check if File is actually available or not.
-          // if not it means we're not in the browser land.
-          if (typeof File !== 'undefined') {
-            if (files[i] instanceof File) {
-              result.push(_this2.html5FileToPull(files[i]));
-            } else {
-              result.push(_this2.fsFileToPull(files[i]));
-            }
+      var result = [];
+      for (var i = 0; i < files.length; i++) {
+        // check if File is actually available or not.
+        // if not it means we're not in the browser land.
+        if (typeof File !== 'undefined') {
+          if (files[i] instanceof File) {
+            result.push(this.html5FileToPull(files[i]));
           } else {
-            result.push(_this2.fsFileToPull(files[i]));
+            result.push(this.fsFileToPull(files[i]));
           }
+        } else {
+          result.push(this.fsFileToPull(files[i]));
         }
-        var ev = _this2.upload(result, _this2);
-        ev.on('done', function (hashedFiles) {
-          return resolve(hashedFiles);
-        });
-        ev.on('error', function (err) {
-          return reject(err);
-        });
+      }
+      emitter = this.upload(result, emitter);
+      emitter.on('done', function (hashedFiles) {
+        console.log(hashedFiles);
       });
-      return p;
+      // emitter.on('error', (err) => reject(err))
+      return emitter;
     }
 
     /**
@@ -152,7 +145,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
   }, {
     key: 'upload',
     value: function upload(files, ev) {
-      var _this3 = this;
+      var _this2 = this;
 
       var meta = {}; // holds File metadata.
       if (!ev) {
@@ -162,13 +155,13 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
       this._ipfs.start().then(function () {
         // trigger onStart callback
         ev.emit('start');
-        if (files && files[0] && files[0].size > _this3.config.ipfs.maxFileSize) {
-          ev.emit('error', 'file size is larger than the allowed ' + _this3.config.ipfs.maxFileSize / 1024 / 1024 + 'MB');
+        if (files && files[0] && files[0].size > _this2.config.ipfs.maxFileSize) {
+          ev.emit('error', 'file size is larger than the allowed ' + _this2.config.ipfs.maxFileSize / 1024 / 1024 + 'MB');
           return;
         }
 
         pull(pull.values(files), pull.through(function (file) {
-          _this3._ipfs.log('Adding ', file);
+          _this2._ipfs.log('Adding ', file);
           meta.fileSize = file.size;
           meta.total = 0;
         }), pull.asyncMap(function (file, cb) {
@@ -177,17 +170,17 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
             content: pull(file._pullStream, pull.through(function (chunk) {
               return ev.emit('progress2', chunk.length, Math.floor((meta.total += chunk.length) * 1.0 / meta.fileSize * 100));
             }))
-          }]), _this3._ipfs._node.files.addPullStream({ chunkerOptions: { maxChunkSize: _this3.config.ipfs.chunkSize } }), // default size 262144
+          }]), _this2._ipfs._node.files.addPullStream({ chunkerOptions: { maxChunkSize: _this2.config.ipfs.chunkSize } }), // default size 262144
           pull.collect(function (err, res) {
             if (err) {
               return ev.emit('error', err);
             }
 
             var hashedFile = res[0];
-            _this3._ipfs.log('Adding %s finished as %s, size: %s', hashedFile.path, hashedFile.hash, hashedFile.size);
+            _this2._ipfs.log('Adding %s finished as %s, size: %s', hashedFile.path, hashedFile.hash, hashedFile.size);
 
             if (file._html5File) {
-              _this3._ipfs.remote.xhrUpload(file, hashedFile.hash, ev);
+              _this2._ipfs.remote.xhrUpload(file, hashedFile, ev);
             } else {
               ev.emit('fileReady', hashedFile);
             }
@@ -198,7 +191,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
           if (err) {
             ev.emit('error', err);
           }
-          _this3._ipfs.log('uploader is DONE');
+          _this2._ipfs.log('uploader is DONE');
           ev.emit('done', hashedFiles);
         }));
       });
@@ -216,14 +209,14 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
   }, {
     key: 'addDirectory',
     value: function addDirectory(dirPath) {
-      var _this4 = this;
+      var _this3 = this;
 
       return new _promise2.default(function (resolve, reject) {
         // cb = once(cb)
         var resp = null;
         // this._ipfs.log('adding ', dirPath, ' to IPFS')
 
-        var addStream = _this4._ipfs._node.files.addReadableStream();
+        var addStream = _this3._ipfs._node.files.addReadableStream();
         addStream.on('data', function (file) {
           // this._ipfs.log('dirPath ', dirPath)
           // this._ipfs.log('file Added ', file)
@@ -246,11 +239,11 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
           eachSeries(files, function (file, next) {
             next = once(next);
             try {
-              _this4._ipfs.log('reading file ', file);
+              _this3._ipfs.log('reading file ', file);
               var rStream = fs.createReadStream(path.join(dirPath, file));
               rStream.on('error', function (err) {
                 if (err) {
-                  _this4._ipfs.error('rStream Error ', err);
+                  _this3._ipfs.error('rStream Error ', err);
                   return next();
                 }
               });
@@ -262,7 +255,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
               }
             } catch (e) {
               if (e) {
-                _this4._ipfs.error('createReadStream Error: ', e);
+                _this3._ipfs.error('createReadStream Error: ', e);
               }
             } finally {}
             // next()

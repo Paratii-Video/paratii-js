@@ -37,13 +37,13 @@ var _paratiiEth = require('./paratii.eth.js');
 
 var _paratiiIpfs = require('./paratii.ipfs.js');
 
-var _paratiiTranscoder = require('./paratii.transcoder.js');
-
 var _schemas = require('./schemas.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var joi = require('joi');
+// import { ParatiiTranscoder } from './paratii.transcoder.js'
+
 var utils = require('./utils.js');
 
 /**
@@ -104,7 +104,9 @@ var Paratii = function (_ParatiiCore) {
     // this.core = new ParatiiCore(this.config)
     _this.db = new _paratiiDb.ParatiiDb(_this.config);
     _this.ipfs = new _paratiiIpfs.ParatiiIPFS(_this.config);
-    _this.transcoder = new _paratiiTranscoder.ParatiiTranscoder(_this.config);
+    // this.transcoder = new ParatiiTranscoder(this.config)
+    //
+    _this.transcoder = _this.ipfs.transcoder;
     return _this;
   }
   /**

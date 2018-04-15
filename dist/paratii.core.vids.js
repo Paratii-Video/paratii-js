@@ -23,6 +23,8 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _schemas = require('./schemas.js');
 
+var _utils = require('./utils.js');
+
 var _joi = require('joi');
 
 var _joi2 = _interopRequireDefault(_joi);
@@ -79,8 +81,10 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
             case 4:
               options = result.value;
 
-              if (options.id === null) {
-                options.id = this.config.paratii.eth.vids.makeId();
+              if (!options.id) {
+                // options.id = this.config.paratii.eth.vids.makeId()
+                options.id = (0, _utils.makeId)();
+                console.log('generating ID...........................', options.id);
               }
 
               _context.next = 8;

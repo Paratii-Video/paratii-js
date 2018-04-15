@@ -2,7 +2,7 @@ import { ParatiiCore } from './paratii.core.js'
 import { ParatiiDb } from './paratii.db.js'
 import { ParatiiEth } from './paratii.eth.js'
 import { ParatiiIPFS } from './paratii.ipfs.js'
-import { ParatiiTranscoder } from './paratii.transcoder.js'
+// import { ParatiiTranscoder } from './paratii.transcoder.js'
 import { ipfsSchema, ethSchema, accountSchema, dbSchema } from './schemas.js'
 
 const joi = require('joi')
@@ -59,7 +59,9 @@ class Paratii extends ParatiiCore {
     // this.core = new ParatiiCore(this.config)
     this.db = new ParatiiDb(this.config)
     this.ipfs = new ParatiiIPFS(this.config)
-    this.transcoder = new ParatiiTranscoder(this.config)
+    // this.transcoder = new ParatiiTranscoder(this.config)
+    //
+    this.transcoder = this.ipfs.transcoder
   }
   /**
   * Sets the account that will be used to sign all transactions

@@ -56,7 +56,9 @@ export class ParatiiEthVids {
    */
   makeId () {
     // create a fresh ID
-    return makeId()
+    let id = makeId()
+    console.log('created id: ', id)
+    return id
   }
   /**
    * Record the video on the blockchain
