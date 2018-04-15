@@ -43,7 +43,10 @@ export class ParatiiDbVids {
     // FIXME: does not handle combinations of parameters yet
     const schema = joi.object({
       'owner': joi.string().empty(),
-      'keyword': joi.string().empty()
+      'keyword': joi.string().empty(),
+      'offset': joi.string().empty(),
+      'limit': joi.string().empty(),
+      'staked': joi.boolean().empty()
     })
 
     const result = joi.validate(options, schema)
@@ -51,7 +54,7 @@ export class ParatiiDbVids {
     if (error) throw error
     let k = ''
     for (let keyword in options) {
-      k = `${keyword}=${options[keyword]}`
+      k += `${keyword}=${options[keyword]}`
     }
     if (k !== '') {
       k = `?${k}`

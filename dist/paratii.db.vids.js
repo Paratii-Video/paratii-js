@@ -95,7 +95,10 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
               // FIXME: does not handle combinations of parameters yet
               schema = joi.object({
                 'owner': joi.string().empty(),
-                'keyword': joi.string().empty()
+                'keyword': joi.string().empty(),
+                'offset': joi.string().empty(),
+                'limit': joi.string().empty(),
+                'staked': joi.boolean().empty()
               });
               result = joi.validate(options, schema);
               error = result.error;
@@ -111,7 +114,7 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
               k = '';
 
               for (keyword in options) {
-                k = keyword + '=' + options[keyword];
+                k += keyword + '=' + options[keyword];
               }
               if (k !== '') {
                 k = '?' + k;
