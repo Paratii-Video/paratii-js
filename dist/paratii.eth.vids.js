@@ -158,7 +158,9 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
     key: 'makeId',
     value: function makeId() {
       // create a fresh ID
-      return (0, _utils.makeId)();
+      var id = (0, _utils.makeId)();
+      console.log('created id: ', id);
+      return id;
     }
     /**
      * Record the video on the blockchain

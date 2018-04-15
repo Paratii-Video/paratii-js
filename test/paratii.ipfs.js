@@ -51,12 +51,13 @@ describe('ParatiiIPFS: :', function () {
   it('should allow for simple add() and get() of files', async function () {
     let path = 'test/data/some-file.txt'
     // let fileStream = fs.createReadStream(path)
-    let result = await paratiiIPFS.local.add(path)
-    assert.isOk(result)
-    console.log(result)
-    let hash = result[0].hash
-    let fileContent = await paratiiIPFS.local.get(hash)
-    assert.equal(String(fileContent[0].content), 'with some content\n')
+    let ev = paratiiIPFS.local.add(path)
+    assert.isOk(ev)
+    ev.on('done', async (result) => {
+      let hash = result[0].hash
+      let fileContent = await paratiiIPFS.local.get(hash)
+      assert.equal(String(fileContent[0].content), 'with some content\n')
+    })
   })
 
   it('put a JSON object and get it back', async function () {

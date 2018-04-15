@@ -29,6 +29,8 @@ export class ParatiiTranscoder extends EventEmitter {
     if (result.error) throw result.error
     this.config = result.value
     this._ipfs = this.config.paratiiIPFS // this is the paratii.ipfs.js
+    this._node = this._ipfs.ipfs
+    // console.log('this._ipfs:', this._ipfs)
   }
 
   /**
@@ -50,7 +52,7 @@ export class ParatiiTranscoder extends EventEmitter {
       transcoderId: joi.any().default(Multiaddr(this.config.ipfs.defaultTranscoder).getPeerId())
     }).unknown()
 
-    this._ipfs.log('Signaling transcoder...')
+    this._ipfs.log('Signaling transcoder...', fileHash)
 
     const result = joi.validate(options, schema)
     const error = result.error
@@ -69,36 +71,41 @@ export class ParatiiTranscoder extends EventEmitter {
       ev.emit('transcoding:done', {test: 1})
       return ev
     }
-    let msg = this._ipfs.protocol.createCommand('transcode', {hash: fileHash, author: opts.author, size: opts.size})
+    let msg = this._ipfs.protocol.createCommand('transcode', {
+      hash: fileHash, author: opts.author, size: opts.size
+    })
     // FIXME : This is for dev, so we just signal our transcoder node.
     // This needs to be dynamic later on.
-    this._node.swarm.connect(opts.transcoder, (err, success) => {
-      if (err) return ev.emit('transcoding:error', err)
-
-      opts.transcoderId = opts.transcoderId || Multiaddr(opts.transcoder).getPeerId()
-      this._ipfs.log('transcoderId: ', opts.transcoderId)
-      this._node.swarm.peers((err, peers) => {
-        this._ipfs.log('peers: ', peers)
+    this._ipfs.getIPFSInstance().then((_ipfs) => {
+      this._node = _ipfs
+      this._node.swarm.connect(opts.transcoder, (err, success) => {
         if (err) return ev.emit('transcoding:error', err)
-        peers.map((peer) => {
-          try {
-            this._ipfs.log('peerID : ', peer.peer.toB58String(), opts.transcoderId, peer.peer.toB58String() === opts.transcoder)
-            if (peer.peer.toB58String() === opts.transcoderId) {
-              this._ipfs.log(`sending transcode msg to ${peer.peer.toB58String()} with request to transcode ${fileHash}`)
-              this._ipfs.protocol.network.sendMessage(peer.peer, msg, (err) => {
-                if (err) {
-                  ev.emit('transcoding:error', err)
-                  return ev
-                }
-              })
-            }
-          } catch (e) {
-            console.log('PEER ERROR :', e, peer)
-          }
-        })
 
-        // paratii transcoder signal.
-        this._ipfs.on('protocol:incoming', this._transcoderRespHander(ev, fileHash))
+        opts.transcoderId = opts.transcoderId || Multiaddr(opts.transcoder).getPeerId()
+        this._ipfs.log('transcoderId: ', opts.transcoderId)
+        this._node.swarm.peers((err, peers) => {
+          this._ipfs.log('peers: ', peers)
+          if (err) return ev.emit('transcoding:error', err)
+          peers.map((peer) => {
+            try {
+              this._ipfs.log('peerID : ', peer.peer.toB58String(), opts.transcoderId, peer.peer.toB58String() === opts.transcoder)
+              if (peer.peer.toB58String() === opts.transcoderId) {
+                this._ipfs.log(`sending transcode msg to ${peer.peer.toB58String()} with request to transcode ${fileHash}`)
+                this._ipfs.protocol.network.sendMessage(peer.peer, msg, (err) => {
+                  if (err) {
+                    ev.emit('transcoding:error', err)
+                    return ev
+                  }
+                })
+              }
+            } catch (e) {
+              console.log('PEER ERROR :', e, peer)
+            }
+          })
+
+          // paratii transcoder signal.
+          this._ipfs.on('protocol:incoming', this._transcoderRespHander(ev, fileHash))
+        })
       })
     })
     return ev
@@ -126,7 +133,7 @@ export class ParatiiTranscoder extends EventEmitter {
         case 'transcoding:error':
           console.log('DEBUG TRANSCODER ERROR: fileHash: ', fileHash, ' , errHash: ', argsObj.hash)
           if (argsObj.hash === fileHash) {
-            ev.emit('transcoding:error', argsObj.err)
+            ev.emit('transcoding:error', argsObj)
           }
           break
         case 'transcoding:started':

@@ -2,7 +2,7 @@
 'use strict'
 
 import { EventEmitter } from 'events'
-import { PromiseEventEmitter } from './utils.js'
+// import { PromiseEventEmitter } from './utils.js'
 const pull = require('pull-stream')
 const pullFilereader = require('pull-filereader')
 const toPull = require('stream-to-pull-stream')
@@ -44,34 +44,34 @@ export class ParatiiIPFSLocal extends EventEmitter {
    * @example let uploaderEv = paratiiIPFS.uploader.add(files)
    */
   add (file) {
-    const p = new PromiseEventEmitter((resolve, reject) => {
-      // return new Promise((resolve, reject) => {
-      let files
-      if (Array.isArray(file)) {
-        files = file
-      } else {
-        files = [file]
-      }
+    let emitter = new EventEmitter()
+    let files
+    if (Array.isArray(file)) {
+      files = file
+    } else {
+      files = [file]
+    }
 
-      let result = []
-      for (let i = 0; i < files.length; i++) {
-          // check if File is actually available or not.
-          // if not it means we're not in the browser land.
-        if (typeof File !== 'undefined') {
-          if (files[i] instanceof File) {
-            result.push(this.html5FileToPull(files[i]))
-          } else {
-            result.push(this.fsFileToPull(files[i]))
-          }
+    let result = []
+    for (let i = 0; i < files.length; i++) {
+      // check if File is actually available or not.
+      // if not it means we're not in the browser land.
+      if (typeof File !== 'undefined') {
+        if (files[i] instanceof File) {
+          result.push(this.html5FileToPull(files[i]))
         } else {
           result.push(this.fsFileToPull(files[i]))
         }
+      } else {
+        result.push(this.fsFileToPull(files[i]))
       }
-      const ev = this.upload(result, this)
-      ev.on('done', (hashedFiles) => resolve(hashedFiles))
-      ev.on('error', (err) => reject(err))
+    }
+    emitter = this.upload(result, emitter)
+    emitter.on('done', (hashedFiles) => {
+      console.log(hashedFiles)
     })
-    return p
+    // emitter.on('error', (err) => reject(err))
+    return emitter
   }
 
   /**
@@ -125,7 +125,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
             this._ipfs.log('Adding %s finished as %s, size: %s', hashedFile.path, hashedFile.hash, hashedFile.size)
 
             if (file._html5File) {
-              this._ipfs.remote.xhrUpload(file, hashedFile.hash, ev)
+              this._ipfs.remote.xhrUpload(file, hashedFile, ev)
             } else {
               ev.emit('fileReady', hashedFile)
             }

@@ -1,4 +1,5 @@
 import { videoSchema } from './schemas.js'
+import { makeId } from './utils.js'
 import joi from 'joi'
 
  /**
@@ -31,8 +32,10 @@ export class ParatiiCoreVids {
     if (error) throw error
     options = result.value
 
-    if (options.id === null) {
-      options.id = this.config.paratii.eth.vids.makeId()
+    if (!options.id) {
+      // options.id = this.config.paratii.eth.vids.makeId()
+      options.id = makeId()
+      console.log('generating ID...........................', options.id)
     }
 
     let hash = await this.config.paratii.ipfs.addAndPinJSON({
