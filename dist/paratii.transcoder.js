@@ -6,10 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ParatiiTranscoder = undefined;
 
-var _promise = require('babel-runtime/core-js/promise');
-
-var _promise2 = _interopRequireDefault(_promise);
-
 var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -244,7 +240,7 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
       return ev;
     }
 
-    // T ODO add docs
+    // TODO add docs
     /**
      * [_signalTranscoder description]
      * @param  {Object} files [description]
@@ -279,99 +275,6 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
       this.transcode(file.hash, {
         author: '0x', // author address,
         ev: ev
-      });
-    }
-
-    // TODO add getMetadata doc
-    /**
-     * [getMetaData description]
-     * @param  {Object} fileHash ipfs multihash of the file
-     * @param  {?Object} options  can contain transcoder, transcoder id and an event emitter
-     * @return {Object}          [description]
-     * @private
-     */
-
-  }, {
-    key: 'getMetaData',
-    value: function getMetaData(fileHash, options) {
-      var _this5 = this;
-
-      return new _promise2.default(function (resolve, reject) {
-        var schema = _joi2.default.object({
-          transcoder: _joi2.default.string().default(_this5.config.ipfs.defaultTranscoder),
-          transcoderId: _joi2.default.any().default(Multiaddr(_this5.config.ipfs.defaultTranscoder).getPeerId())
-        }).unknown();
-
-        _this5._ipfs.log('Signaling transcoder getMetaData...');
-        var result = _joi2.default.validate(options, schema);
-        var error = result.error;
-        if (error) reject(error);
-        var opts = result.value;
-        console.log('opts: ', opts);
-        var ev = void 0;
-        if (opts.ev) {
-          ev = opts.ev;
-        } else {
-          ev = new _events.EventEmitter();
-        }
-        _this5._ipfs.start().then(function () {
-          var msg = _this5._ipfs.protocol.createCommand('getMetaData', { hash: fileHash });
-          // FIXME : This is for dev, so we just signal our transcoder node.
-          // This needs to be dynamic later on.
-          _this5._ipfs.ipfs.swarm.connect(opts.transcoder, function (err, success) {
-            if (err) return reject(err);
-
-            opts.transcoderId = opts.transcoderId || Multiaddr(opts.transcoder).getPeerId();
-            _this5._ipfs.log('transcoderId: ', opts.transcoderId);
-            _this5._node.swarm.peers(function (err, peers) {
-              _this5._ipfs.log('peers: ', peers);
-              if (err) return reject(err);
-
-              peers.map(function (peer) {
-                _this5._ipfs.log('peerID : ', peer.peer.id.toB58String(), opts.transcoderId, peer.peer.id.toB58String() === opts.transcoder);
-                if (peer.peer.id.toB58String() === opts.transcoderId) {
-                  _this5._ipfs.log('sending getMetaData msg to ' + peer.peer.id.toB58String() + ' with request to transcode ' + fileHash);
-                  _this5._ipfs.protocol.network.sendMessage(peer.peer.id, msg, function (err) {
-                    if (err) {
-                      ev.emit('getMetaData:error', err);
-                      return ev;
-                    }
-                  });
-                }
-              });
-
-              // paratii getMetaData signal.
-              _this5._ipfs.on('protocol:incoming', function (peerId, command) {
-                _this5._ipfs.log('paratii protocol: Received command ', command.payload.toString(), 'args: ', command.args.toString());
-                var commandStr = command.payload.toString();
-                var argsObj = void 0;
-                try {
-                  argsObj = JSON.parse(command.args.toString());
-                } catch (e) {
-                  _this5._ipfs.error('couldn\'t parse args, ', command.args.toString());
-                }
-
-                switch (commandStr) {
-                  case 'getMetaData:error':
-                    if (argsObj.hash === fileHash) {
-                      console.log('DEBUG getMetaData ERROR: fileHash: ', fileHash, ' , errHash: ', argsObj.hash);
-                      reject(argsObj.err);
-                    }
-                    break;
-                  case 'getMetaData:done':
-                    if (argsObj.hash === fileHash) {
-                      console.log('data: ', argsObj.data);
-                      var _result = argsObj.data;
-                      resolve(_result);
-                    }
-                    break;
-                  default:
-                    _this5._ipfs.log('unknown command : ', commandStr);
-                }
-              });
-            });
-          });
-        });
       });
     }
 

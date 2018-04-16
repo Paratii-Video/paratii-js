@@ -185,7 +185,7 @@ export class ParatiiTranscoder extends EventEmitter {
     return ev
   }
 
-  // T ODO add docs
+  // TODO add docs
   /**
    * [_signalTranscoder description]
    * @param  {Object} files [description]
@@ -216,94 +216,6 @@ export class ParatiiTranscoder extends EventEmitter {
     this.transcode(file.hash, {
       author: '0x', // author address,
       ev: ev
-    })
-  }
-
-  // TODO add getMetadata doc
-  /**
-   * [getMetaData description]
-   * @param  {Object} fileHash ipfs multihash of the file
-   * @param  {?Object} options  can contain transcoder, transcoder id and an event emitter
-   * @return {Object}          [description]
-   * @private
-   */
-  getMetaData (fileHash, options) {
-    return new Promise((resolve, reject) => {
-      const schema = joi.object({
-        transcoder: joi.string().default(this.config.ipfs.defaultTranscoder),
-        transcoderId: joi.any().default(Multiaddr(this.config.ipfs.defaultTranscoder).getPeerId())
-      }).unknown()
-
-      this._ipfs.log('Signaling transcoder getMetaData...')
-      const result = joi.validate(options, schema)
-      const error = result.error
-      if (error) reject(error)
-      let opts = result.value
-      console.log('opts: ', opts)
-      let ev
-      if (opts.ev) {
-        ev = opts.ev
-      } else {
-        ev = new EventEmitter()
-      }
-      this._ipfs.start().then(() => {
-        let msg = this._ipfs.protocol.createCommand('getMetaData', {hash: fileHash})
-        // FIXME : This is for dev, so we just signal our transcoder node.
-        // This needs to be dynamic later on.
-        this._ipfs.ipfs.swarm.connect(opts.transcoder, (err, success) => {
-          if (err) return reject(err)
-
-          opts.transcoderId = opts.transcoderId || Multiaddr(opts.transcoder).getPeerId()
-          this._ipfs.log('transcoderId: ', opts.transcoderId)
-          this._node.swarm.peers((err, peers) => {
-            this._ipfs.log('peers: ', peers)
-            if (err) return reject(err)
-
-            peers.map((peer) => {
-              this._ipfs.log('peerID : ', peer.peer.id.toB58String(), opts.transcoderId, peer.peer.id.toB58String() === opts.transcoder)
-              if (peer.peer.id.toB58String() === opts.transcoderId) {
-                this._ipfs.log(`sending getMetaData msg to ${peer.peer.id.toB58String()} with request to transcode ${fileHash}`)
-                this._ipfs.protocol.network.sendMessage(peer.peer.id, msg, (err) => {
-                  if (err) {
-                    ev.emit('getMetaData:error', err)
-                    return ev
-                  }
-                })
-              }
-            })
-
-            // paratii getMetaData signal.
-            this._ipfs.on('protocol:incoming', (peerId, command) => {
-              this._ipfs.log('paratii protocol: Received command ', command.payload.toString(), 'args: ', command.args.toString())
-              let commandStr = command.payload.toString()
-              let argsObj
-              try {
-                argsObj = JSON.parse(command.args.toString())
-              } catch (e) {
-                this._ipfs.error('couldn\'t parse args, ', command.args.toString())
-              }
-
-              switch (commandStr) {
-                case 'getMetaData:error':
-                  if (argsObj.hash === fileHash) {
-                    console.log('DEBUG getMetaData ERROR: fileHash: ', fileHash, ' , errHash: ', argsObj.hash)
-                    reject(argsObj.err)
-                  }
-                  break
-                case 'getMetaData:done':
-                  if (argsObj.hash === fileHash) {
-                    console.log('data: ', argsObj.data)
-                    let result = argsObj.data
-                    resolve(result)
-                  }
-                  break
-                default:
-                  this._ipfs.log('unknown command : ', commandStr)
-              }
-            })
-          })
-        })
-      })
     })
   }
 
