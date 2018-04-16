@@ -18,12 +18,11 @@ export class ParatiiDbVids {
    * @example await paratii.db.vids.get('some-video-id')
    */
   async get (videoId) {
-    let videos = await fetch(this.config.db.provider + this.apiVideos + videoId, {
+    let response = await fetch(this.config.db.provider + this.apiVideos + videoId, {
       method: 'get'
-    }).then(function (response) {
-      return response.json()
     })
-    return videos
+    let videoInfo = response.json()
+    return videoInfo
   }
 
   /**

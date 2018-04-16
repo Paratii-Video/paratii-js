@@ -46,7 +46,7 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
   (0, _createClass3.default)(ParatiiDbVids, [{
     key: 'get',
     value: function get(videoId) {
-      var videos;
+      var response, videoInfo;
       return _regenerator2.default.async(function get$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -54,15 +54,14 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
               _context.next = 2;
               return _regenerator2.default.awrap(fetch(this.config.db.provider + this.apiVideos + videoId, {
                 method: 'get'
-              }).then(function (response) {
-                return response.json();
               }));
 
             case 2:
-              videos = _context.sent;
-              return _context.abrupt('return', videos);
+              response = _context.sent;
+              videoInfo = response.json();
+              return _context.abrupt('return', videoInfo);
 
-            case 4:
+            case 5:
             case 'end':
               return _context.stop();
           }
