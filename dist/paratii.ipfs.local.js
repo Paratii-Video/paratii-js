@@ -56,19 +56,14 @@ var _require = require('async'),
 var once = require('once');
 
 /**
- * IPFS UPLOADER : Paratii IPFS uploader interface.
+ * Contains functions to interact with the local IPFS node
  * @extends EventEmitter
- * @param {ParatiiIPFSUploaderSchema} opts
  */
 
 var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
   (0, _inherits3.default)(ParatiiIPFSLocal, _EventEmitter);
 
-  /**
-  * @typedef {Array} ParatiiIPFSUploaderSchema
-  * @property {?ipfsSchema} ipfs
-  * @property {?Object} ParatiiIPFS
-  */
+  // TODO joi validation and add schema
   function ParatiiIPFSLocal(config) {
     (0, _classCallCheck3.default)(this, ParatiiIPFSLocal);
 
@@ -203,7 +198,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
      * upload an entire directory to IPFS
      * @param  {string}   dirPath path to directory
      * @return {Promise}           returns the {multihash, path, size} for the uploaded folder.
-     * @example ?
+     * @example let dir = paratii.ipfs.local.addDirectory('path')
      */
 
   }, {
@@ -274,8 +269,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
      * get file from ipfs
      * @param  {string}  hash ipfs multihash of the file
      * @return {Promise}      the file (path,content)
-     * @example
-     * let result = await paratiiIPFS.add(fileStream)
+     * @example let result = await paratiiIPFS.add(fileStream)
      * let hash = result[0].hash
      * let fileContent = await paratiiIPFS.get(hash)
      */
@@ -411,6 +405,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
       }, null, this, [[5, 11]]);
     }
 
+    // TODO add example
     /**
      * returns a generic File Object with a Pull Stream from an HTML5 File
      * @param  {File} file HTML5 File Object
@@ -431,6 +426,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
       };
     }
 
+    // TODO add example
     /**
      * returns a generic file Object from a file path
      * @param  {string} filePath Path to file.
@@ -457,7 +453,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
     /**
      * log messages on the console if verbose is set
      * @param  {string} msg text to log
-     * @example
+     * @example ?
      * paratii.ipfs.log("some-text")
      * @private
      */
@@ -474,7 +470,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
     /**
      * log warns on the console if verbose is set
      * @param  {string} msg warn text
-     * @example
+     * @example ?
      * paratii.ipfs.warn("some-text")
      * @private
      */
@@ -491,9 +487,9 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
     /**
     * log errors on the console if verbose is set
     * @param  {string} msg error message
-    * @example
+    * @example ?
     * paratii.ipfs.error("some-text")
-     * @private
+    * @private
     */
 
   }, {

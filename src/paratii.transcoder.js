@@ -7,13 +7,13 @@ import joi from 'joi'
 const Multiaddr = require('multiaddr')
 
 /**
- * IPFS UPLOADER : Paratii IPFS uploader interface.
+ * contains functions to interact with the transcoder
  * @extends EventEmitter
- * @param {ParatiiIPFSUploaderSchema} opts
+ * @param {ParatiiIPFSTranscoderSchema} opts
  */
 export class ParatiiTranscoder extends EventEmitter {
   /**
-  * @typedef {Array} ParatiiIPFSUploaderSchema
+  * @typedef {Array} ParatiiIPFSTranscoderSchema
   * @property {?ipfsSchema} ipfs
   * @property {?Object} ParatiiIPFS
   */
@@ -111,6 +111,7 @@ export class ParatiiTranscoder extends EventEmitter {
     return ev
   }
 
+  // TODO add example
   /**
    * handles responses from the paratii-protocol in case of transcoding.
    * @param  {EventEmitter} ev the transcoding job EventEmitter
@@ -169,10 +170,11 @@ export class ParatiiTranscoder extends EventEmitter {
       }
     }
   }
+
+  // TODO add example
   /**
    * convenience method for adding and transcoding files
    * @param {Array} files Array of HTML5 File Objects
-
    */
   addAndTranscode (files) {
     let ev = this._ipfs.local.upload(files)
@@ -182,12 +184,14 @@ export class ParatiiTranscoder extends EventEmitter {
     })
     return ev
   }
+
+  // T ODO add docs
   /**
    * [_signalTranscoder description]
-   * TODO RIVEDI I TIPI
    * @param  {Object} files [description]
    * @param  {Object} ev    [description]
    * @return {Object}       [description]
+   * @example ?
    * @private
    */
   _signalTranscoder (files, ev) {
@@ -214,12 +218,14 @@ export class ParatiiTranscoder extends EventEmitter {
       ev: ev
     })
   }
+
+  // TODO add getMetadata doc
   /**
    * [getMetaData description]
-   * @param  {Object} fileHash [description]
-   * @param  {Object} options  [description]
+   * @param  {Object} fileHash ipfs multihash of the file
+   * @param  {?Object} options  can contain transcoder, transcoder id and an event emitter
    * @return {Object}          [description]
-
+   * @private
    */
   getMetaData (fileHash, options) {
     return new Promise((resolve, reject) => {

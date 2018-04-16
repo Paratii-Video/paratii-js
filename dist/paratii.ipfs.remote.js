@@ -44,16 +44,16 @@ var Resumable = require('resumablejs');
 var Multiaddr = require('multiaddr');
 
 /**
- * IPFS UPLOADER : Paratii IPFS uploader interface.
+ * Contains functions to interact with the remote IPFS node
  * @extends EventEmitter
- * @param {ParatiiIPFSUploaderSchema} opts
+ * @param {ParatiiIPFSRemoteSchema} opts
  */
 
 var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
   (0, _inherits3.default)(ParatiiIPFSRemote, _EventEmitter);
 
   /**
-  * @typedef {Array} ParatiiIPFSUploaderSchema
+  * @typedef {Array} ParatiiIPFSRemoteSchema
   * @property {?ipfsSchema} ipfs
   * @property {?Object} ParatiiIPFS
   */
@@ -81,7 +81,7 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
     * @param  {string} hash IPFS multi-hash of the file
     * @param  {?EventEmitter} ev optional event emitter
     * @example this.xhrUpload(file, hashedFile)
-     */
+    */
 
 
   (0, _createClass3.default)(ParatiiIPFSRemote, [{
@@ -123,10 +123,11 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
       }, 1);
     }
 
+    // TODO add getMetadata doc
     /**
      * [getMetaData description]
-     * @param  {Object} fileHash [description]
-     * @param  {Object} options  [description]
+     * @param  {Object} fileHash ipfs multihash of the file
+     * @param  {?Object} options  can contain transcoder, transcoder id and an event emitter
      * @return {Object}          [description]
      * @private
      */
@@ -214,6 +215,7 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
         });
       });
     }
+
     /**
      * Signal the remote node to pin a File
      * @param  {Object} fileHash hash of the file to pin
@@ -285,6 +287,8 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
 
       return ev;
     }
+
+    // TODO add docs
     /**
      * [_pinResponseHandler description]
      * @param  {Object} ev [description]

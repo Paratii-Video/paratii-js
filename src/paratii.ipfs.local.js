@@ -12,16 +12,11 @@ const { eachSeries, nextTick } = require('async')
 const once = require('once')
 
 /**
- * IPFS UPLOADER : Paratii IPFS uploader interface.
+ * Contains functions to interact with the local IPFS node
  * @extends EventEmitter
- * @param {ParatiiIPFSUploaderSchema} opts
  */
 export class ParatiiIPFSLocal extends EventEmitter {
-  /**
-  * @typedef {Array} ParatiiIPFSUploaderSchema
-  * @property {?ipfsSchema} ipfs
-  * @property {?Object} ParatiiIPFS
-  */
+  // TODO joi validation and add schema
   constructor (config) {
     super()
     // const schema = joi.object({
@@ -150,7 +145,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
    * upload an entire directory to IPFS
    * @param  {string}   dirPath path to directory
    * @return {Promise}           returns the {multihash, path, size} for the uploaded folder.
-   * @example ?
+   * @example let dir = paratii.ipfs.local.addDirectory('path')
    */
   addDirectory (dirPath) {
     return new Promise((resolve, reject) => {
@@ -213,8 +208,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
    * get file from ipfs
    * @param  {string}  hash ipfs multihash of the file
    * @return {Promise}      the file (path,content)
-   * @example
-   * let result = await paratiiIPFS.add(fileStream)
+   * @example let result = await paratiiIPFS.add(fileStream)
    * let hash = result[0].hash
    * let fileContent = await paratiiIPFS.get(hash)
    */
@@ -264,6 +258,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
     return node[0].hash
   }
 
+  // TODO add example
   /**
    * returns a generic File Object with a Pull Stream from an HTML5 File
    * @param  {File} file HTML5 File Object
@@ -281,6 +276,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
     }
   }
 
+  // TODO add example
   /**
    * returns a generic file Object from a file path
    * @param  {string} filePath Path to file.
@@ -304,7 +300,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
   /**
    * log messages on the console if verbose is set
    * @param  {string} msg text to log
-   * @example
+   * @example ?
    * paratii.ipfs.log("some-text")
    * @private
    */
@@ -316,7 +312,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
   /**
    * log warns on the console if verbose is set
    * @param  {string} msg warn text
-   * @example
+   * @example ?
    * paratii.ipfs.warn("some-text")
    * @private
    */
@@ -328,9 +324,9 @@ export class ParatiiIPFSLocal extends EventEmitter {
   /**
   * log errors on the console if verbose is set
   * @param  {string} msg error message
-  * @example
+  * @example ?
   * paratii.ipfs.error("some-text")
-   * @private
+  * @private
   */
   error (...msg) {
     if (this.config.verbose) {

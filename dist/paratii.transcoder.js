@@ -43,16 +43,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var Multiaddr = require('multiaddr');
 
 /**
- * IPFS UPLOADER : Paratii IPFS uploader interface.
+ * contains functions to interact with the transcoder
  * @extends EventEmitter
- * @param {ParatiiIPFSUploaderSchema} opts
+ * @param {ParatiiIPFSTranscoderSchema} opts
  */
 
 var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
   (0, _inherits3.default)(ParatiiTranscoder, _EventEmitter);
 
   /**
-  * @typedef {Array} ParatiiIPFSUploaderSchema
+  * @typedef {Array} ParatiiIPFSTranscoderSchema
   * @property {?ipfsSchema} ipfs
   * @property {?Object} ParatiiIPFS
   */
@@ -160,6 +160,7 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
       return ev;
     }
 
+    // TODO add example
     /**
      * handles responses from the paratii-protocol in case of transcoding.
      * @param  {EventEmitter} ev the transcoding job EventEmitter
@@ -223,10 +224,12 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
         }
       };
     }
+
+    // TODO add example
     /**
      * convenience method for adding and transcoding files
      * @param {Array} files Array of HTML5 File Objects
-      */
+     */
 
   }, {
     key: 'addAndTranscode',
@@ -240,12 +243,14 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
       });
       return ev;
     }
+
+    // T ODO add docs
     /**
      * [_signalTranscoder description]
-     * TODO RIVEDI I TIPI
      * @param  {Object} files [description]
      * @param  {Object} ev    [description]
      * @return {Object}       [description]
+     * @example ?
      * @private
      */
 
@@ -276,12 +281,15 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
         ev: ev
       });
     }
+
+    // TODO add getMetadata doc
     /**
      * [getMetaData description]
-     * @param  {Object} fileHash [description]
-     * @param  {Object} options  [description]
+     * @param  {Object} fileHash ipfs multihash of the file
+     * @param  {?Object} options  can contain transcoder, transcoder id and an event emitter
      * @return {Object}          [description]
-      */
+     * @private
+     */
 
   }, {
     key: 'getMetaData',
