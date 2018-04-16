@@ -7,13 +7,13 @@ const Resumable = require('resumablejs')
 const Multiaddr = require('multiaddr')
 
 /**
- * IPFS UPLOADER : Paratii IPFS uploader interface.
+ * Contains functions to interact with the remote IPFS node
  * @extends EventEmitter
- * @param {ParatiiIPFSUploaderSchema} opts
+ * @param {ParatiiIPFSRemoteSchema} opts
  */
 export class ParatiiIPFSRemote extends EventEmitter {
   /**
-  * @typedef {Array} ParatiiIPFSUploaderSchema
+  * @typedef {Array} ParatiiIPFSRemoteSchema
   * @property {?ipfsSchema} ipfs
   * @property {?Object} ParatiiIPFS
   */
@@ -37,7 +37,6 @@ export class ParatiiIPFSRemote extends EventEmitter {
     * @param  {string} hash IPFS multi-hash of the file
     * @param  {?EventEmitter} ev optional event emitter
     * @example this.xhrUpload(file, hashedFile)
-
     */
   xhrUpload (file, hashedFile, ev) {
     if (!ev) {
@@ -76,10 +75,11 @@ export class ParatiiIPFSRemote extends EventEmitter {
     }, 1)
   }
 
+  // TODO add getMetadata doc
   /**
    * [getMetaData description]
-   * @param  {Object} fileHash [description]
-   * @param  {Object} options  [description]
+   * @param  {Object} fileHash ipfs multihash of the file
+   * @param  {?Object} options  can contain transcoder, transcoder id and an event emitter
    * @return {Object}          [description]
    * @private
    */
@@ -162,6 +162,7 @@ export class ParatiiIPFSRemote extends EventEmitter {
       })
     })
   }
+
   /**
    * Signal the remote node to pin a File
    * @param  {Object} fileHash hash of the file to pin
@@ -228,6 +229,8 @@ export class ParatiiIPFSRemote extends EventEmitter {
 
     return ev
   }
+
+  // TODO add docs
   /**
    * [_pinResponseHandler description]
    * @param  {Object} ev [description]

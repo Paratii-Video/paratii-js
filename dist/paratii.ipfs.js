@@ -185,7 +185,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     }
 
     /**
-     *  adds a JSON structure to the local node and signals remote node to pin it
+     * adds a JSON structure to the local node and signals remote node to pin it
      * @param  {object}  data JSON object to store
      * @return {string}      returns ipfs multihash of the stored object.
      * @example let result = await paratiiIPFS.addAndPinJSON(data)
