@@ -195,7 +195,7 @@ describe('paratii.vids:', function () {
 
   it('vids.uploadAndTranscode should work', async () => {
     let paratii = await new Paratii()
-    let path = 'test/testData/pti-logo.mp4'
+    let path = 'test/data/pti-logo.mp4'
     let result = await paratii.vids.uploadAndTranscode(path)
     assert.isOk(result)
   })
