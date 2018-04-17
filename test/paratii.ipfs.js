@@ -75,6 +75,4 @@ describe('ParatiiIPFS: :', function () {
     let result = await paratii.ipfs.addAndPinJSON({test: 1})
     assert.isOk(result)
   })
-
-
 })
