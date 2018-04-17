@@ -5,13 +5,13 @@
 Contains functions to interact with the IPFS instance.
 
 
-    import { ParatiiIPFS } from 'paratii-lib'
+    import { ParatiiIPFS } from 'paratii-js'
     paratiiIPFS = new ParatiiIPFS({})
 
 
 It is also available as `ipfs` in `Paratii` instances:
 
-    import Paratii from 'paratii-lib'
+    import Paratii from 'paratii-js'
     paratii = new Paratii()
     paratii.ipfs // is a ParatiiIPFS instance
 

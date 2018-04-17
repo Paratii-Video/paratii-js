@@ -91,8 +91,8 @@ var ParatiiEth = exports.ParatiiEth = function () {
     }
     this.config = config;
 
-    this.wallet = (0, _paratiiEthWallet.patchWallet)(this.web3.eth.accounts.wallet, this.config);
-    this.setAccount(this.config.account.address, this.config.account.privateKey, this.config.account.mnemonic);
+    this.wallet = this.web3.eth.accounts.wallet = (0, _paratiiEthWallet.patchWallet)(this.web3.eth.accounts.wallet, this.config);
+    this.setAccount(this.config.account);
 
     this.contracts = {};
     this.contracts.ParatiiToken = this.requireContract('ParatiiToken');
@@ -114,30 +114,31 @@ var ParatiiEth = exports.ParatiiEth = function () {
     this.tcr = new _paratiiEthTcr.ParatiiEthTcr(this);
   }
   /**
-   * creates an account using the private key or, if not present, using the mnemonic
-   * @param {string} address    public address
-   * @param {string} privateKey private key related to the previous public address
-   * @param {string} mnemonic   mnemonic related to the previous public address
-   * @example paratii.eth.setAccount('some-address','some-private-key')
-   * @example paratii.eth.setAccount('some-address','some-mnemonic')
-   * SEE paratii.setAccount()
-   * @private
+   * {@link paratii.setAccount}
    */
 
 
   (0, _createClass3.default)(ParatiiEth, [{
     key: 'setAccount',
-    value: function setAccount(address, privateKey, mnemonic) {
+    value: function setAccount(opts) {
+      var schema = _schemas.accountSchema;
+      var result = _joi2.default.validate(opts, schema);
+      if (result.error) throw result.error;
       var wallet = this.web3.eth.accounts.wallet;
+      var _result$value = result.value,
+          address = _result$value.address,
+          privateKey = _result$value.privateKey,
+          mnemonic = _result$value.mnemonic;
+
       this.config.account.address = address;
       this.config.account.privateKey = privateKey;
       this.web3.eth.testAccount = address;
       if (privateKey) {
         var account = wallet.add(privateKey);
-        if (account.address !== address) {
-          throw Error('Private Key and Account address are not compatible!');
+        if (this.config.account.address && this.config.account.address !== address) {
+          throw Error('Private Key and Account address are not compatible! ');
         }
-        this.config.account.address = address;
+        this.config.account.address = account.address;
         this.config.account.privateKey = privateKey;
       } else if (mnemonic) {
         wallet.create(1, mnemonic);
@@ -731,7 +732,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
      * send ETH from current account to beneficiary
      * @param  {string}  beneficiary ETH address
      * @param  {number}  amount      amount of ETH to be sent
-     * @param  {?string}  description  description of the transaction (will be written in the blockchain)
+     * @param  {string=}  description  description of the transaction (will be written in the blockchain)
      * @return {Promise}             information about the transaction recording the transfer
      * @example await paratii.eth._transferETH('some-address', 20, 'an-optional-description')
      * @private
@@ -858,7 +859,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
      * @param  {string}  beneficiary ETH address
      * @param  {number}  amount      amount of ETH/PTI to be sent
      * @param  {string}  symbol      symbol of the token to send (ETH,PTI)
-     * @param  {?string}  description description to be inserted in the blockchain
+     * @param  {string=}  description description to be inserted in the blockchain
      * @return {Promise}             information about the transaction recording the transfer
      * @example let result = await paratii.eth.transfer('some-address', 20, 'ETH', 'thanks for all the fish')
      */

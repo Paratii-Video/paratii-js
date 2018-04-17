@@ -53,6 +53,7 @@ var utils = require('./utils.js');
  * and utilities to interact with the Paratii index.
 
  * @param {ParatiiConfigSchema} opts options object to configure paratii library
+ * @property {OaratiiConfigSchema} config where the configuration of the paratii object is storeed
  * @property {ParatiiCoreVids} vids operations on videos
  * @property {ParatiiCoreUsers} users operations on users
  * @property {ParatiiEth} eth interact with the Ethereum blockchain
@@ -75,10 +76,10 @@ var Paratii = function (_ParatiiCore) {
 
   /**
     * @typedef {Array} ParatiiConfigSchema
-    * @property {?accountSchema} account
-    * @property {?ethSchema} eth
-    * @property {?dbSchema} db
-    * @property {?ipfsSchema} ipfs
+    * @property {accountSchema=} account settings regarding your the Ethereum account
+    * @property {ethSchema=} eth setings regarding the Ethereum blockchain
+    * @property {dbSchema=} db settings regarding the database index
+    * @property {ipfsSchema=} ipfs settings regardig IPFS
    */
   function Paratii() {
     var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -99,31 +100,28 @@ var Paratii = function (_ParatiiCore) {
 
     _this.config = config;
     _this.config.paratii = _this;
-    // this.core = this
     _this.eth = new _paratiiEth.ParatiiEth(_this.config);
-    // this.core = new ParatiiCore(this.config)
     _this.db = new _paratiiDb.ParatiiDb(_this.config);
     _this.ipfs = new _paratiiIpfs.ParatiiIPFS(_this.config);
     // this.transcoder = new ParatiiTranscoder(this.config)
-    //
     _this.transcoder = _this.ipfs.transcoder;
     return _this;
   }
+
   /**
   * Sets the account that will be used to sign all transactions
-  * @param {?string} address    public address
-  * @param {?string} privateKey private key related to the previous public address
-  * @param {?string} mnemonic   mnemonic related to the previous public address
-  * @example paratii.eth.setAccount(null,'some-private-key')
-  * @example paratii.eth.setAccount('some-address', null, 'some-mnemonic')
+  * @param {accountSchema} opts
+  * @example paratii.eth.setAccount({address: '0xdF7EacFfb8F1C5F65CDD7d045A608DeBa980d473'})
+  * @example paratii.setAccount({privateKey: '0x399b141d0cc2b863b2f514ffe53edc6afc9416d5899da4d9bd2350074c38f1c6'})
   */
+
   // FIXME: we should take an object as arguments here
 
 
   (0, _createClass3.default)(Paratii, [{
     key: 'setAccount',
-    value: function setAccount(address, privateKey, mnemonic) {
-      this.eth.setAccount(address, privateKey, mnemonic);
+    value: function setAccount(opts) {
+      this.eth.setAccount(opts);
     }
     /**
      * Gets the ethereum address that is used to sign all the transactions
@@ -133,7 +131,7 @@ var Paratii = function (_ParatiiCore) {
   }, {
     key: 'getAccount',
     value: function getAccount() {
-      this.eth.getAccount();
+      return this.eth.getAccount();
     }
     /**
      * Get some diagnostic info about the state of the system

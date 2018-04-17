@@ -1,11 +1,6 @@
-// const whyIsNodeRunning = require('why-is-node-running')
-
-// import { address, privateKey } from './utils.js'
 import Paratii from '../src/paratii.js'
 import { ParatiiIPFS } from '../src/paratii.ipfs.js'
 import { assert, expect } from 'chai'
-// const FileApi = require('file-api')
-// const fs = require('fs')
 
 describe('ParatiiIPFS: :', function () {
   let paratiiIPFS

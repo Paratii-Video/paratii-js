@@ -82,9 +82,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
               options = result.value;
 
               if (!options.id) {
-                // options.id = this.config.paratii.eth.vids.makeId()
                 options.id = (0, _utils.makeId)();
-                console.log('generating ID...........................', options.id);
               }
 
               _context.next = 8;

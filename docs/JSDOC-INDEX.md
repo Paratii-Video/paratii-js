@@ -12,25 +12,51 @@ The paratii.js is divided into the following modules:
 * [`paratii.vids`](./ParatiiCoreVids.html) has functions for registering video information on the blockchain, as well as information about likes and views.
 * [`paratii.users`](./ParatiiCoreUsers.html)  allows to write basic user information to the blockchain
 
-For more advantage usage, developers may be interested in the following modules:
+For more advanced usage, developers may be interested in the following modules:
 
-* [`paratii.eth`](./ParatiiEh.html) to interact with the Paratii contracts on the Ethereum blockchain
+* [`paratii.eth`](./ParatiiEth.html) to interact with the Paratii contracts on the Ethereum blockchain
 * [`paratii.ipfs`](./ParatiiIPFS.html) for interaction with IPFS
 * [`paratii.db`](./ParatiiDb.html) for interaction with the Paratii blockchain index
+* [`paratii.transcoder`](./ParatiiTranscoder.html) for interaction with transcoding service
+* [`paratii.vouchers`](./ParatiiVoucher.html) interact with a simple contract for distributing vouchers.
 
 # Usage
 
-## Using `paratii.js` in the browser
-
-See this [Demo Application](https://github.com/geckoslair/ParatiiJSDemo)
+We provide two ways of using the `paratii.js` library: there is a browser build that you can use directly in your web pages, or you can use `paratii.js` as a package in your nodejs application.
 
 ## Using  `paratii.js` in your nodejs application
 
-We intend to provide the package on `npmjs.org` for easy download once it is in a more stable version. Until that time, you can add the the package as a dependency in your `package.json`. If you use yarn, the command is:
+The package is available on npmjs, https://www.npmjs.com/package/paratii-js, and installing it is as easy as:
 
-    yarn add github:Paratii-Video/paratii-js
+    npm install paratii-js
 
-# Documentation  
+Or, if you like living on the edge, you can install the latest (instable) version directly from github:
 
-Methods and configuration are documented on this site - a good place to start is  [https:/docs.paratii.video/Paratii.html](https://docs.paratii.video/Paratii.html).
-More discursive documentation can be found in the repository on [https://github.com/Paratii-Video/paratii-js](https://github.com/Paratii-Video/paratii-js/blob/dev/README.md)
+    npm install github:Paratii-Video/paratii-js#dev
+
+You can now `require('paratii-js')` in your code, and search for cats videos on the Paratii platform:
+
+    const { Paratii } = require('paratii-js')
+    const paratii = new Paratii()
+    paratii.vids.search({keyword: 'cats'})
+
+
+## Using `paratii.js` in the browser
+
+We provide a webpacked minified version of the library that you can include directly in your browser.
+The file to include lives in our github repository https://raw.githubusercontent.com/Paratii-Video/paratii-js/dev/dist/paratii.min.js
+
+
+You can have a look at the [demo Application](https://github.com/Paratii-Video/ParatiiJSDemo) for examples on how to use this.
+
+# Where to go next?
+
+A good place to start is the Tutorials section, specifically XXX
+
+Methods and configuration are documented separately under the "Classes" menu; a good place to start is [https:/docs.paratii.video/Paratii.html](https://docs.paratii.video/Paratii.html).
+
+# Contributing
+
+The library is in active development on our [github repository](https://github.com/Paratii-Video/paratii-js).
+Instructions for contributors are here:
+[https://github.com/Paratii-Video/paratii-js/blob/dev/CONTRIBUTING.md]( https://github.com/Paratii-Video/paratii-js/blob/dev/CONTRIBUTING.md)

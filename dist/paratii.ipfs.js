@@ -80,7 +80,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   * @typedef {Array} ParatiiIPFSSchema
   * @property {?ipfsSchema} ipfs
   * @property {?accountSchema} account
-  * @property {?boolean} verbose
+  * @property {boolean=} verbose
   */
   function ParatiiIPFS(config) {
     (0, _classCallCheck3.default)(this, ParatiiIPFS);

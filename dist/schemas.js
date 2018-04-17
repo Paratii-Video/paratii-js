@@ -7,9 +7,9 @@ var joi = require('joi');
 
 /**
   * @typedef {Array} accountSchema
-  * @property {?string} address public address of the account
-  * @property {?string} privateKey private key of the account
-  * @property {?string} mnemonic mnemonic that generates private key and address
+  * @property {string=} address public address of the account
+  * @property {string=} privateKey private key of the account
+  * @property {string=} mnemonic mnemonic that generates private key and address
  */
 var accountSchema = joi.object({
   address: joi.string().default(null).allow(null),
@@ -19,28 +19,27 @@ var accountSchema = joi.object({
 
 /**
   * @typedef {Array} ethSchema
-  * @property {?string} provider provider of the parity node
-  * @property {?string} registryAddress address of the TCR
-  * @property {?boolean} isTestNet true if it's on test net, false otherwise
+  * @property {string=} provider provider of the parity node
+  * @property {string=} registryAddress address of the TCR
+  * @property {boolean=} isTestNet true if it's on test net, false otherwise
  */
 var ethSchema = joi.object({
   provider: joi.string().default('ws://localhost:8546'),
-  registryAddress: joi.string().default(null).allow(null),
-  isTestNet: joi.boolean().optional()
+  registryAddress: joi.string().default(null).allow(null)
 }).default();
 
 /**
   * @typedef {Array} ipfsSchema
-  * @property {?string} repo path to the ipfs repo
-  * @property {Array} swarm available transports for ipfs (webrtc, websocket, ...)
-  * @property {Array} bootstrap bootstrap nodes that ipfs connects to when it starts
-  * @property {?number} bitswap.maxMessageSize the maximum msg size allowed for paratii-ipfs-bitswap
-  * @property {?number} chunkSize max size allowed per file chunk
-  * @property {?number} xhrChunkSize max chunk size for the express uploader
-  * @property {?number} maxFileSize max size for an original video (default to 300MB)
-  * @property {?string} defaultTranscoder the default multiaddress of the main paratii-node
-  * @property {?string} remoteIFPFSNode the default multiaddress of the main paratii-node
-  * @property {?string} transcoderDropUrl url for the express uploader
+  * @property {number=} bitswap.maxMessageSize the maximum msg size allowed for paratii-ipfs-bitswap
+  * @property {Array=} bootstrap bootstrap nodes that ipfs connects to when it starts
+  * @property {number=} chunkSize max size allowed per file chunk
+  * @property {string=} defaultTranscoder the default multiaddress of the main paratii-node
+  * @property {number=} maxFileSize max size for an original video (default to 300MB)
+  * @property {string=} remoteIFPFSNode the default multiaddress of the main paratii-node
+  * @property {string=} repo path to the ipfs repo
+  * @property {Array=} swarm signaling server for finding ipfs nodes
+  * @property {string=} transcoderDropUrl url for the express uploader
+  * @property {number=} xhrChunkSize max chunk size for the express uploader
  */
 var ipfsSchema = joi.object({
   repo: joi.string().default(null).allow(null),
@@ -59,7 +58,7 @@ var ipfsSchema = joi.object({
 
 /**
   * @typedef {Array} dbSchema
-  * @property {?string} provider provider of the db
+  * @property {string} [provider=https://db.paratii.video/api/v1/] provider of the db
  */
 var dbSchema = joi.object({
   provider: joi.string().default('https://db.paratii.video/api/v1/')
@@ -68,18 +67,18 @@ var dbSchema = joi.object({
 /**
  * @todo some description are still not written
  * @typedef {Array} videoSchema
- * @property {?string} id univocal video identifier randomly generated
- * @property {?string} author author of the video
- * @property {?string} description description of the video
- * @property {?string} duration duration of the video
- * @property {?string} filename filename of the video
+ * @property {string=} id univocal video identifier randomly generated
+ * @property {string=} author author of the video
+ * @property {string=} description description of the video
+ * @property {string=} duration duration of the video
+ * @property {string=} filename filename of the video
  * @property {number} filesize size of the video
- * @property {?string}
- * @property {?string} ipfsHashOrig original ipfs multihash of the video
- * @property {?string} ipfsHash ipfs multihash of the video
+ * @property {string=}
+ * @property {string=} ipfsHashOrig original ipfs multihash of the video
+ * @property {string=} ipfsHash ipfs multihash of the video
  * @property {string} owner owner of the video
- * @property {?number} price price of the video
- * @property {?string} title title of the video
+ * @property {number=} price price of the video
+ * @property {string=} title title of the video
  * @property {Array} thumbnails thumbnails of the video
  * @property {?Object} storageStatus
  * @property {string} storageStatus.name
@@ -97,7 +96,7 @@ var videoSchema = joi.object({
   description: joi.string().empty('').default(''),
   duration: joi.string().empty('').default('').allow(null),
   filename: joi.string().empty('').default('').allow(null).allow(''),
-  filesize: [joi.string(), joi.number()],
+  filesize: [joi.string().allow(''), joi.number()],
   free: joi.string().empty('').default(null).allow(null),
   ipfsHashOrig: joi.string().empty('').default(''),
   ipfsHash: joi.string().empty('').default(''),

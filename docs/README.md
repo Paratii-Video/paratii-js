@@ -14,6 +14,7 @@ The paratii library is divided into the following modules:
 * [`paratii.eth`](./paratii-eth.md) for interaction with the blockchain
 * [`paratii.ipfs`](./paratii-ipfs.md) for interaction with IPFS
 * [`paratii.db`](./paratii-db.md) for interaction with the Paratii blockchain index
+* [`paratii.transcoder`](./paratii-db.md) for interaction with the Paratii blockchain index
 
 # Usage
 
@@ -27,6 +28,6 @@ We do not this yet, but we will provide a compiled version of `paratii.js` that 
 
 We intend to provide the package on `npmjs.org` for easy download once it is in a more stable version. Until that time, you can add the the package as a dependency in your `package.json`. If you use yarn, the command is:
 
-    yarn add github:Paratii-Video/paratii-lib
+    yarn add github:Paratii-Video/paratii-js
 
 See [example-session.md](./example-session.md) and [api.md](./api.md) for more information.

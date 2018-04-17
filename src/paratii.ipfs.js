@@ -21,7 +21,7 @@ export class ParatiiIPFS extends EventEmitter {
   * @typedef {Array} ParatiiIPFSSchema
   * @property {?ipfsSchema} ipfs
   * @property {?accountSchema} account
-  * @property {?boolean} verbose
+  * @property {boolean=} verbose
  */
   constructor (config) {
     super()

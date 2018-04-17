@@ -36,7 +36,7 @@ export class ParatiiTranscoder extends EventEmitter {
   /**
    * signals transcoder(s) to transcode fileHash
    * @param  {string} fileHash IPFS file hash.
-   * @param  {Object} options  ref: https://github.com/Paratii-Video/paratii-lib/blob/master/docs/paratii-ipfs.md#ipfsuploadertranscodefilehash-options
+   * @param  {Object} options  ref: https://github.com/Paratii-Video/paratii-js/blob/master/docs/paratii-ipfs.md#ipfsuploadertranscodefilehash-options
    * @return {EvenEmitter} EventEmitter with the following events:<br>
    *    - 'uploader:progress': (hash, chunkSize, percent) client to transcoder upload progress.<br>
    *    - 'transcoding:started': (hash, author)<br>

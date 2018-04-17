@@ -82,6 +82,18 @@ describe('paratii.eth.vids:', function () {
     ])
   })
 
+  it('vids.create should accept these particular data', async function () {
+    let data = {
+      id: '999',
+      ipfsData: 'QmR9Jz6Y1HWTP2793MdutUQVsj5zsiEJnEXrouQTcfxpRD',
+      ipfsHash: 'QmQP5SJzEBKy1uAGASDfEPqeFJ3HUbEp4eZzxvTLdZZYwB',
+      ipfsHashOrig: '',
+      owner: '0xDF48883A431025a9aDC6CE3657739E51A66d4aeA',
+      price: 0
+    }
+    await paratii.eth.vids.create(data)
+    await paratii.eth.vids.create(data)
+  })
   // FIXME: this test runs locally  for me (<- Jelle), but not  on circle.
   it.skip('vids.create should not raise "transaction nonce is too low" if we send two transactions', async function () {
     // we expect an error if we call the fynction with retry set to 0

@@ -6,7 +6,7 @@ Contains functions that operate transversally over several backend systems.
 
 It is available as a `core` attribute in `Paratii` instances:
 
-    import Paratii from 'paratii-lib'
+    import Paratii from 'paratii-js'
     paratii = new Paratii()
     paratii.core // is a ParatiiCore instance
 

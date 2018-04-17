@@ -75,6 +75,15 @@ describe('Paratii configuration:', function () {
     await assert.isRejected(promise, /No registry/)
   })
 
+  it('config should accept the privateKey argument without the addrss', async function () {
+    let paratii = new Paratii({
+      account: {
+        privateKey: privateKey
+      }
+    })
+    assert.equal(paratii.getAccount(), address)
+  })
+
   it('the account should be added to the wallet if a private key is given', async function () {
     let paratii = new Paratii({
       account: {
@@ -119,7 +128,7 @@ describe('Paratii configuration:', function () {
     // let promise = paratii.eth.transfer(beneficiary, amount, 'PTI')
     // assert.isRejected(promise, /No account/)
     //
-    await paratii.setAccount(address, privateKey)
+    await paratii.setAccount({address, privateKey})
     assert.equal(paratii.config.account.address, address)
     assert.equal(paratii.eth.config.account.address, address)
     assert.equal(paratii.eth.web3.eth.accounts.wallet[0].address, address)

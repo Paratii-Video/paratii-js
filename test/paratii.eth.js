@@ -67,7 +67,7 @@ describe('paratii.eth API: :', function () {
     let contract
     contract = await paratii.eth.getContract('ParatiiToken')
     assert.equal(contract.options.from, address)
-    await paratii.setAccount(address1)
+    await paratii.setAccount({address: address1})
     contract = await paratii.eth.getContract('ParatiiToken')
     assert.equal(contract.options.from, address1)
   })

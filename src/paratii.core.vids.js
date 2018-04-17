@@ -33,9 +33,7 @@ export class ParatiiCoreVids {
     options = result.value
 
     if (!options.id) {
-      // options.id = this.config.paratii.eth.vids.makeId()
       options.id = makeId()
-      console.log('generating ID...........................', options.id)
     }
 
     let hash = await this.config.paratii.ipfs.addAndPinJSON({
