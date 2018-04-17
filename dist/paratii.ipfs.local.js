@@ -128,11 +128,11 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
      * upload an Array of files as is to the local IPFS node
      * @param  {Array} files    HTML5 File Object Array.
      * @return {EventEmitter} returns EventEmitter with the following events:
-     *    - 'start': uploader started.
-     *    - 'progress': (chunkLength, progressPercent)
-     *    - 'fileReady': (file) triggered when a file is uploaded locally.
-     *    - 'done': (files) triggered when the uploader is done locally.
-     *    - 'error': (err) triggered whenever an error occurs.
+     *    - `start`: uploader started.
+     *    - `progress`: (chunkLength, progressPercent)
+     *    - `fileReady`: (file) triggered when a file is uploaded locally.
+     *    - `done`: (files) triggered when the uploader is done locally.
+     *    - `error`: (err) triggered whenever an error occurs.
      * @example paratii.ipfs.local.upload('path/to/file')
      * TODO: this is not "local" only, it calls xhrupload in case we are dealing with an html5 file!
      */

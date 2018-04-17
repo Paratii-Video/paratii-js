@@ -193,6 +193,7 @@ Functions for buying and selling. TBD
 
 Functions for lending money. Completely TBD
 
+
 ## `eth.vouchers`
 
 Functions for redeeming vouchers.
@@ -214,9 +215,6 @@ Function for creating a voucher. Can only be called by the owner of the contract
 
 Returns a promised voucherId, or throws an Error, mostly when there are issues with parameters, like amount is 0, or voucherCode isn't a string, etc...
 
-## "Admin function"
-
-[We may want to move these to a separate name space]
 
 ### `eth.deployContracts()`
 

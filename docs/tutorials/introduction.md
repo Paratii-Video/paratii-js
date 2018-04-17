@@ -68,13 +68,17 @@ If you want to create a new account, `paratii-js` includes a version of the wall
 
 ## Upload and transcode videos
 
-The upload-and-transcode process has a number of steps. If you do not want to bother with the complexity of this process, we provide a convenience function to uploadAndTranscode your video, which can be called as follows:
+The upload-and-transcode process has a number of steps - the video file needs to uploaded to the transcoder, transcoded into different formats and sizes, the result saved in IPFS and made available to paratii.
+
+You might not want to bother with the complexity of this process, so we provide a convenience function, with an interface that is as simple as we could make it:
 
     let pathToYourFile = './some/file.mp4'
     let ev = paratii.vids.uploadAndTranscode(pathToYourFile)
 
 This function will return immediately with an EventEmitter instance which will report about the progress (and eventual errors) in the process:
 
-    ev.on('...', console.log('....'))
+    ev.on('uploader:progress', function(hash, size, percent) { console.log(`upload progress: ${percent} %`))
+    ev.on('transcoding:progress', function(hash, size, percent) { console.log(`upload progress: ${percent} %`))
+    ev.on('transcoding:done', function(hash, transcoderResult) { console.log(`transcoding has finished!`))
 
 For further information [see the docs](./ParatiiCoreVids.html#addAndTrancode__anchor)
