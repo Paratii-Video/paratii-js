@@ -61,7 +61,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
         result.push(this.fsFileToPull(files[i]))
       }
     }
-    emitter = this.upload(result, emitter)
+    emitter = this._ipfs.remote.addAndUpload(result, emitter)
     emitter.on('done', (hashedFiles) => {
       console.log(hashedFiles)
     })
@@ -75,13 +75,13 @@ export class ParatiiIPFSLocal extends EventEmitter {
    * @return {EventEmitter} returns EventEmitter with the following events:
    *    - `start`: uploader started.
    *    - `progress`: (chunkLength, progressPercent)
-   *    - `fileReady`: (file) triggered when a file is uploaded locally.
+   *    - `local:fileReady`: (file) triggered when a file is uploaded locally.
    *    - `done`: (files) triggered when the uploader is done locally.
    *    - `error`: (err) triggered whenever an error occurs.
    * @example paratii.ipfs.local.upload('path/to/file')
    * TODO: this is not "local" only, it calls xhrupload in case we are dealing with an html5 file!
    */
-  upload (files, ev) {
+  uploadLocal (files, ev) {
     let meta = {} // holds File metadata.
     if (!ev) {
       ev = new EventEmitter()
@@ -119,12 +119,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
             const hashedFile = res[0]
             this._ipfs.log('Adding %s finished as %s, size: %s', hashedFile.path, hashedFile.hash, hashedFile.size)
 
-            if (file._html5File) {
-              this._ipfs.remote.xhrUpload(file, hashedFile, ev)
-            } else {
-              ev.emit('fileReady', hashedFile)
-            }
-
+            ev.emit('local:fileReady', file, hashedFile)
             cb(null, hashedFile)
           })
         )),
