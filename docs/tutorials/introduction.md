@@ -71,7 +71,7 @@ If you want to create a new account, `paratii-js` includes a version of the wall
 The upload-and-transcode process has a number of steps. If you do not want to bother with the complexity of this process, we provide a convenience function to uploadAndTranscode your video, which can be called as follows:
 
     let pathToYourFile = './some/file.mp4'
-    let ev = paratii.vids.addAndTranscode(pathToYourFile)
+    let ev = paratii.vids.uploadAndTranscode(pathToYourFile)
 
 This function will return immediately with an EventEmitter instance which will report about the progress (and eventual errors) in the process:
 

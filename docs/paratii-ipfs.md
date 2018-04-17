@@ -137,7 +137,7 @@ Returns an EventEmitter with the following events:
 ##  `ipfs.uploader.addAndTrancode`
 
 
-The function `addAndTranscode` is an abbreviation for the following pattern:
+The function `uploadAndTranscode` is an abbreviation for the following pattern:
 
     ipfs.upload(file, {
       onDone: function(file) {

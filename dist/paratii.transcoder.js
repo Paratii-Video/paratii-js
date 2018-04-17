@@ -222,12 +222,12 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
     }
 
     /**
-     * See {@link ParatiiCoreVids#addAndTranscode}
+     * See {@link ParatiiCoreVids#uploadAndTranscode}
      */
 
   }, {
-    key: 'addAndTranscode',
-    value: function addAndTranscode(files) {
+    key: 'uploadAndTranscode',
+    value: function uploadAndTranscode(files) {
       var _this4 = this;
 
       var ev = this._ipfs.local.add(files);

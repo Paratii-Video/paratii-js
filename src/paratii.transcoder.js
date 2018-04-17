@@ -172,9 +172,9 @@ export class ParatiiTranscoder extends EventEmitter {
   }
 
   /**
-   * See {@link ParatiiCoreVids#addAndTranscode}
+   * See {@link ParatiiCoreVids#uploadAndTranscode}
    */
-  addAndTranscode (files) {
+  uploadAndTranscode (files) {
     let ev = this._ipfs.local.add(files)
     ev.on('done', (files) => {
       this._signalTranscoder(files, ev)

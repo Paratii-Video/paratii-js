@@ -193,10 +193,10 @@ describe('paratii.vids:', function () {
   it.skip('vids.search() should work as expected', async function () {
   })
 
-  it('vids.addAndTranscode should work', async () => {
+  it('vids.uploadAndTranscode should work', async () => {
     let paratii = await new Paratii()
-    let path = 'testData/pti-logo.mp4'
-    let result = await paratii.vids.addAndTranscode(path)
+    let path = 'test/testData/pti-logo.mp4'
+    let result = await paratii.vids.uploadAndTranscode(path)
     assert.isOk(result)
   })
 })
