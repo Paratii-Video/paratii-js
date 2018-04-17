@@ -5,6 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ParatiiEth = undefined;
 
+var _promise = require('babel-runtime/core-js/promise');
+
+var _promise2 = _interopRequireDefault(_promise);
+
 var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
@@ -40,6 +44,7 @@ var _joi2 = _interopRequireDefault(_joi);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Web3 = require('web3');
+var truffleContract = require('truffle-contract');
 // const joi = require('joi')
 /**
  * contains functions to interact with the Ethereum blockchain and the Paratii contracts.<br>
@@ -84,10 +89,12 @@ var ParatiiEth = exports.ParatiiEth = function () {
     } else {
       this.web3 = new Web3();
       if (config.eth.provider.substring(0, 2) === 'ws') {
-        this.web3.setProvider(new this.web3.providers.WebsocketProvider(config.eth.provider));
+        this._provider = new this.web3.providers.WebsocketProvider(config.eth.provider);
       } else {
-        this.web3.setProvider(new this.web3.providers.HttpProvider(config.eth.provider));
+        this._provider = new this.web3.providers.HttpProvider(config.eth.provider);
       }
+
+      this.web3.setProvider(this._provider);
     }
     this.config = config;
 
@@ -106,6 +113,11 @@ var ParatiiEth = exports.ParatiiEth = function () {
     this.contracts.Views = this.requireContract('Views');
     this.contracts.Vouchers = this.requireContract('Vouchers');
     this.contracts.TcrPlaceholder = this.requireContract('TcrPlaceholder');
+    this.contracts.TcrRegistry = this.requireContract('sol-tcr/Registry');
+    this.contracts.TcrPLCRVoting = this.requireContract('sol-tcr/PLCRVoting');
+    this.contracts.TcrParameterizer = this.requireContract('sol-tcr/Parameterizer');
+    this.contracts.TcrDLL = this.requireContract('sol-tcr/DLL');
+    this.contracts.TcrAttributeStore = this.requireContract('sol-tcr/AttributeStore');
 
     this.vids = new _paratiiEthVids.ParatiiEthVids(this);
     this.users = new _paratiiEthUsers.ParatiiEthUsers(this);
@@ -228,10 +240,24 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: 'requireContract',
     value: function requireContract(contractName) {
-      var artifact = require('paratii-contracts/build/contracts/' + contractName + '.json');
+      var artifact = void 0,
+          contract = void 0;
       var from = this.config.account.address;
 
-      var contract = new this.web3.eth.Contract(artifact.abi, {
+      var contractArr = contractName.split('/');
+      if (contractArr[0] === 'sol-tcr') {
+        artifact = require('sol-tcr/build/contracts/' + contractArr[1] + '.json');
+        // contract = truffleContract(artifact)
+        // contract.setProvider(this._provider)
+        // contract.defaults({
+        //   from: from,
+        //   gas: this.web3.utils.toHex(4e6)
+        // })
+      } else {
+        artifact = require('paratii-contracts/build/contracts/' + contractName + '.json');
+      }
+
+      contract = new this.web3.eth.Contract(artifact.abi, {
         from: from,
         gas: this.web3.utils.toHex(4e6),
         data: artifact.bytecode
@@ -239,6 +265,39 @@ var ParatiiEth = exports.ParatiiEth = function () {
       // contract.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
       return contract;
     }
+  }, {
+    key: 'requireTruffleContract',
+    value: function requireTruffleContract(contractName) {
+      var artifact = void 0,
+          contract = void 0;
+      var from = this.config.account.address;
+
+      var contractArr = contractName.split('/');
+      if (contractArr[0] === 'sol-tcr') {
+        artifact = require('sol-tcr/build/contracts/' + contractArr[1] + '.json');
+      } else {
+        artifact = require('paratii-contracts/build/contracts/' + contractName + '.json');
+      }
+      // console.log('artifact: ', this.web3.currentProvider)
+      contract = truffleContract(artifact);
+      contract.setProvider(this.web3.currentProvider);
+
+      // dirty hack for web3@1.0.0 support for localhost testrpc, see https://github.com/trufflesuite/truffle-contract/issues/56#issuecomment-331084530
+      // thanks https://github.com/trufflesuite/truffle-contract/issues/57#issuecomment-331300494
+      if (typeof contract.currentProvider.sendAsync !== 'function') {
+        contract.currentProvider.sendAsync = function () {
+          return contract.currentProvider.send.apply(contract.currentProvider, arguments);
+        };
+      }
+
+      contract.defaults({
+        from: from,
+        gas: this.web3.utils.toHex(4e6)
+      });
+
+      return contract;
+    }
+
     /**
      * deploys contract on the blockchain
      * @param  {string}  name name of the contract
@@ -291,6 +350,38 @@ var ParatiiEth = exports.ParatiiEth = function () {
           }
         }
       }, null, this);
+    }
+  }, {
+    key: 'deployTcr',
+    value: function deployTcr(paratiiRegistry, paratiiToken) {
+      var _this = this;
+
+      return new _promise2.default(function (resolve, reject) {
+        // Deployment steps.
+        // 1. deploy DLL and AttributeStore
+        // 2. deploy PLCRVoting and link the DLL and AttributeStore
+        // 3. deploy Parameterizer with default configs for now.
+        // 4. deploy TcrRegistry
+        // 5. register TcrRegistry to Registry (lol)
+        // let tcrConfig = require('sol-tcr/conf/config.json')
+
+        _this.truffleContracts = {};
+        _this.truffleContracts.TcrRegistry = _this.requireTruffleContract('sol-tcr/Registry');
+        _this.truffleContracts.TcrPLCRVoting = _this.requireTruffleContract('sol-tcr/PLCRVoting');
+        _this.truffleContracts.TcrParameterizer = _this.requireTruffleContract('sol-tcr/Parameterizer');
+        _this.truffleContracts.TcrDLL = _this.requireTruffleContract('sol-tcr/DLL');
+        _this.truffleContracts.TcrAttributeStore = _this.requireTruffleContract('sol-tcr/AttributeStore');
+
+        _this.truffleContracts.TcrDLL.new({ from: _this.config.account.address }).then(function (instance) {
+          console.log('DLL: ', instance);
+          resolve(instance);
+        }).catch(function (e) {
+          console.log('gotcha : ', e);
+          reject(e);
+        });
+
+        // To be continued. after debugging truffle contracts
+      });
     }
 
     /**
@@ -638,6 +729,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
     value: function setRegistryAddress(registryAddress) {
       this.config.eth.registryAddress = registryAddress;
       for (var name in this.contracts) {
+        // console.log('contractName: ', name)
         var contract = this.contracts[name];
         contract.options.address = undefined;
       }
