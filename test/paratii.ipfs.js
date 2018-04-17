@@ -75,10 +75,6 @@ describe('ParatiiIPFS: :', function () {
     let result = await paratii.ipfs.addAndPinJSON({test: 1})
     assert.isOk(result)
   })
-  it('addAndTranscode should work', async () => {
-    let paratii = await new Paratii()
-    let path = 'test/data/some-file.txt'
-    let result = await paratii.ipfs.addAndTranscode(path)
-    assert.isOk(result)
-  })
+
+
 })

@@ -42,32 +42,6 @@ export class ParatiiIPFS extends EventEmitter {
     this.transcoder = new ParatiiTranscoder({ipfs: this.config.ipfs, paratiiIPFS: this})
   }
 
-  // /**
-  //  * adds a data Object to the IPFS local instance
-  //  * @param  {Object} data JSON object to store
-  //  * @return {Promise} promise with the ipfs multihash
-  //  * @example let result = await paratiiIPFS.local.addJSON(data)
-  //  */
-  // async addJSON (data) {
-  //   let ipfs = await this.getIPFSInstance()
-  //   // if (!this.ipfs || !this.ipfs.isOnline()) {
-  //   //   throw new Error('IPFS node is not ready, please trigger getIPFSInstance first')
-  //   // }
-  //   const obj = {
-  //     Data: Buffer.from(JSON.stringify(data)),
-  //     Links: []
-  //   }
-  //   let node
-  //   try {
-  //     // node = await ipfs.object.put(obj)
-  //     node = await ipfs.files.add(obj.Data)
-  //   } catch (e) {
-  //     if (e) throw e
-  //   }
-  //
-  //   return node[0].hash
-  // }
-
   /**
    * Starts the IPFS node
    * @return {Promise} that resolves in an IPFS instance
@@ -151,6 +125,7 @@ export class ParatiiIPFS extends EventEmitter {
    * @param  {string} msg text to log
    * @example
    * paratii.ipfs.log("some-text")
+   * @private
    */
   log (...msg) {
     if (this.config.verbose) {
@@ -162,6 +137,7 @@ export class ParatiiIPFS extends EventEmitter {
    * @param  {string} msg warn text
    * @example
    * paratii.ipfs.warn("some-text")
+   * @private
    */
   warn (...msg) {
     if (this.config.verbose) {
@@ -169,11 +145,12 @@ export class ParatiiIPFS extends EventEmitter {
     }
   }
   /**
-  * log errors on the console if verbose is set
-  * @param  {string} msg error message
-  * @example
-  * paratii.ipfs.error("some-text")
-  */
+   * log errors on the console if verbose is set
+   * @param  {string} msg error message
+   * @example
+   * paratii.ipfs.error("some-text")
+   * @private
+   */
   error (...msg) {
     if (this.config.verbose) {
       console.error(...msg)
@@ -273,18 +250,5 @@ export class ParatiiIPFS extends EventEmitter {
         })
       }
     })
-  }
-
-  /**
-   * adds a file to local IPFS node and signals transcoder to transcode it
-   * @param {Array} files Array of HTML5 File Objects
-   * @returns An EventEmitter
-   */
-  addAndTranscode (files) {
-    let ev = this.local.add(files)
-    ev.on('done', (files) => {
-      this.config.paratii.transcoder._signalTranscoder(files, ev)
-    })
-    return ev
   }
 }

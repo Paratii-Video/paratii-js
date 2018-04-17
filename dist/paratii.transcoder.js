@@ -221,10 +221,8 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
       };
     }
 
-    // TODO add example
     /**
-     * convenience method for adding and transcoding files
-     * @param {Array} files Array of HTML5 File Objects
+     * See {@link ParatiiCoreVids#addAndTranscode}
      */
 
   }, {
@@ -232,8 +230,7 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
     value: function addAndTranscode(files) {
       var _this4 = this;
 
-      var ev = this._ipfs.local.upload(files);
-      // ev.on('done', this._signalTranscoder.bind(this))
+      var ev = this._ipfs.local.add(files);
       ev.on('done', function (files) {
         _this4._signalTranscoder(files, ev);
       });

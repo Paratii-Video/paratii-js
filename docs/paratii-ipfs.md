@@ -1,3 +1,4 @@
+# OLD AND OBSOLETE
 # Paratii IPFS API
 
 ## `paratii.ipfs`

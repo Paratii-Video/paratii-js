@@ -171,14 +171,11 @@ export class ParatiiTranscoder extends EventEmitter {
     }
   }
 
-  // TODO add example
   /**
-   * convenience method for adding and transcoding files
-   * @param {Array} files Array of HTML5 File Objects
+   * See {@link ParatiiCoreVids#addAndTranscode}
    */
   addAndTranscode (files) {
-    let ev = this._ipfs.local.upload(files)
-    // ev.on('done', this._signalTranscoder.bind(this))
+    let ev = this._ipfs.local.add(files)
     ev.on('done', (files) => {
       this._signalTranscoder(files, ev)
     })

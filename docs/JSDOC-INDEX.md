@@ -51,12 +51,11 @@ You can have a look at the [demo Application](https://github.com/Paratii-Video/P
 
 # Where to go next?
 
-A good place to start is the Tutorials section, specifically XXX
+A good place to start is the [introductory tutorial](./tutorial-introduction.html)
 
 Methods and configuration are documented separately under the "Classes" menu; a good place to start is [https:/docs.paratii.video/Paratii.html](https://docs.paratii.video/Paratii.html).
 
-# Contributing
 
 The library is in active development on our [github repository](https://github.com/Paratii-Video/paratii-js).
-Instructions for contributors are here:
-[https://github.com/Paratii-Video/paratii-js/blob/dev/CONTRIBUTING.md]( https://github.com/Paratii-Video/paratii-js/blob/dev/CONTRIBUTING.md)
+Contributions are most welcome. If you want to help developing `paratii-js`,
+[here are instructions for contributors]( https://github.com/Paratii-Video/paratii-js/blob/dev/CONTRIBUTING.md)

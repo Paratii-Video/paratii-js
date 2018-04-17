@@ -31,11 +31,11 @@ It can be initialized in several ways. Here is an example:
 
 All settings are optional, and are documented [here](./global.html#ParatiiConfigSchema__anchor). The currently active configuration is avaiable at `paratii.config`.
 
-## Find some videos
+## Find some cool videos
 
 Your newly configured `paratii` object can read data from the blockchain. For example, you can search for videos about cats:
 
-    let catVideos = await paratii.vids.search({keyword: 'cats'})
+    let coolVideos = await paratii.vids.search({keyword: 'yunta'})
 
 Which will give you a list of videos with "cats" in the title or description. Or, alternatively, you can search for all videos associated with a given account:
 
@@ -46,7 +46,7 @@ This calls will give paginated set of results.
 
 Other options of the search function are (documented here)[./ParatiiCoreVids.html#search__anchor]
 
-## Setting your account
+## Set your base account
 
 All operations on Paratii  that change the state (such as uploading a video) require that you sign transactions with an Ethereum account. You can set the account being used (and the private key with which to sign the transactions) when constructing the Paratii object:
 
@@ -66,26 +66,15 @@ If you want to create a new account, `paratii-js` includes a version of the wall
     paratii.getAccount() // returns the newly generated address
 
 
-##   `paratii.config.registry`
+## Upload and transcode videos
 
-The address of a Paratii `Registry` contract on the blockchain. This contract knows where all other Paratii contracts are deployed, and stores general settings. Most interactions with the blockchain assume this setting is set.
+The upload-and-transcode process has a number of steps. If you do not want to bother with the complexity of this process, we provide a convenience function to uploadAndTranscode your video, which can be called as follows:
 
-It can be set either on initialization of the `Paratii` object, by calling the function `paratii.setRegistryAddress`.
+    let pathToYourFile = './some/file.mp4'
+    let ev = paratii.vids.addAndTranscode(pathToYourFile)
 
+This function will return immediately with an EventEmitter instance which will report about the progress (and eventual errors) in the process:
 
-The function `paratii.eth.deployContracts()` will also set this address as a side effect
+    ev.on('...', console.log('....'))
 
-### `config`
-
-`config` holds the configuration of the paratii object:
-
-    paratii.config // returns { 'provider': 'http:/...', ''}
-
-
-## paratii.setAccount(address, [privateKey])  
-
-Set the Ethereum address what will be used to sign all transactions
-
-## paratii.setRegistryAddress(address)
-
-Set the address of the ParatiiRegistry contract
+For further information [see the docs](./ParatiiCoreVids.html#addAndTrancode__anchor)

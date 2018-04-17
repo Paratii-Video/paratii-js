@@ -395,6 +395,24 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
     value: function search(options) {
       return this.config.paratii.db.vids.search(options);
     }
+
+    /**
+     * convenience method for adding and transcoding files
+     * @param {Object[]} files Either a single file or an array of files.
+     * the files can either be a path to the local filesystem, or a fs.File object, or an HTML5 File object
+     * @return {EventEmitter} an event emitter/Promise object, which defines the following events:
+     *  - all events from {@link ParatiiIPFSLocal#upload}
+     *  - all events from {@link ParatiiTranscoder#transcode}
+     * @example const pathToYourFile = './some/file.mp4'
+     * const ev = paratii.vids.addAndTranscode(pathToYourFile)
+     * @async
+     */
+
+  }, {
+    key: 'addAndTranscode',
+    value: function addAndTranscode(files) {
+      return this.config.paratii.transcoder.addAndTranscode(files);
+    }
   }]);
   return ParatiiCoreVids;
 }();
