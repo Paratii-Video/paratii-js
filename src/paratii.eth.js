@@ -9,6 +9,7 @@ import { ethSchema, accountSchema } from './schemas.js'
 import joi from 'joi'
 
 const Web3 = require('web3')
+const truffleContract = require('truffle-contract')
 // const joi = require('joi')
 /**
  * contains functions to interact with the Ethereum blockchain and the Paratii contracts.<br>
@@ -50,10 +51,12 @@ export class ParatiiEth {
     } else {
       this.web3 = new Web3()
       if (config.eth.provider.substring(0, 2) === 'ws') {
-        this.web3.setProvider(new this.web3.providers.WebsocketProvider(config.eth.provider))
+        this._provider = new this.web3.providers.WebsocketProvider(config.eth.provider)
       } else {
-        this.web3.setProvider(new this.web3.providers.HttpProvider(config.eth.provider))
+        this._provider = new this.web3.providers.HttpProvider(config.eth.provider)
       }
+
+      this.web3.setProvider(this._provider)
     }
     this.config = config
 
@@ -72,6 +75,11 @@ export class ParatiiEth {
     this.contracts.Views = this.requireContract('Views')
     this.contracts.Vouchers = this.requireContract('Vouchers')
     this.contracts.TcrPlaceholder = this.requireContract('TcrPlaceholder')
+    this.contracts.TcrRegistry = this.requireContract('sol-tcr/Registry')
+    this.contracts.TcrPLCRVoting = this.requireContract('sol-tcr/PLCRVoting')
+    this.contracts.TcrParameterizer = this.requireContract('sol-tcr/Parameterizer')
+    this.contracts.TcrDLL = this.requireContract('sol-tcr/DLL')
+    this.contracts.TcrAttributeStore = this.requireContract('sol-tcr/AttributeStore')
 
     this.vids = new ParatiiEthVids(this)
     this.users = new ParatiiEthUsers(this)
@@ -150,19 +158,65 @@ export class ParatiiEth {
    * @private
    */
   requireContract (contractName) {
-    const artifact = require(`paratii-contracts/build/contracts/${contractName}.json`)
+    let artifact, contract
     let from = this.config.account.address
 
-    const contract = new this.web3.eth.Contract(
+    let contractArr = contractName.split('/')
+    if (contractArr[0] === 'sol-tcr') {
+      artifact = require(`sol-tcr/build/contracts/${contractArr[1]}.json`)
+      // contract = truffleContract(artifact)
+      // contract.setProvider(this._provider)
+      // contract.defaults({
+      //   from: from,
+      //   gas: this.web3.utils.toHex(4e6)
+      // })
+    } else {
+      artifact = require(`paratii-contracts/build/contracts/${contractName}.json`)
+    }
+
+    contract = new this.web3.eth.Contract(
       artifact.abi,
       {
         from: from,
         gas: this.web3.utils.toHex(4e6),
         data: artifact.bytecode
       })
-    // contract.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
+      // contract.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
     return contract
   }
+
+  requireTruffleContract (contractName) {
+    let artifact, contract
+    let from = this.config.account.address
+
+    let contractArr = contractName.split('/')
+    if (contractArr[0] === 'sol-tcr') {
+      artifact = require(`sol-tcr/build/contracts/${contractArr[1]}.json`)
+    } else {
+      artifact = require(`paratii-contracts/build/contracts/${contractName}.json`)
+    }
+    // console.log('artifact: ', this.web3.currentProvider)
+    contract = truffleContract(artifact)
+    contract.setProvider(this.web3.currentProvider)
+
+    // dirty hack for web3@1.0.0 support for localhost testrpc, see https://github.com/trufflesuite/truffle-contract/issues/56#issuecomment-331084530
+    // thanks https://github.com/trufflesuite/truffle-contract/issues/57#issuecomment-331300494
+    if (typeof contract.currentProvider.sendAsync !== 'function') {
+      contract.currentProvider.sendAsync = function () {
+        return contract.currentProvider.send.apply(
+          contract.currentProvider, arguments
+        )
+      }
+    }
+
+    contract.defaults({
+      from: from,
+      gas: this.web3.utils.toHex(4e6)
+    })
+
+    return contract
+  }
+
   /**
    * deploys contract on the blockchain
    * @param  {string}  name name of the contract
@@ -187,6 +241,35 @@ export class ParatiiEth {
     return deployedContract
   }
 
+  deployTcr (paratiiRegistry, paratiiToken) {
+    return new Promise((resolve, reject) => {
+      // Deployment steps.
+      // 1. deploy DLL and AttributeStore
+      // 2. deploy PLCRVoting and link the DLL and AttributeStore
+      // 3. deploy Parameterizer with default configs for now.
+      // 4. deploy TcrRegistry
+      // 5. register TcrRegistry to Registry (lol)
+      // let tcrConfig = require('sol-tcr/conf/config.json')
+
+      this.truffleContracts = {}
+      this.truffleContracts.TcrRegistry = this.requireTruffleContract('sol-tcr/Registry')
+      this.truffleContracts.TcrPLCRVoting = this.requireTruffleContract('sol-tcr/PLCRVoting')
+      this.truffleContracts.TcrParameterizer = this.requireTruffleContract('sol-tcr/Parameterizer')
+      this.truffleContracts.TcrDLL = this.requireTruffleContract('sol-tcr/DLL')
+      this.truffleContracts.TcrAttributeStore = this.requireTruffleContract('sol-tcr/AttributeStore')
+
+      this.truffleContracts.TcrDLL.new({from: this.config.account.address}).then((instance) => {
+        console.log('DLL: ', instance)
+        resolve(instance)
+      }).catch((e) => {
+        console.log('gotcha : ', e)
+        reject(e)
+      })
+
+      // To be continued. after debugging truffle contracts
+    })
+  }
+
   /**
    * deploy all Paratii contracts on the blockchain, and register them the registry contract
    * @return {Promise} all the paratii contracts
@@ -209,6 +292,8 @@ export class ParatiiEth {
     let vouchers = await this.deployContract('Vouchers', paratiiRegistryAddress)
     let tcrPlaceholder = await this.deployContract('TcrPlaceholder', paratiiRegistryAddress, paratiiToken.options.address, this.web3.utils.toWei('5'), 100)
 
+    // let tcrTest = await this.deployTcr(paratiiRegistry.options.address, paratiiToken.options.address)
+    // console.log('tcrTEST: ', tcrTest)
     paratiiRegistry = await this.getContract('Registry')
 
     await paratiiRegistry.methods.registerAddress('Avatar', paratiiAvatar.options.address).send()
@@ -326,6 +411,7 @@ export class ParatiiEth {
   setRegistryAddress (registryAddress) {
     this.config.eth.registryAddress = registryAddress
     for (var name in this.contracts) {
+      // console.log('contractName: ', name)
       let contract = this.contracts[name]
       contract.options.address = undefined
     }

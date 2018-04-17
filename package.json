@@ -38,7 +38,9 @@
     "promisify-node": "^0.4.0",
     "pull-filereader": "^1.0.1",
     "resumablejs": "^1.1.0",
+    "sol-tcr": "github:ya7ya/tcr#compiled",
     "stream-to-pull-stream": "^1.7.2",
+    "truffle-contract": "github:skozin/truffle-contract",
     "web3": "^1.0.0-beta.29"
   },
   "devDependencies": {
