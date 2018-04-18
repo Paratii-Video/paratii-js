@@ -5,10 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ParatiiEth = undefined;
 
-var _promise = require('babel-runtime/core-js/promise');
-
-var _promise2 = _interopRequireDefault(_promise);
-
 var _keys = require('babel-runtime/core-js/object/keys');
 
 var _keys2 = _interopRequireDefault(_keys);
@@ -268,8 +264,8 @@ var ParatiiEth = exports.ParatiiEth = function () {
         data: artifact.bytecode
       });
       // contract.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
-      if (contractArr[1] === 'PLCRVoting') {
-        console.log('PLCRVoting: ', contract);
+      if (contractArr[1] === 'DLL') {
+        console.log('DLL: ', contract.options.data);
       }
       return contract;
     }
@@ -375,34 +371,125 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: 'deployTcr',
     value: function deployTcr(paratiiRegistry, paratiiToken) {
-      var _this = this;
+      var tcrConfig, parameterizerConfig, deployedDLL, deployedAttributeStore, linkedByteCode, deployedPLCRVoting, deployedParameterizer, deployedRegistry;
+      return _regenerator2.default.async(function deployTcr$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              // Deployment steps.
+              // 1. deploy DLL and AttributeStore
+              // 2. deploy PLCRVoting and link the DLL and AttributeStore
+              // 3. deploy Parameterizer with default configs for now.
+              // 4. deploy TcrRegistry
+              // 5. register TcrRegistry to Registry (lol)
+              tcrConfig = require('sol-tcr/conf/config.json');
+              parameterizerConfig = tcrConfig.paramDefaults;
+              // this.truffleContracts = {}
+              // this.truffleContracts.TcrRegistry = this.requireTruffleContract('sol-tcr/Registry')
+              // this.truffleContracts.TcrPLCRVoting = this.requireTruffleContract('sol-tcr/PLCRVoting')
+              // this.truffleContracts.TcrParameterizer = this.requireTruffleContract('sol-tcr/Parameterizer')
+              // this.truffleContracts.TcrDLL = this.requireTruffleContract('sol-tcr/DLL')
+              // this.truffleContracts.TcrAttributeStore = this.requireTruffleContract('sol-tcr/AttributeStore')
+              //
+              // this.truffleContracts.TcrDLL.new({from: this.config.account.address}).then((instance) => {
+              //   console.log('DLL: ', instance)
+              //   resolve(instance)
+              // }).catch((e) => {
+              //   console.log('gotcha : ', e)
+              //   reject(e)
+              // })
 
-      return new _promise2.default(function (resolve, reject) {
-        // Deployment steps.
-        // 1. deploy DLL and AttributeStore
-        // 2. deploy PLCRVoting and link the DLL and AttributeStore
-        // 3. deploy Parameterizer with default configs for now.
-        // 4. deploy TcrRegistry
-        // 5. register TcrRegistry to Registry (lol)
-        // let tcrConfig = require('sol-tcr/conf/config.json')
+              console.log('TcrDLL: ', this.contracts.TcrDLL);
+              // console.log('TcrAttributeStore: ', this.contracts.TcrAttributeStore)
+              // console.log('TcrPLCR: ', this.contracts.TcrPLCRVoting)
+              // console.log('Avatar: ', this.contracts.Avatar)
+              console.log('Registry Address: ', this.contracts.Registry.options.address);
+              _context3.next = 6;
+              return _regenerator2.default.awrap(this.contracts.TcrDLL.deploy({ arguments: [] }).send());
 
-        _this.truffleContracts = {};
-        _this.truffleContracts.TcrRegistry = _this.requireTruffleContract('sol-tcr/Registry');
-        _this.truffleContracts.TcrPLCRVoting = _this.requireTruffleContract('sol-tcr/PLCRVoting');
-        _this.truffleContracts.TcrParameterizer = _this.requireTruffleContract('sol-tcr/Parameterizer');
-        _this.truffleContracts.TcrDLL = _this.requireTruffleContract('sol-tcr/DLL');
-        _this.truffleContracts.TcrAttributeStore = _this.requireTruffleContract('sol-tcr/AttributeStore');
+            case 6:
+              deployedDLL = _context3.sent;
 
-        _this.truffleContracts.TcrDLL.new({ from: _this.config.account.address }).then(function (instance) {
-          console.log('DLL: ', instance);
-          resolve(instance);
-        }).catch(function (e) {
-          console.log('gotcha : ', e);
-          reject(e);
-        });
+              deployedDLL.setProvider(this.web3.currentProvider, this.web3.eth.accounts);
+              this.contracts.TcrDLL = deployedDLL;
 
-        // To be continued. after debugging truffle contracts
-      });
+              _context3.next = 11;
+              return _regenerator2.default.awrap(this.contracts.TcrAttributeStore.deploy({ arguments: [] }).send());
+
+            case 11:
+              deployedAttributeStore = _context3.sent;
+
+              deployedAttributeStore.setProvider(this.web3.currentProvider, this.web3.eth.accounts);
+              this.contracts.TcrAttributeStore = deployedAttributeStore;
+
+              // link both libs to PLCRVoting and deploy it.
+              linkedByteCode = this.linkByteCode(this.contracts.TcrPLCRVoting.options.data, {
+                DLL: this.contracts.TcrDLL.options.address,
+                AttributeStore: this.contracts.TcrAttributeStore.options.address
+              });
+
+
+              this.contracts.TcrPLCRVoting.options.data = linkedByteCode;
+
+              _context3.next = 18;
+              return _regenerator2.default.awrap(this.contracts.TcrPLCRVoting.deploy({
+                arguments: [paratiiToken]
+              }).send());
+
+            case 18:
+              deployedPLCRVoting = _context3.sent;
+
+              deployedPLCRVoting.setProvider(this.web3.currentProvider, this.web3.eth.accounts);
+              this.contracts.TcrPLCRVoting = deployedPLCRVoting;
+
+              // ---------------------------------------------
+
+              linkedByteCode = null;
+              linkedByteCode = this.linkByteCode(this.contracts.TcrParameterizer.options.data, {
+                DLL: this.contracts.TcrDLL.options.address,
+                AttributeStore: this.contracts.TcrAttributeStore.options.address
+              });
+              this.contracts.TcrParameterizer.options.data = linkedByteCode;
+              _context3.next = 26;
+              return _regenerator2.default.awrap(this.contracts.TcrParameterizer.deploy({
+                arguments: [paratiiToken, this.contracts.TcrPLCRVoting.options.address, parameterizerConfig.minDeposit, parameterizerConfig.pMinDeposit, parameterizerConfig.applyStageLength, parameterizerConfig.pApplyStageLength, parameterizerConfig.commitStageLength, parameterizerConfig.pCommitStageLength, parameterizerConfig.revealStageLength, parameterizerConfig.pRevealStageLength, parameterizerConfig.dispensationPct, parameterizerConfig.pDispensationPct, parameterizerConfig.voteQuorum, parameterizerConfig.pVoteQuorum]
+              }).send());
+
+            case 26:
+              deployedParameterizer = _context3.sent;
+
+
+              deployedParameterizer.setProvider(this.web3.currentProvider, this.web3.eth.accounts);
+              this.contracts.TcrParameterizer = deployedParameterizer;
+
+              // --------------------------------------------------
+
+              linkedByteCode = null;
+              linkedByteCode = this.linkByteCode(this.contracts.TcrRegistry.options.data, {
+                DLL: this.contracts.TcrDLL.options.address,
+                AttributeStore: this.contracts.TcrAttributeStore.options.address
+              });
+              this.contracts.TcrRegistry.options.data = linkedByteCode;
+              _context3.next = 34;
+              return _regenerator2.default.awrap(this.contracts.TcrRegistry.deploy({
+                arguments: [paratiiToken, this.contracts.TcrPLCRVoting.options.address, this.contracts.TcrParameterizer.options.address, 'paratii test TCR integration']
+              }).send());
+
+            case 34:
+              deployedRegistry = _context3.sent;
+
+
+              deployedRegistry.setProvider(this.web3.currentProvider, this.web3.eth.accounts);
+              this.contracts.TcrRegistry = deployedRegistry;
+
+              return _context3.abrupt('return', deployedRegistry);
+
+            case 38:
+            case 'end':
+              return _context3.stop();
+          }
+        }
+      }, null, this);
     }
 
     /**
@@ -415,124 +502,132 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: 'deployContracts',
     value: function deployContracts() {
-      var paratiiRegistry, paratiiRegistryAddress, paratiiAvatar, paratiiToken, sendEther, userRegistry, videoRegistry, videoStore, likes, views, vouchers, tcrPlaceholder;
-      return _regenerator2.default.async(function deployContracts$(_context3) {
+      var paratiiRegistry, paratiiRegistryAddress, paratiiAvatar, paratiiToken, sendEther, userRegistry, videoRegistry, videoStore, likes, views, vouchers, tcrPlaceholder, tcrTest;
+      return _regenerator2.default.async(function deployContracts$(_context4) {
         while (1) {
-          switch (_context3.prev = _context3.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
-              _context3.next = 2;
+              _context4.next = 2;
               return _regenerator2.default.awrap(this.deployContract('Registry'));
 
             case 2:
-              paratiiRegistry = _context3.sent;
+              paratiiRegistry = _context4.sent;
               paratiiRegistryAddress = paratiiRegistry.options.address;
-              _context3.next = 6;
+              _context4.next = 6;
               return _regenerator2.default.awrap(this.setRegistryAddress(paratiiRegistry.options.address));
 
             case 6:
-              _context3.next = 8;
+              _context4.next = 8;
               return _regenerator2.default.awrap(this.deployContract('Avatar', paratiiRegistryAddress));
 
             case 8:
-              paratiiAvatar = _context3.sent;
-              _context3.next = 11;
+              paratiiAvatar = _context4.sent;
+              _context4.next = 11;
               return _regenerator2.default.awrap(this.deployContract('ParatiiToken'));
 
             case 11:
-              paratiiToken = _context3.sent;
-              _context3.next = 14;
+              paratiiToken = _context4.sent;
+              _context4.next = 14;
               return _regenerator2.default.awrap(this.deployContract('SendEther'));
 
             case 14:
-              sendEther = _context3.sent;
-              _context3.next = 17;
+              sendEther = _context4.sent;
+              _context4.next = 17;
               return _regenerator2.default.awrap(this.deployContract('Users', paratiiRegistryAddress));
 
             case 17:
-              userRegistry = _context3.sent;
-              _context3.next = 20;
+              userRegistry = _context4.sent;
+              _context4.next = 20;
               return _regenerator2.default.awrap(this.deployContract('Videos', paratiiRegistryAddress));
 
             case 20:
-              videoRegistry = _context3.sent;
-              _context3.next = 23;
+              videoRegistry = _context4.sent;
+              _context4.next = 23;
               return _regenerator2.default.awrap(this.deployContract('Store', paratiiRegistryAddress));
 
             case 23:
-              videoStore = _context3.sent;
-              _context3.next = 26;
+              videoStore = _context4.sent;
+              _context4.next = 26;
               return _regenerator2.default.awrap(this.deployContract('Likes', paratiiRegistryAddress));
 
             case 26:
-              likes = _context3.sent;
-              _context3.next = 29;
+              likes = _context4.sent;
+              _context4.next = 29;
               return _regenerator2.default.awrap(this.deployContract('Views', paratiiRegistryAddress));
 
             case 29:
-              views = _context3.sent;
-              _context3.next = 32;
+              views = _context4.sent;
+              _context4.next = 32;
               return _regenerator2.default.awrap(this.deployContract('Vouchers', paratiiRegistryAddress));
 
             case 32:
-              vouchers = _context3.sent;
-              _context3.next = 35;
+              vouchers = _context4.sent;
+              _context4.next = 35;
               return _regenerator2.default.awrap(this.deployContract('TcrPlaceholder', paratiiRegistryAddress, paratiiToken.options.address, this.web3.utils.toWei('5'), 100));
 
             case 35:
-              tcrPlaceholder = _context3.sent;
-              _context3.next = 38;
-              return _regenerator2.default.awrap(this.getContract('Registry'));
+              tcrPlaceholder = _context4.sent;
+              _context4.next = 38;
+              return _regenerator2.default.awrap(this.deployTcr(paratiiRegistry.options.address, paratiiToken.options.address));
 
             case 38:
-              paratiiRegistry = _context3.sent;
-              _context3.next = 41;
+              tcrTest = _context4.sent;
+
+              console.log('tcrTEST address: ', tcrTest.options.address);
+
+              _context4.next = 42;
+              return _regenerator2.default.awrap(this.getContract('Registry'));
+
+            case 42:
+              paratiiRegistry = _context4.sent;
+              _context4.next = 45;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Avatar', paratiiAvatar.options.address).send());
 
-            case 41:
-              _context3.next = 43;
+            case 45:
+              _context4.next = 47;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('ParatiiToken', paratiiToken.options.address).send());
 
-            case 43:
-              _context3.next = 45;
+            case 47:
+              _context4.next = 49;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('SendEther', sendEther.options.address).send());
 
-            case 45:
-              _context3.next = 47;
+            case 49:
+              _context4.next = 51;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Videos', videoRegistry.options.address).send());
 
-            case 47:
-              _context3.next = 49;
+            case 51:
+              _context4.next = 53;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Store', videoStore.options.address).send());
 
-            case 49:
-              _context3.next = 51;
+            case 53:
+              _context4.next = 55;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Users', userRegistry.options.address).send());
 
-            case 51:
-              _context3.next = 53;
+            case 55:
+              _context4.next = 57;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Likes', likes.options.address).send());
 
-            case 53:
-              _context3.next = 55;
+            case 57:
+              _context4.next = 59;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Views', views.options.address).send());
 
-            case 55:
-              _context3.next = 57;
+            case 59:
+              _context4.next = 61;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Vouchers', vouchers.options.address).send());
 
-            case 57:
-              _context3.next = 59;
+            case 61:
+              _context4.next = 63;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('TcrPlaceholder', tcrPlaceholder.options.address).send());
 
-            case 59:
-              _context3.next = 61;
+            case 63:
+              _context4.next = 65;
               return _regenerator2.default.awrap(paratiiRegistry.methods.registerUint('VideoRedistributionPoolShare', this.web3.utils.toWei('0.3')));
 
-            case 61:
-              _context3.next = 63;
+            case 65:
+              _context4.next = 67;
               return _regenerator2.default.awrap(paratiiAvatar.methods.addToWhitelist(videoStore.address));
 
-            case 63:
+            case 67:
 
               this.contracts = {
                 Avatar: paratiiAvatar,
@@ -550,11 +645,11 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
               this.setRegistryAddress(paratiiRegistryAddress);
 
-              return _context3.abrupt('return', this.contracts);
+              return _context4.abrupt('return', this.contracts);
 
-            case 66:
+            case 70:
             case 'end':
-              return _context3.stop();
+              return _context4.stop();
           }
         }
       }, null, this);
@@ -570,9 +665,9 @@ var ParatiiEth = exports.ParatiiEth = function () {
     key: 'setContractsProvider',
     value: function setContractsProvider() {
       var key;
-      return _regenerator2.default.async(function setContractsProvider$(_context4) {
+      return _regenerator2.default.async(function setContractsProvider$(_context5) {
         while (1) {
-          switch (_context4.prev = _context4.next) {
+          switch (_context5.prev = _context5.next) {
             case 0:
               for (key in this.contracts) {
                 this.contracts[key].setProvider(this.web3.currentProvider, this.web3.eth.accounts);
@@ -580,7 +675,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
             case 1:
             case 'end':
-              return _context4.stop();
+              return _context5.stop();
           }
         }
       }, null, this);
@@ -597,46 +692,46 @@ var ParatiiEth = exports.ParatiiEth = function () {
     key: 'getContracts',
     value: function getContracts() {
       var name, contract, address;
-      return _regenerator2.default.async(function getContracts$(_context5) {
+      return _regenerator2.default.async(function getContracts$(_context6) {
         while (1) {
-          switch (_context5.prev = _context5.next) {
+          switch (_context6.prev = _context6.next) {
             case 0:
-              _context5.t0 = _regenerator2.default.keys(this.contracts);
+              _context6.t0 = _regenerator2.default.keys(this.contracts);
 
             case 1:
-              if ((_context5.t1 = _context5.t0()).done) {
-                _context5.next = 11;
+              if ((_context6.t1 = _context6.t0()).done) {
+                _context6.next = 11;
                 break;
               }
 
-              name = _context5.t1.value;
+              name = _context6.t1.value;
               contract = this.contracts[name];
 
               if (contract.options.address) {
-                _context5.next = 9;
+                _context6.next = 9;
                 break;
               }
 
-              _context5.next = 7;
+              _context6.next = 7;
               return _regenerator2.default.awrap(this.getContractAddress(name));
 
             case 7:
-              address = _context5.sent;
+              address = _context6.sent;
 
               if (address && address !== '0x0') {
                 contract.options.address = address;
               }
 
             case 9:
-              _context5.next = 1;
+              _context6.next = 1;
               break;
 
             case 11:
-              return _context5.abrupt('return', this.contracts);
+              return _context6.abrupt('return', this.contracts);
 
             case 12:
             case 'end':
-              return _context5.stop();
+              return _context6.stop();
           }
         }
       }, null, this);
@@ -652,75 +747,75 @@ var ParatiiEth = exports.ParatiiEth = function () {
     key: 'getContractAddress',
     value: function getContractAddress(name) {
       var registryAddress, registry, address;
-      return _regenerator2.default.async(function getContractAddress$(_context6) {
+      return _regenerator2.default.async(function getContractAddress$(_context7) {
         while (1) {
-          switch (_context6.prev = _context6.next) {
+          switch (_context7.prev = _context7.next) {
             case 0:
               registryAddress = this.getRegistryAddress();
 
               if (!(name === 'Registry')) {
-                _context6.next = 3;
+                _context7.next = 3;
                 break;
               }
 
-              return _context6.abrupt('return', registryAddress);
+              return _context7.abrupt('return', registryAddress);
 
             case 3:
               if (registryAddress) {
-                _context6.next = 5;
+                _context7.next = 5;
                 break;
               }
 
               throw Error('No registry address configured');
 
             case 5:
-              _context6.prev = 5;
-              _context6.next = 8;
+              _context7.prev = 5;
+              _context7.next = 8;
               return _regenerator2.default.awrap(this.getContract('Registry'));
 
             case 8:
-              registry = _context6.sent;
+              registry = _context7.sent;
 
               if (registry) {
-                _context6.next = 11;
+                _context7.next = 11;
                 break;
               }
 
               throw Error('No registry contract!');
 
             case 11:
-              _context6.next = 13;
+              _context7.next = 13;
               return _regenerator2.default.awrap(registry.methods.getContract(name).call());
 
             case 13:
-              address = _context6.sent;
-              return _context6.abrupt('return', address);
+              address = _context7.sent;
+              return _context7.abrupt('return', address);
 
             case 17:
-              _context6.prev = 17;
-              _context6.t0 = _context6['catch'](5);
+              _context7.prev = 17;
+              _context7.t0 = _context7['catch'](5);
 
-              if (!(_context6.t0.message === 'Couldn\'t decode address from ABI: 0x')) {
-                _context6.next = 23;
+              if (!(_context7.t0.message === 'Couldn\'t decode address from ABI: 0x')) {
+                _context7.next = 23;
                 break;
               }
 
               throw Error('The registry address is not correct: ' + this.getRegistryAddress());
 
             case 23:
-              if (!(_context6.t0.message === 'Invalid JSON RPC response: ""')) {
-                _context6.next = 27;
+              if (!(_context7.t0.message === 'Invalid JSON RPC response: ""')) {
+                _context7.next = 27;
                 break;
               }
 
-              throw Error('Cannot connect to Ethereum at ' + this.config.eth.provider + '? ' + _context6.t0.message);
+              throw Error('Cannot connect to Ethereum at ' + this.config.eth.provider + '? ' + _context7.t0.message);
 
             case 27:
-              throw _context6.t0;
+              throw _context7.t0;
 
             case 28:
             case 'end':
-              return _context6.stop();
+              return _context7.stop();
           }
         }
       }, null, this, [[5, 17]]);
@@ -775,15 +870,15 @@ var ParatiiEth = exports.ParatiiEth = function () {
     key: 'balanceOf',
     value: function balanceOf(address, symbol) {
       var balance, balances, contract;
-      return _regenerator2.default.async(function balanceOf$(_context7) {
+      return _regenerator2.default.async(function balanceOf$(_context8) {
         while (1) {
-          switch (_context7.prev = _context7.next) {
+          switch (_context8.prev = _context8.next) {
             case 0:
               balance = void 0;
               balances = {};
 
               if (!(symbol && !['PTI', 'ETH'].includes(symbol))) {
-                _context7.next = 4;
+                _context8.next = 4;
                 break;
               }
 
@@ -791,51 +886,51 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
             case 4:
               if (!(!symbol || symbol === 'ETH')) {
-                _context7.next = 9;
+                _context8.next = 9;
                 break;
               }
 
-              _context7.next = 7;
+              _context8.next = 7;
               return _regenerator2.default.awrap(this.web3.eth.getBalance(address));
 
             case 7:
-              balance = _context7.sent;
+              balance = _context8.sent;
 
               balances.ETH = balance;
 
             case 9:
               if (!(!symbol || symbol === 'PTI')) {
-                _context7.next = 17;
+                _context8.next = 17;
                 break;
               }
 
-              _context7.next = 12;
+              _context8.next = 12;
               return _regenerator2.default.awrap(this.getContract('ParatiiToken'));
 
             case 12:
-              contract = _context7.sent;
-              _context7.next = 15;
+              contract = _context8.sent;
+              _context8.next = 15;
               return _regenerator2.default.awrap(contract.methods.balanceOf(address).call());
 
             case 15:
-              balance = _context7.sent;
+              balance = _context8.sent;
 
               balances.PTI = balance;
 
             case 17:
               if (!symbol) {
-                _context7.next = 21;
+                _context8.next = 21;
                 break;
               }
 
-              return _context7.abrupt('return', balance);
+              return _context8.abrupt('return', balance);
 
             case 21:
-              return _context7.abrupt('return', balances);
+              return _context8.abrupt('return', balances);
 
             case 22:
             case 'end':
-              return _context7.stop();
+              return _context8.stop();
           }
         }
       }, null, this);
@@ -854,18 +949,18 @@ var ParatiiEth = exports.ParatiiEth = function () {
     key: '_transferETH',
     value: function _transferETH(beneficiary, amount, description) {
       var contract, from;
-      return _regenerator2.default.async(function _transferETH$(_context8) {
+      return _regenerator2.default.async(function _transferETH$(_context9) {
         while (1) {
-          switch (_context8.prev = _context8.next) {
+          switch (_context9.prev = _context9.next) {
             case 0:
-              _context8.next = 2;
+              _context9.next = 2;
               return _regenerator2.default.awrap(this.getContract('SendEther'));
 
             case 2:
-              contract = _context8.sent;
+              contract = _context9.sent;
 
               if (!(!contract.options || !contract.options.address)) {
-                _context8.next = 5;
+                _context9.next = 5;
                 break;
               }
 
@@ -875,7 +970,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
               from = this.config.account.address;
 
               if (from) {
-                _context8.next = 8;
+                _context9.next = 8;
                 break;
               }
 
@@ -889,21 +984,21 @@ var ParatiiEth = exports.ParatiiEth = function () {
               from = (0, _utils.add0x)(from);
               beneficiary = (0, _utils.add0x)(beneficiary);
 
-              _context8.prev = 11;
-              _context8.next = 14;
+              _context9.prev = 11;
+              _context9.next = 14;
               return _regenerator2.default.awrap(contract.methods.transfer(beneficiary, description).send({ value: amount }));
 
             case 14:
-              return _context8.abrupt('return', _context8.sent);
+              return _context9.abrupt('return', _context9.sent);
 
             case 17:
-              _context8.prev = 17;
-              _context8.t0 = _context8['catch'](11);
-              throw _context8.t0;
+              _context9.prev = 17;
+              _context9.t0 = _context9['catch'](11);
+              throw _context9.t0;
 
             case 20:
             case 'end':
-              return _context8.stop();
+              return _context9.stop();
           }
         }
       }, null, this, [[11, 17]]);
@@ -921,18 +1016,18 @@ var ParatiiEth = exports.ParatiiEth = function () {
     key: '_transferPTI',
     value: function _transferPTI(beneficiary, amount) {
       var contract, from, result;
-      return _regenerator2.default.async(function _transferPTI$(_context9) {
+      return _regenerator2.default.async(function _transferPTI$(_context10) {
         while (1) {
-          switch (_context9.prev = _context9.next) {
+          switch (_context10.prev = _context10.next) {
             case 0:
-              _context9.next = 2;
+              _context10.next = 2;
               return _regenerator2.default.awrap(this.getContract('ParatiiToken'));
 
             case 2:
-              contract = _context9.sent;
+              contract = _context10.sent;
 
               if (!(!contract.options || !contract.options.address)) {
-                _context9.next = 5;
+                _context10.next = 5;
                 break;
               }
 
@@ -942,7 +1037,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
               from = this.config.account.address;
 
               if (from) {
-                _context9.next = 8;
+                _context10.next = 8;
                 break;
               }
 
@@ -952,16 +1047,16 @@ var ParatiiEth = exports.ParatiiEth = function () {
               from = (0, _utils.add0x)(from);
               beneficiary = (0, _utils.add0x)(beneficiary);
 
-              _context9.next = 12;
+              _context10.next = 12;
               return _regenerator2.default.awrap(contract.methods.transfer(beneficiary, amount).send());
 
             case 12:
-              result = _context9.sent;
-              return _context9.abrupt('return', result);
+              result = _context10.sent;
+              return _context10.abrupt('return', result);
 
             case 14:
             case 'end':
-              return _context9.stop();
+              return _context10.stop();
           }
         }
       }, null, this);
@@ -979,28 +1074,28 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: 'transfer',
     value: function transfer(beneficiary, amount, symbol, description) {
-      return _regenerator2.default.async(function transfer$(_context10) {
+      return _regenerator2.default.async(function transfer$(_context11) {
         while (1) {
-          switch (_context10.prev = _context10.next) {
+          switch (_context11.prev = _context11.next) {
             case 0:
               if (!(symbol === 'ETH')) {
-                _context10.next = 4;
+                _context11.next = 4;
                 break;
               }
 
-              return _context10.abrupt('return', this._transferETH(beneficiary, amount, description));
+              return _context11.abrupt('return', this._transferETH(beneficiary, amount, description));
 
             case 4:
               if (!(symbol === 'PTI')) {
-                _context10.next = 6;
+                _context11.next = 6;
                 break;
               }
 
-              return _context10.abrupt('return', this._transferPTI(beneficiary, amount));
+              return _context11.abrupt('return', this._transferPTI(beneficiary, amount));
 
             case 6:
             case 'end':
-              return _context10.stop();
+              return _context11.stop();
           }
         }
       }, null, this);
