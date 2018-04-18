@@ -380,15 +380,21 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
     /**
      * Get the data of the video
      * @param  {Object} options data about the video and (optional) owner i.e {'keyword':'titleOfTheVideo'}
-     * @return {Promise}        data about the video
+     * @param  {String} options.owner data about the video and (optional) owner i.e {'keyword':'titleOfTheVideo'}
+     * @param  {String} options.keyword data about the video and (optional) owner i.e {'keyword':'titleOfTheVideo'}
+     * @param  {Integer} options.offset data about the video and (optional) owner i.e {'keyword':'titleOfTheVideo'}
+     * @param  {Integer} options.limit data about the video and (optional) owner i.e {'keyword':'titleOfTheVideo'}
+     * @param  {Boolean} options.staked data about the video and (optional) owner i.e {'keyword':'titleOfTheVideo'}
+     * @return {Promise} that resolves in a object with this properties:
+     * ```
+     * {
+     *    results: [Array], //videos array
+     *    total: Integer, //results length
+     *    hasNext: Boolean, //if there are more results
+     *    query: Object, //get back your query
+     * }
+     * ```
      * @example paratii.core.vids.search({keyword : 'titleOftheVideo'})
-     * the keyword value can be one from the following list
-     * - video title
-     * - description
-     * - owner
-     * - uploader.name
-     * - uploader.address
-     * - tags
      */
 
   }, {
