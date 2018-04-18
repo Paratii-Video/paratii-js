@@ -8,9 +8,11 @@
     },
     "systemName": "Paratii",
     "outputSourceFiles": true,
-    "search": true
+    "search": true,
+    "theme" : "flatly"
   },
   "opts": {
     "template": "node_modules/ink-docstrap/template"
-  }
+  },
+ "plugins": ["plugins/markdown"]
 }

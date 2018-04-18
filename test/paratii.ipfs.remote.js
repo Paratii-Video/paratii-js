@@ -27,7 +27,6 @@ describe('ParatiiIPFSRemote:', function () {
     let testHash = 'QmTkuJTcQhtQm8bPzF1hQmhrDPsdLs28soUZQEUx7t9pBJ'
     paratiiIPFS.transcoder.getMetaData(testHash, {}).then((data) => {
       assert.isOk(data)
-      console.log(data)
       done()
     }).catch(done)
   })
@@ -77,7 +76,7 @@ describe('ParatiiIPFSRemote:', function () {
       }, (err, file) => {
         if (err) return done(err)
         // assert.isOk(file)
-        console.log(file)
+        // console.log(file)
         // done()
       })
     }).catch(done)
@@ -91,7 +90,7 @@ describe('ParatiiIPFSRemote:', function () {
       }, (err, file) => {
         if (err) return done(err)
         // assert.isOk(file)
-        console.log(file)
+        // console.log(file)
         // done()
       })
     }).catch(done)

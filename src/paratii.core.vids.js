@@ -12,7 +12,8 @@ export class ParatiiCoreVids {
   }
 
   /**
-   * This call will register the video on the blockchain, add its metadata to IPFS, upload file to IPFS, and transcode it
+   * Register the data of this video.
+   * NB: this will _not_ upload the video file itself - just save these ata
    * @param  {videoSchema}  options information about the video ( id, title, FilePath ... )
    * @return {Promise}         information about the video ( id, owner, ipfsHash ... )
    * @example await paratii.core.vids.create({
@@ -33,9 +34,7 @@ export class ParatiiCoreVids {
     options = result.value
 
     if (!options.id) {
-      // options.id = this.config.paratii.eth.vids.makeId()
       options.id = makeId()
-      console.log('generating ID...........................', options.id)
     }
 
     let hash = await this.config.paratii.ipfs.addAndPinJSON({
@@ -215,5 +214,20 @@ export class ParatiiCoreVids {
    */
   search (options) {
     return this.config.paratii.db.vids.search(options)
+  }
+
+  /**
+   * convenience method for adding and transcoding files
+   * @param {Object[]} files Either a single file or an array of files.
+   * the files can either be a path to the local filesystem, or a fs.File object, or an HTML5 File object
+   * @return {EventEmitter} an event emitter/Promise object, which defines the following events:
+   *  - all events from {@link ParatiiIPFSLocal#upload}
+   *  - all events from {@link ParatiiTranscoder#transcode}
+   * @example const pathToYourFile = './some/file.mp4'
+   * const ev = paratii.vids.uploadAndTranscode(pathToYourFile)
+   * @async
+   */
+  uploadAndTranscode (files) {
+    return this.config.paratii.transcoder.uploadAndTranscode(files)
   }
 }

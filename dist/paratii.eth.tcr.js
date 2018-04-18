@@ -240,36 +240,40 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
             case 19:
               // console.log('tx: ', tx)
               vId = void 0;
+              _context5.prev = 20;
 
-              try {
-                vId = (0, _utils.getInfoFromLogs)(tx, '_Application', 'videoId', 1);
-              } catch (e) {
-                // FIXME: thsi error should be thrown
-                if (e) {
-                  console.log(tx);
-                  // throw (e)
-                  // return false
-                }
+              vId = (0, _utils.getInfoFromLogs)(tx, '_Application', 'videoId', 1);
+              _context5.next = 28;
+              break;
+
+            case 24:
+              _context5.prev = 24;
+              _context5.t1 = _context5['catch'](20);
+
+              if (!_context5.t1) {
+                _context5.next = 28;
+                break;
               }
 
-              // console.log('vId: ', vId)
+              throw _context5.t1;
 
+            case 28:
               if (!vId) {
-                _context5.next = 25;
+                _context5.next = 32;
                 break;
               }
 
               return _context5.abrupt('return', true);
 
-            case 25:
+            case 32:
               return _context5.abrupt('return', false);
 
-            case 26:
+            case 33:
             case 'end':
               return _context5.stop();
           }
         }
-      }, null, this, [[10, 16]]);
+      }, null, this, [[10, 16], [20, 24]]);
     }
 
     /**

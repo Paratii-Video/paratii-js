@@ -9,20 +9,21 @@ Bug reports and pull requests very much welcomed.
 
 Make sure you have a recent version of [node.js](https://nodejs.org/) (8.10 and above) and [yarn](https://yarnpkg.com) package manager.
 
-* nodejs >= 8.9.0 ([nodejs.org](https://nodejs.org/))
+* nodejs >= 9.1.0 ([nodejs.org](https://nodejs.org/))
 * [yarn](https://yarnpkg.com/lang/en/docs/install/)
 * Install [parity](https://github.com/paritytech/parity) (ethereum client):
     * ```$ bash <(curl https://get.parity.io -Lk)```
 
 If you are on a Mac, you may need to set the path to parity:
 
-    * add the following to your `.bash_profile`: `export PATH=/Applications/Parity\ Ethereum.app/Contents/MacOS:$PATH`
+    * add the following line to your `.bash_profile`:
+      `export PATH=/Applications/Parity\ Ethereum.app/Contents/MacOS:$PATH`
     * ``` $ source path/to/.bash_profile```
 
 ## Installation
 
-    $ git clone https://github.com/Paratii-Video/paratii-lib
-    $ cd paratii-lib
+    $ git clone https://github.com/Paratii-Video/paratii-js
+    $ cd paratii-js
     $ yarn install
 
 ## Running tests
@@ -42,8 +43,8 @@ Code should survive Javascript Standard linting:
 
     yarn lint
 
-    # Contribute
+# Contribute
 
-Look at the issues https://github.com/Paratii-Video/paratii-lib/issues
+Look at the issues https://github.com/Paratii-Video/paratii-js/issues
 
-Or reach out on Gitter: https://gitter.im/Paratii-Video/paratii-contracts
+Or reach out on Gitter: https://gitter.im/Paratii-Video/dev

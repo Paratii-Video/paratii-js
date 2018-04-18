@@ -22,9 +22,9 @@ describe('ParatiiIPFSLocal:', function () {
     assert.isNotOk(paratiiIPFS.ipfs)
   })
 
-  it('addAndTranscode() should work as expected', (done) => {
+  it('uploadAndTranscode() should work as expected', (done) => {
     let files = []
-    let ev = paratiiIPFS.transcoder.addAndTranscode(files)
+    let ev = paratiiIPFS.transcoder.uploadAndTranscode(files)
     ev.once('transcoding:done', (resp) => {
       assert.isOk(resp)
       assert.isOk(resp.test)

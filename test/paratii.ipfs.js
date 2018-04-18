@@ -1,11 +1,6 @@
-// const whyIsNodeRunning = require('why-is-node-running')
-
-// import { address, privateKey } from './utils.js'
 import Paratii from '../src/paratii.js'
 import { ParatiiIPFS } from '../src/paratii.ipfs.js'
 import { assert, expect } from 'chai'
-// const FileApi = require('file-api')
-// const fs = require('fs')
 
 describe('ParatiiIPFS: :', function () {
   let paratiiIPFS
@@ -78,12 +73,6 @@ describe('ParatiiIPFS: :', function () {
   it('addAndPinJSON should work', async () => {
     let paratii = await new Paratii()
     let result = await paratii.ipfs.addAndPinJSON({test: 1})
-    assert.isOk(result)
-  })
-  it('addAndTranscode should work', async () => {
-    let paratii = await new Paratii()
-    let path = 'test/data/some-file.txt'
-    let result = await paratii.ipfs.addAndTranscode(path)
     assert.isOk(result)
   })
 })

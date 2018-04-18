@@ -28,22 +28,21 @@ describe('ParatiiIPFSLocal:', function () {
     let filePath = 'test/data/some-file.txt'
     let files = [paratiiIPFS.local.fsFileToPull(filePath)]
     paratiiIPFS.start().then(() => {
-      let uploaderEv = paratiiIPFS.local.upload(files)
+      let uploaderEv = paratiiIPFS.local.uploadLocal(files)
 
-      uploaderEv.once('start', () => {
-      // console.log('uploader started')
-      })
-
-      uploaderEv.on('progress', (chunkLength, percent) => {
-        console.log('progress: ', percent)
-      })
-
-      uploaderEv.on('fileReady', (file) => {
-        console.log('got fileReady ', file)
-      })
+      // uploaderEv.once('start', () => {
+      // // console.log('uploader started')
+      // })
+      //
+      // uploaderEv.on('progress', (chunkLength, percent) => {
+      //   console.log('progress: ', percent)
+      // })
+      //
+      // uploaderEv.on('fileReady', (file) => {
+      //   console.log('got fileReady ', file)
+      // })
 
       uploaderEv.once('done', (files) => {
-        console.log('uploader done, ', files)
         assert.isOk(files)
         expect(files).to.have.lengthOf(1)
         expect(files[0].hash).to.equal('QmS8yinWCD1vm7WJx34tg81FpjEXbdYXf3Y5XcCeh29C6K')
@@ -53,12 +52,12 @@ describe('ParatiiIPFSLocal:', function () {
   })
 
   it('should add a directory to IPFS', async function () {
-    let testDir = 'test/data'
+    let testDir = 'test/data/just-a-directory'
     await paratiiIPFS.start()
     let response = await paratiiIPFS.local.addDirectory(testDir)
     assert.isOk(response)
     assert.isOk(response.hash)
     // NOTE THIS WILL Trigger an error if the director test/data content changes.
-    assert.equal(response.hash, 'QmbwqfRAtRRpuf87He77tGmunwihd7bFSLVstVNM8FxS5s')
+    assert.equal(response.hash, 'QmPwJ8mUV9KnhD4Z8egPYW1DFwh7LGnaenMMWeCt1EthBw')
   })
 })

@@ -36,14 +36,14 @@ export class ParatiiTranscoder extends EventEmitter {
   /**
    * signals transcoder(s) to transcode fileHash
    * @param  {string} fileHash IPFS file hash.
-   * @param  {Object} options  ref: https://github.com/Paratii-Video/paratii-lib/blob/master/docs/paratii-ipfs.md#ipfsuploadertranscodefilehash-options
-   * @return {EvenEmitter} EventEmitter with the following events:<br>
-   *    - 'uploader:progress': (hash, chunkSize, percent) client to transcoder upload progress.<br>
-   *    - 'transcoding:started': (hash, author)<br>
-   *    - 'transcoding:progress': (hash, size, percent)<br>
-   *    - 'transcoding:downsample:ready' (hash, size)<br>
-   *    - 'transcoding:done': (hash, transcoderResult) triggered when the transcoder is done - returns the hash of the transcoded file<br>
-   *    - 'transcoder:error': (err) triggered whenever an error occurs.<br>
+   * @param  {Object} options  ref: https://github.com/Paratii-Video/paratii-js/blob/master/docs/paratii-ipfs.md#ipfsuploadertranscodefilehash-options
+   * @return {EvenEmitter} EventEmitter with the following events:
+   *    - `uploader:progress (hash, chunkSize, percent)` client to transcoder upload progress.
+   *    - `transcoding:started (hash, author)`
+   *    - `transcoding:progress (hash, size, percent)`
+   *    - `transcoding:downsample:ready (hash, size)`
+   *    - `transcoding:done (hash, transcoderResult)`  triggered when the transcoder is done - returns the hash of the transcoded file<br>
+   *    - `transcoding:error (err)` triggered whenever an error occurs.
    */
   transcode (fileHash, options) {
     const schema = joi.object({
@@ -171,14 +171,11 @@ export class ParatiiTranscoder extends EventEmitter {
     }
   }
 
-  // TODO add example
   /**
-   * convenience method for adding and transcoding files
-   * @param {Array} files Array of HTML5 File Objects
+   * See {@link ParatiiCoreVids#uploadAndTranscode}
    */
-  addAndTranscode (files) {
-    let ev = this._ipfs.local.upload(files)
-    // ev.on('done', this._signalTranscoder.bind(this))
+  uploadAndTranscode (files) {
+    let ev = this._ipfs.local.add(files)
     ev.on('done', (files) => {
       this._signalTranscoder(files, ev)
     })
