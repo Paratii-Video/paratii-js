@@ -201,12 +201,12 @@ export class ParatiiCoreVids {
   }
   /**
    * Get the data of the video
-   * @param  {Object} options data about the video and (optional) owner i.e {'keyword':'titleOfTheVideo'}
-   * @param  {String} options.owner data about the video and (optional) owner i.e {'keyword':'titleOfTheVideo'}
-   * @param  {String} options.keyword data about the video and (optional) owner i.e {'keyword':'titleOfTheVideo'}
-   * @param  {Integer} options.offset data about the video and (optional) owner i.e {'keyword':'titleOfTheVideo'}
-   * @param  {Integer} options.limit data about the video and (optional) owner i.e {'keyword':'titleOfTheVideo'}
-   * @param  {Boolean} options.staked data about the video and (optional) owner i.e {'keyword':'titleOfTheVideo'}
+   * @param  {Object} options data about the video and (optional)
+   * @param  {String} options.owner owner i.e {'owner':'0x9e2d04eef5b16CFfB4328Ddd027B55736407B275'}
+   * @param  {String} options.keyword keyword i.e {'keyword':'titleOfTheVideo'}
+   * @param  {Integer} options.offset pagination offset i.e {'offset': 10} skip the first 10 videos
+   * @param  {Integer} options.limit pagination limit i.e {'limit': 10} get just 10 videos
+   * @param  {Boolean} options.staked staked videos i.e {'staked': true} get staked videos, {'staked': false} get not staked videos
    * @return {Promise} that resolves in a object with this properties:
    * ```
    * {
