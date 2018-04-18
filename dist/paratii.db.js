@@ -24,8 +24,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * ParatiiDb contains a functionality to interact with the Paratii Index.
  * @param {ParatiiDbSchema} config configuration object to initialize Paratii object
- * @property {ParatiiCoreVids} vids operations on videos
- * @property {ParatiiCoreUsers} users operations on users
+ * @property {ParatiiDbVids} vids operations on videos
+ * @property {ParatiiDbUsers} users operations on users
  */
 var ParatiiDb =
 /**
