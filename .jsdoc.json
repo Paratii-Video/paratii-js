@@ -12,5 +12,6 @@
   },
   "opts": {
     "template": "node_modules/ink-docstrap/template"
-  }
+  },
+ "plugins": ["plugins/markdown"]
 }

@@ -116,7 +116,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
           result.push(this.fsFileToPull(files[i]));
         }
       }
-      emitter = this.upload(result, emitter);
+      emitter = this._ipfs.remote.addAndUpload(result, emitter);
       emitter.on('done', function (hashedFiles) {
         console.log(hashedFiles);
       });
@@ -128,18 +128,18 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
      * upload an Array of files as is to the local IPFS node
      * @param  {Array} files    HTML5 File Object Array.
      * @return {EventEmitter} returns EventEmitter with the following events:
-     *    - 'start': uploader started.
-     *    - 'progress': (chunkLength, progressPercent)
-     *    - 'fileReady': (file) triggered when a file is uploaded locally.
-     *    - 'done': (files) triggered when the uploader is done locally.
-     *    - 'error': (err) triggered whenever an error occurs.
+     *    - `start`: uploader started.
+     *    - `progress`: (chunkLength, progressPercent)
+     *    - `local:fileReady`: (file) triggered when a file is uploaded locally.
+     *    - `done`: (files) triggered when the uploader is done locally.
+     *    - `error`: (err) triggered whenever an error occurs.
      * @example paratii.ipfs.local.upload('path/to/file')
      * TODO: this is not "local" only, it calls xhrupload in case we are dealing with an html5 file!
      */
 
   }, {
-    key: 'upload',
-    value: function upload(files, ev) {
+    key: 'uploadLocal',
+    value: function uploadLocal(files, ev) {
       var _this2 = this;
 
       var meta = {}; // holds File metadata.
@@ -174,12 +174,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
             var hashedFile = res[0];
             _this2._ipfs.log('Adding %s finished as %s, size: %s', hashedFile.path, hashedFile.hash, hashedFile.size);
 
-            if (file._html5File) {
-              _this2._ipfs.remote.xhrUpload(file, hashedFile, ev);
-            } else {
-              ev.emit('fileReady', hashedFile);
-            }
-
+            ev.emit('local:fileReady', file, hashedFile);
             cb(null, hashedFile);
           }));
         }), pull.collect(function (err, hashedFiles) {

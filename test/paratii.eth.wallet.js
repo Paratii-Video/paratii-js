@@ -114,7 +114,7 @@ describe('paratii.eth.wallet: :', function () {
       },
       account: {address: address17}
     })
-    console.log(paratii.config)
+    // console.log(paratii.config)
     // set the account but not the private key
     // paratii.setAccount(address17)
     await paratii.eth.transfer(address1, 2e18, 'ETH')
@@ -153,21 +153,6 @@ describe('paratii.eth.wallet: :', function () {
       privateKey: privateKey
     }})
     await assert.isRejected(paratii.eth.wallet.create())
-  })
-
-  it.skip('eth.wallet.getMnemonic() should work as expected', async function () {
-    paratii = await new Paratii()
-    assert.equal(paratii.eth.wallet.getMnemonic(), undefined)
-    let wallet = await paratii.eth.wallet.create()
-    assert.notEqual(wallet.getMnemonic(), undefined)
-    assert.isOk(wallet.isValidMnemonic(wallet.getMnemonic()))
-
-    // if we construct the paratii object with
-    paratii = new Paratii({
-      address: address,
-      privateKey: privateKey
-    })
-    assert.equal(paratii.eth.wallet.getMnemonic(), undefined)
   })
 
   it('eth.wallet.create() generates key from mnemoninc correctly', async function () {

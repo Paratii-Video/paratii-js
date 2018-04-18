@@ -31,6 +31,26 @@ export class ParatiiIPFSRemote extends EventEmitter {
     this._ipfs = this.config.paratiiIPFS // this is the paratii.ipfs.js
   }
 
+  /*
+   * Add a file to the local ipfs node and upload it over xhr to the remote node
+   */
+  addAndUpload (files, ev) {
+    if (!ev) {
+      ev = new EventEmitter()
+    }
+    ev = this._ipfs.local.uploadLocal(files, ev)
+    ev.on('local:fileReady', function (file, hashedFile) {
+      if (file._html5File) {
+        this._ipfs.remote.xhrUpload(file, hashedFile, ev)
+      } else {
+        let msg = 'This is not an HTML5 file - I cannot use XHR to upload it'
+        console.log(`We should throw this Error here: ${msg}`)
+        // throw Error(msg)
+      }
+    })
+    return ev
+  }
+
   /**
     * Upload a file over XHR to the transcoder. To be called with an event emitter as the last argument
     * @param  {Object} file file to upload
@@ -42,7 +62,7 @@ export class ParatiiIPFSRemote extends EventEmitter {
     if (!ev) {
       ev = new EventEmitter()
     }
-    console.log('xhrUpload: ', hashedFile.hash)
+
     let r = new Resumable({
       target: `${this.config.ipfs.transcoderDropUrl}/${hashedFile.hash}`,
       chunkSize: this.config.ipfs.xhrChunkSize,

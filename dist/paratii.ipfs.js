@@ -80,7 +80,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   * @typedef {Array} ParatiiIPFSSchema
   * @property {?ipfsSchema} ipfs
   * @property {?accountSchema} account
-  * @property {?boolean} verbose
+  * @property {boolean=} verbose
   */
   function ParatiiIPFS(config) {
     (0, _classCallCheck3.default)(this, ParatiiIPFS);
@@ -104,32 +104,6 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     _this.transcoder = new _paratiiTranscoder.ParatiiTranscoder({ ipfs: _this.config.ipfs, paratiiIPFS: _this });
     return _this;
   }
-
-  // /**
-  //  * adds a data Object to the IPFS local instance
-  //  * @param  {Object} data JSON object to store
-  //  * @return {Promise} promise with the ipfs multihash
-  //  * @example let result = await paratiiIPFS.local.addJSON(data)
-  //  */
-  // async addJSON (data) {
-  //   let ipfs = await this.getIPFSInstance()
-  //   // if (!this.ipfs || !this.ipfs.isOnline()) {
-  //   //   throw new Error('IPFS node is not ready, please trigger getIPFSInstance first')
-  //   // }
-  //   const obj = {
-  //     Data: Buffer.from(JSON.stringify(data)),
-  //     Links: []
-  //   }
-  //   let node
-  //   try {
-  //     // node = await ipfs.object.put(obj)
-  //     node = await ipfs.files.add(obj.Data)
-  //   } catch (e) {
-  //     if (e) throw e
-  //   }
-  //
-  //   return node[0].hash
-  // }
 
   /**
    * Starts the IPFS node
@@ -258,6 +232,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
      * @param  {string} msg text to log
      * @example
      * paratii.ipfs.log("some-text")
+     * @private
      */
 
   }, {
@@ -274,6 +249,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
      * @param  {string} msg warn text
      * @example
      * paratii.ipfs.warn("some-text")
+     * @private
      */
 
   }, {
@@ -286,11 +262,12 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
       }
     }
     /**
-    * log errors on the console if verbose is set
-    * @param  {string} msg error message
-    * @example
-    * paratii.ipfs.error("some-text")
-    */
+     * log errors on the console if verbose is set
+     * @param  {string} msg error message
+     * @example
+     * paratii.ipfs.error("some-text")
+     * @private
+     */
 
   }, {
     key: 'error',
@@ -399,24 +376,6 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
           });
         }
       });
-    }
-
-    /**
-     * adds a file to local IPFS node and signals transcoder to transcode it
-     * @param {Array} files Array of HTML5 File Objects
-     * @returns An EventEmitter
-     */
-
-  }, {
-    key: 'addAndTranscode',
-    value: function addAndTranscode(files) {
-      var _this6 = this;
-
-      var ev = this.local.add(files);
-      ev.on('done', function (files) {
-        _this6.config.paratii.transcoder._signalTranscoder(files, ev);
-      });
-      return ev;
     }
   }]);
   return ParatiiIPFS;

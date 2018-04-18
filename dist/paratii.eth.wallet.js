@@ -28,7 +28,7 @@ function patchWallet(wallet, config) {
   /**
    * Create a wallet with a given number of accounts from a BIP39 mnemonic
    * @param  {number} numberOfAccounts number of accounts to be created
-   * @param  {?string} mnemonic         mnemonic of the wallet, if not specified a random one is generated
+   * @param  {string=} mnemonic         mnemonic of the wallet, if not specified a random one is generated
    * @return {Object}                  the created wallet
    * @example wallet = await wallet.create(5, 'some long mnemonic phrase')
    */
@@ -125,7 +125,10 @@ function patchWallet(wallet, config) {
   function _decrypt(data, password) {
     var newWallet = origDecrypt(data, password);
     if (newWallet) {
-      config.paratii.eth.setAccount(newWallet['0'].address, newWallet['0'].privateKey);
+      config.paratii.eth.setAccount({
+        address: newWallet['0'].address,
+        privateKey: newWallet['0'].privateKey
+      });
     }
     return newWallet;
   }

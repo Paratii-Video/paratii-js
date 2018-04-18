@@ -56,7 +56,6 @@ const vidsFixture = [
     ipfsHashOrig: '',
     duration: '2h 32m',
     storageStatus: {},
-        // thumbnails: [],
     transcodingStatus: {},
     uploadStatus: {},
     owner: address1

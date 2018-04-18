@@ -96,8 +96,7 @@ export class ParatiiEthTcr {
     } catch (e) {
       // FIXME: thsi error should be thrown
       if (e) {
-        console.log(tx)
-        // throw (e)
+        throw (e)
         // return false
       }
     }
