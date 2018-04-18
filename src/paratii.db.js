@@ -6,8 +6,8 @@ import joi from 'joi'
 /**
  * ParatiiDb contains a functionality to interact with the Paratii Index.
  * @param {ParatiiDbSchema} config configuration object to initialize Paratii object
- * @property {ParatiiCoreVids} vids operations on videos
- * @property {ParatiiCoreUsers} users operations on users
+ * @property {ParatiiDbVids} vids operations on videos
+ * @property {ParatiiDbUsers} users operations on users
  */
 export class ParatiiDb {
   /**
