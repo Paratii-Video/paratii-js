@@ -92,12 +92,12 @@ const dbSchema = joi.object({
   * @property {number=} price price of the video
   * @property {string=} title title of the video
   * @property {Array} thumbnails thumbnails of the video
-  * @property {?Object} transcodingStatus
+  * @property {Object=} transcodingStatus
   * @property {string} transcodingStatus.name
-  * @property {?Object} transcodingStatus.data
-  * @property {?Object} uploadStatus
+  * @property {Object=} transcodingStatus.data
+  * @property {Object=} uploadStatus
   * @property {string} uploadStatus.name
-  * @property {?Object} uploadStatus.data
+  * @property {Object=} uploadStatus.data
   */
 const videoSchema = joi.object({
   id: joi.string().default(null),

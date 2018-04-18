@@ -57,7 +57,6 @@ export class ParatiiIPFSLocal extends EventEmitter {
         result.push(this.fsFileToPull(files[i]))
       }
     }
-    // emitter = this._ipfs.remote.addAndUpload(result, emitter)
     emitter = this.upload(result, emitter)
     emitter.on('done', (hashedFiles) => {
       console.log(hashedFiles)

@@ -5,7 +5,7 @@
 import { ParatiiIPFS } from '../src/paratii.ipfs.js'
 import { assert, expect } from 'chai'
 
-describe('ParatiiIPFSLocal:', function () {
+describe('ParatiiTranscoder:', function () {
   let paratiiIPFS
   this.timeout(30000)
 

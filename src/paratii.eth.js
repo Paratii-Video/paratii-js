@@ -26,8 +26,8 @@ const Web3 = require('web3')
 export class ParatiiEth {
   /**
   * @typedef {Array} ParatiiEthSchema
-  * @property {?accountSchema} account
-  * @property {?ethSchema} eth
+  * @property {accountSchema=} account
+  * @property {ethSchema=} eth
  */
   constructor (config) {
     const schema = joi.object({

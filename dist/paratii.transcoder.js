@@ -49,8 +49,8 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
 
   /**
   * @typedef {Array} ParatiiIPFSTranscoderSchema
-  * @property {?ipfsSchema} ipfs
-  * @property {?Object} ParatiiIPFS
+  * @property {ipfsSchema=} ipfs
+  * @property {Object=} ParatiiIPFS
   */
   function ParatiiTranscoder(opts) {
     (0, _classCallCheck3.default)(this, ParatiiTranscoder);

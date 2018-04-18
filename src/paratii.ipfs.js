@@ -19,8 +19,8 @@ global.Buffer = global.Buffer || require('buffer').Buffer
 export class ParatiiIPFS extends EventEmitter {
   /**
   * @typedef {Array} ParatiiIPFSSchema
-  * @property {?ipfsSchema} ipfs
-  * @property {?accountSchema} account
+  * @property {ipfsSchema=} ipfs
+  * @property {accountSchema=} account
   * @property {boolean=} verbose
  */
   constructor (config) {

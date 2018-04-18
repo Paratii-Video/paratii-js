@@ -112,7 +112,6 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
           result.push(this.fsFileToPull(files[i]));
         }
       }
-      // emitter = this._ipfs.remote.addAndUpload(result, emitter)
       emitter = this.upload(result, emitter);
       emitter.on('done', function (hashedFiles) {
         console.log(hashedFiles);

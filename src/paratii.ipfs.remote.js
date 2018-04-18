@@ -14,8 +14,8 @@ const Multiaddr = require('multiaddr')
 export class ParatiiIPFSRemote extends EventEmitter {
   /**
   * @typedef {Array} ParatiiIPFSRemoteSchema
-  * @property {?ipfsSchema} ipfs
-  * @property {?Object} ParatiiIPFS
+  * @property {ipfsSchema=} ipfs
+  * @property {ParatiiIPFS} paratiiIPFS
   */
   constructor (opts) {
     super()
@@ -43,9 +43,7 @@ export class ParatiiIPFSRemote extends EventEmitter {
       if (file._html5File) {
         this._ipfs.remote.xhrUpload(file, hashedFile, ev)
       } else {
-        let msg = 'This is not an HTML5 file - I cannot use XHR to upload it'
-        console.log(`We should throw this Error here: ${msg}`)
-        // throw Error(msg)
+        this._ipfs.remote.pinFile(hashedFile)
       }
     })
     return ev

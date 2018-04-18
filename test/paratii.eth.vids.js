@@ -94,6 +94,7 @@ describe('paratii.eth.vids:', function () {
     await paratii.eth.vids.create(data)
     await paratii.eth.vids.create(data)
   })
+
   // FIXME: this test runs locally  for me (<- Jelle), but not  on circle.
   it.skip('vids.create should not raise "transaction nonce is too low" if we send two transactions', async function () {
     // we expect an error if we call the fynction with retry set to 0
