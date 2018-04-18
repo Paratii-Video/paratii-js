@@ -62,7 +62,6 @@ var once = require('once');
 var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
   (0, _inherits3.default)(ParatiiIPFSLocal, _EventEmitter);
 
-  // TODO joi validation and add schema
   function ParatiiIPFSLocal(config) {
     (0, _classCallCheck3.default)(this, ParatiiIPFSLocal);
 
@@ -78,10 +77,10 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
    * @param  {Array} files    HTML5 File Object Array.
    * @return {EventEmitter} returns EventEmitter with the following events:
    *    - `start`: uploader started.
-   *    - `progress`: (chunkLength, progressPercent)
-   *    - `local:fileReady`: (file) triggered when a file is uploaded locally.
-   *    - `done`: (files) triggered when the uploader is done locally.
-   *    - `error`: (err) triggered whenever an error occurs.
+   *    - `progress (chunkLength, progressPercent)`
+   *    - `local:fileReady (file)` triggered when a file is uploaded locally.
+   *    - `done (files)` triggered when the uploader is done locally.
+   *    - `error (err)` triggered whenever an error occurs.
    * @example paratii.ipfs.local.upload('path/to/file')
    * @example paratii.ipfs.local.upload(['path/to/file', 'path/to/file2'])
    * @example paratii.ipfs.local.upload([file1])
