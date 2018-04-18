@@ -9,6 +9,10 @@ var _promise = require('babel-runtime/core-js/promise');
 
 var _promise2 = _interopRequireDefault(_promise);
 
+var _keys = require('babel-runtime/core-js/object/keys');
+
+var _keys2 = _interopRequireDefault(_keys);
+
 var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
@@ -264,6 +268,9 @@ var ParatiiEth = exports.ParatiiEth = function () {
         data: artifact.bytecode
       });
       // contract.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
+      if (contractArr[1] === 'PLCRVoting') {
+        console.log('PLCRVoting: ', contract);
+      }
       return contract;
     }
   }, {
@@ -297,6 +304,18 @@ var ParatiiEth = exports.ParatiiEth = function () {
       });
 
       return contract;
+    }
+  }, {
+    key: 'linkByteCode',
+    value: function linkByteCode(bytecode, links) {
+      (0, _keys2.default)(links).forEach(function (libraryName) {
+        var libraryAddress = links[libraryName];
+        var regex = new RegExp('__' + libraryName + '_+', 'g');
+
+        bytecode = bytecode.replace(regex, libraryAddress.replace('0x', ''));
+      });
+
+      return bytecode;
     }
 
     /**

@@ -182,6 +182,9 @@ export class ParatiiEth {
         data: artifact.bytecode
       })
       // contract.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
+    if (contractArr[1] === 'PLCRVoting') {
+      console.log('PLCRVoting: ', contract)
+    }
     return contract
   }
 
@@ -215,6 +218,17 @@ export class ParatiiEth {
     })
 
     return contract
+  }
+
+  linkByteCode (bytecode, links) {
+    Object.keys(links).forEach(function (libraryName) {
+      var libraryAddress = links[libraryName]
+      var regex = new RegExp('__' + libraryName + '_+', 'g')
+
+      bytecode = bytecode.replace(regex, libraryAddress.replace('0x', ''))
+    })
+
+    return bytecode
   }
 
   /**
