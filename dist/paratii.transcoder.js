@@ -60,15 +60,12 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
     var schema = _joi2.default.object({
       ipfs: _schemas.ipfsSchema,
       paratiiIPFS: _joi2.default.object().optional()
-      //   onReadyHook: joi.array().ordered().default([]),
-      //   protocol: joi.string().default(null),
     });
     var result = _joi2.default.validate(opts, schema, { allowUnknown: true });
     if (result.error) throw result.error;
     _this.config = result.value;
     _this._ipfs = _this.config.paratiiIPFS; // this is the paratii.ipfs.js
     _this._node = _this._ipfs.ipfs;
-    // console.log('this._ipfs:', this._ipfs)
     return _this;
   }
 
@@ -121,7 +118,7 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
       });
       // FIXME : This is for dev, so we just signal our transcoder node.
       // This needs to be dynamic later on.
-      this._ipfs.getIPFSInstance().then(function (_ipfs) {
+      this._ipfs.start().then(function (_ipfs) {
         _this2._node = _ipfs;
         _this2._node.swarm.connect(opts.transcoder, function (err, success) {
           if (err) return ev.emit('transcoding:error', err);
@@ -156,12 +153,10 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
       return ev;
     }
 
-    // TODO add example
     /**
      * handles responses from the paratii-protocol in case of transcoding.
      * @param  {EventEmitter} ev the transcoding job EventEmitter
      * @return {function}    returns various events based on transcoder response.
-     * @example ?
      * @private
      */
 
@@ -237,7 +232,6 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
       return ev;
     }
 
-    // TODO add docs
     /**
      * [_signalTranscoder description]
      * @param  {Object} files [description]

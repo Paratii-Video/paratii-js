@@ -120,6 +120,7 @@ export class ParatiiIPFS extends EventEmitter {
       })
     })
   }
+
   /**
    * log messages on the console if verbose is set
    * @param  {string} msg text to log

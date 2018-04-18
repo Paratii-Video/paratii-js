@@ -28,7 +28,7 @@ describe('ParatiiIPFSLocal:', function () {
     let filePath = 'test/data/some-file.txt'
     let files = [paratiiIPFS.local.fsFileToPull(filePath)]
     paratiiIPFS.start().then(() => {
-      let uploaderEv = paratiiIPFS.local.uploadLocal(files)
+      let uploaderEv = paratiiIPFS.local.upload(files)
 
       // uploaderEv.once('start', () => {
       // // console.log('uploader started')

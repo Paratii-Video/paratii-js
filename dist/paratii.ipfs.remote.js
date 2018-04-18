@@ -86,7 +86,7 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
       if (!ev) {
         ev = new _events.EventEmitter();
       }
-      ev = this._ipfs.local.uploadLocal(files, ev);
+      ev = this._ipfs.local.upload(files, ev);
       ev.on('local:fileReady', function (file, hashedFile) {
         if (file._html5File) {
           this._ipfs.remote.xhrUpload(file, hashedFile, ev);
@@ -349,95 +349,6 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
         }
       };
     }
-
-    // grabYt (url, onResponse, callback) {
-    //   let starttime
-    //   let fileSize
-    //   let video = ytdl(url)
-    //   video.once('response', () => {
-    //     this._ipfs.log(`starting ${url}`)
-    //     starttime = Date.now()
-    //     onResponse(null, starttime)
-    //   })
-    //
-    //   video.on('error', (err) => {
-    //     onResponse(err)
-    //   })
-    //
-    //   video.on('progress', (chunkLength, downloaded, total) => {
-    //     fileSize = total
-    //     // const floatDownloaded = downloaded / total
-    //     // const downloadedMinutes = (Date.now() - starttime) / 1000 / 60
-    //     // readline.cursorTo(process.stdout, 0)
-    //     // process.stdout.write(`${(floatDownloaded * 100).toFixed(2)}% downloaded`)
-    //     // process.stdout.write(`(${(downloaded / 1024 / 1024).toFixed(2)}MB of ${(total / 1024 / 1024).toFixed(2)}MB)\n`)
-    //     // process.stdout.write(`running for: ${downloadedMinutes.toFixed(2)}minutes`)
-    //     // process.stdout.write(`, estimated time left: ${(downloadedMinutes / floatDownloaded - downloadedMinutes).toFixed(2)}minutes `)
-    //     // readline.moveCursor(process.stdout, 0, -1)
-    //   })
-    //
-    //   video.on('end', () => {
-    //     process.stdout.write('\n\n')
-    //     // cb(null, output)
-    //   })
-    //
-    //   var total = 0
-    //   function updateProgress (chunkLength) {
-    //     total += chunkLength
-    //     this._ipfs.log('Progress \t', total, ' / ', fileSize, ' = ', Math.floor((total / fileSize) * 100))
-    //   }
-    //
-    //   pull(
-    //     pull.values([{
-    //       path: url,
-    //       content: pull(
-    //         toPull(video),
-    //         pull.through((chunk) => updateProgress(chunk.length))
-    //       )
-    //     }]),
-    //     this._node.files.addPullStream({chunkerOptions: {maxChunkSize: this._chunkSize}}), // default size 262144
-    //     this._signalTranscoderPull(callback)
-    //   )
-    // }
-    //
-    // grabVimeo (url, onResponse, callback) {
-    //   let starttime
-    //   // let total = 0
-    //   let video = vidl(url, {quality: '720p'})
-    //
-    //   video.once('response', () => {
-    //     this._ipfs.log(`starting ${url}`)
-    //     starttime = Date.now()
-    //     onResponse(null, starttime)
-    //   })
-    //
-    //   video.on('data', (chunk) => {
-    //     // total += chunk.length / 1024 / 1024
-    //   })
-    //
-    //   video.on('end', () => {
-    //     // process.stdout.write('\n\n')
-    //     // cb(null, output)
-    //   })
-    //
-    //   function updateProgress (chunkLength) {
-    //     // this._ipfs.log('Progress \t', total, ' / ', fileSize, ' = ', Math.floor((total / fileSize) * 100))
-    //   }
-    //
-    //   pull(
-    //     pull.values([{
-    //       path: url,
-    //       content: pull(
-    //         toPull(video),
-    //         pull.through((chunk) => updateProgress(chunk.length))
-    //       )
-    //     }]),
-    //     this._node.files.addPullStream({chunkerOptions: {maxChunkSize: this._chunkSize}}), // default size 262144
-    //     this._signalTranscoderPull(callback)
-    //   )
-    // }
-    //
-
   }]);
   return ParatiiIPFSRemote;
 }(_events.EventEmitter);

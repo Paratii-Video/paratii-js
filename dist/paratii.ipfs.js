@@ -227,6 +227,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
         }
       }, null, this);
     }
+
     /**
      * log messages on the console if verbose is set
      * @param  {string} msg text to log

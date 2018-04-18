@@ -42,7 +42,6 @@ var _events = require('events');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import { PromiseEventEmitter } from './utils.js'
 var pull = require('pull-stream');
 var pullFilereader = require('pull-filereader');
 var toPull = require('stream-to-pull-stream');
@@ -67,15 +66,6 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
   function ParatiiIPFSLocal(config) {
     (0, _classCallCheck3.default)(this, ParatiiIPFSLocal);
 
-    // const schema = joi.object({
-    //   ipfs: ipfsSchema,
-    //   paratiiIPFS: joi.object().optional()
-    // //   onReadyHook: joi.array().ordered().default([]),
-    // //   protocol: joi.string().default(null),
-    // })
-    // const result = joi.validate(opts, schema, {allowUnknown: true})
-    // if (result.error) throw result.error
-    // this.config = result.value
     var _this = (0, _possibleConstructorReturn3.default)(this, (ParatiiIPFSLocal.__proto__ || (0, _getPrototypeOf2.default)(ParatiiIPFSLocal)).call(this));
 
     _this.config = config;
@@ -84,10 +74,17 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
   }
 
   /**
-   * uploads a single file to *local* IPFS node
-   * @param {File} file HTML5 File Object.
-   * @returns {EventEmitter} checkout the upload function below for details.
-   * @example let uploaderEv = paratiiIPFS.uploader.add(files)
+   * upload an Array of files to the local IPFS node
+   * @param  {Array} files    HTML5 File Object Array.
+   * @return {EventEmitter} returns EventEmitter with the following events:
+   *    - `start`: uploader started.
+   *    - `progress`: (chunkLength, progressPercent)
+   *    - `local:fileReady`: (file) triggered when a file is uploaded locally.
+   *    - `done`: (files) triggered when the uploader is done locally.
+   *    - `error`: (err) triggered whenever an error occurs.
+   * @example paratii.ipfs.local.upload('path/to/file')
+   * @example paratii.ipfs.local.upload(['path/to/file', 'path/to/file2'])
+   * @example paratii.ipfs.local.upload([file1])
    */
 
 
@@ -116,30 +113,17 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
           result.push(this.fsFileToPull(files[i]));
         }
       }
-      emitter = this._ipfs.remote.addAndUpload(result, emitter);
+      // emitter = this._ipfs.remote.addAndUpload(result, emitter)
+      emitter = this.upload(result, emitter);
       emitter.on('done', function (hashedFiles) {
         console.log(hashedFiles);
       });
       // emitter.on('error', (err) => reject(err))
       return emitter;
     }
-
-    /**
-     * upload an Array of files as is to the local IPFS node
-     * @param  {Array} files    HTML5 File Object Array.
-     * @return {EventEmitter} returns EventEmitter with the following events:
-     *    - `start`: uploader started.
-     *    - `progress`: (chunkLength, progressPercent)
-     *    - `local:fileReady`: (file) triggered when a file is uploaded locally.
-     *    - `done`: (files) triggered when the uploader is done locally.
-     *    - `error`: (err) triggered whenever an error occurs.
-     * @example paratii.ipfs.local.upload('path/to/file')
-     * TODO: this is not "local" only, it calls xhrupload in case we are dealing with an html5 file!
-     */
-
   }, {
-    key: 'uploadLocal',
-    value: function uploadLocal(files, ev) {
+    key: 'upload',
+    value: function upload(files, ev) {
       var _this2 = this;
 
       var meta = {}; // holds File metadata.

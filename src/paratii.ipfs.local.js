@@ -2,7 +2,6 @@
 'use strict'
 
 import { EventEmitter } from 'events'
-// import { PromiseEventEmitter } from './utils.js'
 const pull = require('pull-stream')
 const pullFilereader = require('pull-filereader')
 const toPull = require('stream-to-pull-stream')
@@ -19,24 +18,22 @@ export class ParatiiIPFSLocal extends EventEmitter {
   // TODO joi validation and add schema
   constructor (config) {
     super()
-    // const schema = joi.object({
-    //   ipfs: ipfsSchema,
-    //   paratiiIPFS: joi.object().optional()
-    // //   onReadyHook: joi.array().ordered().default([]),
-    // //   protocol: joi.string().default(null),
-    // })
-    // const result = joi.validate(opts, schema, {allowUnknown: true})
-    // if (result.error) throw result.error
-    // this.config = result.value
     this.config = config
     this._ipfs = this.config.ipfsInstance
   }
 
   /**
-   * uploads a single file to *local* IPFS node
-   * @param {File} file HTML5 File Object.
-   * @returns {EventEmitter} checkout the upload function below for details.
-   * @example let uploaderEv = paratiiIPFS.uploader.add(files)
+   * upload an Array of files to the local IPFS node
+   * @param  {Array} files    HTML5 File Object Array.
+   * @return {EventEmitter} returns EventEmitter with the following events:
+   *    - `start`: uploader started.
+   *    - `progress`: (chunkLength, progressPercent)
+   *    - `local:fileReady`: (file) triggered when a file is uploaded locally.
+   *    - `done`: (files) triggered when the uploader is done locally.
+   *    - `error`: (err) triggered whenever an error occurs.
+   * @example paratii.ipfs.local.upload('path/to/file')
+   * @example paratii.ipfs.local.upload(['path/to/file', 'path/to/file2'])
+   * @example paratii.ipfs.local.upload([file1])
    */
   add (file) {
     let emitter = new EventEmitter()
@@ -61,7 +58,8 @@ export class ParatiiIPFSLocal extends EventEmitter {
         result.push(this.fsFileToPull(files[i]))
       }
     }
-    emitter = this._ipfs.remote.addAndUpload(result, emitter)
+    // emitter = this._ipfs.remote.addAndUpload(result, emitter)
+    emitter = this.upload(result, emitter)
     emitter.on('done', (hashedFiles) => {
       console.log(hashedFiles)
     })
@@ -69,19 +67,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
     return emitter
   }
 
-  /**
-   * upload an Array of files as is to the local IPFS node
-   * @param  {Array} files    HTML5 File Object Array.
-   * @return {EventEmitter} returns EventEmitter with the following events:
-   *    - `start`: uploader started.
-   *    - `progress`: (chunkLength, progressPercent)
-   *    - `local:fileReady`: (file) triggered when a file is uploaded locally.
-   *    - `done`: (files) triggered when the uploader is done locally.
-   *    - `error`: (err) triggered whenever an error occurs.
-   * @example paratii.ipfs.local.upload('path/to/file')
-   * TODO: this is not "local" only, it calls xhrupload in case we are dealing with an html5 file!
-   */
-  uploadLocal (files, ev) {
+  upload (files, ev) {
     let meta = {} // holds File metadata.
     if (!ev) {
       ev = new EventEmitter()
