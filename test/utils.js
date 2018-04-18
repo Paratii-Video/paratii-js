@@ -40,6 +40,13 @@ const testConfig = {
   }
 }
 
+const testConfigWS = {
+  account: {
+    address: address,
+    privateKey: privateKey
+  }
+}
+
 const vidsFixture = [
   {
     id: 'some-id',
@@ -145,5 +152,6 @@ export {
   voucherCode11,
   hashedVoucherCode11,
   testConfig,
+  testConfigWS,
   testAccount
 }
