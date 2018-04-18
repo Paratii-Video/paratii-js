@@ -29,17 +29,27 @@ var ethSchema = joi.object({
 }).default();
 
 /**
-  * @typedef {Array} ipfsSchema
-  * @property {number} [bitswap.maxMessageSize=256*1024] the maximum msg size allowed for paratii-ipfs-bitswap
-  * @property {Array=} bootstrap bootstrap nodes that ipfs connects to when it starts
-  * @property {number=} chunkSize max size allowed per file chunk
-  * @property {string=} defaultTranscoder the default multiaddress of the main paratii-node
-  * @property {number=} maxFileSize max size for an original video (default to 300MB)
-  * @property {string=} remoteIFPFSNode the default multiaddress of the main paratii-node
-  * @property {string=} repo path to the ipfs repo
-  * @property {Array=} swarm signaling server for finding ipfs nodes
-  * @property {string=} transcoderDropUrl url for the express uploader
-  * @property {number=} xhrChunkSize max chunk size for the express uploader
+ * @typedef {Array} ipfsSchema
+ * @property {number} bitswap.maxMessageSize the maximum msg size allowed for paratii-ipfs-bitswap
+ * @property {Array=} bootstrap bootstrap nodes that ipfs connects to when it starts
+ * @property {number=} chunkSize max size allowed per file chunk
+ * @property {string=} defaultTranscoder the default multiaddress of the main paratii-node
+ * @property {number=} maxFileSize max size for an original video (default to 300MB)
+ * @property {string=} remoteIFPFSNode the default multiaddress of the main paratii-node
+ * @property {string=} repo path to the ipfs repo
+ * @property {Array=} swarm signaling server for finding ipfs nodes
+ * @property {string=} transcoderDropUrl url for the express uploader
+ * @property {number=} xhrChunkSize max chunk size for the express uploader
+ * @example {
+ *   bitswap.maxMessageSize: 262144
+ *   chunkSize : 131072
+ *   defaultTranscoder : "/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW"
+ *   maxFileSize : 314572800
+ *   remoteIPFSNode : "/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW"
+ *   repo: null
+ *   transcoderDropUrl: "https://uploader.paratii.video/api/v1/transcode"
+ *   xhrChunkSize: 1048576
+ * }
  */
 var ipfsSchema = joi.object({
   repo: joi.string().default(null).allow(null),
