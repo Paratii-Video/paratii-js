@@ -91,9 +91,7 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
         if (file._html5File) {
           this._ipfs.remote.xhrUpload(file, hashedFile, ev);
         } else {
-          var msg = 'This is not an HTML5 file - I cannot use XHR to upload it';
-          console.log('We should throw this Error here: ' + msg);
-          // throw Error(msg)
+          this._ipfs.remote.pinFile(hashedFile);
         }
       });
       return ev;
