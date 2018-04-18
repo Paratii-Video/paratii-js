@@ -33,11 +33,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var ParatiiCore =
 /**
 * @typedef {Array} ParatiiCoreSchema
-* @property {?accountSchema} account
-* @property {?ethSchema} eth
-* @property {?dbSchema} db
-* @property {?ipfsSchema} ipfs
-* @property {?Object} paratii
+* @property {accountSchema=} account
+* @property {ethSchema=} eth
+* @property {dbSchema=} db
+* @property {ipfsSchema=} ipfs
+* @property {Object=} paratii
 * @private
 */
 exports.ParatiiCore = function ParatiiCore(config) {

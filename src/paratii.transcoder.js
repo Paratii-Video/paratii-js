@@ -14,8 +14,8 @@ const Multiaddr = require('multiaddr')
 export class ParatiiTranscoder extends EventEmitter {
   /**
   * @typedef {Array} ParatiiIPFSTranscoderSchema
-  * @property {?ipfsSchema} ipfs
-  * @property {?Object} ParatiiIPFS
+  * @property {ipfsSchema=} ipfs
+  * @property {Object=} ParatiiIPFS
   */
   constructor (opts) {
     super()

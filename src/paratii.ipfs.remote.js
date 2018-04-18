@@ -14,8 +14,8 @@ const Multiaddr = require('multiaddr')
 export class ParatiiIPFSRemote extends EventEmitter {
   /**
   * @typedef {Array} ParatiiIPFSRemoteSchema
-  * @property {?ipfsSchema} ipfs
-  * @property {?Object} ParatiiIPFS
+  * @property {ipfsSchema=} ipfs
+  * @property {ParatiiIPFS} paratiiIPFS
   */
   constructor (opts) {
     super()

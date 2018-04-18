@@ -58,8 +58,8 @@ var Web3 = require('web3');
 var ParatiiEth = exports.ParatiiEth = function () {
   /**
   * @typedef {Array} ParatiiEthSchema
-  * @property {?accountSchema} account
-  * @property {?ethSchema} eth
+  * @property {accountSchema=} account
+  * @property {ethSchema=} eth
   */
   function ParatiiEth(config) {
     (0, _classCallCheck3.default)(this, ParatiiEth);

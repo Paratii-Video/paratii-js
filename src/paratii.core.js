@@ -15,11 +15,11 @@ import joi from 'joi'
 export class ParatiiCore {
   /**
   * @typedef {Array} ParatiiCoreSchema
-  * @property {?accountSchema} account
-  * @property {?ethSchema} eth
-  * @property {?dbSchema} db
-  * @property {?ipfsSchema} ipfs
-  * @property {?Object} paratii
+  * @property {accountSchema=} account
+  * @property {ethSchema=} eth
+  * @property {dbSchema=} db
+  * @property {ipfsSchema=} ipfs
+  * @property {Object=} paratii
   * @private
  */
   constructor (config) {

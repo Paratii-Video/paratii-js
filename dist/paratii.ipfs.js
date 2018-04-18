@@ -78,8 +78,8 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
 
   /**
   * @typedef {Array} ParatiiIPFSSchema
-  * @property {?ipfsSchema} ipfs
-  * @property {?accountSchema} account
+  * @property {ipfsSchema=} ipfs
+  * @property {accountSchema=} account
   * @property {boolean=} verbose
   */
   function ParatiiIPFS(config) {

@@ -54,8 +54,8 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
 
   /**
   * @typedef {Array} ParatiiIPFSRemoteSchema
-  * @property {?ipfsSchema} ipfs
-  * @property {?Object} ParatiiIPFS
+  * @property {ipfsSchema=} ipfs
+  * @property {ParatiiIPFS} paratiiIPFS
   */
   function ParatiiIPFSRemote(opts) {
     (0, _classCallCheck3.default)(this, ParatiiIPFSRemote);
