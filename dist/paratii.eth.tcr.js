@@ -22,8 +22,8 @@ var _utils = require('./utils.js');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * Token Curated Registry functionalities
- * This class is not meant to be used independently
+ * Token Curated Registry functionalities.
+ * Work in progress: this class does not yet implement all TCR functinality
  * @param  {ParatiiEth} context ParatiiEth instance
  * @property {ParatiiEth} eth ParatiiEth instance
  * @example let paratii = new Paratii()

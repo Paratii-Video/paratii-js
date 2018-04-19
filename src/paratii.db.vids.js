@@ -26,17 +26,7 @@ export class ParatiiDbVids {
   }
 
   /**
-   * Get the data of the video
-   * @param  {Object} options data about the video and (optional) owner i.e {'keyword':'titleOfTheVideo'}
-   * @return {Promise}        data about the video
-   * @example await paratii.db.vids.search({keyword : 'titleOftheVideo'})
-   * the keyword value can be one from the following list
-   * - video title
-   * - description
-   * - owner
-   * - uploader.name
-   * - uploader.address
-   * - tags
+   * Get the data of the video. See {@link ParatiiCoreVids#search}
    */
   async search (options) {
     // FIXME: does not handle combinations of parameters yet
