@@ -62,7 +62,7 @@ const ipfsSchema = joi.object({
     ),
   chunkSize: joi.number().default(128 * 1024),
   xhrChunkSize: joi.number().default(1 * 1024 * 1024),
-  maxFileSize: joi.number().default(300 * 1024 * 1024),
+  maxFileSize: joi.number().default(800 * 1024 * 1024),
   defaultTranscoder: joi.string().default('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'),
   remoteIPFSNode: joi.string().default('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'),
   transcoderDropUrl: joi.string().default('https://uploader.paratii.video/api/v1/transcode')
