@@ -1,14 +1,14 @@
-import { ParatiiCoreVids } from './paratii.core.vids.js'
-import { ParatiiCoreUsers } from './paratii.core.users.js'
+import { ParatiiVids } from './paratii.core.vids.js'
+import { ParatiiUsers } from './paratii.core.users.js'
 import { ipfsSchema, ethSchema, accountSchema, dbSchema } from './schemas.js'
 import joi from 'joi'
 
 /**
  * Contains functions that operate transversally over several backend systems. <br />
- * validates the config file and istantiates ParatiiCoreVids and ParatiiCoreUsers.
+ * validates the config file and istantiates ParatiiVids and ParatiiUsers.
  * @param {ParatiiCoreSchema} config configuration object to initialize Paratii object
- * @property {ParatiiCoreVids} vids operations on videos
- * @property {ParatiiCoreUsers} users operations on users
+ * @property {ParatiiVids} vids operations on videos
+ * @property {ParatiiUsers} users operations on users
  * @property {Paratii} paratii main Paratii Object
  * @private
  */
@@ -34,8 +34,8 @@ export class ParatiiCore {
     if (result.error) throw result.error
     this.config = config
     // this.config = result.value
-    this.vids = new ParatiiCoreVids(this.config)
-    this.users = new ParatiiCoreUsers(this.config)
+    this.vids = new ParatiiVids(this.config)
+    this.users = new ParatiiUsers(this.config)
     this.paratii = this.config.paratii
   }
 }

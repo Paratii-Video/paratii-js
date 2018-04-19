@@ -6,7 +6,7 @@ import joi from 'joi'
   * Utilities to create and manipulate information about the videos on the blockchain.
   * @param {Object} config configuration object to initialize Paratii object
   */
-export class ParatiiCoreVids {
+export class ParatiiVids {
   constructor (config) {
     this.config = config
   }

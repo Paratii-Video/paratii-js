@@ -2,9 +2,11 @@ const joi = require('joi')
 
 /**
  * Utilities to create and manipulate information about the users on the blockchain.
- * @param {Object} config configuration object to initialize Paratii object
+ * @param {ParatiiConfigSchema} config configuration object to initialize Paratii object
+ * @example let paratii = new Paratii()
+ * paratii.users // <- this is an instance of ParatiiUsers
  */
-export class ParatiiCoreUsers {
+export class ParatiiUsers {
   constructor (config) {
     // const schema = joi.object({
     //   'db.provider': joi.string().default(null)

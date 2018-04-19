@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ParatiiCoreUsers = undefined;
+exports.ParatiiUsers = undefined;
 
 var _regenerator = require('babel-runtime/regenerator');
 
@@ -27,12 +27,14 @@ var joi = require('joi');
 
 /**
  * Utilities to create and manipulate information about the users on the blockchain.
- * @param {Object} config configuration object to initialize Paratii object
+ * @param {ParatiiConfigSchema} config configuration object to initialize Paratii object
+ * @example let paratii = new Paratii()
+ * paratii.users // <- this is an instance of ParatiiUsers
  */
 
-var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
-  function ParatiiCoreUsers(config) {
-    (0, _classCallCheck3.default)(this, ParatiiCoreUsers);
+var ParatiiUsers = exports.ParatiiUsers = function () {
+  function ParatiiUsers(config) {
+    (0, _classCallCheck3.default)(this, ParatiiUsers);
 
     // const schema = joi.object({
     //   'db.provider': joi.string().default(null)
@@ -59,7 +61,7 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
   // FIXME: do some joi validation here
 
 
-  (0, _createClass3.default)(ParatiiCoreUsers, [{
+  (0, _createClass3.default)(ParatiiUsers, [{
     key: 'create',
     value: function create(options) {
       var keysForBlockchain, optionsKeys, optionsBlockchain, optionsIpfs, hash;
@@ -248,5 +250,5 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
       }, null, this);
     }
   }]);
-  return ParatiiCoreUsers;
+  return ParatiiUsers;
 }();

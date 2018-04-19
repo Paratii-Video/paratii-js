@@ -45,8 +45,8 @@ var Web3 = require('web3');
  * contains functions to interact with the Ethereum blockchain and the Paratii contracts.<br>
  * See {@link Paratii}
  * @param {ParatiiEthSchema} config configuration object to initialize Paratii object
- * @property {ParatiiCoreVids} vids operations on videos
- * @property {ParatiiCoreUsers} users operations on users
+ * @property {ParatiiVids} vids operations on videos
+ * @property {ParatiiUsers} users operations on users
  * @property {ParatiiEthEvents} events manage subscriptions to Ethereum events
  * @property {ParatiiEthVouchers} vouchers Functions for redeeming vouchers
  * @property {ParatiiEthTcr} tcr TCR functionality

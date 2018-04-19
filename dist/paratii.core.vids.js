@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ParatiiCoreVids = undefined;
+exports.ParatiiVids = undefined;
 
 var _keys = require('babel-runtime/core-js/object/keys');
 
@@ -35,9 +35,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Utilities to create and manipulate information about the videos on the blockchain.
  * @param {Object} config configuration object to initialize Paratii object
  */
-var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
-  function ParatiiCoreVids(config) {
-    (0, _classCallCheck3.default)(this, ParatiiCoreVids);
+var ParatiiVids = exports.ParatiiVids = function () {
+  function ParatiiVids(config) {
+    (0, _classCallCheck3.default)(this, ParatiiVids);
 
     this.config = config;
   }
@@ -60,7 +60,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
    */
 
 
-  (0, _createClass3.default)(ParatiiCoreVids, [{
+  (0, _createClass3.default)(ParatiiVids, [{
     key: 'create',
     value: function create() {
       var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -421,5 +421,5 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
       return this.config.paratii.transcoder.uploadAndTranscode(files);
     }
   }]);
-  return ParatiiCoreVids;
+  return ParatiiVids;
 }();
