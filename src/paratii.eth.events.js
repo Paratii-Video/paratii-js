@@ -157,7 +157,6 @@ export class ParatiiEthEvents {
       default: {
         let contract = await this.config.getContract(this._customEvents[structuredEvent.event].contract)
         subscription = await contract.events[this._customEvents[structuredEvent.event].event](options)
-
         subscription.on(structuredEvent.emit, listener)
       }
     }
