@@ -135,6 +135,7 @@ export class ParatiiEth {
   async getContract (name) {
     let contract = this.contracts[name]
     if (!contract) {
+      console.log('contractNames: ', Object.keys(this.contracts))
       throw Error(`No contract with name "${name}" is known`)
     }
     if (!contract.options.address) {
@@ -158,6 +159,7 @@ export class ParatiiEth {
    * @private
    */
   requireContract (contractName) {
+    console.log('requiring ', contractName)
     let artifact, contract
     let from = this.config.account.address
 
@@ -183,7 +185,7 @@ export class ParatiiEth {
       })
       // contract.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
     if (contractArr[1] === 'DLL') {
-      console.log('DLL: ', contract.options.data)
+      console.log('DLL required!')
     }
     return contract
   }
@@ -252,6 +254,7 @@ export class ParatiiEth {
 
     // deployedContract.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
     this.contracts[name] = deployedContract
+    console.log('deployed ', name)
     return deployedContract
   }
 
@@ -278,18 +281,18 @@ export class ParatiiEth {
     //   console.log('gotcha : ', e)
     //   reject(e)
     // })
-    console.log('TcrDLL: ', this.contracts.TcrDLL)
+    // console.log('TcrDLL: ', this.contracts.TcrDLL)
     // console.log('TcrAttributeStore: ', this.contracts.TcrAttributeStore)
     // console.log('TcrPLCR: ', this.contracts.TcrPLCRVoting)
     // console.log('Avatar: ', this.contracts.Avatar)
-    console.log('Registry Address: ', this.contracts.Registry.options.address)
-    let deployedDLL = await this.contracts.TcrDLL.deploy({arguments: []}).send()
-    deployedDLL.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
-    this.contracts.TcrDLL = deployedDLL
-
-    let deployedAttributeStore = await this.contracts.TcrAttributeStore.deploy({arguments: []}).send()
-    deployedAttributeStore.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
-    this.contracts.TcrAttributeStore = deployedAttributeStore
+    // console.log('Registry Address: ', this.contracts.Registry.options.address)
+    // let deployedDLL = await this.contracts.TcrDLL.deploy({arguments: []}).send()
+    // deployedDLL.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
+    // this.contracts.TcrDLL = deployedDLL
+    //
+    // let deployedAttributeStore = await this.contracts.TcrAttributeStore.deploy({arguments: []}).send()
+    // deployedAttributeStore.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
+    // this.contracts.TcrAttributeStore = deployedAttributeStore
 
     // link both libs to PLCRVoting and deploy it.
     let linkedByteCode = this.linkByteCode(
@@ -386,6 +389,8 @@ export class ParatiiEth {
     let views = await this.deployContract('Views', paratiiRegistryAddress)
     let vouchers = await this.deployContract('Vouchers', paratiiRegistryAddress)
     let tcrPlaceholder = await this.deployContract('TcrPlaceholder', paratiiRegistryAddress, paratiiToken.options.address, this.web3.utils.toWei('5'), 100)
+    let tcrDLL = await this.deployContract('TcrDLL')
+    let TcrAttributeStore = await this.deployContract('TcrAttributeStore')
 
     let tcrTest = await this.deployTcr(paratiiRegistry.options.address, paratiiToken.options.address)
     console.log('tcrTEST address: ', tcrTest.options.address)
@@ -402,24 +407,26 @@ export class ParatiiEth {
     await paratiiRegistry.methods.registerAddress('Views', views.options.address).send()
     await paratiiRegistry.methods.registerAddress('Vouchers', vouchers.options.address).send()
     await paratiiRegistry.methods.registerAddress('TcrPlaceholder', tcrPlaceholder.options.address).send()
+    await paratiiRegistry.methods.registerAddress('TcrDLL', tcrDLL.options.address).send()
+    await paratiiRegistry.methods.registerAddress('TcrAttributeStore', TcrAttributeStore.options.address).send()
 
     await paratiiRegistry.methods.registerUint('VideoRedistributionPoolShare', this.web3.utils.toWei('0.3'))
 
     await paratiiAvatar.methods.addToWhitelist(videoStore.address)
 
-    this.contracts = {
-      Avatar: paratiiAvatar,
-      Registry: paratiiRegistry,
-      ParatiiToken: paratiiToken,
-      SendEther: sendEther,
-      Users: userRegistry,
-      Videos: videoRegistry,
-      Likes: likes,
-      Views: views,
-      Vouchers: vouchers,
-      Store: videoStore,
-      TcrPlaceholder: tcrPlaceholder
-    }
+    this.contracts.Avatar = paratiiAvatar
+    this.contracts.Registry = paratiiRegistry
+    this.contracts.ParatiiToken = paratiiToken
+    this.contracts.SendEther = sendEther
+    this.contracts.Users = userRegistry
+    this.contracts.Videos = videoRegistry
+    this.contracts.Likes = likes
+    this.contracts.Views = views
+    this.contracts.Vouchers = vouchers
+    this.contracts.Store = videoStore
+    this.contracts.TcrPlaceholder = tcrPlaceholder
+    this.contracts.TcrDLL = tcrDLL
+    this.contracts.TcrAttributeStore = TcrAttributeStore
 
     this.setRegistryAddress(paratiiRegistryAddress)
 
