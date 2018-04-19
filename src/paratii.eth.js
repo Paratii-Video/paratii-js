@@ -50,7 +50,6 @@ export class ParatiiEth {
     } else {
       this.web3 = new Web3()
       if (config.eth.provider.substring(0, 2) === 'ws') {
-        console.log('i\'m on socket')
         this.web3.setProvider(new this.web3.providers.WebsocketProvider(config.eth.provider))
       } else {
         this.web3.setProvider(new this.web3.providers.HttpProvider(config.eth.provider))
@@ -253,7 +252,6 @@ export class ParatiiEth {
    */
   async setContractsProvider () {
     for (var key in this.contracts) {
-      console.log(this.web3.currentProvider)
       this.contracts[key].setProvider(this.web3.currentProvider, this.web3.eth.accounts)
     }
   }

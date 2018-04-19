@@ -84,7 +84,6 @@ var ParatiiEth = exports.ParatiiEth = function () {
     } else {
       this.web3 = new Web3();
       if (config.eth.provider.substring(0, 2) === 'ws') {
-        console.log('i\'m on socket');
         this.web3.setProvider(new this.web3.providers.WebsocketProvider(config.eth.provider));
       } else {
         this.web3.setProvider(new this.web3.providers.HttpProvider(config.eth.provider));
@@ -466,7 +465,6 @@ var ParatiiEth = exports.ParatiiEth = function () {
           switch (_context4.prev = _context4.next) {
             case 0:
               for (key in this.contracts) {
-                console.log(this.web3.currentProvider);
                 this.contracts[key].setProvider(this.web3.currentProvider, this.web3.eth.accounts);
               }
 
