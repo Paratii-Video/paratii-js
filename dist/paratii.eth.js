@@ -356,11 +356,12 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 8:
               deployedContract = _context2.sent;
 
-              deployedContract.setProvider(this.web3.currentProvider, this.web3.eth.accounts);
+
+              // deployedContract.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
               this.contracts[name] = deployedContract;
               return _context2.abrupt('return', deployedContract);
 
-            case 12:
+            case 11:
             case 'end':
               return _context2.stop();
           }
