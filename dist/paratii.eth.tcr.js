@@ -23,8 +23,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 /**
  * Token Curated Registry functionalities
- * @param  {Object} context ParatiiEth instance
+ * This class is not meant to be used independently
+ * @param  {ParatiiEth} context ParatiiEth instance
  * @property {ParatiiEth} eth ParatiiEth instance
+ * @example let paratii = new Paratii()
+ * paratii.eth.tcr // this is an instance of ParatiiEthTcr
  */
 var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   function ParatiiEthTcr(context) {
@@ -74,7 +77,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
     /**
      * get the minimum amount required to stake a video.
-     * @return {Float} amount required in PTI
+     * @return {integer} amount required, in PTI base units
      * @todo return amount as bignumber.js Object
      * @example let minDeposit = await paratii.eth.tcr.getMinDeposit()
      */
@@ -108,7 +111,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     }
 
     /**
-     * check if video is already whitelisted or not. note that this returns false
+     * check if video is already whitelisted. note that this returns false
      * till the video is actually whitelisted. use didVideoApply in case you want
      * to check whether the video is in application process.
      * @param  {string}  videoId univocal video identifier randomly generated
@@ -145,9 +148,9 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     }
 
     /**
-     * check whether a video started the application process or not yet.
+     * check whether a video started the application process
      * @param  {string}  videoId univocal video identifier randomly generated
-     * @return {boolean}         true if video started the application process, false otherwise
+     * @return {boolean}  true if video started the application process, false otherwise
      * @example let appWasMade = await paratii.eth.tcr.didVideoApply('some-video-id')
      */
 
@@ -180,14 +183,13 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     }
 
     /**
-     * start the application process.<br>
-     * NOTE that this require the client approves PTI amount first before actually
-     * running this function, use checkEligiblityAndApply instead.
+     * Start the application process.
+     * One of the preconditions for apploication is the client approve that the TCR contract can   amount first before actually
+     * transfer the stake. If this sounds unfamliar to you, use {@link ParatiiEthTcr#checkEligiblityAndApply} instead.
      * @param  {string} videoId univocal video identifier randomly generated
-     * @param  {Float}  amountToStake number of tokens to stake. must >= minDeposit
-     * @return {boolean}               returns true if all is good, plus _Application
-     * event.
-     * @example let result = await paratii.eth.tcr.apply('some-video-id', 'amount of tokens')
+     * @param  {integer}  amountToStake number of tokens to stake. must >= minDeposit
+     * @return {boolean}  returns true if the  application is successful
+     * @example paratii.eth.tcr.apply('some-video-id', 3e18)
      */
 
   }, {
@@ -238,42 +240,26 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
               throw _context5.t0;
 
             case 19:
-              // console.log('tx: ', tx)
               vId = void 0;
-              _context5.prev = 20;
 
               vId = (0, _utils.getInfoFromLogs)(tx, '_Application', 'videoId', 1);
-              _context5.next = 28;
-              break;
 
-            case 24:
-              _context5.prev = 24;
-              _context5.t1 = _context5['catch'](20);
-
-              if (!_context5.t1) {
-                _context5.next = 28;
-                break;
-              }
-
-              throw _context5.t1;
-
-            case 28:
               if (!vId) {
-                _context5.next = 32;
+                _context5.next = 25;
                 break;
               }
 
               return _context5.abrupt('return', true);
 
-            case 32:
+            case 25:
               return _context5.abrupt('return', false);
 
-            case 33:
+            case 26:
             case 'end':
               return _context5.stop();
           }
         }
-      }, null, this, [[10, 16], [20, 24]]);
+      }, null, this, [[10, 16]]);
     }
 
     /**
@@ -283,10 +269,10 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
      * - approve that the TCR contract can transfer amountToStake tokens
      * - apply to the TCR
      * @param  {string}  videoId       univocal video identifier randomly generated
-     * @param  {number}  amountToStake number of tokens to stake
-     * @return {Promise}                returns true if all is good, plus _Application
+     * @param  {integer}  amountToStake amount (in base units) of tokens to stake
+     * @return {Promise}  returns true if the application was successful, false otherwise
      * event.
-     * @example let result = await paratii.eth.tcr.checkEligiblityAndApply('some-video-id', 'amount of tokens')
+     * @example let result = await paratii.eth.tcr.checkEligiblityAndApply('some-video-id', 31415926)
      */
     // FIXME: better naming
 
@@ -390,8 +376,8 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     }
 
     /**
-     * remove the video given by videoId from the listing
-     * @param videoId univocal video identifier randomly generated
+     * remove the video given by videoId from the listing (and returns the stake to the staker)
+     * @param videoId {string} video identifier
      * @return information about the transaction
      * @example let tx = await paratii.eth.tcr.exit('some-video-id')
      */

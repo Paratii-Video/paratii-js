@@ -12,7 +12,10 @@
     "theme" : "flatly"
   },
   "opts": {
-    "template": "node_modules/ink-docstrap/template"
+    "template": "node_modules/ink-docstrap/template",
+    "tutorials": "./docs/tutorials",
+    "readme": "./docs/JSDOC-INDEX.md",
+    "destination": "./docs/htmldoc"
   },
  "plugins": ["plugins/markdown"]
 }
