@@ -223,14 +223,20 @@ export class ParatiiCoreVids {
   }
 
   /**
-   * convenience method for adding and transcoding files
+   * convenience method for adding and transcoding files. It will upload a file to the local IPFS instance, signal
+   * the transcoder to transcode the file. It returns an EventEmitter that signals progress updates
+   * and, when done, returns the hash of the transcoded file
    * @param {Object[]} files Either a single file or an array of files.
    * the files can either be a path to the local filesystem, or a fs.File object, or an HTML5 File object
    * @return {EventEmitter} an event emitter/Promise object, which defines the following events:
-   *  - all events from {@link ParatiiIPFSLocal#upload}
+   *  - all events from {@link ParatiiIPFSLocal#add}
    *  - all events from {@link ParatiiTranscoder#transcode}
    * @example const pathToYourFile = './some/file.mp4'
    * const ev = paratii.vids.uploadAndTranscode(pathToYourFile)
+   * ev.on('transcoding:error',  console.error )
+   * ev.on('transcoding:done',  function(hash, transcoderResult) {
+   *    console.log(`Your file should now be available on https://gateway.paratii.video/ipfs/${transcoderResult}`)
+   *  })
    * @async
    */
   uploadAndTranscode (files) {
