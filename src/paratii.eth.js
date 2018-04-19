@@ -88,7 +88,7 @@ export class ParatiiEth {
     this.tcr = new ParatiiEthTcr(this)
   }
   /**
-   * {@link paratii.setAccount}
+   * [paratii.setAccount()](./Paratii.html#setAccount__anchor)
    */
   setAccount (opts) {
     const schema = accountSchema
