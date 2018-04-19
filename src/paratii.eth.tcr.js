@@ -3,8 +3,11 @@ import { getInfoFromLogs } from './utils.js'
 
  /**
   * Token Curated Registry functionalities
-  * @param  {Object} context ParatiiEth instance
+  * This class is not meant to be used independently
+  * @param  {ParatiiEth} context ParatiiEth instance
   * @property {ParatiiEth} eth ParatiiEth instance
+  * @example let paratii = new Paratii()
+  * paratii.eth.tcr // this is an instance of ParatiiEthTcr
   */
 export class ParatiiEthTcr {
   constructor (context) {
@@ -26,7 +29,7 @@ export class ParatiiEthTcr {
 
   /**
    * get the minimum amount required to stake a video.
-   * @return {Float} amount required in PTI
+   * @return {integer} amount required, in PTI base units
    * @todo return amount as bignumber.js Object
    * @example let minDeposit = await paratii.eth.tcr.getMinDeposit()
    */
@@ -37,7 +40,7 @@ export class ParatiiEthTcr {
   }
 
   /**
-   * check if video is already whitelisted or not. note that this returns false
+   * check if video is already whitelisted. note that this returns false
    * till the video is actually whitelisted. use didVideoApply in case you want
    * to check whether the video is in application process.
    * @param  {string}  videoId univocal video identifier randomly generated
@@ -51,9 +54,9 @@ export class ParatiiEthTcr {
   }
 
   /**
-   * check whether a video started the application process or not yet.
+   * check whether a video started the application process
    * @param  {string}  videoId univocal video identifier randomly generated
-   * @return {boolean}         true if video started the application process, false otherwise
+   * @return {boolean}  true if video started the application process, false otherwise
    * @example let appWasMade = await paratii.eth.tcr.didVideoApply('some-video-id')
    */
   async didVideoApply (videoId) {
@@ -63,14 +66,13 @@ export class ParatiiEthTcr {
   }
 
   /**
-   * start the application process.<br>
-   * NOTE that this require the client approves PTI amount first before actually
-   * running this function, use checkEligiblityAndApply instead.
+   * Start the application process.
+   * One of the preconditions for apploication is the client approve that the TCR contract can   amount first before actually
+   * transfer the stake. If this sounds unfamliar to you, use {@link ParatiiEthTcr#checkEligiblityAndApply} instead.
    * @param  {string} videoId univocal video identifier randomly generated
-   * @param  {Float}  amountToStake number of tokens to stake. must >= minDeposit
-   * @return {boolean}               returns true if all is good, plus _Application
-   * event.
-   * @example let result = await paratii.eth.tcr.apply('some-video-id', 'amount of tokens')
+   * @param  {integer}  amountToStake number of tokens to stake. must >= minDeposit
+   * @return {boolean}  returns true if the  application is successful
+   * @example paratii.eth.tcr.apply('some-video-id', 3e18)
    */
   async apply (videoId, amountToStake) {
     // FIXME: it is more efficient if we first call "apply", and check for preconditions only after this failed
@@ -89,19 +91,9 @@ export class ParatiiEthTcr {
     } catch (error) {
       throw error
     }
-    // console.log('tx: ', tx)
     let vId
-    try {
-      vId = getInfoFromLogs(tx, '_Application', 'videoId', 1)
-    } catch (e) {
-      // FIXME: thsi error should be thrown
-      if (e) {
-        throw (e)
-        // return false
-      }
-    }
+    vId = getInfoFromLogs(tx, '_Application', 'videoId', 1)
 
-    // console.log('vId: ', vId)
     if (vId) {
       return true
     } else {
@@ -116,10 +108,10 @@ export class ParatiiEthTcr {
    * - approve that the TCR contract can transfer amountToStake tokens
    * - apply to the TCR
    * @param  {string}  videoId       univocal video identifier randomly generated
-   * @param  {number}  amountToStake number of tokens to stake
-   * @return {Promise}                returns true if all is good, plus _Application
+   * @param  {integer}  amountToStake amount (in base units) of tokens to stake
+   * @return {Promise}  returns true if the application was successful, false otherwise
    * event.
-   * @example let result = await paratii.eth.tcr.checkEligiblityAndApply('some-video-id', 'amount of tokens')
+   * @example let result = await paratii.eth.tcr.checkEligiblityAndApply('some-video-id', 31415926)
    */
    // FIXME: better naming
   async checkEligiblityAndApply (videoId, amountToStake) {
@@ -164,8 +156,8 @@ export class ParatiiEthTcr {
   }
 
   /**
-   * remove the video given by videoId from the listing
-   * @param videoId univocal video identifier randomly generated
+   * remove the video given by videoId from the listing (and returns the stake to the staker)
+   * @param videoId {string} video identifier
    * @return information about the transaction
    * @example let tx = await paratii.eth.tcr.exit('some-video-id')
    */
