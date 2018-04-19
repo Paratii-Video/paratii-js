@@ -41,7 +41,7 @@ Which will give you a list of videos with "cats" in the title or description. Or
 
 This calls will give paginated set of results.
 
-Other options of the search function are [documented here](./ParatiiCoreVids.html#search__anchor).
+Other options of the search function are [documented here](ParatiiCoreVids.html#search__anchor).
 
 ## Set your base account
 
