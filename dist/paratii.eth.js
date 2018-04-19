@@ -114,7 +114,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
     this.tcr = new _paratiiEthTcr.ParatiiEthTcr(this);
   }
   /**
-   * {@link paratii.setAccount}
+   * [paratii.setAccount()](./Paratii.html#setAccount__anchor)
    */
 
 
