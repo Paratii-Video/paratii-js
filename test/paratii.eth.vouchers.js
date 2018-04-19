@@ -7,7 +7,6 @@ describe('paratii.eth.vouchers:', function () {
 
   beforeEach(async function () {
     paratii = new Paratii(testConfig)
-
     await paratii.eth.deployContracts()
     let token = await paratii.eth.getContract('ParatiiToken')
     let vouchers = await paratii.eth.getContract('Vouchers')

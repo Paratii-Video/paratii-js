@@ -394,7 +394,8 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
      *    query: Object, //get back your query
      * }
      * ```
-     * @example paratii.core.vids.search({keyword : 'titleOftheVideo'})
+     * @example let response = await paratii.core.vids.search({keyword : 'titleOftheVideo'})
+     * console.log(`We found ${response.total} result for your query ${response.query}`)
      */
 
   }, {

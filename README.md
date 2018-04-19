@@ -31,7 +31,9 @@ Here is a code snippet which will upload a video to Paratii and transcode it:
       title: 'Paratii for fun and profit'
       })
 
-We have more extensive documentation on [https://docs.paratii.video](https://docs.paratii.video)
+## Where to find more documentation
+
+There is extensive documentation on [https://docs.paratii.video](https://docs.paratii.video)
 
 ## Contributing to `paratii.js`
 

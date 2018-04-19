@@ -3,8 +3,6 @@
 
 Bug reports and pull requests very much welcomed.
 
-
-
 ## Prerequisties:
 
 Make sure you have a recent version of [node.js](https://nodejs.org/) (8.10 and above) and [yarn](https://yarnpkg.com) package manager.
