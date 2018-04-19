@@ -26,7 +26,7 @@ We provide two ways of using the `paratii.js` library: there is a browser build 
 
 ## Using  `paratii.js` in your nodejs application
 
-The package is available on npmjs, https://www.npmjs.com/package/paratii-js, and installing it is as easy as:
+The package is [available on npmjs](http://www.npmjs.com/package/paratii-js), and installing it is as easy as:
 
     npm install paratii-js
 
@@ -44,7 +44,7 @@ You can now `require('paratii-js')` in your code, and search for cats videos on 
 ## Using `paratii.js` in the browser
 
 We provide a webpacked minified version of the library that you can include directly in your browser.
-The file to include lives in our github repository https://raw.githubusercontent.com/Paratii-Video/paratii-js/dev/dist/paratii.min.js
+The file to include lives in our github repository <https://raw.githubusercontent.com/Paratii-Video/paratii-js/dev/dist/paratii.min.js>
 
 
 You can have a look at the [demo Application](https://github.com/Paratii-Video/ParatiiJSDemo) for examples on how to use this.

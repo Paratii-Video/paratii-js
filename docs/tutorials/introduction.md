@@ -5,13 +5,11 @@ The Paratii object serves as the general entry point for interacting with the fa
 
 This short tutorial shows you how to set up and use `paratii-js` in a node environment. We have some examples of using `paratii-js` directly in the browser as well.
 
-## initialization
+## Initialization
 
-
-The default export of the `paratii-js` module is the [Paratii class]('../Paratii.html')
+The default export of the `paratii-js` module is the [Paratii class](./Paratii.html)
 
     const { Paratii } = require('paratii-js')
-
 
 It can be initialized in several ways. Here is an example:
 
@@ -35,20 +33,19 @@ All settings are optional, and are documented [here](./global.html#ParatiiConfig
 
 Your newly configured `paratii` object can read data from the blockchain. For example, you can search for videos about cats:
 
-    let coolVideos = await paratii.vids.search({keyword: 'yunta'})
+    let coolVideos = await paratii.vids.search({keyword: 'cats'})
 
 Which will give you a list of videos with "cats" in the title or description. Or, alternatively, you can search for all videos associated with a given account:
 
     let myVideos = await paratii.vids.search({owner: '0xCbe4f07b343171ac37055B25a5266f48f6945b7d'})
 
-
 This calls will give paginated set of results.
 
-Other options of the search function are (documented here)[./ParatiiCoreVids.html#search__anchor]
+Other options of the search function are [documented here](./ParatiiCoreVids.html#search__anchor).
 
 ## Set your base account
 
-All operations on Paratii  that change the state (such as uploading a video) require that you sign transactions with an Ethereum account. You can set the account being used (and the private key with which to sign the transactions) when constructing the Paratii object:
+All operations on Paratii that change the state (such as uploading a video) require that you sign transactions with an Ethereum account. You can set the account being used (and the private key with which to sign the transactions) when constructing the Paratii object:
 
     paratii = new Paratii({
       account: {
@@ -60,7 +57,7 @@ Or, alternatively, you can change the account being used by passing the private 
 
     paratii.setAccount({privateKey: '0x399b141d0cc2b863b2f514ffe53edc6afc9416d5899da4d9bd2350074c38f1c6'})
 
-If you want to create a new account, `paratii-js` includes a version of the wallet from (web3js)[http://web3js.readthedocs.io/en/1.0/web3-eth-accounts.html#wallet]:
+If you want to create a new account, `paratii-js` includes a version of the wallet from [web3js](http://web3js.readthedocs.io/en/1.0/web3-eth-accounts.html#wallet):
 
     paratii.eth.wallet.create() // create a new account in the wallet
     paratii.getAccount() // returns the newly generated address
@@ -68,7 +65,7 @@ If you want to create a new account, `paratii-js` includes a version of the wall
 
 ## Upload and transcode videos
 
-The upload-and-transcode process has a number of steps - the video file needs to uploaded to the transcoder, transcoded into different formats and sizes, the result saved in IPFS and made available to paratii.
+The upload-and-transcode process has a number of steps - the video file needs to uploaded to the transcoding network, transcoded into different formats and sizes, the result saved in IPFS and made available to Paratii.
 
 You might not want to bother with the complexity of this process, so we provide a convenience function, with an interface that is as simple as we could make it:
 
