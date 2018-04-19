@@ -23,10 +23,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 /**
  * Contains functions that operate transversally over several backend systems. <br />
- * validates the config file and istantiates ParatiiCoreVids and ParatiiCoreUsers.
+ * validates the config file and istantiates ParatiiVids and ParatiiUsers.
  * @param {ParatiiCoreSchema} config configuration object to initialize Paratii object
- * @property {ParatiiCoreVids} vids operations on videos
- * @property {ParatiiCoreUsers} users operations on users
+ * @property {ParatiiVids} vids operations on videos
+ * @property {ParatiiUsers} users operations on users
  * @property {Paratii} paratii main Paratii Object
  * @private
  */
@@ -54,7 +54,7 @@ exports.ParatiiCore = function ParatiiCore(config) {
   if (result.error) throw result.error;
   this.config = config;
   // this.config = result.value
-  this.vids = new _paratiiCoreVids.ParatiiCoreVids(this.config);
-  this.users = new _paratiiCoreUsers.ParatiiCoreUsers(this.config);
+  this.vids = new _paratiiCoreVids.ParatiiVids(this.config);
+  this.users = new _paratiiCoreUsers.ParatiiUsers(this.config);
   this.paratii = this.config.paratii;
 };

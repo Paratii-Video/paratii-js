@@ -217,7 +217,7 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
     }
 
     /**
-     * See {@link ParatiiCoreVids#uploadAndTranscode}
+     * See {@link ParatiiVids#uploadAndTranscode}
      */
 
   }, {

@@ -37,7 +37,7 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
   }
   /**
    * Get information about this video from the db
-   * @param  {string}  videoId univocal video identifier randomly generated
+   * @param  {string}  videoId id of the video
    * @return {Promise}         data about the video
    * @example await paratii.db.vids.get('some-video-id')
    */

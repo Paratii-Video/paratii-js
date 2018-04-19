@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ParatiiCoreUsers = undefined;
+exports.ParatiiUsers = undefined;
 
 var _regenerator = require('babel-runtime/regenerator');
 
@@ -27,12 +27,14 @@ var joi = require('joi');
 
 /**
  * Utilities to create and manipulate information about the users on the blockchain.
- * @param {Object} config configuration object to initialize Paratii object
+ * @param {ParatiiConfigSchema} config configuration object to initialize Paratii object
+ * @example let paratii = new Paratii()
+ * paratii.users // <- this is an instance of ParatiiUsers
  */
 
-var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
-  function ParatiiCoreUsers(config) {
-    (0, _classCallCheck3.default)(this, ParatiiCoreUsers);
+var ParatiiUsers = exports.ParatiiUsers = function () {
+  function ParatiiUsers(config) {
+    (0, _classCallCheck3.default)(this, ParatiiUsers);
 
     // const schema = joi.object({
     //   'db.provider': joi.string().default(null)
@@ -43,23 +45,26 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
     // if (error) throw error
     this.config = config;
   }
-
+  /**
+   * @typedef {Array} userSchema
+   * @property {string=} id univocal video identifier
+   * @property {string=} name
+   * @property {string=} email
+   */
   /**
    * Creates a user, fields id, name and email go to the smart contract Users, other fields are stored on IPFS.
    * @param  {userSchema}  options information about the video ( id, name, email ... )
    * @return {Promise}         the id of the newly created user
-   * @example
-   *            await paratii.users.create({
-   *              id: 'some-user-id', //must be a valid ethereum address
-   *              name: 'A user name',
-   *              email: 'some@email.com',
-   *              ...
-   *             })
+   * @example await paratii.users.create({
+   *   id: 'some-user-id', //must be a valid ethereum address
+   *   name: 'A user name',
+   *   email: 'some@email.com',
+   *  })
    */
   // FIXME: do some joi validation here
 
 
-  (0, _createClass3.default)(ParatiiCoreUsers, [{
+  (0, _createClass3.default)(ParatiiUsers, [{
     key: 'create',
     value: function create(options) {
       var keysForBlockchain, optionsKeys, optionsBlockchain, optionsIpfs, hash;
@@ -111,7 +116,7 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
     /**
      * Updates a user's details. name and email are defined in the smart contract Users, other fields get written to IPFS.
      * @param  {string}  userId  user univocal id
-     * @param  {Object}  options updated data i.e. { name: 'A new user name' }
+     * @param  {UserSchema}  options updated data i.e. { name: 'A new user name' }
      * @return {Promise}         updated data about the user
      * @example let updatedData = await paratii.users.update('some-user-id', {name: 'A new user name'})
      */
@@ -248,5 +253,5 @@ var ParatiiCoreUsers = exports.ParatiiCoreUsers = function () {
       }, null, this);
     }
   }]);
-  return ParatiiCoreUsers;
+  return ParatiiUsers;
 }();

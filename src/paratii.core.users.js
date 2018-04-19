@@ -2,9 +2,11 @@ const joi = require('joi')
 
 /**
  * Utilities to create and manipulate information about the users on the blockchain.
- * @param {Object} config configuration object to initialize Paratii object
+ * @param {ParatiiConfigSchema} config configuration object to initialize Paratii object
+ * @example let paratii = new Paratii()
+ * paratii.users // <- this is an instance of ParatiiUsers
  */
-export class ParatiiCoreUsers {
+export class ParatiiUsers {
   constructor (config) {
     // const schema = joi.object({
     //   'db.provider': joi.string().default(null)
@@ -15,18 +17,21 @@ export class ParatiiCoreUsers {
     // if (error) throw error
     this.config = config
   }
-
+  /**
+   * @typedef {Array} userSchema
+   * @property {string=} id univocal video identifier
+   * @property {string=} name
+   * @property {string=} email
+   */
   /**
    * Creates a user, fields id, name and email go to the smart contract Users, other fields are stored on IPFS.
    * @param  {userSchema}  options information about the video ( id, name, email ... )
    * @return {Promise}         the id of the newly created user
-   * @example
-   *            await paratii.users.create({
-   *              id: 'some-user-id', //must be a valid ethereum address
-   *              name: 'A user name',
-   *              email: 'some@email.com',
-   *              ...
-   *             })
+   * @example await paratii.users.create({
+   *   id: 'some-user-id', //must be a valid ethereum address
+   *   name: 'A user name',
+   *   email: 'some@email.com',
+   *  })
    */
   // FIXME: do some joi validation here
   async create (options) {
@@ -58,7 +63,7 @@ export class ParatiiCoreUsers {
   /**
    * Updates a user's details. name and email are defined in the smart contract Users, other fields get written to IPFS.
    * @param  {string}  userId  user univocal id
-   * @param  {Object}  options updated data i.e. { name: 'A new user name' }
+   * @param  {UserSchema}  options updated data i.e. { name: 'A new user name' }
    * @return {Promise}         updated data about the user
    * @example let updatedData = await paratii.users.update('some-user-id', {name: 'A new user name'})
    */

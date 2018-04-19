@@ -9,8 +9,8 @@ All this is very much work in progress. Please be patient.
 The paratii.js is divided into the following modules:
 
 * [`paratii`](./Paratii.html) is the main access point, which is used for configuration and for accessing all submodules.
-* [`paratii.vids`](./ParatiiCoreVids.html) has functions for registering video information on the blockchain, as well as information about likes and views.
-* [`paratii.users`](./ParatiiCoreUsers.html)  allows to write basic user information to the blockchain
+* [`paratii.vids`](./ParatiiVids.html) has functions for registering video information on the blockchain, as well as information about likes and views.
+* [`paratii.users`](./ParatiiUsers.html)  allows to write basic user information to the blockchain
 
 For more advanced usage, developers may be interested in the following modules:
 

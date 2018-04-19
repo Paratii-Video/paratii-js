@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ParatiiCoreVids = undefined;
+exports.ParatiiVids = undefined;
 
 var _keys = require('babel-runtime/core-js/object/keys');
 
@@ -35,9 +35,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * Utilities to create and manipulate information about the videos on the blockchain.
  * @param {Object} config configuration object to initialize Paratii object
  */
-var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
-  function ParatiiCoreVids(config) {
-    (0, _classCallCheck3.default)(this, ParatiiCoreVids);
+var ParatiiVids = exports.ParatiiVids = function () {
+  function ParatiiVids(config) {
+    (0, _classCallCheck3.default)(this, ParatiiVids);
 
     this.config = config;
   }
@@ -60,7 +60,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
    */
 
 
-  (0, _createClass3.default)(ParatiiCoreVids, [{
+  (0, _createClass3.default)(ParatiiVids, [{
     key: 'create',
     value: function create() {
       var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -130,7 +130,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
 
     /**
      * Writes a like for the video on the blockchain (contract Likes), and negates a dislike for the video, if it exists.
-     * @param  {string} videoId univocal video identifier randomly generated
+     * @param  {string} videoId id of the video
      * @return {Object}         information about the transaction recording the like
      * @example paratii.core.vids.like('some-video-id')
      */
@@ -142,7 +142,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
     }
     /**
      * Writes a dislike for the video on the blockchain (contract Likes), and negates a like for the video, if it exists.
-     * @param  {string} videoId univocal video identifier randomly generated
+     * @param  {string} videoId id of the video
      * @return {Object}         information about the transaction recording the dislike
      * @example paratii.core.vids.dislike('some-video-id')
      */
@@ -154,7 +154,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
     }
     /**
      * Check if the current user has already liked the video
-     * @param  {string} videoId univocal video identifier randomly generated
+     * @param  {string} videoId id of the video
      * @return {Boolean}         true if the current user already liked the video, false otherwise
      * @example paratii.core.vids.doesLike('some-video-id')
      */
@@ -167,7 +167,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
     /**
      * Check if the viewer has already viewed the video
      * @param  {string}  viewer  viewer address
-     * @param  {string}  videoId univocal video identifier randomly generated
+     * @param  {string}  videoId id of the video
      * @return {Boolean}         true if the current user already viewed the video, false otherwise
      * @example paratii.core.vids.hasViewedVideo('some-user-id','some-video-id')
      */
@@ -179,7 +179,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
     }
     /**
      * Check if the current user has already disliked the video
-     * @param  {string} videoId univocal video identifier randomly generated
+     * @param  {string} videoId id of the video
      * @return {Boolean}         true if the current user already disliked the video, false otherwise
      * @example paratii.core.vids.doesDislike('some-video-id')
     */
@@ -356,7 +356,7 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
     }
     /**
      * Get the data of the video identified by videoId
-     * @param  {string}  videoId univocal video identifier randomly generated
+     * @param  {string}  videoId id of the video
      * @return {Promise}         data about the video
      * @example await paratii.core.vids.get('some-video-id')
      */
@@ -428,5 +428,5 @@ var ParatiiCoreVids = exports.ParatiiCoreVids = function () {
       return this.config.paratii.transcoder.uploadAndTranscode(files);
     }
   }]);
-  return ParatiiCoreVids;
+  return ParatiiVids;
 }();
