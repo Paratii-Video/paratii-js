@@ -23,7 +23,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 /**
  * Token Curated Registry functionalities.
- * Work in progress: this class does not yet implement all TCR functinality
+ * Work in progress: this class does not yet implement all TCR functionality
  * @param  {ParatiiEth} context ParatiiEth instance
  * @property {ParatiiEth} eth ParatiiEth instance
  * @example let paratii = new Paratii()
