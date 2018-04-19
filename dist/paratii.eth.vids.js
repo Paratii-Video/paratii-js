@@ -408,7 +408,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
      * record a views to the video on the blockchain
      * @param  {Object}  options data about the video and the viewer
      * @param {string} options.viewer address of the viewer
-     * @param {string} options.videoId univocal video identifier randomly generated
+     * @param {string} options.videoId id of the video
      * @param {string} options.ipfsData ipfs multihash
      * @return {Promise}         transaction recording the view
      * @example await paratii.eth.vids.view({viewer:'some-user-id',videoId: 'some-video-id'})
@@ -509,7 +509,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
     }
     /**
      * Writes a like for the video on the blockchain (contract Likes), and negates a dislike for the video, if it exists.
-     * @param  {string}  videoId univocal video identifier randomly generated
+     * @param  {string}  videoId id of the video
      * @return {Promise}          transaction recording the like
      * @example let result = await paratii.eth.vids.like('some-id')
      */
@@ -533,7 +533,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
     }
     /**
      * Writes a dislike for the video on the blockchain (contract Likes), and negates a like for the video, if it exists.
-     * @param  {string}  videoId univocal video identifier randomly generated
+     * @param  {string}  videoId id of the video
      * @return {Promise}          transaction recording the dislike
      * @example let result = await paratii.eth.vids.dislike('some-id')
      */
@@ -557,7 +557,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
     }
     /**
      * Check if the current user has already liked the video
-     * @param  {string}  videoId univocal video identifier randomly generated
+     * @param  {string}  videoId id of the video
      * @return {Promise}          true if the current user already liked the video, false otherwise
      * @example let result = await paratii.eth.vids.doesLike('some-id')
      */
@@ -592,7 +592,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
     }
     /**
      * Check if the current user has already disliked the video.
-     * @param  {string}  videoId univocal video identifier randomly generated
+     * @param  {string}  videoId id of the video
      * @return {Promise}          true if the current user already disliked the video, false otherwise
      * @example let result = await paratii.eth.vids.doesDislike('some-id')
      */
@@ -667,7 +667,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
     }
     /**
      * delete the video from the blockchain
-     * @param  {string}  videoId univocal video identifier randomly generated
+     * @param  {string}  videoId id of the video
      * @return {Promise}         transaction recording the remove action
      * @example let tx = await paratii.eth.vids.delete('some-id')
      */

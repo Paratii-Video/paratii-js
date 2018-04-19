@@ -114,7 +114,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
      * check if video is already whitelisted. note that this returns false
      * till the video is actually whitelisted. use didVideoApply in case you want
      * to check whether the video is in application process.
-     * @param  {string}  videoId univocal video identifier randomly generated
+     * @param  {string}  videoId id of the video
      * @return {boolean}         true if video is whitelisted, false otherwise
      * @example let isWhitelisted = await paratii.eth.tcr.isWhitelisted('some-video-id')
      */
@@ -149,7 +149,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
     /**
      * check whether a video started the application process
-     * @param  {string}  videoId univocal video identifier randomly generated
+     * @param  {string}  videoId id of the video
      * @return {boolean}  true if video started the application process, false otherwise
      * @example let appWasMade = await paratii.eth.tcr.didVideoApply('some-video-id')
      */
@@ -186,7 +186,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
      * Start the application process.
      * One of the preconditions for apploication is the client approve that the TCR contract can   amount first before actually
      * transfer the stake. If this sounds unfamliar to you, use {@link ParatiiEthTcr#checkEligiblityAndApply} instead.
-     * @param  {string} videoId univocal video identifier randomly generated
+     * @param  {string} videoId id of the video
      * @param  {integer}  amountToStake number of tokens to stake. must >= minDeposit
      * @return {boolean}  returns true if the  application is successful
      * @example paratii.eth.tcr.apply('some-video-id', 3e18)
@@ -268,7 +268,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
      * - check preconditions for staking
      * - approve that the TCR contract can transfer amountToStake tokens
      * - apply to the TCR
-     * @param  {string}  videoId       univocal video identifier randomly generated
+     * @param  {string}  videoId       id of the video
      * @param  {integer}  amountToStake amount (in base units) of tokens to stake
      * @return {Promise}  returns true if the application was successful, false otherwise
      * event.

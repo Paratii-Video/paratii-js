@@ -67,7 +67,7 @@ export class ParatiiVids {
 
   /**
    * Writes a like for the video on the blockchain (contract Likes), and negates a dislike for the video, if it exists.
-   * @param  {string} videoId univocal video identifier randomly generated
+   * @param  {string} videoId id of the video
    * @return {Object}         information about the transaction recording the like
    * @example paratii.core.vids.like('some-video-id')
    */
@@ -76,7 +76,7 @@ export class ParatiiVids {
   }
   /**
    * Writes a dislike for the video on the blockchain (contract Likes), and negates a like for the video, if it exists.
-   * @param  {string} videoId univocal video identifier randomly generated
+   * @param  {string} videoId id of the video
    * @return {Object}         information about the transaction recording the dislike
    * @example paratii.core.vids.dislike('some-video-id')
    */
@@ -85,7 +85,7 @@ export class ParatiiVids {
   }
   /**
    * Check if the current user has already liked the video
-   * @param  {string} videoId univocal video identifier randomly generated
+   * @param  {string} videoId id of the video
    * @return {Boolean}         true if the current user already liked the video, false otherwise
    * @example paratii.core.vids.doesLike('some-video-id')
    */
@@ -95,7 +95,7 @@ export class ParatiiVids {
   /**
    * Check if the viewer has already viewed the video
    * @param  {string}  viewer  viewer address
-   * @param  {string}  videoId univocal video identifier randomly generated
+   * @param  {string}  videoId id of the video
    * @return {Boolean}         true if the current user already viewed the video, false otherwise
    * @example paratii.core.vids.hasViewedVideo('some-user-id','some-video-id')
    */
@@ -104,7 +104,7 @@ export class ParatiiVids {
   }
   /**
    * Check if the current user has already disliked the video
-   * @param  {string} videoId univocal video identifier randomly generated
+   * @param  {string} videoId id of the video
    * @return {Boolean}         true if the current user already disliked the video, false otherwise
    * @example paratii.core.vids.doesDislike('some-video-id')
   */
@@ -192,7 +192,7 @@ export class ParatiiVids {
   }
   /**
    * Get the data of the video identified by videoId
-   * @param  {string}  videoId univocal video identifier randomly generated
+   * @param  {string}  videoId id of the video
    * @return {Promise}         data about the video
    * @example await paratii.core.vids.get('some-video-id')
    */
