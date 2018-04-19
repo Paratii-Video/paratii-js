@@ -41,7 +41,7 @@ Which will give you a list of videos with "cats" in the title or description. Or
 
 This calls will give paginated set of results.
 
-Other options of the search function are [documented here](ParatiiCoreVids.html#search__anchor).
+Other options of the search function are [documented here](./ParatiiCoreVids.html#search__anchor).
 
 ## Set your base account
 
@@ -57,7 +57,7 @@ Or, alternatively, you can change the account being used by passing the private 
 
     paratii.setAccount({privateKey: '0x399b141d0cc2b863b2f514ffe53edc6afc9416d5899da4d9bd2350074c38f1c6'})
 
-If you want to create a new account, `paratii-js` includes a version of the wallet from (web3js)[http://web3js.readthedocs.io/en/1.0/web3-eth-accounts.html#wallet]:
+If you want to create a new account, `paratii-js` includes a version of the wallet from [web3js](http://web3js.readthedocs.io/en/1.0/web3-eth-accounts.html#wallet):
 
     paratii.eth.wallet.create() // create a new account in the wallet
     paratii.getAccount() // returns the newly generated address
