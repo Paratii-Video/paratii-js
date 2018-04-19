@@ -41,6 +41,7 @@ const testConfig = {
 }
 
 const testConfigWS = {
+  eth: { provider: 'ws://localhost:8546' },
   account: {
     address: address,
     privateKey: privateKey

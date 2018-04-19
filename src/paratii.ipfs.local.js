@@ -15,7 +15,6 @@ const once = require('once')
  * @extends EventEmitter
  */
 export class ParatiiIPFSLocal extends EventEmitter {
-  // TODO joi validation and add schema
   constructor (config) {
     super()
     this.config = config
@@ -27,10 +26,10 @@ export class ParatiiIPFSLocal extends EventEmitter {
    * @param  {Array} files    HTML5 File Object Array.
    * @return {EventEmitter} returns EventEmitter with the following events:
    *    - `start`: uploader started.
-   *    - `progress`: (chunkLength, progressPercent)
-   *    - `local:fileReady`: (file) triggered when a file is uploaded locally.
-   *    - `done`: (files) triggered when the uploader is done locally.
-   *    - `error`: (err) triggered whenever an error occurs.
+   *    - `progress (chunkLength, progressPercent)`
+   *    - `local:fileReady (file)` triggered when a file is uploaded locally.
+   *    - `done (files)` triggered when the uploader is done locally.
+   *    - `error (err)` triggered whenever an error occurs.
    * @example paratii.ipfs.local.upload('path/to/file')
    * @example paratii.ipfs.local.upload(['path/to/file', 'path/to/file2'])
    * @example paratii.ipfs.local.upload([file1])

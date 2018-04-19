@@ -78,4 +78,4 @@ This function will return immediately with an EventEmitter instance which will r
     ev.on('transcoding:progress', function(hash, size, percent) { console.log(`upload progress: ${percent} %`))
     ev.on('transcoding:done', function(hash, transcoderResult) { console.log(`transcoding has finished!`))
 
-For further information [see the docs](./ParatiiVids.html#addAndTrancode__anchor)
+For further information [see the docs](./ParatiiCoreVids.html#uploadAndTranscode__anchor)

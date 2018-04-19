@@ -80,7 +80,7 @@ export class ParatiiEth {
     this.tcr = new ParatiiEthTcr(this)
   }
   /**
-   * {@link paratii.setAccount}
+   * [paratii.setAccount()](./Paratii.html#setAccount__anchor)
    */
   setAccount (opts) {
     const schema = accountSchema
@@ -181,7 +181,8 @@ export class ParatiiEth {
     let contract = await this.getContract(name)
 
     let deployedContract = await contract.deploy({arguments: args}).send()
-    deployedContract.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
+
+    // deployedContract.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
     this.contracts[name] = deployedContract
     return deployedContract
   }

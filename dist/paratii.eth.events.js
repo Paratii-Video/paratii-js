@@ -225,7 +225,6 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
             case 19:
               subscription = _context2.sent;
 
-
               subscription.on(structuredEvent.emit, listener);
 
             case 21:

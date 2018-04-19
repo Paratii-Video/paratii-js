@@ -18,7 +18,7 @@ For more advanced usage, developers may be interested in the following modules:
 * [`paratii.ipfs`](./ParatiiIPFS.html) for interaction with IPFS
 * [`paratii.db`](./ParatiiDb.html) for interaction with the Paratii blockchain index
 * [`paratii.transcoder`](./ParatiiTranscoder.html) for interaction with transcoding service
-* [`paratii.vouchers`](./ParatiiVoucher.html) interact with a simple contract for distributing vouchers.
+* [`paratii.vouchers`](./ParatiiEthVouchers.html) interact with a simple contract for distributing vouchers.
 
 # Usage
 

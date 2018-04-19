@@ -12,4 +12,9 @@ force_sealing = true
 [rpc]
 cors = []
 [websockets]
-origins = ["localhost:8080", "127.0.0.1:8080", "0.0.0.0:8080"]
+disable = false
+port = 8546
+interface = "local"
+origins = ["none"]
+apis = ["web3", "eth", "pubsub", "net", "parity", "parity_pubsub", "traces", "rpc", "shh", "shh_pubsub"]
+hosts = ["none"]
