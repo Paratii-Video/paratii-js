@@ -80,7 +80,7 @@ const dbSchema = joi.object({
  /**
   * @todo some description are still not written
   * @typedef {Array} videoSchema
-  * @property {string=} id univocal video identifier randomly generated
+  * @property {string=} id id of the video
   * @property {string=} author author of the video
   * @property {string=} description description of the video
   * @property {string=} duration duration of the video
