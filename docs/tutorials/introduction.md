@@ -7,7 +7,7 @@ This short tutorial shows you how to set up and use `paratii-js` in a node envir
 
 ## Initialization
 
-The default export of the `paratii-js` module is the [Paratii class]('../Paratii.html')
+The default export of the `paratii-js` module is the [Paratii class](./Paratii.html)
 
     const { Paratii } = require('paratii-js')
 
