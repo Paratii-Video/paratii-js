@@ -34,10 +34,14 @@ jobs:
           background: true
       - run: yarn test
       - run: yarn docs
+
+  deploy:
+    steps:
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
       - run: npm publish
-      - deploy:
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              rsync -rv -e "ssh -o StrictHostKeyChecking=no" ./docs/htmldoc/ paratii@docs.paratii.video:/var/www/docs.paratii.video/htmldoc
-            fi
+      - run:
+        name: publishing doc
+        command: |
+          if [ "${CIRCLE_BRANCH}" == "master" ]; then
+            rsync -rv -e "ssh -o StrictHostKeyChecking=no" ./docs/htmldoc/ paratii@docs.paratii.video:/var/www/docs.paratii.video/htmldoc
+          fi
