@@ -36,6 +36,9 @@ jobs:
       - run: yarn docs
 
   deploy:
+    docker:
+      - image: leeaandrob/paratii-db:0.0.1
+      - image: circleci/mongo:latest
     steps:
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
       - run: npm publish
