@@ -25,6 +25,7 @@
   "dependencies": {
     "async": "^2.6.0",
     "babel-runtime": "^6.26.0",
+    "bignumber.js": "^6.0.0",
     "bip39": "^2.5.0",
     "chai-bignumber": "^2.0.2",
     "es6-promise": "^4.2.4",
@@ -39,6 +40,7 @@
     "promisify-node": "^0.4.0",
     "pull-filereader": "^1.0.1",
     "resumablejs": "^1.1.0",
+    "sol-tcr": "github:ya7ya/tcr#compiled",
     "stream-to-pull-stream": "^1.7.2",
     "web3": "^1.0.0-beta.29"
   },
