@@ -36,3 +36,14 @@ We have more extensive documentation on [https://docs.paratii.video](https://doc
 ## Contributing to `paratii.js`
 
 Contributions are most welcome! Please read [CONTRIBUTING.md](./CONTRIBUTING.md)
+
+## Deploying
+
+- Run the following commands:
+
+  ```
+  $ git checkout master && git pull
+  $ yarn version --new-version <patch|minor|major>
+  $ git push --follow-tags
+  ```
+  This will tell `CircleCI` to build and then publish a new version `x.x.x` to the `npm` registry
