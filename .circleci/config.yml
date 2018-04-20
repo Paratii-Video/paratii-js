@@ -43,8 +43,24 @@ jobs:
       - run: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
       - run: npm publish
       - run:
-        name: publishing doc
-        command: |
-          if [ "${CIRCLE_BRANCH}" == "master" ]; then
-            rsync -rv -e "ssh -o StrictHostKeyChecking=no" ./docs/htmldoc/ paratii@docs.paratii.video:/var/www/docs.paratii.video/htmldoc
-          fi
+          name: publishing doc
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              rsync -rv -e "ssh -o StrictHostKeyChecking=no" ./docs/htmldoc/ paratii@docs.paratii.video:/var/www/docs.paratii.video/htmldoc
+            fi
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /.*/
+      - deploy:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /^v\d+\.\d+\.\d+$/
+            branches:
+              ignore: /.*/
