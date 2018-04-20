@@ -114,9 +114,11 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
 
               for (keyword in options) {
                 k += keyword + '=' + options[keyword];
+                k += '&';
               }
               if (k !== '') {
                 k = '?' + k;
+                k = k.slice(0, -1);
               }
               _context2.next = 10;
               return _regenerator2.default.awrap(fetch(this.config.db.provider + this.apiVideos + k, {

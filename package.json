@@ -1,6 +1,6 @@
 {
   "name": "paratii-js",
-  "version": "0.2.0",
+  "version": "0.2.5",
   "description": "Paratii JS Library",
   "main": "dist/paratii.js",
   "browser": {
@@ -19,7 +19,7 @@
     "lint": "standard",
     "lint-fix": "standard --fix",
     "node": "node",
-    "docs": "jsdoc --configure .jsdoc.json" ,
+    "docs": "jsdoc --configure .jsdoc.json",
     "git-add-dist": "git add dist"
   },
   "dependencies": {
