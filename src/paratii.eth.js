@@ -376,7 +376,7 @@ export class ParatiiEth {
     let deployedContract = await this.contracts[name].deploy({
       arguments: args
     }).send()
-    deployedContract.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
+    // deployedContract.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
     this.contracts[name] = deployedContract
     // console.log('deployed ', name)
     return deployedContract
@@ -595,16 +595,6 @@ export class ParatiiEth {
     return this.contracts
   }
 
-  /**
-   * Set the provider on all the contracts
-   * @example await paratii.eth.setContractsProvider()
-   * @private
-   */
-  async setContractsProvider () {
-    for (var key in this.contracts) {
-      this.contracts[key].setProvider(this.web3.currentProvider, this.web3.eth.accounts)
-    }
-  }
   /**
    * return all the contracts
    * @return {Promise}
