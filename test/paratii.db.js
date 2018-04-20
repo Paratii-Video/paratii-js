@@ -15,7 +15,7 @@ describe('paratii.db API: :', function () {
     .reply(200, videos)
     .get('/videos/')
     .reply(200, videos)
-    .get('/videos/?owner=0x9e2d04eef5b16CFfB4328Ddd027B55736407B275keyword=keyword')
+    .get('/videos/?owner=0x9e2d04eef5b16CFfB4328Ddd027B55736407B275&keyword=keyword')
     .reply(200, videos)
     .get('/videos/QmNZS5J3LS1tMEVEP3tz3jyd2LXUEjkYJHyWSuwUvHDaRJ')
     .reply(200, videos[0])
