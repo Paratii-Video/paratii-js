@@ -34,6 +34,7 @@ jobs:
           background: true
       - run: yarn test
       - run: yarn docs
+      - run: npm publish
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
