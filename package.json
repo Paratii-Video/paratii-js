@@ -1,6 +1,6 @@
 {
   "name": "paratii-js",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Paratii JS Library",
   "main": "dist/paratii.js",
   "browser": {
