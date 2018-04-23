@@ -40,6 +40,10 @@ export class ParatiiEthTcr {
     return contract
   }
 
+  // -----------------------
+  // TCR PARAMETERS GETTERS
+  // -----------------------
+
   /**
    * get the minimum amount required to stake a video.
    * @return {integer} amount required, in PTI base units
@@ -48,6 +52,124 @@ export class ParatiiEthTcr {
    */
   async getMinDeposit () {
     return this.get('minDeposit')
+  }
+
+  /**
+   * get the period over which applicants wait to be whitelisted
+   * @return {integer} length of the apply stage in seconds
+   * @example let applyStageLen = await paratii.eth.tcr.getApplyStageLen()
+   */
+  async getApplyStageLen () {
+    return this.get('applyStageLen')
+  }
+
+  /**
+   * get the percentage of losing party's deposit distributed to winning party
+   * @return {integer} percentage of losing party's deposit distributed to winning party
+   * @example let dispensationPct = await paratii.eth.tcr.getDispensationPct()
+   */
+  async getDispensationPct () {
+    return this.get('dispensationPct')
+  }
+
+  /**
+   * get the length of commit period for voting
+   * @return {integer} length of the commit stage in seconds
+   * @example let applyCommitLen = await paratii.eth.tcr.getCommitStageLen()
+   */
+  async getCommitStageLen () {
+    return this.get('commitStageLen')
+  }
+
+  /**
+   * get the length of reveal period for voting
+   * @return {integer} length of the reveal stage in seconds
+   * @example let applyRevealLen = await paratii.eth.tcr.getRevealStageLen()
+   */
+  async getRevealStageLen () {
+    return this.get('revealStageLen')
+  }
+
+  /**
+   * get the type of majority out of 100 necessary for vote success
+   * @return {integer} percentage needed for success
+   * @example let voteQuorum = await paratii.eth.tcr.getVoteQuorum()
+   */
+  async getVoteQuorum () {
+    return this.get('voteQuorum')
+  }
+
+  // -----------------------
+  // PARAMETRIZER PARAMETERS GETTERS
+  // -----------------------
+
+  /**
+   * get the minimum deposit to propose a reparameterization
+   * @return {integer} amount required, in PTI base units
+   * @todo return amount as bignumber.js Object
+   * @example let minpDeposit = await paratii.eth.tcr.getpMinDeposit()
+   */
+  async getpMinDeposit () {
+    return this.get('pMinDeposit')
+  }
+
+  /**
+   * get the period over which reparmeterization proposals wait to be processed
+   * @return {integer} length of the parametrizer apply stage in seconds
+   * @example let pApplyStageLen = await paratii.eth.tcr.getpApplyStageLen()
+   */
+  async getpApplyStageLen () {
+    return this.get('pApplyStageLen')
+  }
+
+  /**
+   * get the percentage of losing party's deposit distributed to winning party in parameterizer
+   * @return {integer} percentage of losing party's deposit distributed to winning party
+   * @example let pDispensationPct = await paratii.eth.tcr.getpDispensationPct()
+   */
+  async getpDispensationPct () {
+    return this.get('pDispensationPct')
+  }
+
+  /**
+   * get the length of commit period for voting in parametrizer
+   * @return {integer} length of the parametrizer commit stage in seconds
+   * @example let pCommitStageLen = await paratii.eth.tcr.getpCommitStageLen()
+   */
+  async getpCommitStageLen () {
+    return this.get('pCommitStageLen')
+  }
+
+  /**
+   * get the length of reveal period for voting in parametrizer
+   * @return {integer} length of the parametrizer reveal stage in seconds
+   * @example let pRevealStageLen = await paratii.eth.tcr.getpRevealStageLen()
+   */
+  async getpRevealStageLen () {
+    return this.get('pRevealStageLen')
+  }
+
+  /**
+   * get the type of majority out of 100 necessary for vote success in parametrizer
+   * @return {integer} percentage needed for success in parametrizer
+   * @example let pVoteQuorum = await paratii.eth.tcr.getpVoteQuorum()
+   */
+  async getpVoteQuorum () {
+    return this.get('pVoteQuorum')
+  }
+
+  /**
+   * get the value of the param passed on the Parametrizer contract
+   * @param  {String}  param name of the param
+   * @return {Promise}       that resolves in the value of the parameter
+   * @example  let minDeposit = await paratii.eth.tcr.get('minDeposit')
+   * @private
+   */
+  async get (param) {
+    let contract = await this.getParametrizerContract()
+
+    let value = await contract.methods.get(param).call()
+    return value
   }
 
   /**
@@ -186,15 +308,5 @@ export class ParatiiEthTcr {
     let contract = await this.getTcrContract()
     let videoIdBytes = this.eth.web3.utils.fromAscii(videoId)
     return contract.methods.exit(videoIdBytes).send()
-  }
-
-  // new functions for the real tcr
-
-  async get (param) {
-    let contract = await this.getParametrizerContract()
-
-    let value = await contract.methods.get(param).call()
-
-    return value
   }
 }
