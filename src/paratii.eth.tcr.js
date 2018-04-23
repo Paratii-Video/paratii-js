@@ -154,7 +154,7 @@ export class ParatiiEthTcr {
 
     // get some tokens
     let token = await this.eth.getContract('ParatiiToken')
-    let tcrPlaceholder = await this.eth.getContract('TcrPlaceholder')
+    let tcr = await this.getTcrContract()
 
     // FIXME: restore this logic (it is broken!)
     // let balance = await token.methods.balanceOf(this.getAccount()).call()
@@ -162,12 +162,12 @@ export class ParatiiEthTcr {
     //   throw new Error(`Your balance is to low: it is ${balance.toString()}, while a minimal deposit of ${minDeposit.toString()} is required`)
     // }
 
-    let tx2 = await token.methods.approve(tcrPlaceholder.options.address, amountToStake).send()
+    let tx2 = await token.methods.approve(tcr.options.address, amountToStake).send()
     if (!tx2) {
       throw new Error('checkEligiblityAndApply Error ', tx2)
     }
 
-    let allowance = await token.methods.allowance(this.eth.getAccount(), tcrPlaceholder.options.address).call()
+    let allowance = await token.methods.allowance(this.eth.getAccount(), tcr.options.address).call()
     if (allowance.toString() !== amountToStake.toString()) {
       console.warn(`allowance ${allowance.toString()} != ${amountToStake.toString()}`)
     }
@@ -184,7 +184,8 @@ export class ParatiiEthTcr {
    */
   async exit (videoId) {
     let contract = await this.getTcrContract()
-    return contract.methods.exit(videoId).send()
+    let videoIdBytes = this.eth.web3.utils.fromAscii(videoId)
+    return contract.methods.exit(videoIdBytes).send()
   }
 
   // new functions for the real tcr

@@ -315,7 +315,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'checkEligiblityAndApply',
     value: function checkEligiblityAndApply(videoId, amountToStake) {
-      var minDeposit, isWhitelisted, appWasMade, token, tcrPlaceholder, tx2, allowance, result;
+      var minDeposit, isWhitelisted, appWasMade, token, tcr, tx2, allowance, result;
       return _regenerator2.default.async(function checkEligiblityAndApply$(_context7) {
         while (1) {
           switch (_context7.prev = _context7.next) {
@@ -368,12 +368,12 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
             case 17:
               token = _context7.sent;
               _context7.next = 20;
-              return _regenerator2.default.awrap(this.eth.getContract('TcrPlaceholder'));
+              return _regenerator2.default.awrap(this.getTcrContract());
 
             case 20:
-              tcrPlaceholder = _context7.sent;
+              tcr = _context7.sent;
               _context7.next = 23;
-              return _regenerator2.default.awrap(token.methods.approve(tcrPlaceholder.options.address, amountToStake).send());
+              return _regenerator2.default.awrap(token.methods.approve(tcr.options.address, amountToStake).send());
 
             case 23:
               tx2 = _context7.sent;
@@ -387,7 +387,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 26:
               _context7.next = 28;
-              return _regenerator2.default.awrap(token.methods.allowance(this.eth.getAccount(), tcrPlaceholder.options.address).call());
+              return _regenerator2.default.awrap(token.methods.allowance(this.eth.getAccount(), tcr.options.address).call());
 
             case 28:
               allowance = _context7.sent;
@@ -421,7 +421,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'exit',
     value: function exit(videoId) {
-      var contract;
+      var contract, videoIdBytes;
       return _regenerator2.default.async(function exit$(_context8) {
         while (1) {
           switch (_context8.prev = _context8.next) {
@@ -431,9 +431,10 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 2:
               contract = _context8.sent;
-              return _context8.abrupt('return', contract.methods.exit(videoId).send());
+              videoIdBytes = this.eth.web3.utils.fromAscii(videoId);
+              return _context8.abrupt('return', contract.methods.exit(videoIdBytes).send());
 
-            case 4:
+            case 5:
             case 'end':
               return _context8.stop();
           }
