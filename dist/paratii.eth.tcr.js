@@ -139,7 +139,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
     /**
      * check if video is already whitelisted. note that this returns false
-     * till the video is actually whitelisted. use didVideoApply in case you want
+     * till the video is actually whitelisted. use appWasMade in case you want
      * to check whether the video is in application process.
      * @param  {string}  videoId id of the video
      * @return {boolean}         true if video is whitelisted, false otherwise
@@ -179,14 +179,14 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
      * check whether a video started the application process
      * @param  {string}  videoId id of the video
      * @return {boolean}  true if video started the application process, false otherwise
-     * @example let appWasMade = await paratii.eth.tcr.didVideoApply('some-video-id')
+     * @example let appWasMade = await paratii.eth.tcr.appWasMade('some-video-id')
      */
 
   }, {
-    key: 'didVideoApply',
-    value: function didVideoApply(videoId) {
+    key: 'appWasMade',
+    value: function appWasMade(videoId) {
       var contract, videoIdBytes, appWasMade;
-      return _regenerator2.default.async(function didVideoApply$(_context5) {
+      return _regenerator2.default.async(function appWasMade$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
             case 0:
@@ -349,7 +349,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 10:
               _context7.next = 12;
-              return _regenerator2.default.awrap(this.didVideoApply(videoId));
+              return _regenerator2.default.awrap(this.appWasMade(videoId));
 
             case 12:
               appWasMade = _context7.sent;

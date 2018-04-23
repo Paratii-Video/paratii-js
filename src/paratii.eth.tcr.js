@@ -52,7 +52,7 @@ export class ParatiiEthTcr {
 
   /**
    * check if video is already whitelisted. note that this returns false
-   * till the video is actually whitelisted. use didVideoApply in case you want
+   * till the video is actually whitelisted. use appWasMade in case you want
    * to check whether the video is in application process.
    * @param  {string}  videoId id of the video
    * @return {boolean}         true if video is whitelisted, false otherwise
@@ -69,9 +69,9 @@ export class ParatiiEthTcr {
    * check whether a video started the application process
    * @param  {string}  videoId id of the video
    * @return {boolean}  true if video started the application process, false otherwise
-   * @example let appWasMade = await paratii.eth.tcr.didVideoApply('some-video-id')
+   * @example let appWasMade = await paratii.eth.tcr.appWasMade('some-video-id')
    */
-  async didVideoApply (videoId) {
+  async appWasMade (videoId) {
     let contract = await this.getTcrContract()
     let videoIdBytes = this.eth.web3.utils.fromAscii(videoId)
     let appWasMade = await contract.methods.appWasMade(videoIdBytes).call()
@@ -147,7 +147,7 @@ export class ParatiiEthTcr {
       throw new Error(`video ${videoId} is already whitelisted`)
     }
 
-    let appWasMade = await this.didVideoApply(videoId)
+    let appWasMade = await this.appWasMade(videoId)
     if (appWasMade) {
       throw new Error(`video ${videoId} already applied and awaiting decision`)
     }

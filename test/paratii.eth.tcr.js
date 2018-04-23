@@ -62,7 +62,7 @@ describe('paratii.eth.tcr:', function () {
     let amount = 5
     let result = await paratii.eth.tcr.checkEligiblityAndApply(videoId2, paratii.eth.web3.utils.toWei(amount.toString()))
     assert.isOk(result, result)
-    let didVideoApply = await paratii.eth.tcr.didVideoApply(videoId2)
+    let didVideoApply = await paratii.eth.tcr.appWasMade(videoId2)
     assert.isOk(didVideoApply)
   })
 
