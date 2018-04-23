@@ -202,7 +202,7 @@ export class ParatiiEthTcr {
 
   /**
    * Start the application process.
-   * One of the preconditions for apploication is the client approve that the TCR contract can   amount first before actually
+   * One of the preconditions for application is the client approve that the TCR contract can amount first before actually
    * transfer the stake. If this sounds unfamliar to you, use {@link ParatiiEthTcr#checkEligiblityAndApply} instead.
    * @param  {string} videoId id of the video
    * @param  {integer}  amountToStake number of tokens to stake. must >= minDeposit
@@ -211,12 +211,23 @@ export class ParatiiEthTcr {
    * @example paratii.eth.tcr.apply('some-video-id', 3e18)
    */
   async apply (videoId, amountToStake, data) {
-    // solidity wants a string anyway
+    // tcr contract wants a string anyway
     if (data == null) {
       data = ''
     }
-    // FIXME: it is more efficient if we first call "apply", and check for preconditions only after this failed
+
     let minDeposit = await this.getMinDeposit()
+
+    // FIXME: it is more efficient if we first call "apply", and check for preconditions only after this failed
+
+    if (this.isWhitelisted(videoId)) {
+      throw new Error('The video is already whitelisted')
+    }
+
+    if (this.appWasMade(videoId)) {
+      throw new Error('The video has already applied for the whitelist')
+    }
+
     if (this.eth.web3.utils.toBN(amountToStake).lt(minDeposit)) {
       throw new Error(`amount to stake ${amountToStake} is less than minDeposit ${minDeposit.toString()}`)
     }

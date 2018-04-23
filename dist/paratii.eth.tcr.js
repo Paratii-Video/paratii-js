@@ -511,7 +511,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
     /**
      * Start the application process.
-     * One of the preconditions for apploication is the client approve that the TCR contract can   amount first before actually
+     * One of the preconditions for application is the client approve that the TCR contract can amount first before actually
      * transfer the stake. If this sounds unfamliar to you, use {@link ParatiiEthTcr#checkEligiblityAndApply} instead.
      * @param  {string} videoId id of the video
      * @param  {integer}  amountToStake number of tokens to stake. must >= minDeposit
@@ -528,29 +528,45 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         while (1) {
           switch (_context18.prev = _context18.next) {
             case 0:
-              // solidity wants a string anyway
+              // tcr contract wants a string anyway
               if (data == null) {
                 data = '';
               }
-              // FIXME: it is more efficient if we first call "apply", and check for preconditions only after this failed
+
               _context18.next = 3;
               return _regenerator2.default.awrap(this.getMinDeposit());
 
             case 3:
               minDeposit = _context18.sent;
 
-              if (!this.eth.web3.utils.toBN(amountToStake).lt(minDeposit)) {
+              if (!this.isWhitelisted(videoId)) {
                 _context18.next = 6;
+                break;
+              }
+
+              throw new Error('The video is already whitelisted');
+
+            case 6:
+              if (!this.appWasMade(videoId)) {
+                _context18.next = 8;
+                break;
+              }
+
+              throw new Error('The video has already applied for the whitelist');
+
+            case 8:
+              if (!this.eth.web3.utils.toBN(amountToStake).lt(minDeposit)) {
+                _context18.next = 10;
                 break;
               }
 
               throw new Error('amount to stake ' + amountToStake + ' is less than minDeposit ' + minDeposit.toString());
 
-            case 6:
-              _context18.next = 8;
+            case 10:
+              _context18.next = 12;
               return _regenerator2.default.awrap(this.getTcrContract());
 
-            case 8:
+            case 12:
               contract = _context18.sent;
 
               // let amountInWei = this.eth.web3.utils.toWei(amountToStake.toString())
@@ -559,41 +575,41 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
               videoIdBytes = this.eth.web3.utils.fromAscii(videoId);
               tx = void 0;
-              _context18.prev = 12;
-              _context18.next = 15;
+              _context18.prev = 16;
+              _context18.next = 19;
               return _regenerator2.default.awrap(contract.methods.apply(videoIdBytes, amountInHex, data).send());
 
-            case 15:
+            case 19:
               tx = _context18.sent;
-              _context18.next = 21;
+              _context18.next = 25;
               break;
 
-            case 18:
-              _context18.prev = 18;
-              _context18.t0 = _context18['catch'](12);
+            case 22:
+              _context18.prev = 22;
+              _context18.t0 = _context18['catch'](16);
               throw _context18.t0;
 
-            case 21:
+            case 25:
               vId = void 0;
 
               vId = (0, _utils.getInfoFromLogs)(tx, '_Application', 'listingHash', 1);
 
               if (!vId) {
-                _context18.next = 27;
+                _context18.next = 31;
                 break;
               }
 
               return _context18.abrupt('return', true);
 
-            case 27:
+            case 31:
               return _context18.abrupt('return', false);
 
-            case 28:
+            case 32:
             case 'end':
               return _context18.stop();
           }
         }
-      }, null, this, [[12, 18]]);
+      }, null, this, [[16, 22]]);
     }
 
     /**
