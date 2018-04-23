@@ -50,7 +50,7 @@ export class ParatiiIPFS extends EventEmitter {
   start () {
     return new Promise((resolve, reject) => {
       if (this.ipfs && this.ipfs.isOnline()) {
-        console.log('IPFS is already running')
+        // console.log('IPFS is already running')
         return resolve(this.ipfs)
       }
 

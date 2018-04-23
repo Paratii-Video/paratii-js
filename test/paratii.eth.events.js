@@ -2,7 +2,7 @@ import { Paratii } from '../src/paratii.js'
 import { testConfigWS, address, address1, voucherAmountInitial11 } from './utils.js'
 import { assert } from 'chai'
 
-describe.skip('paratii.eth.events API: :', function () {
+describe('paratii.eth.events API: :', function () {
   let paratii
   before(async function () {
     paratii = new Paratii(testConfigWS)

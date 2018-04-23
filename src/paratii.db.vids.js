@@ -44,9 +44,11 @@ export class ParatiiDbVids {
     let k = ''
     for (let keyword in options) {
       k += `${keyword}=${options[keyword]}`
+      k += '&'
     }
     if (k !== '') {
       k = `?${k}`
+      k = k.slice(0, -1)
     }
     let videos = await fetch(this.config.db.provider + this.apiVideos + k, {
       method: 'get'
