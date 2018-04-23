@@ -457,7 +457,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 2:
               contract = _context16.sent;
-              videoIdBytes = this.eth.web3.utils.fromAscii(videoId);
+              videoIdBytes = this.eth.web3.utils.toHex(videoId);
               _context16.next = 6;
               return _regenerator2.default.awrap(contract.methods.isWhitelisted(videoIdBytes).call());
 
@@ -493,7 +493,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 2:
               contract = _context17.sent;
-              videoIdBytes = this.eth.web3.utils.fromAscii(videoId);
+              videoIdBytes = this.eth.web3.utils.toHex(videoId);
               _context17.next = 6;
               return _regenerator2.default.awrap(contract.methods.appWasMade(videoIdBytes).call());
 
@@ -584,7 +584,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
               amountInHex = this.eth.web3.utils.toHex(amountToStake.toString());
               // console.log('amountInHex: ', amountInHex)
 
-              videoIdBytes = this.eth.web3.utils.fromAscii(videoId);
+              videoIdBytes = this.eth.web3.utils.toHex(videoId);
               tx = void 0;
               _context18.prev = 22;
               _context18.next = 25;
@@ -735,6 +735,14 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         }
       }, null, this);
     }
+
+    /**
+     * get the listing of that videoId
+     * @param  {String}  videoId id of the video
+     * @return {Promise}        that resolves in the listings
+     * @example let listing = await paratii.eth.tcr.getListing()
+     */
+
   }, {
     key: 'getListing',
     value: function getListing(videoId) {
@@ -748,15 +756,24 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 2:
               contract = _context20.sent;
-              videoIdBytes = this.eth.web3.utils.fromAscii(videoId);
+              videoIdBytes = this.eth.web3.utils.toHex(videoId);
               _context20.next = 6;
               return _regenerator2.default.awrap(contract.methods.listings(videoIdBytes).call());
 
             case 6:
               listing = _context20.sent;
+
+              if (!(listing.owner === '0x0000000000000000000000000000000000000000')) {
+                _context20.next = 9;
+                break;
+              }
+
+              throw Error('Listing with videoId ' + videoId + ' doesn\'t exists');
+
+            case 9:
               return _context20.abrupt('return', listing);
 
-            case 8:
+            case 10:
             case 'end':
               return _context20.stop();
           }
@@ -798,7 +815,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 7:
               contract = _context21.sent;
-              videoIdBytes = this.eth.web3.utils.fromAscii(videoId);
+              videoIdBytes = this.eth.web3.utils.toHex(videoId);
               return _context21.abrupt('return', contract.methods.exit(videoIdBytes).send());
 
             case 10:

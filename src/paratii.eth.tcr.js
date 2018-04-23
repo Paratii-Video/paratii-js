@@ -182,7 +182,7 @@ export class ParatiiEthTcr {
    */
   async isWhitelisted (videoId) {
     let contract = await this.getTcrContract()
-    let videoIdBytes = this.eth.web3.utils.fromAscii(videoId)
+    let videoIdBytes = this.eth.web3.utils.toHex(videoId)
     let isWhitelisted = await contract.methods.isWhitelisted(videoIdBytes).call()
     return isWhitelisted
   }
@@ -195,7 +195,7 @@ export class ParatiiEthTcr {
    */
   async appWasMade (videoId) {
     let contract = await this.getTcrContract()
-    let videoIdBytes = this.eth.web3.utils.fromAscii(videoId)
+    let videoIdBytes = this.eth.web3.utils.toHex(videoId)
     let appWasMade = await contract.methods.appWasMade(videoIdBytes).call()
     return appWasMade
   }
@@ -237,7 +237,7 @@ export class ParatiiEthTcr {
     // let amountInWei = this.eth.web3.utils.toWei(amountToStake.toString())
     let amountInHex = this.eth.web3.utils.toHex(amountToStake.toString())
     // console.log('amountInHex: ', amountInHex)
-    let videoIdBytes = this.eth.web3.utils.fromAscii(videoId)
+    let videoIdBytes = this.eth.web3.utils.toHex(videoId)
 
     let tx
     try {
@@ -310,12 +310,19 @@ export class ParatiiEthTcr {
     return result
   }
 
+  /**
+   * get the listing of that videoId
+   * @param  {String}  videoId id of the video
+   * @return {Promise}        that resolves in the listings
+   * @example let listing = await paratii.eth.tcr.getListing()
+   */
   async getListing (videoId) {
     let contract = await this.getTcrContract()
 
-    let videoIdBytes = this.eth.web3.utils.fromAscii(videoId)
+    let videoIdBytes = this.eth.web3.utils.toHex(videoId)
     let listing = await contract.methods.listings(videoIdBytes).call()
 
+    if (listing.owner === '0x0000000000000000000000000000000000000000') { throw Error(`Listing with videoId ${videoId} doesn't exists`) }
     return listing
   }
 
@@ -332,7 +339,7 @@ export class ParatiiEthTcr {
     }
 
     let contract = await this.getTcrContract()
-    let videoIdBytes = this.eth.web3.utils.fromAscii(videoId)
+    let videoIdBytes = this.eth.web3.utils.toHex(videoId)
     return contract.methods.exit(videoIdBytes).send()
   }
 }

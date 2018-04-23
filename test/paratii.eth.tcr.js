@@ -15,6 +15,8 @@ describe('paratii.eth.tcr:', function () {
 
   let videoId = 'some-video-id'
   let videoId2 = 'some-other-video-id'
+  let videoId3 = 'another-one'
+  let videoId4 = 'not-applied'
 
   it('should be able to get minDeposit', async function () {
     let amount = await paratii.eth.tcr.getMinDeposit()
@@ -103,14 +105,19 @@ describe('paratii.eth.tcr:', function () {
   })
 
   it('getListing should retrieve the listing inserted previously', async function () {
-    // inserting a video in the whitelist
     let amount = 5
-    let result = await paratii.eth.tcr.checkEligiblityAndApply(videoId2, paratii.eth.web3.utils.toWei(amount.toString()))
+    let result = await paratii.eth.tcr.checkEligiblityAndApply(videoId3, paratii.eth.web3.utils.toWei(amount.toString()))
     assert.isOk(result, result)
-    let didVideoApply = await paratii.eth.tcr.appWasMade(videoId2)
+    let didVideoApply = await paratii.eth.tcr.appWasMade(videoId3)
     assert.isOk(didVideoApply)
 
-    let listing = await paratii.eth.tcr.getListing(videoId2)
+    let listing = await paratii.eth.tcr.getListing(videoId3)
     assert.isOk(listing)
+  })
+
+  it('getListing should throw an error if the listing does not exist', async function () {
+    assert.isFalse(await paratii.eth.tcr.appWasMade(videoId4))
+
+    await assert.isRejected(paratii.eth.tcr.getListing(videoId4), Error, /doesn't exists/g)
   })
 })
