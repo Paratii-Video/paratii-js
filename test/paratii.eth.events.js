@@ -282,9 +282,10 @@ describe('paratii.eth.events API: :', function () {
     let amount = 5
     amount = paratii.eth.web3.utils.toWei(amount.toString())
     let videoId = 'some-vide-id'
+    let expectedBytes = '0x736f6d652d766964652d69640000000000000000000000000000000000000000'
 
     paratii.eth.events.addListener('Application', function (log) {
-      assert.equal(log.returnValues.videoId, videoId)
+      assert.equal(log.returnValues.listingHash, expectedBytes)
       assert.equal(log.returnValues.deposit, amount)
       done()
     })
