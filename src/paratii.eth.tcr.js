@@ -219,12 +219,13 @@ export class ParatiiEthTcr {
     let minDeposit = await this.getMinDeposit()
 
     // FIXME: it is more efficient if we first call "apply", and check for preconditions only after this failed
-
-    if (await this.isWhitelisted(videoId)) {
+    let isWhitelisted = await this.isWhitelisted(videoId)
+    if (isWhitelisted) {
       throw new Error('The video is already whitelisted')
     }
 
-    if (await this.appWasMade(videoId)) {
+    let appWasMade = await this.appWasMade(videoId)
+    if (appWasMade) {
       throw new Error('The video has already applied for the whitelist')
     }
 
@@ -309,6 +310,15 @@ export class ParatiiEthTcr {
     return result
   }
 
+  async getListing (videoId) {
+    let contract = await this.getTcrContract()
+
+    let videoIdBytes = this.eth.web3.utils.fromAscii(videoId)
+    let listing = await contract.methods.listings(videoIdBytes).call()
+
+    return listing
+  }
+
   /**
    * remove the video given by videoId from the listing (and returns the stake to the staker)
    * @param videoId {string} video identifier
@@ -316,6 +326,11 @@ export class ParatiiEthTcr {
    * @example let tx = await paratii.eth.tcr.exit('some-video-id')
    */
   async exit (videoId) {
+    let isWhitelisted = await this.isWhitelisted(videoId)
+    if (!isWhitelisted) {
+      throw new Error('The video must be whitelisted in order to exit')
+    }
+
     let contract = await this.getTcrContract()
     let videoIdBytes = this.eth.web3.utils.fromAscii(videoId)
     return contract.methods.exit(videoIdBytes).send()

@@ -523,7 +523,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'apply',
     value: function apply(videoId, amountToStake, data) {
-      var minDeposit, contract, amountInHex, videoIdBytes, tx, vId;
+      var minDeposit, isWhitelisted, appWasMade, contract, amountInHex, videoIdBytes, tx, vId;
       return _regenerator2.default.async(function apply$(_context18) {
         while (1) {
           switch (_context18.prev = _context18.next) {
@@ -542,38 +542,42 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
               return _regenerator2.default.awrap(this.isWhitelisted(videoId));
 
             case 6:
-              if (!_context18.sent) {
-                _context18.next = 8;
+              isWhitelisted = _context18.sent;
+
+              if (!isWhitelisted) {
+                _context18.next = 9;
                 break;
               }
 
               throw new Error('The video is already whitelisted');
 
-            case 8:
-              _context18.next = 10;
+            case 9:
+              _context18.next = 11;
               return _regenerator2.default.awrap(this.appWasMade(videoId));
 
-            case 10:
-              if (!_context18.sent) {
-                _context18.next = 12;
+            case 11:
+              appWasMade = _context18.sent;
+
+              if (!appWasMade) {
+                _context18.next = 14;
                 break;
               }
 
               throw new Error('The video has already applied for the whitelist');
 
-            case 12:
+            case 14:
               if (!this.eth.web3.utils.toBN(amountToStake).lt(minDeposit)) {
-                _context18.next = 14;
+                _context18.next = 16;
                 break;
               }
 
               throw new Error('amount to stake ' + amountToStake + ' is less than minDeposit ' + minDeposit.toString());
 
-            case 14:
-              _context18.next = 16;
+            case 16:
+              _context18.next = 18;
               return _regenerator2.default.awrap(this.getTcrContract());
 
-            case 16:
+            case 18:
               contract = _context18.sent;
 
               // let amountInWei = this.eth.web3.utils.toWei(amountToStake.toString())
@@ -582,41 +586,41 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
               videoIdBytes = this.eth.web3.utils.fromAscii(videoId);
               tx = void 0;
-              _context18.prev = 20;
-              _context18.next = 23;
+              _context18.prev = 22;
+              _context18.next = 25;
               return _regenerator2.default.awrap(contract.methods.apply(videoIdBytes, amountInHex, data).send());
 
-            case 23:
+            case 25:
               tx = _context18.sent;
-              _context18.next = 29;
+              _context18.next = 31;
               break;
 
-            case 26:
-              _context18.prev = 26;
-              _context18.t0 = _context18['catch'](20);
+            case 28:
+              _context18.prev = 28;
+              _context18.t0 = _context18['catch'](22);
               throw _context18.t0;
 
-            case 29:
+            case 31:
               vId = void 0;
 
               vId = (0, _utils.getInfoFromLogs)(tx, '_Application', 'listingHash', 1);
 
               if (!vId) {
-                _context18.next = 35;
+                _context18.next = 37;
                 break;
               }
 
               return _context18.abrupt('return', true);
 
-            case 35:
+            case 37:
               return _context18.abrupt('return', false);
 
-            case 36:
+            case 38:
             case 'end':
               return _context18.stop();
           }
         }
-      }, null, this, [[20, 26]]);
+      }, null, this, [[22, 28]]);
     }
 
     /**
@@ -731,6 +735,34 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         }
       }, null, this);
     }
+  }, {
+    key: 'getListing',
+    value: function getListing(videoId) {
+      var contract, videoIdBytes, listing;
+      return _regenerator2.default.async(function getListing$(_context20) {
+        while (1) {
+          switch (_context20.prev = _context20.next) {
+            case 0:
+              _context20.next = 2;
+              return _regenerator2.default.awrap(this.getTcrContract());
+
+            case 2:
+              contract = _context20.sent;
+              videoIdBytes = this.eth.web3.utils.fromAscii(videoId);
+              _context20.next = 6;
+              return _regenerator2.default.awrap(contract.methods.listings(videoIdBytes).call());
+
+            case 6:
+              listing = _context20.sent;
+              return _context20.abrupt('return', listing);
+
+            case 8:
+            case 'end':
+              return _context20.stop();
+          }
+        }
+      }, null, this);
+    }
 
     /**
      * remove the video given by videoId from the listing (and returns the stake to the staker)
@@ -742,22 +774,36 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'exit',
     value: function exit(videoId) {
-      var contract, videoIdBytes;
-      return _regenerator2.default.async(function exit$(_context20) {
+      var isWhitelisted, contract, videoIdBytes;
+      return _regenerator2.default.async(function exit$(_context21) {
         while (1) {
-          switch (_context20.prev = _context20.next) {
+          switch (_context21.prev = _context21.next) {
             case 0:
-              _context20.next = 2;
-              return _regenerator2.default.awrap(this.getTcrContract());
+              _context21.next = 2;
+              return _regenerator2.default.awrap(this.isWhitelisted(videoId));
 
             case 2:
-              contract = _context20.sent;
-              videoIdBytes = this.eth.web3.utils.fromAscii(videoId);
-              return _context20.abrupt('return', contract.methods.exit(videoIdBytes).send());
+              isWhitelisted = _context21.sent;
+
+              if (isWhitelisted) {
+                _context21.next = 5;
+                break;
+              }
+
+              throw new Error('The video must be whitelisted in order to exit');
 
             case 5:
+              _context21.next = 7;
+              return _regenerator2.default.awrap(this.getTcrContract());
+
+            case 7:
+              contract = _context21.sent;
+              videoIdBytes = this.eth.web3.utils.fromAscii(videoId);
+              return _context21.abrupt('return', contract.methods.exit(videoIdBytes).send());
+
+            case 10:
             case 'end':
-              return _context20.stop();
+              return _context21.stop();
           }
         }
       }, null, this);

@@ -92,6 +92,7 @@ describe('paratii.eth.tcr:', function () {
     assert.equal(await paratii.eth.tcr.getRevealStageLen(), tcrConfig.paramDefaults.revealStageLength)
     assert.equal(await paratii.eth.tcr.getVoteQuorum(), tcrConfig.paramDefaults.voteQuorum)
   })
+
   it('getters for the parametrizer contract should return correct values', async function () {
     assert.equal(await paratii.eth.tcr.getpMinDeposit(), tcrConfig.paramDefaults.pMinDeposit)
     assert.equal(await paratii.eth.tcr.getpApplyStageLen(), tcrConfig.paramDefaults.pApplyStageLength)
@@ -99,5 +100,17 @@ describe('paratii.eth.tcr:', function () {
     assert.equal(await paratii.eth.tcr.getpCommitStageLen(), tcrConfig.paramDefaults.pCommitStageLength)
     assert.equal(await paratii.eth.tcr.getpRevealStageLen(), tcrConfig.paramDefaults.pRevealStageLength)
     assert.equal(await paratii.eth.tcr.getpVoteQuorum(), tcrConfig.paramDefaults.pVoteQuorum)
+  })
+
+  it('getListing should retrieve the listing inserted previously', async function () {
+    // inserting a video in the whitelist
+    let amount = 5
+    let result = await paratii.eth.tcr.checkEligiblityAndApply(videoId2, paratii.eth.web3.utils.toWei(amount.toString()))
+    assert.isOk(result, result)
+    let didVideoApply = await paratii.eth.tcr.appWasMade(videoId2)
+    assert.isOk(didVideoApply)
+
+    let listing = await paratii.eth.tcr.getListing(videoId2)
+    assert.isOk(listing)
   })
 })
