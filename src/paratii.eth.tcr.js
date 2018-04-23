@@ -220,11 +220,11 @@ export class ParatiiEthTcr {
 
     // FIXME: it is more efficient if we first call "apply", and check for preconditions only after this failed
 
-    if (this.isWhitelisted(videoId)) {
+    if (await this.isWhitelisted(videoId)) {
       throw new Error('The video is already whitelisted')
     }
 
-    if (this.appWasMade(videoId)) {
+    if (await this.appWasMade(videoId)) {
       throw new Error('The video has already applied for the whitelist')
     }
 

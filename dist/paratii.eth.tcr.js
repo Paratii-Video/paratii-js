@@ -538,35 +538,42 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 3:
               minDeposit = _context18.sent;
+              _context18.next = 6;
+              return _regenerator2.default.awrap(this.isWhitelisted(videoId));
 
-              if (!this.isWhitelisted(videoId)) {
-                _context18.next = 6;
+            case 6:
+              if (!_context18.sent) {
+                _context18.next = 8;
                 break;
               }
 
               throw new Error('The video is already whitelisted');
 
-            case 6:
-              if (!this.appWasMade(videoId)) {
-                _context18.next = 8;
+            case 8:
+              _context18.next = 10;
+              return _regenerator2.default.awrap(this.appWasMade(videoId));
+
+            case 10:
+              if (!_context18.sent) {
+                _context18.next = 12;
                 break;
               }
 
               throw new Error('The video has already applied for the whitelist');
 
-            case 8:
+            case 12:
               if (!this.eth.web3.utils.toBN(amountToStake).lt(minDeposit)) {
-                _context18.next = 10;
+                _context18.next = 14;
                 break;
               }
 
               throw new Error('amount to stake ' + amountToStake + ' is less than minDeposit ' + minDeposit.toString());
 
-            case 10:
-              _context18.next = 12;
+            case 14:
+              _context18.next = 16;
               return _regenerator2.default.awrap(this.getTcrContract());
 
-            case 12:
+            case 16:
               contract = _context18.sent;
 
               // let amountInWei = this.eth.web3.utils.toWei(amountToStake.toString())
@@ -575,41 +582,41 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
               videoIdBytes = this.eth.web3.utils.fromAscii(videoId);
               tx = void 0;
-              _context18.prev = 16;
-              _context18.next = 19;
+              _context18.prev = 20;
+              _context18.next = 23;
               return _regenerator2.default.awrap(contract.methods.apply(videoIdBytes, amountInHex, data).send());
 
-            case 19:
+            case 23:
               tx = _context18.sent;
-              _context18.next = 25;
+              _context18.next = 29;
               break;
 
-            case 22:
-              _context18.prev = 22;
-              _context18.t0 = _context18['catch'](16);
+            case 26:
+              _context18.prev = 26;
+              _context18.t0 = _context18['catch'](20);
               throw _context18.t0;
 
-            case 25:
+            case 29:
               vId = void 0;
 
               vId = (0, _utils.getInfoFromLogs)(tx, '_Application', 'listingHash', 1);
 
               if (!vId) {
-                _context18.next = 31;
+                _context18.next = 35;
                 break;
               }
 
               return _context18.abrupt('return', true);
 
-            case 31:
+            case 35:
               return _context18.abrupt('return', false);
 
-            case 32:
+            case 36:
             case 'end':
               return _context18.stop();
           }
         }
-      }, null, this, [[16, 22]]);
+      }, null, this, [[20, 26]]);
     }
 
     /**
