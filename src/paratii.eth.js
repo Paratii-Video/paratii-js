@@ -4,6 +4,7 @@ import { ParatiiEthUsers } from './paratii.eth.users.js'
 import { ParatiiEthEvents } from './paratii.eth.events.js'
 import { ParatiiEthVouchers } from './paratii.eth.vouchers.js'
 import { ParatiiEthTcr } from './paratii.eth.tcr.js'
+import { ParatiiEthTcrPlaceholder } from './paratii.eth.tcrPlaceholder.js'
 import { patchWallet } from './paratii.eth.wallet.js'
 import { ethSchema, accountSchema } from './schemas.js'
 import joi from 'joi'
@@ -85,6 +86,7 @@ export class ParatiiEth {
     this.events = new ParatiiEthEvents(this)
     this.vouchers = new ParatiiEthVouchers(this)
     this.tcr = new ParatiiEthTcr(this)
+    this.tcrPlaceholder = new ParatiiEthTcrPlaceholder(this)
   }
   /**
    * [paratii.setAccount()](./Paratii.html#setAccount__anchor)

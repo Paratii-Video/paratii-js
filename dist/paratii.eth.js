@@ -33,6 +33,8 @@ var _paratiiEthVouchers = require('./paratii.eth.vouchers.js');
 
 var _paratiiEthTcr = require('./paratii.eth.tcr.js');
 
+var _paratiiEthTcrPlaceholder = require('./paratii.eth.tcrPlaceholder.js');
+
 var _paratiiEthWallet = require('./paratii.eth.wallet.js');
 
 var _schemas = require('./schemas.js');
@@ -123,6 +125,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
     this.events = new _paratiiEthEvents.ParatiiEthEvents(this);
     this.vouchers = new _paratiiEthVouchers.ParatiiEthVouchers(this);
     this.tcr = new _paratiiEthTcr.ParatiiEthTcr(this);
+    this.tcrPlaceholder = new _paratiiEthTcrPlaceholder.ParatiiEthTcrPlaceholder(this);
   }
   /**
    * [paratii.setAccount()](./Paratii.html#setAccount__anchor)
