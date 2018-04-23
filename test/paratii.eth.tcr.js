@@ -5,9 +5,11 @@ import { BigNumber } from 'bignumber.js'
 
 describe('paratii.eth.tcr:', function () {
   let paratii
+  let tcrConfig
 
   before(async function () {
     paratii = new Paratii(testConfig)
+    tcrConfig = require('sol-tcr/conf/config.json')
     await paratii.eth.deployContracts()
   })
 
@@ -17,7 +19,7 @@ describe('paratii.eth.tcr:', function () {
   it('should be able to get minDeposit', async function () {
     let amount = await paratii.eth.tcr.getMinDeposit()
     assert.isOk(amount)
-    assert.equal(amount.toString(), '5000000000000000000')
+    assert.equal(amount, tcrConfig.paramDefaults.minDeposit)
   })
 
   it('videoId should not be whitelisted yet', async function () {
@@ -29,25 +31,25 @@ describe('paratii.eth.tcr:', function () {
     let amount = 5
     // get some tokens
     let token = await paratii.eth.getContract('ParatiiToken')
-    let tcrPlaceholder = await paratii.eth.getContract('TcrPlaceholder')
+    let tcr = await paratii.eth.tcr.getTcrContract()
 
     let tx = await token.methods.transfer(address, 1000).send()
     assert.isOk(tx)
     let balanceBefore = await token.methods.balanceOf(address).call()
     // console.log('balanceBefore: ', balanceBefore)
     // let balance = await token.methods.balanceOf(address).call()
-    // assert.equal(balance, 1000)
+    // assert.equal(balanceBefore, 1000)
     let amountToAllowWei = paratii.eth.web3.utils.toWei('100')
     let amountToAllowInHex = paratii.eth.web3.utils.toHex(amountToAllowWei)
-    let tx2 = await token.methods.approve(tcrPlaceholder.options.address, amountToAllowInHex).send()
+    let tx2 = await token.methods.approve(tcr.options.address, amountToAllowInHex).send()
     assert.isOk(tx2)
 
-    let allowance = await token.methods.allowance(address, tcrPlaceholder.options.address).call()
+    let allowance = await token.methods.allowance(address, tcr.options.address).call()
     assert.equal(allowance, paratii.eth.web3.utils.toWei('100'))
 
     let result = await paratii.eth.tcr.apply(videoId, paratii.eth.web3.utils.toWei(amount.toString()))
     assert.isTrue(result)
-    let allowanceAfter = await token.methods.allowance(address, tcrPlaceholder.options.address).call()
+    let allowanceAfter = await token.methods.allowance(address, tcr.options.address).call()
     assert.equal(paratii.eth.web3.utils.toWei('95'), allowanceAfter)
     let balanceAfter = await token.methods.balanceOf(address).call()
     // console.log('balanceAfter: ', balanceAfter.toString())

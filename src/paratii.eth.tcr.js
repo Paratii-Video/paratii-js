@@ -20,9 +20,22 @@ export class ParatiiEthTcr {
    * @example let contract = await paratii.eth.tcr.getTcrContract()
    */
   async getTcrContract () {
-    let contract = await this.eth.getContract('TcrPlaceholder')
+    let contract = await this.eth.getContract('TcrRegistry')
     if (contract.options.address === '0x0') {
       throw Error('There is no TCR contract known in the registry')
+    }
+    return contract
+  }
+
+  /**
+   * get parametrizer contract instance.
+   * @return {Promise} The parametrizer Contract instance.
+   * @example let contract = await paratii.eth.tcr.getParametrizerContract()
+   */
+  async getParametrizerContract () {
+    let contract = await this.eth.getContract('TcrParameterizer')
+    if (contract.options.address === '0x0') {
+      throw Error('There is no Parametrizer contract known in the registry')
     }
     return contract
   }
@@ -34,9 +47,7 @@ export class ParatiiEthTcr {
    * @example let minDeposit = await paratii.eth.tcr.getMinDeposit()
    */
   async getMinDeposit () {
-    let contract = await this.getTcrContract()
-    let minDeposit = await contract.methods.getMinDeposit().call()
-    return minDeposit
+    return this.get('minDeposit')
   }
 
   /**
@@ -49,7 +60,8 @@ export class ParatiiEthTcr {
    */
   async isWhitelisted (videoId) {
     let contract = await this.getTcrContract()
-    let isWhitelisted = await contract.methods.isWhitelisted(videoId).call()
+    let videoIdBytes = this.eth.web3.utils.fromAscii(videoId)
+    let isWhitelisted = await contract.methods.isWhitelisted(videoIdBytes).call()
     return isWhitelisted
   }
 
@@ -61,7 +73,8 @@ export class ParatiiEthTcr {
    */
   async didVideoApply (videoId) {
     let contract = await this.getTcrContract()
-    let appWasMade = await contract.methods.appWasMade(videoId).call()
+    let videoIdBytes = this.eth.web3.utils.fromAscii(videoId)
+    let appWasMade = await contract.methods.appWasMade(videoIdBytes).call()
     return appWasMade
   }
 
@@ -71,10 +84,15 @@ export class ParatiiEthTcr {
    * transfer the stake. If this sounds unfamliar to you, use {@link ParatiiEthTcr#checkEligiblityAndApply} instead.
    * @param  {string} videoId id of the video
    * @param  {integer}  amountToStake number of tokens to stake. must >= minDeposit
+   * @param  {string} data optional data for the application
    * @return {boolean}  returns true if the  application is successful
    * @example paratii.eth.tcr.apply('some-video-id', 3e18)
    */
-  async apply (videoId, amountToStake) {
+  async apply (videoId, amountToStake, data) {
+    // solidity wants a string anyway
+    if (data == null) {
+      data = ''
+    }
     // FIXME: it is more efficient if we first call "apply", and check for preconditions only after this failed
     let minDeposit = await this.getMinDeposit()
     if (this.eth.web3.utils.toBN(amountToStake).lt(minDeposit)) {
@@ -85,14 +103,16 @@ export class ParatiiEthTcr {
     // let amountInWei = this.eth.web3.utils.toWei(amountToStake.toString())
     let amountInHex = this.eth.web3.utils.toHex(amountToStake.toString())
     // console.log('amountInHex: ', amountInHex)
+    let videoIdBytes = this.eth.web3.utils.fromAscii(videoId)
+
     let tx
     try {
-      tx = await contract.methods.apply(videoId, amountInHex).send()
+      tx = await contract.methods.apply(videoIdBytes, amountInHex, data).send()
     } catch (error) {
       throw error
     }
     let vId
-    vId = getInfoFromLogs(tx, '_Application', 'videoId', 1)
+    vId = getInfoFromLogs(tx, '_Application', 'listingHash', 1)
 
     if (vId) {
       return true
@@ -116,6 +136,7 @@ export class ParatiiEthTcr {
    // FIXME: better naming
   async checkEligiblityAndApply (videoId, amountToStake) {
     let minDeposit = await this.getMinDeposit()
+
     if (this.eth.web3.utils.toBN(amountToStake).lt(minDeposit)) {
       throw new Error(`amount to stake ${amountToStake} is less than minDeposit ${minDeposit.toString()}`)
     }
@@ -164,5 +185,15 @@ export class ParatiiEthTcr {
   async exit (videoId) {
     let contract = await this.getTcrContract()
     return contract.methods.exit(videoId).send()
+  }
+
+  // new functions for the real tcr
+
+  async get (param) {
+    let contract = await this.getParametrizerContract()
+
+    let value = await contract.methods.get(param).call()
+
+    return value
   }
 }
