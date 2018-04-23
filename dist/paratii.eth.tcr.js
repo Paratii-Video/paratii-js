@@ -740,7 +740,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
      * get the listing of that videoId
      * @param  {String}  videoId id of the video
      * @return {Promise}        that resolves in the listings
-     * @example let listing = await paratii.eth.tcr.getListing()
+     * @example let listing = await paratii.eth.tcr.getListing('video-id')
      */
 
   }, {
@@ -782,6 +782,50 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     }
 
     /**
+     * get the challenge of that challengeId
+     * @param  {integer}  challengeId id of the challenge
+     * @return {Promise}        that resolves in the challenge
+     * @example let challenge = await paratii.eth.tcr.getChallenge(1)
+     */
+
+  }, {
+    key: 'getChallenge',
+    value: function getChallenge(challengeId) {
+      var contract, challenge;
+      return _regenerator2.default.async(function getChallenge$(_context21) {
+        while (1) {
+          switch (_context21.prev = _context21.next) {
+            case 0:
+              _context21.next = 2;
+              return _regenerator2.default.awrap(this.getTcrContract());
+
+            case 2:
+              contract = _context21.sent;
+              _context21.next = 5;
+              return _regenerator2.default.awrap(contract.methods.challenges(challengeId).call());
+
+            case 5:
+              challenge = _context21.sent;
+
+              if (!(challenge.challenger === '0x0000000000000000000000000000000000000000')) {
+                _context21.next = 8;
+                break;
+              }
+
+              throw Error('Challenge with challengeId ' + challengeId + ' doesn\'t exists');
+
+            case 8:
+              return _context21.abrupt('return', challenge);
+
+            case 9:
+            case 'end':
+              return _context21.stop();
+          }
+        }
+      }, null, this);
+    }
+
+    /**
      * remove the video given by videoId from the listing (and returns the stake to the staker)
      * @param videoId {string} video identifier
      * @return information about the transaction
@@ -792,35 +836,35 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     key: 'exit',
     value: function exit(videoId) {
       var isWhitelisted, contract, videoIdBytes;
-      return _regenerator2.default.async(function exit$(_context21) {
+      return _regenerator2.default.async(function exit$(_context22) {
         while (1) {
-          switch (_context21.prev = _context21.next) {
+          switch (_context22.prev = _context22.next) {
             case 0:
-              _context21.next = 2;
+              _context22.next = 2;
               return _regenerator2.default.awrap(this.isWhitelisted(videoId));
 
             case 2:
-              isWhitelisted = _context21.sent;
+              isWhitelisted = _context22.sent;
 
               if (isWhitelisted) {
-                _context21.next = 5;
+                _context22.next = 5;
                 break;
               }
 
               throw new Error('The video must be whitelisted in order to exit');
 
             case 5:
-              _context21.next = 7;
+              _context22.next = 7;
               return _regenerator2.default.awrap(this.getTcrContract());
 
             case 7:
-              contract = _context21.sent;
+              contract = _context22.sent;
               videoIdBytes = this.eth.web3.utils.toHex(videoId);
-              return _context21.abrupt('return', contract.methods.exit(videoIdBytes).send());
+              return _context22.abrupt('return', contract.methods.exit(videoIdBytes).send());
 
             case 10:
             case 'end':
-              return _context21.stop();
+              return _context22.stop();
           }
         }
       }, null, this);

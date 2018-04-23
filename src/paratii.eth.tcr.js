@@ -314,7 +314,7 @@ export class ParatiiEthTcr {
    * get the listing of that videoId
    * @param  {String}  videoId id of the video
    * @return {Promise}        that resolves in the listings
-   * @example let listing = await paratii.eth.tcr.getListing()
+   * @example let listing = await paratii.eth.tcr.getListing('video-id')
    */
   async getListing (videoId) {
     let contract = await this.getTcrContract()
@@ -324,6 +324,21 @@ export class ParatiiEthTcr {
 
     if (listing.owner === '0x0000000000000000000000000000000000000000') { throw Error(`Listing with videoId ${videoId} doesn't exists`) }
     return listing
+  }
+
+  /**
+   * get the challenge of that challengeId
+   * @param  {integer}  challengeId id of the challenge
+   * @return {Promise}        that resolves in the challenge
+   * @example let challenge = await paratii.eth.tcr.getChallenge(1)
+   */
+  async getChallenge (challengeId) {
+    let contract = await this.getTcrContract()
+
+    let challenge = await contract.methods.challenges(challengeId).call()
+
+    if (challenge.challenger === '0x0000000000000000000000000000000000000000') { throw Error(`Challenge with challengeId ${challengeId} doesn't exists`) }
+    return challenge
   }
 
   /**
