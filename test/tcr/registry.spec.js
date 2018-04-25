@@ -81,7 +81,7 @@ describe('TCR Registry:', function () {
   it('should be able to deposit', async function () {
     let depositTx = await tcrRegistry.methods.deposit(
       paratii.eth.web3.utils.soliditySha3('test_video_id'),
-      paratii.eth.web3.utils.toWei('20')
+      paratii.eth.web3.utils.toWei('42')
     ).send()
 
     assert.isOk(depositTx)
@@ -96,6 +96,7 @@ describe('TCR Registry:', function () {
 
     assert.isOk(withdrawTx)
     assert.isOk(withdrawTx.events._Withdrawal)
+    // console.log('withdraw: ', withdrawTx.events._Withdrawal.returnValues)
   })
 
   it('challenge should NOT exist yet', async function () {
@@ -131,7 +132,7 @@ describe('TCR Registry:', function () {
     let challengeTx = await tcrRegistry.methods.challenge(
       paratii.eth.web3.utils.soliditySha3('test_video_id'),
       ''
-    ).send({from: challengerAccount.address})
+    ).send({from: paratii.eth.web3.eth.accounts[1]})
 
     let balanceAfter = await token.methods.balanceOf(challengerAccount.address).call()
     console.log('balanceOf challengerAccount After: ', balanceAfter)
