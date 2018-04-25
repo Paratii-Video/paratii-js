@@ -1,5 +1,5 @@
 import { Paratii } from '../../src/paratii.js'
-import { testAccount, address1 } from '../utils.js'
+import { testAccount, privateKey17 } from '../utils.js'
 import { assert } from 'chai'
 // import { BigNumber } from 'bignumber.js'
 
@@ -32,14 +32,12 @@ describe('TCR Registry:', function () {
     assert.isOk(_parameterizer)
     assert.isOk(_token)
 
-    let contracts = await paratii.eth.getContracts()
-    console.log('contracts: ', Object.keys(contracts))
-    // console.log('contracts: TcrPLCRVoting ', contracts.TcrPLCRVoting.options)
-    console.log('_voting: ', _voting)
-    console.log('TcrPLCRVoting: ', contracts.TcrPLCRVoting.options.adddress)
-    assert.equal(_voting, contracts.TcrPLCRVoting.options.adddress)
-    assert.equal(_parameterizer, contracts.TcrParameterizer.options.adddress)
-    assert.equal(_token, contracts.ParatiiToken.options.adddress)
+    let tcrPLCRVoting = await paratii.eth.getContract('TcrPLCRVoting')
+    let tcrParameterizer = await paratii.eth.getContract('TcrParameterizer')
+    let token = await paratii.eth.getContract('ParatiiToken')
+    assert.equal(_token, token.options.address)
+    assert.equal(_voting, tcrPLCRVoting.options.address)
+    assert.equal(_parameterizer, tcrParameterizer.options.address)
   })
 
   it('test_video_id should not be whitelisted', async function () {
@@ -109,23 +107,38 @@ describe('TCR Registry:', function () {
   })
 
   it('should be able to start a challenge', async function () {
+    // create challenger account
+    let challengerAccount = await paratii.eth.web3.eth.accounts.wallet.add({
+      privateKey: privateKey17
+    })
+    assert.isOk(challengerAccount)
+    console.log('challengerAccount: ', challengerAccount)
+
     // fund address1
     let token = await paratii.eth.getContract('ParatiiToken')
     assert.isOk(token)
     let transferTx = await token.methods.transfer(
-      address1,
+      challengerAccount.address,
       paratii.eth.web3.utils.toWei('40')
     ).send()
 
     assert.isOk(transferTx)
-    let balanceOfAddress1 = await token.methods.balanceOf(address1).call()
+    let balanceOfAddress1 = await token.methods.balanceOf(challengerAccount.address).call()
     assert.equal(balanceOfAddress1, paratii.eth.web3.utils.toWei('40'))
-    console.log('transferTx', transferTx, '\nbalanceOf:', balanceOfAddress1)
+    // console.log('transferTx', transferTx, '\nbalanceOf:', balanceOfAddress1)
+    console.log('balanceOf challengerAccount: ', balanceOfAddress1)
 
     let challengeTx = await tcrRegistry.methods.challenge(
       paratii.eth.web3.utils.soliditySha3('test_video_id'),
       ''
-    ).send({from: address1})
+    ).send({from: challengerAccount.address})
+
+    let balanceAfter = await token.methods.balanceOf(challengerAccount.address).call()
+    console.log('balanceOf challengerAccount After: ', balanceAfter)
+
+    // check if the listing has challengeID now
+    let struct = await tcrRegistry.methods.listings(paratii.eth.web3.utils.soliditySha3('test_video_id')).call()
+    console.log('struct: ', struct)
 
     console.log('challengeTx ', challengeTx)
     assert.isOk(challengeTx)

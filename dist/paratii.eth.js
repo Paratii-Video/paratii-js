@@ -833,11 +833,13 @@ var ParatiiEth = exports.ParatiiEth = function () {
               this.contracts.TcrPLCRVoting = tcrPLCRVoting;
               this.contracts.TcrParameterizer = tcrParameterizer;
 
-              this.setRegistryAddress(paratiiRegistryAddress);
-
-              return _context4.abrupt('return', this.contracts);
+              _context4.next = 108;
+              return _regenerator2.default.awrap(this.setRegistryAddress(paratiiRegistryAddress));
 
             case 108:
+              return _context4.abrupt('return', this.contracts);
+
+            case 109:
             case 'end':
               return _context4.stop();
           }
