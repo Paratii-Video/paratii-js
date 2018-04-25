@@ -4,15 +4,18 @@ import { assert } from 'chai'
 // import { BigNumber } from 'bignumber.js'
 
 describe('TCR Registry:', function () {
-  let paratii, tcrRegistry
+  let paratii, tcrRegistry, challengeID, tcrPLCRVoting
 
   before(async function () {
     paratii = new Paratii({account: testAccount})
     // paratii = new Paratii(testConfig)
     await paratii.eth.deployContracts()
     tcrRegistry = await paratii.eth.getContract('TcrRegistry')
+    tcrPLCRVoting = await paratii.eth.getContract('TcrPLCRVoting')
     assert.isOk(tcrRegistry)
     assert.isOk(tcrRegistry.options.address)
+    assert.isOk(tcrPLCRVoting)
+    assert.isOk(tcrPLCRVoting.options.address)
   })
 
   it('should already be deployed', async function () {
@@ -127,22 +130,82 @@ describe('TCR Registry:', function () {
     let balanceOfAddress1 = await token.methods.balanceOf(challengerAccount.address).call()
     assert.equal(balanceOfAddress1, paratii.eth.web3.utils.toWei('40'))
     // console.log('transferTx', transferTx, '\nbalanceOf:', balanceOfAddress1)
-    console.log('balanceOf challengerAccount: ', balanceOfAddress1)
+    // console.log('balanceOf challengerAccount: ', balanceOfAddress1)
 
     let challengeTx = await tcrRegistry.methods.challenge(
       paratii.eth.web3.utils.soliditySha3('test_video_id'),
       ''
     ).send({from: paratii.eth.web3.eth.accounts[1]})
 
-    let balanceAfter = await token.methods.balanceOf(challengerAccount.address).call()
-    console.log('balanceOf challengerAccount After: ', balanceAfter)
+    // let balanceAfter = await token.methods.balanceOf(challengerAccount.address).call()
+    // console.log('balanceOf challengerAccount After: ', balanceAfter)
 
     // check if the listing has challengeID now
-    let struct = await tcrRegistry.methods.listings(paratii.eth.web3.utils.soliditySha3('test_video_id')).call()
-    console.log('struct: ', struct)
+    // let struct = await tcrRegistry.methods.listings(paratii.eth.web3.utils.soliditySha3('test_video_id')).call()
+    // console.log('struct: ', struct)
 
-    console.log('challengeTx ', challengeTx)
+    // console.log('challengeTx ', challengeTx)
     assert.isOk(challengeTx)
     assert.isOk(challengeTx.events._Challenge)
+    challengeID = challengeTx.events._Challenge.returnValues.challengeID
+    // console.log('challengeID: ', challengeID)
+  })
+
+  it('should be able to vote on existing challenge', async function () {
+    // create Voter account.
+    let voterAccount = await paratii.eth.web3.eth.accounts.create('54674321§3456764321§3456743')
+    let addedVoterAccount = await paratii.eth.web3.eth.accounts.wallet.add({
+      privateKey: voterAccount.privateKey
+    })
+
+    console.log('voterAccount: ', voterAccount)
+    console.log('addedVoterAccount: ', addedVoterAccount)
+
+    // fund it.
+    let token = await paratii.eth.getContract('ParatiiToken')
+    assert.isOk(token)
+    let transferTx = await token.methods.transfer(
+      voterAccount.address,
+      paratii.eth.web3.utils.toWei('40')
+    ).send()
+
+    assert.isOk(transferTx)
+    let balanceOfVoter = await token.methods.balanceOf(voterAccount.address).call()
+    assert.equal(balanceOfVoter, paratii.eth.web3.utils.toWei('40'))
+    console.log('balanceOfVoter: ', balanceOfVoter)
+
+    // voting process.
+    // 1. create voteSaltHash
+    let vote = 1
+    let salt = 420 // this gotta be some random val
+    let voteSaltHash = paratii.eth.web3.utils.soliditySha3(vote, salt)
+    let amount = paratii.eth.web3.utils.toWei('1')
+
+    // 2. request voting rights as voter.
+    let requestVotingRightsTx = await tcrPLCRVoting.methods.requestVotingRights(
+      amount
+    ).send({from: paratii.eth.web3.eth.accounts[2]})
+
+    console.log('requestVotingRightsTx: ', requestVotingRightsTx)
+    assert.isOk(requestVotingRightsTx)
+    assert.isOk(requestVotingRightsTx.events._VotingRightsGranted)
+    // 3. getPrevious PollID
+    let prevPollID = await tcrPLCRVoting.methods.getInsertPointForNumTokens(
+      voterAccount.address,
+      amount,
+      challengeID
+    ).call()
+    console.log('prevPollID: ', prevPollID)
+    assert.isOk(prevPollID)
+
+    // 4. finally commitVote.
+    let commitVoteTx = await tcrPLCRVoting.methods.commitVote(
+      challengeID,
+      voteSaltHash,
+      amount,
+      prevPollID
+    ).send({from: paratii.eth.web3.eth.accounts[2]})
+
+    console.log('commitVoteTx', commitVoteTx)
   })
 })
