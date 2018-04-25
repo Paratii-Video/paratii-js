@@ -116,7 +116,7 @@ describe('TCR Registry:', function () {
       privateKey: privateKey17
     })
     assert.isOk(challengerAccount)
-    console.log('challengerAccount: ', challengerAccount)
+    // console.log('challengerAccount: ', challengerAccount)
 
     // fund address1
     let token = await paratii.eth.getContract('ParatiiToken')
@@ -148,6 +148,7 @@ describe('TCR Registry:', function () {
     assert.isOk(challengeTx)
     assert.isOk(challengeTx.events._Challenge)
     challengeID = challengeTx.events._Challenge.returnValues.challengeID
+    assert.isOk(challengeID)
     // console.log('challengeID: ', challengeID)
   })
 
@@ -158,8 +159,10 @@ describe('TCR Registry:', function () {
       privateKey: voterAccount.privateKey
     })
 
-    console.log('voterAccount: ', voterAccount)
-    console.log('addedVoterAccount: ', addedVoterAccount)
+    assert.isOk(voterAccount)
+    assert.isOk(addedVoterAccount)
+    // console.log('voterAccount: ', voterAccount)
+    // console.log('addedVoterAccount: ', addedVoterAccount)
 
     // fund it.
     let token = await paratii.eth.getContract('ParatiiToken')
@@ -172,14 +175,14 @@ describe('TCR Registry:', function () {
     assert.isOk(transferTx)
     let balanceOfVoter = await token.methods.balanceOf(voterAccount.address).call()
     assert.equal(balanceOfVoter, paratii.eth.web3.utils.toWei('40'))
-    console.log('balanceOfVoter: ', balanceOfVoter)
+    // console.log('balanceOfVoter: ', balanceOfVoter)
     // approve PLCRVoting
     let approveTx = await token.methods.approve(
       tcrPLCRVoting.options.address,
       paratii.eth.web3.utils.toWei('1')
     ).send({from: paratii.eth.web3.eth.accounts[2]})
     assert.isOk(approveTx)
-    console.log('approveTx', approveTx)
+    // console.log('approveTx', approveTx)
     // voting process.
     // 1. create voteSaltHash
     let vote = 1
@@ -192,7 +195,7 @@ describe('TCR Registry:', function () {
       amount
     ).send({from: paratii.eth.web3.eth.accounts[2]})
 
-    console.log('requestVotingRightsTx: ', requestVotingRightsTx)
+    // console.log('requestVotingRightsTx: ', requestVotingRightsTx)
     assert.isOk(requestVotingRightsTx)
     assert.isOk(requestVotingRightsTx.events._VotingRightsGranted)
     // 3. getPrevious PollID
@@ -201,7 +204,7 @@ describe('TCR Registry:', function () {
       amount,
       challengeID
     ).call()
-    console.log('prevPollID: ', prevPollID)
+    // console.log('prevPollID: ', prevPollID)
     assert.isOk(prevPollID)
 
     // 4. finally commitVote.
@@ -212,6 +215,8 @@ describe('TCR Registry:', function () {
       prevPollID
     ).send({from: paratii.eth.web3.eth.accounts[2]})
 
-    console.log('commitVoteTx', commitVoteTx)
+    // console.log('commitVoteTx', commitVoteTx)
+    assert.isOk(commitVoteTx)
+    assert.isOk(commitVoteTx.events._VoteCommitted)
   })
 })
