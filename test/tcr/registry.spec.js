@@ -173,7 +173,13 @@ describe('TCR Registry:', function () {
     let balanceOfVoter = await token.methods.balanceOf(voterAccount.address).call()
     assert.equal(balanceOfVoter, paratii.eth.web3.utils.toWei('40'))
     console.log('balanceOfVoter: ', balanceOfVoter)
-
+    // approve PLCRVoting
+    let approveTx = await token.methods.approve(
+      tcrPLCRVoting.options.address,
+      paratii.eth.web3.utils.toWei('1')
+    ).send({from: paratii.eth.web3.eth.accounts[2]})
+    assert.isOk(approveTx)
+    console.log('approveTx', approveTx)
     // voting process.
     // 1. create voteSaltHash
     let vote = 1
