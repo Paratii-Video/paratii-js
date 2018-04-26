@@ -447,7 +447,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'isWhitelisted',
     value: function isWhitelisted(videoId) {
-      var contract, videoIdBytes, isWhitelisted;
+      var contract, hash, isWhitelisted;
       return _regenerator2.default.async(function isWhitelisted$(_context16) {
         while (1) {
           switch (_context16.prev = _context16.next) {
@@ -457,9 +457,9 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 2:
               contract = _context16.sent;
-              videoIdBytes = this.eth.web3.utils.toHex(videoId);
+              hash = this.getHash(videoId);
               _context16.next = 6;
-              return _regenerator2.default.awrap(contract.methods.isWhitelisted(videoIdBytes).call());
+              return _regenerator2.default.awrap(contract.methods.isWhitelisted(hash).call());
 
             case 6:
               isWhitelisted = _context16.sent;
@@ -483,7 +483,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'appWasMade',
     value: function appWasMade(videoId) {
-      var contract, videoIdBytes, appWasMade;
+      var contract, hash, appWasMade;
       return _regenerator2.default.async(function appWasMade$(_context17) {
         while (1) {
           switch (_context17.prev = _context17.next) {
@@ -493,9 +493,9 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 2:
               contract = _context17.sent;
-              videoIdBytes = this.eth.web3.utils.toHex(videoId);
+              hash = this.getHash(videoId);
               _context17.next = 6;
-              return _regenerator2.default.awrap(contract.methods.appWasMade(videoIdBytes).call());
+              return _regenerator2.default.awrap(contract.methods.appWasMade(hash).call());
 
             case 6:
               appWasMade = _context17.sent;
@@ -523,7 +523,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'apply',
     value: function apply(videoId, amountToStake, data) {
-      var minDeposit, isWhitelisted, appWasMade, contract, amountInHex, videoIdBytes, tx, vId;
+      var minDeposit, isWhitelisted, appWasMade, contract, amountInHex, hash, tx, vId;
       return _regenerator2.default.async(function apply$(_context18) {
         while (1) {
           switch (_context18.prev = _context18.next) {
@@ -584,11 +584,11 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
               amountInHex = this.eth.web3.utils.toHex(amountToStake.toString());
               // console.log('amountInHex: ', amountInHex)
 
-              videoIdBytes = this.eth.web3.utils.toHex(videoId);
+              hash = this.getHash(videoId);
               tx = void 0;
               _context18.prev = 22;
               _context18.next = 25;
-              return _regenerator2.default.awrap(contract.methods.apply(videoIdBytes, amountInHex, data).send());
+              return _regenerator2.default.awrap(contract.methods.apply(hash, amountInHex, data).send());
 
             case 25:
               tx = _context18.sent;
@@ -746,7 +746,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'getListing',
     value: function getListing(videoId) {
-      var contract, videoIdBytes, listing;
+      var contract, hash, listing;
       return _regenerator2.default.async(function getListing$(_context20) {
         while (1) {
           switch (_context20.prev = _context20.next) {
@@ -756,9 +756,9 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 2:
               contract = _context20.sent;
-              videoIdBytes = this.eth.web3.utils.toHex(videoId);
+              hash = this.getHash(videoId);
               _context20.next = 6;
-              return _regenerator2.default.awrap(contract.methods.listings(videoIdBytes).call());
+              return _regenerator2.default.awrap(contract.methods.listings(hash).call());
 
             case 6:
               listing = _context20.sent;
@@ -826,6 +826,19 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     }
 
     /**
+     * get the hash of the video Id to be inserted in the TCR contract
+     * @param  {String} videoId univocal id of the video
+     * @return {String}         sha3 of the id
+     * @private
+     */
+
+  }, {
+    key: 'getHash',
+    value: function getHash(videoId) {
+      return this.eth.web3.utils.soliditySha3(videoId);
+    }
+
+    /**
      * remove the video given by videoId from the listing (and returns the stake to the staker)
      * @param videoId {string} video identifier
      * @return information about the transaction
@@ -835,7 +848,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'exit',
     value: function exit(videoId) {
-      var isWhitelisted, listing, sender, challenge, contract, videoIdBytes;
+      var isWhitelisted, listing, sender, challenge, contract, hash;
       return _regenerator2.default.async(function exit$(_context22) {
         while (1) {
           switch (_context22.prev = _context22.next) {
@@ -885,8 +898,8 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 15:
               contract = _context22.sent;
-              videoIdBytes = this.eth.web3.utils.toHex(videoId);
-              return _context22.abrupt('return', contract.methods.exit(videoIdBytes).send());
+              hash = this.getHash(videoId);
+              return _context22.abrupt('return', contract.methods.exit(hash).send());
 
             case 18:
             case 'end':

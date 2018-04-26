@@ -182,8 +182,8 @@ export class ParatiiEthTcr {
    */
   async isWhitelisted (videoId) {
     let contract = await this.getTcrContract()
-    let videoIdBytes = this.eth.web3.utils.toHex(videoId)
-    let isWhitelisted = await contract.methods.isWhitelisted(videoIdBytes).call()
+    let hash = this.getHash(videoId)
+    let isWhitelisted = await contract.methods.isWhitelisted(hash).call()
     return isWhitelisted
   }
 
@@ -195,8 +195,8 @@ export class ParatiiEthTcr {
    */
   async appWasMade (videoId) {
     let contract = await this.getTcrContract()
-    let videoIdBytes = this.eth.web3.utils.toHex(videoId)
-    let appWasMade = await contract.methods.appWasMade(videoIdBytes).call()
+    let hash = this.getHash(videoId)
+    let appWasMade = await contract.methods.appWasMade(hash).call()
     return appWasMade
   }
 
@@ -237,11 +237,11 @@ export class ParatiiEthTcr {
     // let amountInWei = this.eth.web3.utils.toWei(amountToStake.toString())
     let amountInHex = this.eth.web3.utils.toHex(amountToStake.toString())
     // console.log('amountInHex: ', amountInHex)
-    let videoIdBytes = this.eth.web3.utils.toHex(videoId)
+    let hash = this.getHash(videoId)
 
     let tx
     try {
-      tx = await contract.methods.apply(videoIdBytes, amountInHex, data).send()
+      tx = await contract.methods.apply(hash, amountInHex, data).send()
     } catch (error) {
       throw error
     }
@@ -319,8 +319,8 @@ export class ParatiiEthTcr {
   async getListing (videoId) {
     let contract = await this.getTcrContract()
 
-    let videoIdBytes = this.eth.web3.utils.toHex(videoId)
-    let listing = await contract.methods.listings(videoIdBytes).call()
+    let hash = this.getHash(videoId)
+    let listing = await contract.methods.listings(hash).call()
 
     if (listing.owner === '0x0000000000000000000000000000000000000000') { throw Error(`Listing with videoId ${videoId} doesn't exists`) }
     return listing
@@ -339,6 +339,16 @@ export class ParatiiEthTcr {
 
     if (challenge.challenger === '0x0000000000000000000000000000000000000000') { throw Error(`Challenge with challengeId ${challengeId} doesn't exists`) }
     return challenge
+  }
+
+  /**
+   * get the hash of the video Id to be inserted in the TCR contract
+   * @param  {String} videoId univocal id of the video
+   * @return {String}         sha3 of the id
+   * @private
+   */
+  getHash (videoId) {
+    return this.eth.web3.utils.soliditySha3(videoId)
   }
 
   /**
@@ -367,7 +377,8 @@ export class ParatiiEthTcr {
     }
 
     let contract = await this.getTcrContract()
-    let videoIdBytes = this.eth.web3.utils.toHex(videoId)
-    return contract.methods.exit(videoIdBytes).send()
+    let hash = this.getHash(videoId)
+
+    return contract.methods.exit(hash).send()
   }
 }
