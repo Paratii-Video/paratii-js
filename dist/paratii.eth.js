@@ -833,11 +833,13 @@ var ParatiiEth = exports.ParatiiEth = function () {
               this.contracts.TcrPLCRVoting = tcrPLCRVoting;
               this.contracts.TcrParameterizer = tcrParameterizer;
 
-              this.setRegistryAddress(paratiiRegistryAddress);
-
-              return _context4.abrupt('return', this.contracts);
+              _context4.next = 108;
+              return _regenerator2.default.awrap(this.setRegistryAddress(paratiiRegistryAddress));
 
             case 108:
+              return _context4.abrupt('return', this.contracts);
+
+            case 109:
             case 'end':
               return _context4.stop();
           }
@@ -865,36 +867,38 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
             case 1:
               if ((_context5.t1 = _context5.t0()).done) {
-                _context5.next = 11;
+                _context5.next = 12;
                 break;
               }
 
               name = _context5.t1.value;
               contract = this.contracts[name];
 
+              console.log('[' + name + '] = ' + contract.options.address);
+
               if (contract.options.address) {
-                _context5.next = 9;
+                _context5.next = 10;
                 break;
               }
 
-              _context5.next = 7;
+              _context5.next = 8;
               return _regenerator2.default.awrap(this.getContractAddress(name));
 
-            case 7:
+            case 8:
               address = _context5.sent;
 
               if (address && address !== '0x0') {
                 contract.options.address = address;
               }
 
-            case 9:
+            case 10:
               _context5.next = 1;
               break;
 
-            case 11:
+            case 12:
               return _context5.abrupt('return', this.contracts);
 
-            case 12:
+            case 13:
             case 'end':
               return _context5.stop();
           }

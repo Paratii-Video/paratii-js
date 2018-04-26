@@ -592,7 +592,7 @@ export class ParatiiEth {
     this.contracts.TcrPLCRVoting = tcrPLCRVoting
     this.contracts.TcrParameterizer = tcrParameterizer
 
-    this.setRegistryAddress(paratiiRegistryAddress)
+    await this.setRegistryAddress(paratiiRegistryAddress)
 
     return this.contracts
   }
@@ -607,6 +607,7 @@ export class ParatiiEth {
   async getContracts () {
     for (var name in this.contracts) {
       let contract = this.contracts[name]
+      console.log(`[${name}] = ${contract.options.address}`)
       if (!contract.options.address) {
         let address = await this.getContractAddress(name)
         if (address && address !== '0x0') {
