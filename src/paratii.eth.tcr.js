@@ -291,7 +291,7 @@ export class ParatiiEthTcr {
     let tcr = await this.getTcrContract()
 
     // FIXME: restore this logic (it is broken!)
-    // let balance = await token.methods.balanceOf(this.getAccount()).call()
+    // let balance = await token.methods.balanceOf(this.eth.getAccount()).call()
     // if (this.eth.web3.utils.toBN(balance.toString()).lt(amountToStake)) {
     //   throw new Error(`Your balance is to low: it is ${balance.toString()}, while a minimal deposit of ${minDeposit.toString()} is required`)
     // }
@@ -351,6 +351,19 @@ export class ParatiiEthTcr {
     let isWhitelisted = await this.isWhitelisted(videoId)
     if (!isWhitelisted) {
       throw new Error('The video must be whitelisted in order to exit')
+    }
+
+    let listing = this.getListing(videoId)
+    let sender = this.eth.getAccount()
+    if (sender !== listing.owner) {
+      throw new Error('You must be the owner of the listing to exit the whitelist')
+    }
+
+    if (listing.challengeID !== 0) {
+      let challenge = this.getChallenge(listing.challengeID)
+      if (challenge.resolved !== 1) {
+        throw new Error('You can\'t exit during a challenge')
+      }
     }
 
     let contract = await this.getTcrContract()

@@ -115,18 +115,22 @@ describe('paratii.eth.tcr:', function () {
     assert.isOk(listing)
   })
 
-  it('getListing should throw an error if the listing does not exist', async function () {
+  it('getListing() should throw an error if the listing does not exist', async function () {
     assert.isFalse(await paratii.eth.tcr.appWasMade(videoId4))
 
     await assert.isRejected(paratii.eth.tcr.getListing(videoId4), Error, /doesn't exists/g)
   })
 
-  it('getChallenge should throw an error if the challenge does not exist', async function () {
+  it('getChallenge() should throw an error if the challenge does not exist', async function () {
     // new paratii --> contracts are re-deployed --> no challenges are present
     paratii = new Paratii(testConfig)
     tcrConfig = require('sol-tcr/conf/config.json')
     await paratii.eth.deployContracts()
 
     await assert.isRejected(paratii.eth.tcr.getChallenge(1), Error, /doesn't exists/g)
+  })
+
+  it.skip('exit() should throw errors if conditions aren\'t fulfilled', async function () {
+    // need to be implemented after the challenge implementation
   })
 })

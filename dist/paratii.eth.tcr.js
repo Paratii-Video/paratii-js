@@ -835,7 +835,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'exit',
     value: function exit(videoId) {
-      var isWhitelisted, contract, videoIdBytes;
+      var isWhitelisted, listing, sender, challenge, contract, videoIdBytes;
       return _regenerator2.default.async(function exit$(_context22) {
         while (1) {
           switch (_context22.prev = _context22.next) {
@@ -854,15 +854,41 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
               throw new Error('The video must be whitelisted in order to exit');
 
             case 5:
-              _context22.next = 7;
+              listing = this.getListing(videoId);
+              sender = this.eth.getAccount();
+
+              if (!(sender !== listing.owner)) {
+                _context22.next = 9;
+                break;
+              }
+
+              throw new Error('You must be the owner of the listing to exit the whitelist');
+
+            case 9:
+              if (!(listing.challengeID !== 0)) {
+                _context22.next = 13;
+                break;
+              }
+
+              challenge = this.getChallenge(listing.challengeID);
+
+              if (!(challenge.resolved !== 1)) {
+                _context22.next = 13;
+                break;
+              }
+
+              throw new Error('You can\'t exit during a challenge');
+
+            case 13:
+              _context22.next = 15;
               return _regenerator2.default.awrap(this.getTcrContract());
 
-            case 7:
+            case 15:
               contract = _context22.sent;
               videoIdBytes = this.eth.web3.utils.toHex(videoId);
               return _context22.abrupt('return', contract.methods.exit(videoIdBytes).send());
 
-            case 10:
+            case 18:
             case 'end':
               return _context22.stop();
           }
