@@ -1,6 +1,9 @@
 'use strict'
 import { getInfoFromLogs } from './utils.js'
 
+const HASH_TO_KEY_PREFIX = 'HASH_KEY_'
+const SALT_KEY_PREFIX = 'SALT_KEY_'
+
  /**
   * Token Curated Registry functionalities.
   * Work in progress: this class does not yet implement all TCR functionality
@@ -172,6 +175,8 @@ export class ParatiiEthTcr {
     return value
   }
 
+  // ---------------------------------------------------------------------------
+
   /**
    * check if video is already whitelisted. note that this returns false
    * till the video is actually whitelisted. use appWasMade in case you want
@@ -188,6 +193,18 @@ export class ParatiiEthTcr {
   }
 
   /**
+   * Determines whether the given videoId be whitelisted.
+   * @param  {string}  videoId id of the video
+   * @return {Promise}         true if it can be whitelisted.
+   */
+  async canBeWhitelisted (videoId) {
+    let hash = this.getHash(videoId)
+    let tcrRegistry = await this.getTcrContract()
+    let canBeWhitelisted = await tcrRegistry.methods.canBeWhitelisted(hash).call()
+    return canBeWhitelisted
+  }
+
+  /**
    * check whether a video started the application process
    * @param  {string}  videoId id of the video
    * @return {boolean}  true if video started the application process, false otherwise
@@ -198,6 +215,19 @@ export class ParatiiEthTcr {
     let hash = this.getHash(videoId)
     let appWasMade = await contract.methods.appWasMade(hash).call()
     return appWasMade
+  }
+
+  /**
+   * Calculates the provided voter's token reward for the given poll.
+   * @param  {string}  voterAddress address of the voter
+   * @param  {uint}  challengeID  challengeID ( in hex )
+   * @param  {string}  salt         the salt used for that vote.
+   * @return {Number}              returns the voterReward in BN format.
+   */
+  async voterReward (voterAddress, challengeID, salt) {
+    let tcrRegistry = await this.getTcrContract()
+    let voterReward = await tcrRegistry.methods.voterReward(voterAddress, challengeID, salt).call()
+    return voterReward
   }
 
   /**
@@ -380,5 +410,132 @@ export class ParatiiEthTcr {
     let hash = this.getHash(videoId)
 
     return contract.methods.exit(hash).send()
+  }
+
+  async startChallenge (videoId, _data) {
+    if (!_data) {
+      _data = ''
+    }
+
+    let tcrRegistry = await this.getTcrContract()
+    let hash = this.getAndStoreHash(videoId)
+
+    // 1. check if challenger has enough minDeposit and approved the
+    // contract to spend that
+    let minDeposit = await this.getMinDeposit()
+    let balance = await this.eth.balanceOf(this.eth.config.account.address)
+    let allowance = await this.eth.allowance(this.eth.getAccount, tcrRegistry.options.address)
+
+    if (allowance.lt(minDeposit)) {
+      throw new Error(`allowance ${allowance.toString()} is less than ${minDeposit.toString()}`)
+    }
+
+    if (balance.lt(minDeposit)) {
+      throw new Error(`balance ${balance.toString()} is less than ${minDeposit.toString()}`)
+    }
+
+    // Listing must be in apply stage or already on the whitelist
+    let appWasMade = await this.appWasMade(videoId)
+    let isWhitelisted = await this.isWhitelisted(videoId)
+
+    if (!appWasMade && !isWhitelisted) {
+      throw new Error(`video ${videoId} has no application or is not whitelisted`)
+    }
+
+    // Prevent multiple challenges
+    let listing = await this.getListing(videoId)
+    if (listing.challengeID !== 0) {
+      throw new Error(`challenge for ${videoId} already exist. challengeID ${listing.challengeID}`)
+    }
+
+    let pollID = await tcrRegistry.methods.challenge(hash, _data).send()
+    if (!pollID) {
+      throw new Error(`starting Challenge ${videoId} failed!!`)
+    }
+
+    return pollID
+  }
+
+  /**
+   * Updates a listingHash's status from 'application' to 'listing' or resolves
+   * a challenge if one exists.
+   * this is required to be able to use claimReward.
+   * @param  {string}  videoId id of the video
+   * @return {Promise}         tx of the updateStatus
+   */
+  async updateStatus (videoId) {
+    let hash = this.getAndStoreHash(videoId)
+    let tcrRegistry = await this.getTcrContract()
+    let tx = await tcrRegistry.methods.updateStatus(hash).send()
+    return tx
+  }
+
+  /**
+   * claim reward. nuff said.
+   * @param  {string}  videoId id of the video.
+   * @param  {string}  salt    salt used in that vote.
+   * @return {Promise}         the claimReward tx
+   */
+  async claimReward (videoId, salt) {
+    let tcrRegistry = await this.getTcrContract()
+    let listing = await this.getListing(videoId)
+    let challengeID = listing.challengeID
+
+    // Ensure the voter has not already claimed tokens and challenge results have been processed
+    let challenge = await this.getChallenge(challengeID)
+    if (challenge.tokenClaims[this.eth.getAccount()] !== false) {
+      throw new Error(`Account ${this.eth.getAccount()} has already claimed reward. for video ${videoId}`)
+    }
+
+    if (challenge.resolved !== true) {
+      throw new Error(`Challenge ${challengeID} (videoId: ${videoId}) hasn't been resolved`)
+    }
+
+    let tx = await tcrRegistry.methods.claimReward(
+      this.eth.web3.utils.toHex(challengeID.toString()),
+      salt
+    ).send()
+    return tx
+  }
+
+  // --------------------[voting functions]-------------------------------------
+
+  async commitVote (vote, amount) {
+
+  }
+
+  // ---------------------------[ utils ]---------------------------------------
+  getAndStoreHash (videoId) {
+    let hash = this.getHash(videoId)
+    if (window && window.localStorage) {
+      window.localStorage.setItem(HASH_TO_KEY_PREFIX + hash.toString(), videoId)
+    } else {
+      console.warn('localStorage isn\'t available. TODO: levelDB integration.')
+    }
+
+    return hash
+  }
+  storeSalt (videoId, salt) {
+    if (window && window.localStorage) {
+      window.localStorage.setItem(SALT_KEY_PREFIX + videoId, salt)
+    } else {
+      console.warn('localStorage isn\'t available. TODO: levelDB integration.')
+    }
+  }
+
+  getSalt (videoId) {
+    if (window && window.localStorage) {
+      return window.localStorage.getItem(SALT_KEY_PREFIX + videoId)
+    } else {
+      console.warn('localStorage isn\'t available. TODO: levelDB integration.')
+    }
+  }
+
+  hashToId (hash) {
+    if (window && window.localStorage) {
+      return window.localStorage.getItem(HASH_TO_KEY_PREFIX + hash.toString())
+    } else {
+      console.warn('localStorage isn\'t available. TODO: levelDB integration.')
+    }
   }
 }

@@ -21,6 +21,9 @@ var _utils = require('./utils.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var HASH_TO_KEY_PREFIX = 'HASH_KEY_';
+var SALT_KEY_PREFIX = 'SALT_KEY_';
+
 /**
  * Token Curated Registry functionalities.
  * Work in progress: this class does not yet implement all TCR functionality
@@ -29,6 +32,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @example let paratii = new Paratii()
  * paratii.eth.tcr // this is an instance of ParatiiEthTcr
  */
+
 var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   function ParatiiEthTcr(context) {
     (0, _classCallCheck3.default)(this, ParatiiEthTcr);
@@ -435,6 +439,8 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
       }, null, this);
     }
 
+    // ---------------------------------------------------------------------------
+
     /**
      * check if video is already whitelisted. note that this returns false
      * till the video is actually whitelisted. use appWasMade in case you want
@@ -474,6 +480,41 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     }
 
     /**
+     * Determines whether the given videoId be whitelisted.
+     * @param  {string}  videoId id of the video
+     * @return {Promise}         true if it can be whitelisted.
+     */
+
+  }, {
+    key: 'canBeWhitelisted',
+    value: function canBeWhitelisted(videoId) {
+      var hash, tcrRegistry, canBeWhitelisted;
+      return _regenerator2.default.async(function canBeWhitelisted$(_context17) {
+        while (1) {
+          switch (_context17.prev = _context17.next) {
+            case 0:
+              hash = this.getHash(videoId);
+              _context17.next = 3;
+              return _regenerator2.default.awrap(this.getTcrContract());
+
+            case 3:
+              tcrRegistry = _context17.sent;
+              _context17.next = 6;
+              return _regenerator2.default.awrap(tcrRegistry.methods.canBeWhitelisted(hash).call());
+
+            case 6:
+              canBeWhitelisted = _context17.sent;
+              return _context17.abrupt('return', canBeWhitelisted);
+
+            case 8:
+            case 'end':
+              return _context17.stop();
+          }
+        }
+      }, null, this);
+    }
+
+    /**
      * check whether a video started the application process
      * @param  {string}  videoId id of the video
      * @return {boolean}  true if video started the application process, false otherwise
@@ -484,26 +525,62 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     key: 'appWasMade',
     value: function appWasMade(videoId) {
       var contract, hash, appWasMade;
-      return _regenerator2.default.async(function appWasMade$(_context17) {
+      return _regenerator2.default.async(function appWasMade$(_context18) {
         while (1) {
-          switch (_context17.prev = _context17.next) {
+          switch (_context18.prev = _context18.next) {
             case 0:
-              _context17.next = 2;
+              _context18.next = 2;
               return _regenerator2.default.awrap(this.getTcrContract());
 
             case 2:
-              contract = _context17.sent;
+              contract = _context18.sent;
               hash = this.getHash(videoId);
-              _context17.next = 6;
+              _context18.next = 6;
               return _regenerator2.default.awrap(contract.methods.appWasMade(hash).call());
 
             case 6:
-              appWasMade = _context17.sent;
-              return _context17.abrupt('return', appWasMade);
+              appWasMade = _context18.sent;
+              return _context18.abrupt('return', appWasMade);
 
             case 8:
             case 'end':
-              return _context17.stop();
+              return _context18.stop();
+          }
+        }
+      }, null, this);
+    }
+
+    /**
+     * Calculates the provided voter's token reward for the given poll.
+     * @param  {string}  voterAddress address of the voter
+     * @param  {uint}  challengeID  challengeID ( in hex )
+     * @param  {string}  salt         the salt used for that vote.
+     * @return {Number}              returns the voterReward in BN format.
+     */
+
+  }, {
+    key: 'voterReward',
+    value: function voterReward(voterAddress, challengeID, salt) {
+      var tcrRegistry, voterReward;
+      return _regenerator2.default.async(function voterReward$(_context19) {
+        while (1) {
+          switch (_context19.prev = _context19.next) {
+            case 0:
+              _context19.next = 2;
+              return _regenerator2.default.awrap(this.getTcrContract());
+
+            case 2:
+              tcrRegistry = _context19.sent;
+              _context19.next = 5;
+              return _regenerator2.default.awrap(tcrRegistry.methods.voterReward(voterAddress, challengeID, salt).call());
+
+            case 5:
+              voterReward = _context19.sent;
+              return _context19.abrupt('return', voterReward);
+
+            case 7:
+            case 'end':
+              return _context19.stop();
           }
         }
       }, null, this);
@@ -524,42 +601,42 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     key: 'apply',
     value: function apply(videoId, amountToStake, data) {
       var minDeposit, isWhitelisted, appWasMade, contract, amountInHex, hash, tx, vId;
-      return _regenerator2.default.async(function apply$(_context18) {
+      return _regenerator2.default.async(function apply$(_context20) {
         while (1) {
-          switch (_context18.prev = _context18.next) {
+          switch (_context20.prev = _context20.next) {
             case 0:
               // tcr contract wants a string anyway
               if (data == null) {
                 data = '';
               }
 
-              _context18.next = 3;
+              _context20.next = 3;
               return _regenerator2.default.awrap(this.getMinDeposit());
 
             case 3:
-              minDeposit = _context18.sent;
-              _context18.next = 6;
+              minDeposit = _context20.sent;
+              _context20.next = 6;
               return _regenerator2.default.awrap(this.isWhitelisted(videoId));
 
             case 6:
-              isWhitelisted = _context18.sent;
+              isWhitelisted = _context20.sent;
 
               if (!isWhitelisted) {
-                _context18.next = 9;
+                _context20.next = 9;
                 break;
               }
 
               throw new Error('The video is already whitelisted');
 
             case 9:
-              _context18.next = 11;
+              _context20.next = 11;
               return _regenerator2.default.awrap(this.appWasMade(videoId));
 
             case 11:
-              appWasMade = _context18.sent;
+              appWasMade = _context20.sent;
 
               if (!appWasMade) {
-                _context18.next = 14;
+                _context20.next = 14;
                 break;
               }
 
@@ -567,18 +644,18 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 14:
               if (!this.eth.web3.utils.toBN(amountToStake).lt(minDeposit)) {
-                _context18.next = 16;
+                _context20.next = 16;
                 break;
               }
 
               throw new Error('amount to stake ' + amountToStake + ' is less than minDeposit ' + minDeposit.toString());
 
             case 16:
-              _context18.next = 18;
+              _context20.next = 18;
               return _regenerator2.default.awrap(this.getTcrContract());
 
             case 18:
-              contract = _context18.sent;
+              contract = _context20.sent;
 
               // let amountInWei = this.eth.web3.utils.toWei(amountToStake.toString())
               amountInHex = this.eth.web3.utils.toHex(amountToStake.toString());
@@ -586,19 +663,19 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
               hash = this.getHash(videoId);
               tx = void 0;
-              _context18.prev = 22;
-              _context18.next = 25;
+              _context20.prev = 22;
+              _context20.next = 25;
               return _regenerator2.default.awrap(contract.methods.apply(hash, amountInHex, data).send());
 
             case 25:
-              tx = _context18.sent;
-              _context18.next = 31;
+              tx = _context20.sent;
+              _context20.next = 31;
               break;
 
             case 28:
-              _context18.prev = 28;
-              _context18.t0 = _context18['catch'](22);
-              throw _context18.t0;
+              _context20.prev = 28;
+              _context20.t0 = _context20['catch'](22);
+              throw _context20.t0;
 
             case 31:
               vId = void 0;
@@ -606,18 +683,18 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
               vId = (0, _utils.getInfoFromLogs)(tx, '_Application', 'listingHash', 1);
 
               if (!vId) {
-                _context18.next = 37;
+                _context20.next = 37;
                 break;
               }
 
-              return _context18.abrupt('return', true);
+              return _context20.abrupt('return', true);
 
             case 37:
-              return _context18.abrupt('return', false);
+              return _context20.abrupt('return', false);
 
             case 38:
             case 'end':
-              return _context18.stop();
+              return _context20.stop();
           }
         }
       }, null, this, [[22, 28]]);
@@ -641,96 +718,96 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     key: 'checkEligiblityAndApply',
     value: function checkEligiblityAndApply(videoId, amountToStake) {
       var minDeposit, isWhitelisted, appWasMade, token, tcr, tx2, allowance, result;
-      return _regenerator2.default.async(function checkEligiblityAndApply$(_context19) {
+      return _regenerator2.default.async(function checkEligiblityAndApply$(_context21) {
         while (1) {
-          switch (_context19.prev = _context19.next) {
+          switch (_context21.prev = _context21.next) {
             case 0:
-              _context19.next = 2;
+              _context21.next = 2;
               return _regenerator2.default.awrap(this.getMinDeposit());
 
             case 2:
-              minDeposit = _context19.sent;
+              minDeposit = _context21.sent;
 
               if (!this.eth.web3.utils.toBN(amountToStake).lt(minDeposit)) {
-                _context19.next = 5;
+                _context21.next = 5;
                 break;
               }
 
               throw new Error('amount to stake ' + amountToStake + ' is less than minDeposit ' + minDeposit.toString());
 
             case 5:
-              _context19.next = 7;
+              _context21.next = 7;
               return _regenerator2.default.awrap(this.isWhitelisted(videoId));
 
             case 7:
-              isWhitelisted = _context19.sent;
+              isWhitelisted = _context21.sent;
 
               if (!isWhitelisted) {
-                _context19.next = 10;
+                _context21.next = 10;
                 break;
               }
 
               throw new Error('video ' + videoId + ' is already whitelisted');
 
             case 10:
-              _context19.next = 12;
+              _context21.next = 12;
               return _regenerator2.default.awrap(this.appWasMade(videoId));
 
             case 12:
-              appWasMade = _context19.sent;
+              appWasMade = _context21.sent;
 
               if (!appWasMade) {
-                _context19.next = 15;
+                _context21.next = 15;
                 break;
               }
 
               throw new Error('video ' + videoId + ' already applied and awaiting decision');
 
             case 15:
-              _context19.next = 17;
+              _context21.next = 17;
               return _regenerator2.default.awrap(this.eth.getContract('ParatiiToken'));
 
             case 17:
-              token = _context19.sent;
-              _context19.next = 20;
+              token = _context21.sent;
+              _context21.next = 20;
               return _regenerator2.default.awrap(this.getTcrContract());
 
             case 20:
-              tcr = _context19.sent;
-              _context19.next = 23;
+              tcr = _context21.sent;
+              _context21.next = 23;
               return _regenerator2.default.awrap(token.methods.approve(tcr.options.address, amountToStake).send());
 
             case 23:
-              tx2 = _context19.sent;
+              tx2 = _context21.sent;
 
               if (tx2) {
-                _context19.next = 26;
+                _context21.next = 26;
                 break;
               }
 
               throw new Error('checkEligiblityAndApply Error ', tx2);
 
             case 26:
-              _context19.next = 28;
+              _context21.next = 28;
               return _regenerator2.default.awrap(token.methods.allowance(this.eth.getAccount(), tcr.options.address).call());
 
             case 28:
-              allowance = _context19.sent;
+              allowance = _context21.sent;
 
               if (allowance.toString() !== amountToStake.toString()) {
                 console.warn('allowance ' + allowance.toString() + ' != ' + amountToStake.toString());
               }
 
-              _context19.next = 32;
+              _context21.next = 32;
               return _regenerator2.default.awrap(this.apply(videoId, amountToStake));
 
             case 32:
-              result = _context19.sent;
-              return _context19.abrupt('return', result);
+              result = _context21.sent;
+              return _context21.abrupt('return', result);
 
             case 34:
             case 'end':
-              return _context19.stop();
+              return _context21.stop();
           }
         }
       }, null, this);
@@ -747,35 +824,35 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     key: 'getListing',
     value: function getListing(videoId) {
       var contract, hash, listing;
-      return _regenerator2.default.async(function getListing$(_context20) {
+      return _regenerator2.default.async(function getListing$(_context22) {
         while (1) {
-          switch (_context20.prev = _context20.next) {
+          switch (_context22.prev = _context22.next) {
             case 0:
-              _context20.next = 2;
+              _context22.next = 2;
               return _regenerator2.default.awrap(this.getTcrContract());
 
             case 2:
-              contract = _context20.sent;
+              contract = _context22.sent;
               hash = this.getHash(videoId);
-              _context20.next = 6;
+              _context22.next = 6;
               return _regenerator2.default.awrap(contract.methods.listings(hash).call());
 
             case 6:
-              listing = _context20.sent;
+              listing = _context22.sent;
 
               if (!(listing.owner === '0x0000000000000000000000000000000000000000')) {
-                _context20.next = 9;
+                _context22.next = 9;
                 break;
               }
 
               throw Error('Listing with videoId ' + videoId + ' doesn\'t exists');
 
             case 9:
-              return _context20.abrupt('return', listing);
+              return _context22.abrupt('return', listing);
 
             case 10:
             case 'end':
-              return _context20.stop();
+              return _context22.stop();
           }
         }
       }, null, this);
@@ -792,34 +869,34 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     key: 'getChallenge',
     value: function getChallenge(challengeId) {
       var contract, challenge;
-      return _regenerator2.default.async(function getChallenge$(_context21) {
+      return _regenerator2.default.async(function getChallenge$(_context23) {
         while (1) {
-          switch (_context21.prev = _context21.next) {
+          switch (_context23.prev = _context23.next) {
             case 0:
-              _context21.next = 2;
+              _context23.next = 2;
               return _regenerator2.default.awrap(this.getTcrContract());
 
             case 2:
-              contract = _context21.sent;
-              _context21.next = 5;
+              contract = _context23.sent;
+              _context23.next = 5;
               return _regenerator2.default.awrap(contract.methods.challenges(challengeId).call());
 
             case 5:
-              challenge = _context21.sent;
+              challenge = _context23.sent;
 
               if (!(challenge.challenger === '0x0000000000000000000000000000000000000000')) {
-                _context21.next = 8;
+                _context23.next = 8;
                 break;
               }
 
               throw Error('Challenge with challengeId ' + challengeId + ' doesn\'t exists');
 
             case 8:
-              return _context21.abrupt('return', challenge);
+              return _context23.abrupt('return', challenge);
 
             case 9:
             case 'end':
-              return _context21.stop();
+              return _context23.stop();
           }
         }
       }, null, this);
@@ -849,18 +926,18 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     key: 'exit',
     value: function exit(videoId) {
       var isWhitelisted, listing, sender, challenge, contract, hash;
-      return _regenerator2.default.async(function exit$(_context22) {
+      return _regenerator2.default.async(function exit$(_context24) {
         while (1) {
-          switch (_context22.prev = _context22.next) {
+          switch (_context24.prev = _context24.next) {
             case 0:
-              _context22.next = 2;
+              _context24.next = 2;
               return _regenerator2.default.awrap(this.isWhitelisted(videoId));
 
             case 2:
-              isWhitelisted = _context22.sent;
+              isWhitelisted = _context24.sent;
 
               if (isWhitelisted) {
-                _context22.next = 5;
+                _context24.next = 5;
                 break;
               }
 
@@ -871,7 +948,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
               sender = this.eth.getAccount();
 
               if (!(sender !== listing.owner)) {
-                _context22.next = 9;
+                _context24.next = 9;
                 break;
               }
 
@@ -879,34 +956,305 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 9:
               if (!(listing.challengeID !== 0)) {
-                _context22.next = 13;
+                _context24.next = 13;
                 break;
               }
 
               challenge = this.getChallenge(listing.challengeID);
 
               if (!(challenge.resolved !== 1)) {
-                _context22.next = 13;
+                _context24.next = 13;
                 break;
               }
 
               throw new Error('You can\'t exit during a challenge');
 
             case 13:
-              _context22.next = 15;
+              _context24.next = 15;
               return _regenerator2.default.awrap(this.getTcrContract());
 
             case 15:
-              contract = _context22.sent;
+              contract = _context24.sent;
               hash = this.getHash(videoId);
-              return _context22.abrupt('return', contract.methods.exit(hash).send());
+              return _context24.abrupt('return', contract.methods.exit(hash).send());
 
             case 18:
             case 'end':
-              return _context22.stop();
+              return _context24.stop();
           }
         }
       }, null, this);
+    }
+  }, {
+    key: 'startChallenge',
+    value: function startChallenge(videoId, _data) {
+      var tcrRegistry, hash, minDeposit, balance, allowance, appWasMade, isWhitelisted, listing, pollID;
+      return _regenerator2.default.async(function startChallenge$(_context25) {
+        while (1) {
+          switch (_context25.prev = _context25.next) {
+            case 0:
+              if (!_data) {
+                _data = '';
+              }
+
+              _context25.next = 3;
+              return _regenerator2.default.awrap(this.getTcrContract());
+
+            case 3:
+              tcrRegistry = _context25.sent;
+              hash = this.getAndStoreHash(videoId);
+
+              // 1. check if challenger has enough minDeposit and approved the
+              // contract to spend that
+
+              _context25.next = 7;
+              return _regenerator2.default.awrap(this.getMinDeposit());
+
+            case 7:
+              minDeposit = _context25.sent;
+              _context25.next = 10;
+              return _regenerator2.default.awrap(this.eth.balanceOf(this.eth.config.account.address));
+
+            case 10:
+              balance = _context25.sent;
+              _context25.next = 13;
+              return _regenerator2.default.awrap(this.eth.allowance(this.eth.getAccount, tcrRegistry.options.address));
+
+            case 13:
+              allowance = _context25.sent;
+
+              if (!allowance.lt(minDeposit)) {
+                _context25.next = 16;
+                break;
+              }
+
+              throw new Error('allowance ' + allowance.toString() + ' is less than ' + minDeposit.toString());
+
+            case 16:
+              if (!balance.lt(minDeposit)) {
+                _context25.next = 18;
+                break;
+              }
+
+              throw new Error('balance ' + balance.toString() + ' is less than ' + minDeposit.toString());
+
+            case 18:
+              _context25.next = 20;
+              return _regenerator2.default.awrap(this.appWasMade(videoId));
+
+            case 20:
+              appWasMade = _context25.sent;
+              _context25.next = 23;
+              return _regenerator2.default.awrap(this.isWhitelisted(videoId));
+
+            case 23:
+              isWhitelisted = _context25.sent;
+
+              if (!(!appWasMade && !isWhitelisted)) {
+                _context25.next = 26;
+                break;
+              }
+
+              throw new Error('video ' + videoId + ' has no application or is not whitelisted');
+
+            case 26:
+              _context25.next = 28;
+              return _regenerator2.default.awrap(this.getListing(videoId));
+
+            case 28:
+              listing = _context25.sent;
+
+              if (!(listing.challengeID !== 0)) {
+                _context25.next = 31;
+                break;
+              }
+
+              throw new Error('challenge for ' + videoId + ' already exist. challengeID ' + listing.challengeID);
+
+            case 31:
+              _context25.next = 33;
+              return _regenerator2.default.awrap(tcrRegistry.methods.challenge(hash, _data).send());
+
+            case 33:
+              pollID = _context25.sent;
+
+              if (pollID) {
+                _context25.next = 36;
+                break;
+              }
+
+              throw new Error('starting Challenge ' + videoId + ' failed!!');
+
+            case 36:
+              return _context25.abrupt('return', pollID);
+
+            case 37:
+            case 'end':
+              return _context25.stop();
+          }
+        }
+      }, null, this);
+    }
+
+    /**
+     * Updates a listingHash's status from 'application' to 'listing' or resolves
+     * a challenge if one exists.
+     * this is required to be able to use claimReward.
+     * @param  {string}  videoId id of the video
+     * @return {Promise}         tx of the updateStatus
+     */
+
+  }, {
+    key: 'updateStatus',
+    value: function updateStatus(videoId) {
+      var hash, tcrRegistry, tx;
+      return _regenerator2.default.async(function updateStatus$(_context26) {
+        while (1) {
+          switch (_context26.prev = _context26.next) {
+            case 0:
+              hash = this.getAndStoreHash(videoId);
+              _context26.next = 3;
+              return _regenerator2.default.awrap(this.getTcrContract());
+
+            case 3:
+              tcrRegistry = _context26.sent;
+              _context26.next = 6;
+              return _regenerator2.default.awrap(tcrRegistry.methods.updateStatus(hash).send());
+
+            case 6:
+              tx = _context26.sent;
+              return _context26.abrupt('return', tx);
+
+            case 8:
+            case 'end':
+              return _context26.stop();
+          }
+        }
+      }, null, this);
+    }
+
+    /**
+     * claim reward. nuff said.
+     * @param  {string}  videoId id of the video.
+     * @param  {string}  salt    salt used in that vote.
+     * @return {Promise}         the claimReward tx
+     */
+
+  }, {
+    key: 'claimReward',
+    value: function claimReward(videoId, salt) {
+      var tcrRegistry, listing, challengeID, challenge, tx;
+      return _regenerator2.default.async(function claimReward$(_context27) {
+        while (1) {
+          switch (_context27.prev = _context27.next) {
+            case 0:
+              _context27.next = 2;
+              return _regenerator2.default.awrap(this.getTcrContract());
+
+            case 2:
+              tcrRegistry = _context27.sent;
+              _context27.next = 5;
+              return _regenerator2.default.awrap(this.getListing(videoId));
+
+            case 5:
+              listing = _context27.sent;
+              challengeID = listing.challengeID;
+
+              // Ensure the voter has not already claimed tokens and challenge results have been processed
+
+              _context27.next = 9;
+              return _regenerator2.default.awrap(this.getChallenge(challengeID));
+
+            case 9:
+              challenge = _context27.sent;
+
+              if (!(challenge.tokenClaims[this.eth.getAccount()] !== false)) {
+                _context27.next = 12;
+                break;
+              }
+
+              throw new Error('Account ' + this.eth.getAccount() + ' has already claimed reward. for video ' + videoId);
+
+            case 12:
+              if (!(challenge.resolved !== true)) {
+                _context27.next = 14;
+                break;
+              }
+
+              throw new Error('Challenge ' + challengeID + ' (videoId: ' + videoId + ') hasn\'t been resolved');
+
+            case 14:
+              _context27.next = 16;
+              return _regenerator2.default.awrap(tcrRegistry.methods.claimReward(this.eth.web3.utils.toHex(challengeID.toString()), salt).send());
+
+            case 16:
+              tx = _context27.sent;
+              return _context27.abrupt('return', tx);
+
+            case 18:
+            case 'end':
+              return _context27.stop();
+          }
+        }
+      }, null, this);
+    }
+
+    // --------------------[voting functions]-------------------------------------
+
+  }, {
+    key: 'commitVote',
+    value: function commitVote(vote, amount) {
+      return _regenerator2.default.async(function commitVote$(_context28) {
+        while (1) {
+          switch (_context28.prev = _context28.next) {
+            case 0:
+            case 'end':
+              return _context28.stop();
+          }
+        }
+      }, null, this);
+    }
+
+    // ---------------------------[ utils ]---------------------------------------
+
+  }, {
+    key: 'getAndStoreHash',
+    value: function getAndStoreHash(videoId) {
+      var hash = this.getHash(videoId);
+      if (window && window.localStorage) {
+        window.localStorage.setItem(HASH_TO_KEY_PREFIX + hash.toString(), videoId);
+      } else {
+        console.warn('localStorage isn\'t available. TODO: levelDB integration.');
+      }
+
+      return hash;
+    }
+  }, {
+    key: 'storeSalt',
+    value: function storeSalt(videoId, salt) {
+      if (window && window.localStorage) {
+        window.localStorage.setItem(SALT_KEY_PREFIX + videoId, salt);
+      } else {
+        console.warn('localStorage isn\'t available. TODO: levelDB integration.');
+      }
+    }
+  }, {
+    key: 'getSalt',
+    value: function getSalt(videoId) {
+      if (window && window.localStorage) {
+        return window.localStorage.getItem(SALT_KEY_PREFIX + videoId);
+      } else {
+        console.warn('localStorage isn\'t available. TODO: levelDB integration.');
+      }
+    }
+  }, {
+    key: 'hashToId',
+    value: function hashToId(hash) {
+      if (window && window.localStorage) {
+        return window.localStorage.getItem(HASH_TO_KEY_PREFIX + hash.toString());
+      } else {
+        console.warn('localStorage isn\'t available. TODO: levelDB integration.');
+      }
     }
   }]);
   return ParatiiEthTcr;
