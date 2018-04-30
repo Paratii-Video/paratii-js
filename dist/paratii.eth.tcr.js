@@ -916,6 +916,143 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     }
 
     /**
+     * Allows the owner of a listingHash to increase their unstaked deposit.
+     * @param  {string}  videoId id of the video
+     * @param  {number}  amount  amount in bignumber format.
+     * @return {Promise}         the deposit tx
+     */
+
+  }, {
+    key: 'deposit',
+    value: function deposit(videoId, amount) {
+      var hash, listing, tcrRegistry, allowance, tx;
+      return _regenerator2.default.async(function deposit$(_context24) {
+        while (1) {
+          switch (_context24.prev = _context24.next) {
+            case 0:
+              // check if user is the listing owner.
+              hash = this.getAndStoreHash(videoId);
+              _context24.next = 3;
+              return _regenerator2.default.awrap(this.getListing(videoId));
+
+            case 3:
+              listing = _context24.sent;
+
+              if (!(listing.owner !== this.eth.getAccount())) {
+                _context24.next = 6;
+                break;
+              }
+
+              throw new Error('Can\'t deposit tokens to video ' + videoId + ' because ' + this.eth.getAccount() + ' isn\'t the owner.');
+
+            case 6:
+              _context24.next = 8;
+              return _regenerator2.default.awrap(this.getTcrContract());
+
+            case 8:
+              tcrRegistry = _context24.sent;
+              _context24.next = 11;
+              return _regenerator2.default.awrap(this.eth.allowance(this.eth.getAccount(), tcrRegistry.options.address));
+
+            case 11:
+              allowance = _context24.sent;
+
+              if (!allowance.lt(amount)) {
+                _context24.next = 14;
+                break;
+              }
+
+              throw new Error('tcrRegistry doesn\'t have enough allowance (' + allowance.toString() + ') to deposit ' + amount.toString());
+
+            case 14:
+              _context24.next = 16;
+              return _regenerator2.default.awrap(tcrRegistry.methods.deposit(hash, amount).send());
+
+            case 16:
+              tx = _context24.sent;
+              return _context24.abrupt('return', tx);
+
+            case 18:
+            case 'end':
+              return _context24.stop();
+          }
+        }
+      }, null, this);
+    }
+
+    /**
+     * Allows the owner of a listingHash to decrease their unstaked deposit.
+     * @param  {string}  videoId id of the video
+     * @param  {number}  amount  amount to withdraw.
+     * @return {Promise}         withdraw tx.
+     */
+
+  }, {
+    key: 'withdraw',
+    value: function withdraw(videoId, amount) {
+      var tcrRegistry, hash, listing, minDeposit, tx;
+      return _regenerator2.default.async(function withdraw$(_context25) {
+        while (1) {
+          switch (_context25.prev = _context25.next) {
+            case 0:
+              _context25.next = 2;
+              return _regenerator2.default.awrap(this.getTcrContract());
+
+            case 2:
+              tcrRegistry = _context25.sent;
+              hash = this.getAndStoreHash(videoId);
+              _context25.next = 6;
+              return _regenerator2.default.awrap(this.getListing(videoId));
+
+            case 6:
+              listing = _context25.sent;
+
+              if (!(listing.owner !== this.eth.getAccount())) {
+                _context25.next = 9;
+                break;
+              }
+
+              throw new Error('Can\'t deposit tokens to video ' + videoId + ' because ' + this.eth.getAccount() + ' isn\'t the owner.');
+
+            case 9:
+              if (!listing.unstakedDeposit.lt(amount)) {
+                _context25.next = 11;
+                break;
+              }
+
+              throw new Error('unstakedDeposit ' + listing.unstakedDeposit.toString() + ' is less than amount ' + amount.toString());
+
+            case 11:
+              _context25.next = 13;
+              return _regenerator2.default.awrap(this.getMinDeposit());
+
+            case 13:
+              minDeposit = _context25.sent;
+
+              if (!listing.unstakedDeposit.minus(amount).lt(minDeposit)) {
+                _context25.next = 16;
+                break;
+              }
+
+              throw new Error('can\'t withdraw amount (' + amount.toString() + ') from ' + listing.unstakedDeposit.toString() + ' since it\'d be under ' + minDeposit.toString());
+
+            case 16:
+              _context25.next = 18;
+              return _regenerator2.default.awrap(tcrRegistry.methods.withdraw(hash, amount).send());
+
+            case 18:
+              tx = _context25.sent;
+              return _context25.abrupt('return', tx);
+
+            case 20:
+            case 'end':
+              return _context25.stop();
+          }
+        }
+      }, null, this);
+    }
+
+    /**
      * remove the video given by videoId from the listing (and returns the stake to the staker)
      * @param videoId {string} video identifier
      * @return information about the transaction
@@ -926,18 +1063,18 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     key: 'exit',
     value: function exit(videoId) {
       var isWhitelisted, listing, sender, challenge, contract, hash;
-      return _regenerator2.default.async(function exit$(_context24) {
+      return _regenerator2.default.async(function exit$(_context26) {
         while (1) {
-          switch (_context24.prev = _context24.next) {
+          switch (_context26.prev = _context26.next) {
             case 0:
-              _context24.next = 2;
+              _context26.next = 2;
               return _regenerator2.default.awrap(this.isWhitelisted(videoId));
 
             case 2:
-              isWhitelisted = _context24.sent;
+              isWhitelisted = _context26.sent;
 
               if (isWhitelisted) {
-                _context24.next = 5;
+                _context26.next = 5;
                 break;
               }
 
@@ -948,7 +1085,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
               sender = this.eth.getAccount();
 
               if (!(sender !== listing.owner)) {
-                _context24.next = 9;
+                _context26.next = 9;
                 break;
               }
 
@@ -956,31 +1093,31 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 9:
               if (!(listing.challengeID !== 0)) {
-                _context24.next = 13;
+                _context26.next = 13;
                 break;
               }
 
               challenge = this.getChallenge(listing.challengeID);
 
               if (!(challenge.resolved !== 1)) {
-                _context24.next = 13;
+                _context26.next = 13;
                 break;
               }
 
               throw new Error('You can\'t exit during a challenge');
 
             case 13:
-              _context24.next = 15;
+              _context26.next = 15;
               return _regenerator2.default.awrap(this.getTcrContract());
 
             case 15:
-              contract = _context24.sent;
+              contract = _context26.sent;
               hash = this.getHash(videoId);
-              return _context24.abrupt('return', contract.methods.exit(hash).send());
+              return _context26.abrupt('return', contract.methods.exit(hash).send());
 
             case 18:
             case 'end':
-              return _context24.stop();
+              return _context26.stop();
           }
         }
       }, null, this);
@@ -989,42 +1126,42 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     key: 'startChallenge',
     value: function startChallenge(videoId, _data) {
       var tcrRegistry, hash, minDeposit, balance, allowance, appWasMade, isWhitelisted, listing, pollID;
-      return _regenerator2.default.async(function startChallenge$(_context25) {
+      return _regenerator2.default.async(function startChallenge$(_context27) {
         while (1) {
-          switch (_context25.prev = _context25.next) {
+          switch (_context27.prev = _context27.next) {
             case 0:
               if (!_data) {
                 _data = '';
               }
 
-              _context25.next = 3;
+              _context27.next = 3;
               return _regenerator2.default.awrap(this.getTcrContract());
 
             case 3:
-              tcrRegistry = _context25.sent;
+              tcrRegistry = _context27.sent;
               hash = this.getAndStoreHash(videoId);
 
               // 1. check if challenger has enough minDeposit and approved the
               // contract to spend that
 
-              _context25.next = 7;
+              _context27.next = 7;
               return _regenerator2.default.awrap(this.getMinDeposit());
 
             case 7:
-              minDeposit = _context25.sent;
-              _context25.next = 10;
+              minDeposit = _context27.sent;
+              _context27.next = 10;
               return _regenerator2.default.awrap(this.eth.balanceOf(this.eth.config.account.address));
 
             case 10:
-              balance = _context25.sent;
-              _context25.next = 13;
+              balance = _context27.sent;
+              _context27.next = 13;
               return _regenerator2.default.awrap(this.eth.allowance(this.eth.getAccount, tcrRegistry.options.address));
 
             case 13:
-              allowance = _context25.sent;
+              allowance = _context27.sent;
 
               if (!allowance.lt(minDeposit)) {
-                _context25.next = 16;
+                _context27.next = 16;
                 break;
               }
 
@@ -1032,65 +1169,65 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 16:
               if (!balance.lt(minDeposit)) {
-                _context25.next = 18;
+                _context27.next = 18;
                 break;
               }
 
               throw new Error('balance ' + balance.toString() + ' is less than ' + minDeposit.toString());
 
             case 18:
-              _context25.next = 20;
+              _context27.next = 20;
               return _regenerator2.default.awrap(this.appWasMade(videoId));
 
             case 20:
-              appWasMade = _context25.sent;
-              _context25.next = 23;
+              appWasMade = _context27.sent;
+              _context27.next = 23;
               return _regenerator2.default.awrap(this.isWhitelisted(videoId));
 
             case 23:
-              isWhitelisted = _context25.sent;
+              isWhitelisted = _context27.sent;
 
               if (!(!appWasMade && !isWhitelisted)) {
-                _context25.next = 26;
+                _context27.next = 26;
                 break;
               }
 
               throw new Error('video ' + videoId + ' has no application or is not whitelisted');
 
             case 26:
-              _context25.next = 28;
+              _context27.next = 28;
               return _regenerator2.default.awrap(this.getListing(videoId));
 
             case 28:
-              listing = _context25.sent;
+              listing = _context27.sent;
 
               if (!(listing.challengeID !== 0)) {
-                _context25.next = 31;
+                _context27.next = 31;
                 break;
               }
 
               throw new Error('challenge for ' + videoId + ' already exist. challengeID ' + listing.challengeID);
 
             case 31:
-              _context25.next = 33;
+              _context27.next = 33;
               return _regenerator2.default.awrap(tcrRegistry.methods.challenge(hash, _data).send());
 
             case 33:
-              pollID = _context25.sent;
+              pollID = _context27.sent;
 
               if (pollID) {
-                _context25.next = 36;
+                _context27.next = 36;
                 break;
               }
 
               throw new Error('starting Challenge ' + videoId + ' failed!!');
 
             case 36:
-              return _context25.abrupt('return', pollID);
+              return _context27.abrupt('return', pollID);
 
             case 37:
             case 'end':
-              return _context25.stop();
+              return _context27.stop();
           }
         }
       }, null, this);
@@ -1108,26 +1245,26 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     key: 'updateStatus',
     value: function updateStatus(videoId) {
       var hash, tcrRegistry, tx;
-      return _regenerator2.default.async(function updateStatus$(_context26) {
+      return _regenerator2.default.async(function updateStatus$(_context28) {
         while (1) {
-          switch (_context26.prev = _context26.next) {
+          switch (_context28.prev = _context28.next) {
             case 0:
               hash = this.getAndStoreHash(videoId);
-              _context26.next = 3;
+              _context28.next = 3;
               return _regenerator2.default.awrap(this.getTcrContract());
 
             case 3:
-              tcrRegistry = _context26.sent;
-              _context26.next = 6;
+              tcrRegistry = _context28.sent;
+              _context28.next = 6;
               return _regenerator2.default.awrap(tcrRegistry.methods.updateStatus(hash).send());
 
             case 6:
-              tx = _context26.sent;
-              return _context26.abrupt('return', tx);
+              tx = _context28.sent;
+              return _context28.abrupt('return', tx);
 
             case 8:
             case 'end':
-              return _context26.stop();
+              return _context28.stop();
           }
         }
       }, null, this);
@@ -1144,32 +1281,32 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     key: 'claimReward',
     value: function claimReward(videoId, salt) {
       var tcrRegistry, listing, challengeID, challenge, tx;
-      return _regenerator2.default.async(function claimReward$(_context27) {
+      return _regenerator2.default.async(function claimReward$(_context29) {
         while (1) {
-          switch (_context27.prev = _context27.next) {
+          switch (_context29.prev = _context29.next) {
             case 0:
-              _context27.next = 2;
+              _context29.next = 2;
               return _regenerator2.default.awrap(this.getTcrContract());
 
             case 2:
-              tcrRegistry = _context27.sent;
-              _context27.next = 5;
+              tcrRegistry = _context29.sent;
+              _context29.next = 5;
               return _regenerator2.default.awrap(this.getListing(videoId));
 
             case 5:
-              listing = _context27.sent;
+              listing = _context29.sent;
               challengeID = listing.challengeID;
 
               // Ensure the voter has not already claimed tokens and challenge results have been processed
 
-              _context27.next = 9;
+              _context29.next = 9;
               return _regenerator2.default.awrap(this.getChallenge(challengeID));
 
             case 9:
-              challenge = _context27.sent;
+              challenge = _context29.sent;
 
               if (!(challenge.tokenClaims[this.eth.getAccount()] !== false)) {
-                _context27.next = 12;
+                _context29.next = 12;
                 break;
               }
 
@@ -1177,23 +1314,23 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 12:
               if (!(challenge.resolved !== true)) {
-                _context27.next = 14;
+                _context29.next = 14;
                 break;
               }
 
               throw new Error('Challenge ' + challengeID + ' (videoId: ' + videoId + ') hasn\'t been resolved');
 
             case 14:
-              _context27.next = 16;
+              _context29.next = 16;
               return _regenerator2.default.awrap(tcrRegistry.methods.claimReward(this.eth.web3.utils.toHex(challengeID.toString()), salt).send());
 
             case 16:
-              tx = _context27.sent;
-              return _context27.abrupt('return', tx);
+              tx = _context29.sent;
+              return _context29.abrupt('return', tx);
 
             case 18:
             case 'end':
-              return _context27.stop();
+              return _context29.stop();
           }
         }
       }, null, this);
@@ -1204,12 +1341,12 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'commitVote',
     value: function commitVote(vote, amount) {
-      return _regenerator2.default.async(function commitVote$(_context28) {
+      return _regenerator2.default.async(function commitVote$(_context30) {
         while (1) {
-          switch (_context28.prev = _context28.next) {
+          switch (_context30.prev = _context30.next) {
             case 0:
             case 'end':
-              return _context28.stop();
+              return _context30.stop();
           }
         }
       }, null, this);

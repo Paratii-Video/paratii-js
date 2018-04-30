@@ -382,6 +382,58 @@ export class ParatiiEthTcr {
   }
 
   /**
+   * Allows the owner of a listingHash to increase their unstaked deposit.
+   * @param  {string}  videoId id of the video
+   * @param  {number}  amount  amount in bignumber format.
+   * @return {Promise}         the deposit tx
+   */
+  async deposit (videoId, amount) {
+    // check if user is the listing owner.
+    let hash = this.getAndStoreHash(videoId)
+    let listing = await this.getListing(videoId)
+    if (listing.owner !== this.eth.getAccount()) {
+      throw new Error(`Can't deposit tokens to video ${videoId} because ${this.eth.getAccount()} isn't the owner.`)
+    }
+
+    // check if tcrRegistry has the allowance
+    let tcrRegistry = await this.getTcrContract()
+    let allowance = await this.eth.allowance(this.eth.getAccount(), tcrRegistry.options.address)
+    if (allowance.lt(amount)) {
+      throw new Error(`tcrRegistry doesn't have enough allowance (${allowance.toString()}) to deposit ${amount.toString()}`)
+    }
+
+    let tx = await tcrRegistry.methods.deposit(hash, amount).send()
+    return tx
+  }
+
+  /**
+   * Allows the owner of a listingHash to decrease their unstaked deposit.
+   * @param  {string}  videoId id of the video
+   * @param  {number}  amount  amount to withdraw.
+   * @return {Promise}         withdraw tx.
+   */
+  async withdraw (videoId, amount) {
+    let tcrRegistry = await this.getTcrContract()
+    let hash = this.getAndStoreHash(videoId)
+    let listing = await this.getListing(videoId)
+    if (listing.owner !== this.eth.getAccount()) {
+      throw new Error(`Can't deposit tokens to video ${videoId} because ${this.eth.getAccount()} isn't the owner.`)
+    }
+
+    if (listing.unstakedDeposit.lt(amount)) {
+      throw new Error(`unstakedDeposit ${listing.unstakedDeposit.toString()} is less than amount ${amount.toString()}`)
+    }
+
+    let minDeposit = await this.getMinDeposit()
+    if (listing.unstakedDeposit.minus(amount).lt(minDeposit)) {
+      throw new Error(`can't withdraw amount (${amount.toString()}) from ${listing.unstakedDeposit.toString()} since it'd be under ${minDeposit.toString()}`)
+    }
+
+    let tx = await tcrRegistry.methods.withdraw(hash, amount).send()
+    return tx
+  }
+
+  /**
    * remove the video given by videoId from the listing (and returns the stake to the staker)
    * @param videoId {string} video identifier
    * @return information about the transaction
