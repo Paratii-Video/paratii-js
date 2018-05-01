@@ -1352,6 +1352,152 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
       }, null, this);
     }
 
+    /**
+     * Loads amount ERC20 tokens into the voting contract for one-to-one voting rights
+     * @param  {bignumber}  amount amount to deposit into voting contract.
+     * @return {Promise}        `requestVotingRights` tx
+     */
+
+  }, {
+    key: 'requestVotingRights',
+    value: function requestVotingRights(amount) {
+      var tcrPLCRVoting, balance, allowance, tx;
+      return _regenerator2.default.async(function requestVotingRights$(_context31) {
+        while (1) {
+          switch (_context31.prev = _context31.next) {
+            case 0:
+              _context31.next = 2;
+              return _regenerator2.default.awrap(this.eth.getContract('TcrPLCRVoting'));
+
+            case 2:
+              tcrPLCRVoting = _context31.sent;
+              _context31.next = 5;
+              return _regenerator2.default.awrap(this.eth.balanceOf(this.eth.getAccount(), 'PTI'));
+
+            case 5:
+              balance = _context31.sent;
+
+              if (!balance.lt(amount)) {
+                _context31.next = 8;
+                break;
+              }
+
+              throw new Error(this.eth.getAccount() + ' balance (' + balance.toString() + ') is insufficient (amount = ' + amount.toString() + ')');
+
+            case 8:
+              _context31.next = 10;
+              return _regenerator2.default.awrap(this.eth.allowance(this.eth.getAccount(), tcrPLCRVoting.options.address));
+
+            case 10:
+              allowance = _context31.sent;
+
+              if (!allowance.lt(amount)) {
+                _context31.next = 13;
+                break;
+              }
+
+              throw new Error('PLCRVoting Contract allowance (' + allowance.toString() + ') is < amount (' + amount.toString() + ')');
+
+            case 13:
+              _context31.next = 15;
+              return _regenerator2.default.awrap(tcrPLCRVoting.methods.requestVotingRights(amount).send());
+
+            case 15:
+              tx = _context31.sent;
+              return _context31.abrupt('return', tx);
+
+            case 17:
+            case 'end':
+              return _context31.stop();
+          }
+        }
+      }, null, this);
+    }
+  }, {
+    key: 'getLockedTokens',
+    value: function getLockedTokens(voterAddress) {
+      var tcrPLCRVoting, lockedTokens;
+      return _regenerator2.default.async(function getLockedTokens$(_context32) {
+        while (1) {
+          switch (_context32.prev = _context32.next) {
+            case 0:
+              if (!voterAddress) {
+                voterAddress = this.eth.getAccount();
+              }
+              _context32.next = 3;
+              return _regenerator2.default.awrap(this.eth.getContract('TcrPLCRVoting'));
+
+            case 3:
+              tcrPLCRVoting = _context32.sent;
+              _context32.next = 6;
+              return _regenerator2.default.awrap(tcrPLCRVoting.methods.getLockedTokens(voterAddress).call());
+
+            case 6:
+              lockedTokens = _context32.sent;
+              return _context32.abrupt('return', lockedTokens);
+
+            case 8:
+            case 'end':
+              return _context32.stop();
+          }
+        }
+      }, null, this);
+    }
+
+    /**
+     * Withdraw amount ERC20 tokens from the voting contract, revoking these voting rights
+     * @param  {bignumber}  amount amount to withdraw
+     * @return {Promise}        withdrawVotingRights tx
+     */
+
+  }, {
+    key: 'withdrawVotingRights',
+    value: function withdrawVotingRights(amount) {
+      var tcrPLCRVoting, voterBalance, lockedTokens, balanceAfter, tx;
+      return _regenerator2.default.async(function withdrawVotingRights$(_context33) {
+        while (1) {
+          switch (_context33.prev = _context33.next) {
+            case 0:
+              _context33.next = 2;
+              return _regenerator2.default.awrap(this.eth.getContract('TcrPLCRVoting'));
+
+            case 2:
+              tcrPLCRVoting = _context33.sent;
+              _context33.next = 5;
+              return _regenerator2.default.awrap(tcrPLCRVoting.methods.voteTokenBalance(this.eth.getAccount()).call());
+
+            case 5:
+              voterBalance = _context33.sent;
+              _context33.next = 8;
+              return _regenerator2.default.awrap(this.getLockedTokens(this.eth.getAccount()));
+
+            case 8:
+              lockedTokens = _context33.sent;
+              balanceAfter = voterBalance.minus(lockedTokens);
+
+              if (!balanceAfter.lt(amount)) {
+                _context33.next = 12;
+                break;
+              }
+
+              throw new Error('unlocked balance ' + balanceAfter.toString() + ' is < amount ' + amount.toString());
+
+            case 12:
+              _context33.next = 14;
+              return _regenerator2.default.awrap(tcrPLCRVoting.methods.withdrawVotingRights(amount).send());
+
+            case 14:
+              tx = _context33.sent;
+              return _context33.abrupt('return', tx);
+
+            case 16:
+            case 'end':
+              return _context33.stop();
+          }
+        }
+      }, null, this);
+    }
+
     // ---------------------------[ utils ]---------------------------------------
 
   }, {

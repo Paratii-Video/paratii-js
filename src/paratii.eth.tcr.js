@@ -556,6 +556,54 @@ export class ParatiiEthTcr {
 
   }
 
+  /**
+   * Loads amount ERC20 tokens into the voting contract for one-to-one voting rights
+   * @param  {bignumber}  amount amount to deposit into voting contract.
+   * @return {Promise}        `requestVotingRights` tx
+   */
+  async requestVotingRights (amount) {
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+    let balance = await this.eth.balanceOf(this.eth.getAccount(), 'PTI')
+    if (balance.lt(amount)) {
+      throw new Error(`${this.eth.getAccount()} balance (${balance.toString()}) is insufficient (amount = ${amount.toString()})`)
+    }
+
+    let allowance = await this.eth.allowance(this.eth.getAccount(), tcrPLCRVoting.options.address)
+    if (allowance.lt(amount)) {
+      throw new Error(`PLCRVoting Contract allowance (${allowance.toString()}) is < amount (${amount.toString()})`)
+    }
+
+    let tx = await tcrPLCRVoting.methods.requestVotingRights(amount).send()
+    return tx
+  }
+
+  async getLockedTokens (voterAddress) {
+    if (!voterAddress) {
+      voterAddress = this.eth.getAccount()
+    }
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+    let lockedTokens = await tcrPLCRVoting.methods.getLockedTokens(voterAddress).call()
+    return lockedTokens
+  }
+
+  /**
+   * Withdraw amount ERC20 tokens from the voting contract, revoking these voting rights
+   * @param  {bignumber}  amount amount to withdraw
+   * @return {Promise}        withdrawVotingRights tx
+   */
+  async withdrawVotingRights (amount) {
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+    let voterBalance = await tcrPLCRVoting.methods.voteTokenBalance(this.eth.getAccount()).call()
+    let lockedTokens = await this.getLockedTokens(this.eth.getAccount())
+    let balanceAfter = voterBalance.minus(lockedTokens)
+    if (balanceAfter.lt(amount)) {
+      throw new Error(`unlocked balance ${balanceAfter.toString()} is < amount ${amount.toString()}`)
+    }
+
+    let tx = await tcrPLCRVoting.methods.withdrawVotingRights(amount).send()
+    return tx
+  }
+
   // ---------------------------[ utils ]---------------------------------------
   getAndStoreHash (videoId) {
     let hash = this.getHash(videoId)
