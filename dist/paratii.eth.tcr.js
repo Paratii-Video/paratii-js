@@ -1497,6 +1497,86 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         }
       }, null, this);
     }
+  }, {
+    key: 'isExpired',
+    value: function isExpired(deadline) {
+      var tcrPLCRVoting, isExpired;
+      return _regenerator2.default.async(function isExpired$(_context34) {
+        while (1) {
+          switch (_context34.prev = _context34.next) {
+            case 0:
+              _context34.next = 2;
+              return _regenerator2.default.awrap(this.eth.getContract('TcrPLCRVoting'));
+
+            case 2:
+              tcrPLCRVoting = _context34.sent;
+              _context34.next = 5;
+              return _regenerator2.default.awrap(tcrPLCRVoting.methods.isExpired(deadline).call());
+
+            case 5:
+              isExpired = _context34.sent;
+              return _context34.abrupt('return', isExpired);
+
+            case 7:
+            case 'end':
+              return _context34.stop();
+          }
+        }
+      }, null, this);
+    }
+
+    /**
+     * Unlocks tokens locked in unrevealed vote where poll has ended
+     * @param  {uint}  pollID the pollID , aka challengeID
+     * @return {Promise}        rescueTokens tx
+     */
+
+  }, {
+    key: 'rescueTokens',
+    value: function rescueTokens(pollID) {
+      var tcrPLCRVoting, poll, isExpired, tx;
+      return _regenerator2.default.async(function rescueTokens$(_context35) {
+        while (1) {
+          switch (_context35.prev = _context35.next) {
+            case 0:
+              _context35.next = 2;
+              return _regenerator2.default.awrap(this.eth.getContract('TcrPLCRVoting'));
+
+            case 2:
+              tcrPLCRVoting = _context35.sent;
+              _context35.next = 5;
+              return _regenerator2.default.awrap(tcrPLCRVoting.methods.pollMap(pollID).call());
+
+            case 5:
+              poll = _context35.sent;
+              _context35.next = 8;
+              return _regenerator2.default.awrap(this.isExpired(poll.revealEndDate));
+
+            case 8:
+              isExpired = _context35.sent;
+
+              if (isExpired) {
+                _context35.next = 11;
+                break;
+              }
+
+              throw new Error('poll ' + pollID.toString() + ' did not expire just yet.');
+
+            case 11:
+              _context35.next = 13;
+              return _regenerator2.default.awrap(tcrPLCRVoting.methods.rescueTokens(pollID).send());
+
+            case 13:
+              tx = _context35.sent;
+              return _context35.abrupt('return', tx);
+
+            case 15:
+            case 'end':
+              return _context35.stop();
+          }
+        }
+      }, null, this);
+    }
 
     // ---------------------------[ utils ]---------------------------------------
 

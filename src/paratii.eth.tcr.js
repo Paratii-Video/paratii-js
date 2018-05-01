@@ -604,6 +604,31 @@ export class ParatiiEthTcr {
     return tx
   }
 
+  async isExpired (deadline) {
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+    let isExpired = await tcrPLCRVoting.methods.isExpired(deadline).call()
+    return isExpired
+  }
+
+  /**
+   * Unlocks tokens locked in unrevealed vote where poll has ended
+   * @param  {uint}  pollID the pollID , aka challengeID
+   * @return {Promise}        rescueTokens tx
+   */
+  async rescueTokens (pollID) {
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+    // TODO make sure pollID is a uint and is converted to hex
+    let poll = await tcrPLCRVoting.methods.pollMap(pollID).call()
+    let isExpired = await this.isExpired(poll.revealEndDate)
+    if (!isExpired) {
+      throw new Error(`poll ${pollID.toString()} did not expire just yet.`)
+    }
+
+    // TODO check the DLL if it contains this poll.
+    let tx = await tcrPLCRVoting.methods.rescueTokens(pollID).send()
+    return tx
+  }
+
   // ---------------------------[ utils ]---------------------------------------
   getAndStoreHash (videoId) {
     let hash = this.getHash(videoId)
