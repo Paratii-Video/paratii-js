@@ -577,15 +577,6 @@ export class ParatiiEthTcr {
     return tx
   }
 
-  async getLockedTokens (voterAddress) {
-    if (!voterAddress) {
-      voterAddress = this.eth.getAccount()
-    }
-    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
-    let lockedTokens = await tcrPLCRVoting.methods.getLockedTokens(voterAddress).call()
-    return lockedTokens
-  }
-
   /**
    * Withdraw amount ERC20 tokens from the voting contract, revoking these voting rights
    * @param  {bignumber}  amount amount to withdraw
@@ -602,12 +593,6 @@ export class ParatiiEthTcr {
 
     let tx = await tcrPLCRVoting.methods.withdrawVotingRights(amount).send()
     return tx
-  }
-
-  async isExpired (deadline) {
-    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
-    let isExpired = await tcrPLCRVoting.methods.isExpired(deadline).call()
-    return isExpired
   }
 
   /**
@@ -629,6 +614,42 @@ export class ParatiiEthTcr {
     return tx
   }
 
+  // ---------------------------[voting utils]----------------------------------
+  async isExpired (deadline) {
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+    let isExpired = await tcrPLCRVoting.methods.isExpired(deadline).call()
+    return isExpired
+  }
+
+  async getLockedTokens (voterAddress) {
+    if (!voterAddress) {
+      voterAddress = this.eth.getAccount()
+    }
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+    let lockedTokens = await tcrPLCRVoting.methods.getLockedTokens(voterAddress).call()
+    return lockedTokens
+  }
+
+  async commitPeriodActive (pollID) {
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+    let isCommitPeriodActive = await tcrPLCRVoting.methods.commitPeriodActive(pollID).call()
+    return isCommitPeriodActive
+  }
+
+  /**
+   * Gets top element of sorted poll-linked-list
+   * @param  {address}  voter the address of the voter
+   * @return {Promise}       [description]
+   */
+  async getLastNode (voter) {
+    if (!voter) {
+      voter = this.eth.getAccount()
+    }
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+    let lastNode = await tcrPLCRVoting.methods.getLastNode(voter).call()
+    return lastNode
+  }
+
   // ---------------------------[ utils ]---------------------------------------
   getAndStoreHash (videoId) {
     let hash = this.getHash(videoId)
@@ -640,6 +661,15 @@ export class ParatiiEthTcr {
 
     return hash
   }
+
+  generateSalt (size) {
+    if (!size) {
+      size = 32
+    }
+
+    return this.eth.web3.utils.randomHex(size)
+  }
+
   storeSalt (videoId, salt) {
     if (window && window.localStorage) {
       window.localStorage.setItem(SALT_KEY_PREFIX + videoId, salt)
