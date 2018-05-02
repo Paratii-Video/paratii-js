@@ -43,8 +43,8 @@ export class ParatiiDbVids {
     const schema = joi.object({
       'owner': joi.string().empty(),
       'keyword': joi.string().empty(),
-      'offset': joi.string().empty(),
-      'limit': joi.string().empty(),
+      'offset': joi.number().integer().empty(),
+      'limit': joi.number().integer().empty(),
       'staked': joi.boolean().empty()
     })
 
