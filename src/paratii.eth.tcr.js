@@ -552,8 +552,60 @@ export class ParatiiEthTcr {
 
   // --------------------[voting functions]-------------------------------------
 
-  async commitVote (vote, amount) {
+  /**
+   * Commits vote using hash of choice and secret salt to conceal vote until reveal
+   * @param  {string}  videoId videoId
+   * @param  {bignumber}  vote    1 = yes, 0 = no
+   * @param  {bignumber}  amount  amount of tokens to vote with.
+   * @return {Promise}         commitVote tx
+   */
+  async commitVote (videoId, vote, amount) {
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
 
+    let listing = await this.getListing(videoId)
+    if (!listing) {
+      throw new Error(`Can't find listing for video ${videoId}`)
+    }
+
+    let pollID = listing.challengeID
+    if (!pollID || pollID.toNumber() === 0) {
+      throw new Error(`Video ${videoId} isn't currently being challenged`)
+    }
+
+    // check balance and allowance
+    let balance = await this.eth.balanceOf(this.eth.getAccount())
+    if (balance.lt(amount)) {
+      throw new Error(`${this.eth.getAccount()} balance (${balance.toString()}) is insufficient (amount = ${amount.toString()})`)
+    }
+
+    let allowance = await this.eth.allowance(this.eth.getAccount(), tcrPLCRVoting.options.address)
+    if (allowance.lt(amount)) {
+      throw new Error(`PLCRVoting Contract allowance (${allowance.toString()}) is < amount (${amount.toString()})`)
+    }
+
+    // generate salt and store it.
+    let salt = this.generateSalt(32)
+    this.storeSalt(videoId, salt)
+    let secretHash = this.eth.web3.utils.soliditySha3(vote, salt)
+
+    // get previous PollID
+    let prevNode = await this.getLastNode(this.eth.getAccount())
+
+    // Check if the position is valid.
+    // let isValidPosition = await this.validPosition(prevNode, pollID, this.eth.getAccount(), amount)
+
+    let tx = await tcrPLCRVoting.methods.commitVote(
+      pollID,
+      secretHash,
+      amount,
+      prevNode
+    ).send()
+
+    return tx
+  }
+
+  async validPosition (prevPollID, nextPollID, voter, amount) {
+    // TODO
   }
 
   /**
