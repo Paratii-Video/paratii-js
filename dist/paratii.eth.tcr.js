@@ -995,6 +995,14 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         }
       }, null, this);
     }
+
+    /**
+     * Determines whether voting has concluded in a challenge for a given
+     * videoId. Throws if no challenge exists.
+     * @param  {integer}  videoId univocal video id
+     * @return {Promise}         true if voting has concluded,false otherwise
+     */
+
   }, {
     key: 'challengeCanBeResolved',
     value: function challengeCanBeResolved(videoId) {
