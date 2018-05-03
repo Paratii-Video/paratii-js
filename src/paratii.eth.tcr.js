@@ -370,6 +370,20 @@ export class ParatiiEthTcr {
   }
 
   /**
+   * checks whether the video has an unresolved challenge or not
+   * @param  {integer}  videoId id of the video
+   * @return {Promise}        true if the video has an unresolved challenge, false otherwise
+   * @example let challenge = await paratii.eth.tcr.challengeExists(1)
+   */
+  async challengeExists (videoId) {
+    let listing = await this.getListing(videoId)
+    let challengeID = listing.challengeID
+    let challenge = this.getChallenge(challengeID)
+
+    return (challengeID > 0 && !challenge.resolved)
+  }
+
+  /**
    * get the challenge of that challengeId
    * @param  {integer}  challengeId id of the challenge
    * @return {Promise}        that resolves in the challenge
