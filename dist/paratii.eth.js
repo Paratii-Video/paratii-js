@@ -1104,6 +1104,100 @@ var ParatiiEth = exports.ParatiiEth = function () {
         }
       }, null, this);
     }
+
+    /**
+     * get the amount the beneficiary is allowed to transferFrom the owner account.
+     * @param  {string}  ownerAddress       the address of the owner.
+     * @param  {string}  beneficiaryAddress address of the contract/person allowed to spend owners money
+     * @return {Promise}                    returns allowance in BN format.
+     */
+
+  }, {
+    key: 'allowance',
+    value: function allowance(ownerAddress, beneficiaryAddress) {
+      var tokenContract, allowance;
+      return _regenerator2.default.async(function allowance$(_context8) {
+        while (1) {
+          switch (_context8.prev = _context8.next) {
+            case 0:
+              _context8.next = 2;
+              return _regenerator2.default.awrap(this.getContract('ParatiiToken'));
+
+            case 2:
+              tokenContract = _context8.sent;
+              _context8.next = 5;
+              return _regenerator2.default.awrap(tokenContract.methods.allowance(ownerAddress, beneficiaryAddress).call());
+
+            case 5:
+              allowance = _context8.sent;
+              return _context8.abrupt('return', allowance);
+
+            case 7:
+            case 'end':
+              return _context8.stop();
+          }
+        }
+      }, null, this);
+    }
+
+    /**
+     * ERC20 token approval
+     * @param  {string}  beneficiary beneficiary ETH Address
+     * @param  {Number}  amount      bignumber of amount to approve.
+     * @return {Promise}             returns approved amount.
+     */
+
+  }, {
+    key: 'approve',
+    value: function approve(beneficiary, amount) {
+      var tokenContract, approved, allowance;
+      return _regenerator2.default.async(function approve$(_context9) {
+        while (1) {
+          switch (_context9.prev = _context9.next) {
+            case 0:
+              _context9.next = 2;
+              return _regenerator2.default.awrap(this.getContract('ParatiiToken'));
+
+            case 2:
+              tokenContract = _context9.sent;
+              _context9.next = 5;
+              return _regenerator2.default.awrap(tokenContract.methods.approve(beneficiary, amount).send({ from: this.getAccount() }));
+
+            case 5:
+              approved = _context9.sent;
+
+              if (approved) {
+                _context9.next = 8;
+                break;
+              }
+
+              throw new Error('Couldn\'t Approve ' + beneficiary + ' to spend ' + amount.toString() + ' from ' + this.getAccount());
+
+            case 8:
+              _context9.next = 10;
+              return _regenerator2.default.awrap(this.allowance(this.getAccount(), beneficiary));
+
+            case 10:
+              allowance = _context9.sent;
+
+              if (!(allowance.toString() !== amount.toString())) {
+                _context9.next = 13;
+                break;
+              }
+
+              throw new Error('allowance Error : allowance ' + allowance.toString() + ' !== amount ' + amount.toString());
+
+            case 13:
+              return _context9.abrupt('return', approved);
+
+            case 14:
+            case 'end':
+              return _context9.stop();
+          }
+        }
+      }, null, this);
+    }
+
     /**
      * send ETH from current account to beneficiary
      * @param  {string}  beneficiary ETH address
@@ -1118,18 +1212,18 @@ var ParatiiEth = exports.ParatiiEth = function () {
     key: '_transferETH',
     value: function _transferETH(beneficiary, amount, description) {
       var contract, from;
-      return _regenerator2.default.async(function _transferETH$(_context8) {
+      return _regenerator2.default.async(function _transferETH$(_context10) {
         while (1) {
-          switch (_context8.prev = _context8.next) {
+          switch (_context10.prev = _context10.next) {
             case 0:
-              _context8.next = 2;
+              _context10.next = 2;
               return _regenerator2.default.awrap(this.getContract('SendEther'));
 
             case 2:
-              contract = _context8.sent;
+              contract = _context10.sent;
 
               if (!(!contract.options || !contract.options.address)) {
-                _context8.next = 5;
+                _context10.next = 5;
                 break;
               }
 
@@ -1139,7 +1233,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
               from = this.config.account.address;
 
               if (from) {
-                _context8.next = 8;
+                _context10.next = 8;
                 break;
               }
 
@@ -1153,21 +1247,21 @@ var ParatiiEth = exports.ParatiiEth = function () {
               from = (0, _utils.add0x)(from);
               beneficiary = (0, _utils.add0x)(beneficiary);
 
-              _context8.prev = 11;
-              _context8.next = 14;
+              _context10.prev = 11;
+              _context10.next = 14;
               return _regenerator2.default.awrap(contract.methods.transfer(beneficiary, description).send({ value: amount }));
 
             case 14:
-              return _context8.abrupt('return', _context8.sent);
+              return _context10.abrupt('return', _context10.sent);
 
             case 17:
-              _context8.prev = 17;
-              _context8.t0 = _context8['catch'](11);
-              throw _context8.t0;
+              _context10.prev = 17;
+              _context10.t0 = _context10['catch'](11);
+              throw _context10.t0;
 
             case 20:
             case 'end':
-              return _context8.stop();
+              return _context10.stop();
           }
         }
       }, null, this, [[11, 17]]);
@@ -1185,18 +1279,18 @@ var ParatiiEth = exports.ParatiiEth = function () {
     key: '_transferPTI',
     value: function _transferPTI(beneficiary, amount) {
       var contract, from, result;
-      return _regenerator2.default.async(function _transferPTI$(_context9) {
+      return _regenerator2.default.async(function _transferPTI$(_context11) {
         while (1) {
-          switch (_context9.prev = _context9.next) {
+          switch (_context11.prev = _context11.next) {
             case 0:
-              _context9.next = 2;
+              _context11.next = 2;
               return _regenerator2.default.awrap(this.getContract('ParatiiToken'));
 
             case 2:
-              contract = _context9.sent;
+              contract = _context11.sent;
 
               if (!(!contract.options || !contract.options.address)) {
-                _context9.next = 5;
+                _context11.next = 5;
                 break;
               }
 
@@ -1206,7 +1300,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
               from = this.config.account.address;
 
               if (from) {
-                _context9.next = 8;
+                _context11.next = 8;
                 break;
               }
 
@@ -1216,16 +1310,16 @@ var ParatiiEth = exports.ParatiiEth = function () {
               from = (0, _utils.add0x)(from);
               beneficiary = (0, _utils.add0x)(beneficiary);
 
-              _context9.next = 12;
+              _context11.next = 12;
               return _regenerator2.default.awrap(contract.methods.transfer(beneficiary, amount).send());
 
             case 12:
-              result = _context9.sent;
-              return _context9.abrupt('return', result);
+              result = _context11.sent;
+              return _context11.abrupt('return', result);
 
             case 14:
             case 'end':
-              return _context9.stop();
+              return _context11.stop();
           }
         }
       }, null, this);
@@ -1243,28 +1337,28 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: 'transfer',
     value: function transfer(beneficiary, amount, symbol, description) {
-      return _regenerator2.default.async(function transfer$(_context10) {
+      return _regenerator2.default.async(function transfer$(_context12) {
         while (1) {
-          switch (_context10.prev = _context10.next) {
+          switch (_context12.prev = _context12.next) {
             case 0:
               if (!(symbol === 'ETH')) {
-                _context10.next = 4;
+                _context12.next = 4;
                 break;
               }
 
-              return _context10.abrupt('return', this._transferETH(beneficiary, amount, description));
+              return _context12.abrupt('return', this._transferETH(beneficiary, amount, description));
 
             case 4:
               if (!(symbol === 'PTI')) {
-                _context10.next = 6;
+                _context12.next = 6;
                 break;
               }
 
-              return _context10.abrupt('return', this._transferPTI(beneficiary, amount));
+              return _context12.abrupt('return', this._transferPTI(beneficiary, amount));
 
             case 6:
             case 'end':
-              return _context10.stop();
+              return _context12.stop();
           }
         }
       }, null, this);

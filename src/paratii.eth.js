@@ -712,6 +712,41 @@ export class ParatiiEth {
       return balances
     }
   }
+
+  /**
+   * get the amount the beneficiary is allowed to transferFrom the owner account.
+   * @param  {string}  ownerAddress       the address of the owner.
+   * @param  {string}  beneficiaryAddress address of the contract/person allowed to spend owners money
+   * @return {Promise}                    returns allowance in BN format.
+   */
+  async allowance (ownerAddress, beneficiaryAddress) {
+    let tokenContract = await this.getContract('ParatiiToken')
+    let allowance = await tokenContract.methods.allowance(ownerAddress, beneficiaryAddress).call()
+    return allowance
+  }
+
+  /**
+   * ERC20 token approval
+   * @param  {string}  beneficiary beneficiary ETH Address
+   * @param  {Number}  amount      bignumber of amount to approve.
+   * @return {Promise}             returns approved amount.
+   */
+  async approve (beneficiary, amount) {
+    let tokenContract = await this.getContract('ParatiiToken')
+    let approved = await tokenContract.methods.approve(beneficiary, amount).send({from: this.getAccount()})
+    if (!approved) {
+      throw new Error(`Couldn't Approve ${beneficiary} to spend ${amount.toString()} from ${this.getAccount()}`)
+    }
+
+    // check to make sure all is good.
+    let allowance = await this.allowance(this.getAccount(), beneficiary)
+    if (allowance.toString() !== amount.toString()) {
+      throw new Error(`allowance Error : allowance ${allowance.toString()} !== amount ${amount.toString()}`)
+    }
+
+    return approved
+  }
+
   /**
    * send ETH from current account to beneficiary
    * @param  {string}  beneficiary ETH address
