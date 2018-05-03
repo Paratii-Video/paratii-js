@@ -370,20 +370,6 @@ export class ParatiiEthTcr {
   }
 
   /**
-   * checks whether the video has an unresolved challenge or not
-   * @param  {integer}  videoId id of the video
-   * @return {Promise}        true if the video has an unresolved challenge, false otherwise
-   * @example let challenge = await paratii.eth.tcr.challengeExists(1)
-   */
-  async challengeExists (videoId) {
-    let listing = await this.getListing(videoId)
-    let challengeID = listing.challengeID
-    let challenge = this.getChallenge(challengeID)
-
-    return (challengeID > 0 && !challenge.resolved)
-  }
-
-  /**
    * get the challenge of that challengeId
    * @param  {integer}  challengeId id of the challenge
    * @return {Promise}        that resolves in the challenge
@@ -396,6 +382,38 @@ export class ParatiiEthTcr {
 
     if (challenge.challenger === '0x0000000000000000000000000000000000000000') { throw Error(`Challenge with challengeId ${challengeId} doesn't exists`) }
     return challenge
+  }
+
+  /**
+   * get the challenge Id of that video
+   * @param  {integer}  videoId univocal id of the video
+   * @return {Promise}         id of the challenge of that video
+   */
+  async getChallengeId (videoId) {
+    let listing = await this.getListing(videoId)
+    return listing.challengeID
+  }
+
+    /**
+     * checks whether the video has an unresolved challenge or not
+     * @param  {integer}  videoId id of the video
+     * @return {Promise}        true if the video has an unresolved challenge, false otherwise
+     * @example let challenge = await paratii.eth.tcr.challengeExists(1)
+     */
+  async challengeExists (videoId) {
+    let challengeID = this.getChallengeId(videoId)
+    let challenge = this.getChallenge(challengeID)
+
+    return (challengeID > 0 && !challenge.resolved)
+  }
+
+  async challengeCanBeResolved (videoId) {
+    let contract = await this.getTcrContract()
+
+    if (!this.challengeExists(videoId)) { throw Error(`No challenge is in progress for video with id = ${videoId}`) }
+
+    let result = await contract.methods.challengeCanBeResolved(this.getHash(videoId)).call()
+    return result
   }
 
   /**
