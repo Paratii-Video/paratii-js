@@ -186,6 +186,12 @@ describe('paratii.eth.tcr:', function () {
     let balanceOfAddress1 = await token.methods.balanceOf(challengerAccount.address).call()
     assert.equal(balanceOfAddress1, paratii.eth.web3.utils.toWei('40'))
 
+    let approval = await token.methods.approve(
+      tcrRegistry.options.address, paratii.eth.web3.utils.toWei('40')
+    ).send({from: paratii.eth.web3.eth.accounts[1]}) // send from challengerAccount
+    assert.isOk(approval)
+    assert.isOk(approval.events.Approval)
+
     let challengeTx = await tcrRegistry.methods.challenge(
       paratii.eth.tcr.getHash(videoId5),
       ''
