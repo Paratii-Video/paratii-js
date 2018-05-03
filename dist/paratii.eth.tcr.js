@@ -1599,6 +1599,207 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     }
 
     /**
+     * Reveals vote with choice and secret salt used in generating commitHash to attribute committed tokens
+     * @param  {BigNumber}  pollID     poll Id of the vote to reveal.
+     * @param  {uint}  voteOption 1 for yes, 0 or other for no.
+     * @param  {string}  salt       salt used when commiting the vote.
+     * @return {Promise}            revealVote tx
+     */
+
+  }, {
+    key: 'revealVote',
+    value: function revealVote(pollID, voteOption, salt) {
+      var tcrPLCRVoting, isRevealPeriodActive, didCommit, didReveal, secretHash, commitHash, tx;
+      return _regenerator2.default.async(function revealVote$(_context35) {
+        while (1) {
+          switch (_context35.prev = _context35.next) {
+            case 0:
+              _context35.next = 2;
+              return _regenerator2.default.awrap(this.eth.getContract('TcrPLCRVoting'));
+
+            case 2:
+              tcrPLCRVoting = _context35.sent;
+              _context35.next = 5;
+              return _regenerator2.default.awrap(this.revealPeriodActive(pollID));
+
+            case 5:
+              isRevealPeriodActive = _context35.sent;
+
+              if (isRevealPeriodActive) {
+                _context35.next = 8;
+                break;
+              }
+
+              throw new Error('Reveal Period for poll ' + pollID.toString() + ' is not active');
+
+            case 8:
+              _context35.next = 10;
+              return _regenerator2.default.awrap(this.didCommit(this.eth.getAccount(), pollID));
+
+            case 10:
+              didCommit = _context35.sent;
+
+              if (didCommit) {
+                _context35.next = 13;
+                break;
+              }
+
+              throw new Error('user ' + this.eth.getAccount() + ' didn\'t commit to vote ' + pollID.toString());
+
+            case 13:
+              _context35.next = 15;
+              return _regenerator2.default.awrap(this.didReveal(this.eth.getAccount(), pollID));
+
+            case 15:
+              didReveal = _context35.sent;
+
+              if (!didReveal) {
+                _context35.next = 18;
+                break;
+              }
+
+              throw new Error('user ' + this.eth.getAccount() + ' already revealed vote ' + pollID.toString());
+
+            case 18:
+              secretHash = this.eth.web3.utils.soliditySha3(voteOption, salt);
+              _context35.next = 21;
+              return _regenerator2.default.awrap(this.getCommitHash(this.eth.getAccount(), pollID));
+
+            case 21:
+              commitHash = _context35.sent;
+
+              if (!(commitHash !== secretHash)) {
+                _context35.next = 24;
+                break;
+              }
+
+              throw new Error('commitHash ' + commitHash + ' !== secretHash ' + secretHash);
+
+            case 24:
+              _context35.next = 26;
+              return _regenerator2.default.awrap(tcrPLCRVoting.methods.revealVote(pollID, voteOption, salt).send());
+
+            case 26:
+              tx = _context35.sent;
+              return _context35.abrupt('return', tx);
+
+            case 28:
+            case 'end':
+              return _context35.stop();
+          }
+        }
+      }, null, this);
+    }
+  }, {
+    key: 'revealPeriodActive',
+    value: function revealPeriodActive(pollID) {
+      var tcrPLCRVoting, isRevealPeriodActive;
+      return _regenerator2.default.async(function revealPeriodActive$(_context36) {
+        while (1) {
+          switch (_context36.prev = _context36.next) {
+            case 0:
+              _context36.next = 2;
+              return _regenerator2.default.awrap(this.eth.getContract('TcrPLCRVoting'));
+
+            case 2:
+              tcrPLCRVoting = _context36.sent;
+              _context36.next = 5;
+              return _regenerator2.default.awrap(tcrPLCRVoting.methods.revealPeriodActive(pollID).call());
+
+            case 5:
+              isRevealPeriodActive = _context36.sent;
+              return _context36.abrupt('return', isRevealPeriodActive);
+
+            case 7:
+            case 'end':
+              return _context36.stop();
+          }
+        }
+      }, null, this);
+    }
+  }, {
+    key: 'didCommit',
+    value: function didCommit(voterAddress, pollID) {
+      var tcrPLCRVoting, didCommit;
+      return _regenerator2.default.async(function didCommit$(_context37) {
+        while (1) {
+          switch (_context37.prev = _context37.next) {
+            case 0:
+              _context37.next = 2;
+              return _regenerator2.default.awrap(this.eth.getContract('TcrPLCRVoting'));
+
+            case 2:
+              tcrPLCRVoting = _context37.sent;
+              _context37.next = 5;
+              return _regenerator2.default.awrap(tcrPLCRVoting.methods.didCommit(voterAddress, pollID).call());
+
+            case 5:
+              didCommit = _context37.sent;
+              return _context37.abrupt('return', didCommit);
+
+            case 7:
+            case 'end':
+              return _context37.stop();
+          }
+        }
+      }, null, this);
+    }
+  }, {
+    key: 'didReveal',
+    value: function didReveal(voterAddress, pollID) {
+      var tcrPLCRVoting, didReveal;
+      return _regenerator2.default.async(function didReveal$(_context38) {
+        while (1) {
+          switch (_context38.prev = _context38.next) {
+            case 0:
+              _context38.next = 2;
+              return _regenerator2.default.awrap(this.eth.getContract('TcrPLCRVoting'));
+
+            case 2:
+              tcrPLCRVoting = _context38.sent;
+              _context38.next = 5;
+              return _regenerator2.default.awrap(tcrPLCRVoting.methods.didReveal(voterAddress, pollID).call());
+
+            case 5:
+              didReveal = _context38.sent;
+              return _context38.abrupt('return', didReveal);
+
+            case 7:
+            case 'end':
+              return _context38.stop();
+          }
+        }
+      }, null, this);
+    }
+  }, {
+    key: 'getCommitHash',
+    value: function getCommitHash(voterAddress, pollID) {
+      var tcrPLCRVoting, commitHash;
+      return _regenerator2.default.async(function getCommitHash$(_context39) {
+        while (1) {
+          switch (_context39.prev = _context39.next) {
+            case 0:
+              _context39.next = 2;
+              return _regenerator2.default.awrap(this.eth.getContract('TcrPLCRVoting'));
+
+            case 2:
+              tcrPLCRVoting = _context39.sent;
+              _context39.next = 5;
+              return _regenerator2.default.awrap(tcrPLCRVoting.methods.getCommitHash(voterAddress, pollID).call());
+
+            case 5:
+              commitHash = _context39.sent;
+              return _context39.abrupt('return', commitHash);
+
+            case 7:
+            case 'end':
+              return _context39.stop();
+          }
+        }
+      }, null, this);
+    }
+
+    /**
      * Compares previous and next poll's committed tokens for sorting purposes
      * @param  {bignumber}  prevPollID uint of the previous PollID
      * @param  {BigNumber}  nextPollID uint of the next PollID
@@ -1611,43 +1812,43 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     key: 'validPosition',
     value: function validPosition(prevPollID, nextPollID, voter, amount) {
       var prevNumTokens, nextNumTokens;
-      return _regenerator2.default.async(function validPosition$(_context35) {
+      return _regenerator2.default.async(function validPosition$(_context40) {
         while (1) {
-          switch (_context35.prev = _context35.next) {
+          switch (_context40.prev = _context40.next) {
             case 0:
-              _context35.next = 2;
+              _context40.next = 2;
               return _regenerator2.default.awrap(this.getNumTokens(voter, prevPollID));
 
             case 2:
-              prevNumTokens = _context35.sent;
+              prevNumTokens = _context40.sent;
 
               if (!amount.lt(prevNumTokens)) {
-                _context35.next = 5;
+                _context40.next = 5;
                 break;
               }
 
               throw new Error('prev position is invalid, prevPollID: ' + prevPollID.toString() + ',\n      numTokens: ' + prevNumTokens.toString() + ',\n      amount: ' + amount.toString());
 
             case 5:
-              _context35.next = 7;
+              _context40.next = 7;
               return _regenerator2.default.awrap(this.getNumTokens(voter, nextPollID));
 
             case 7:
-              nextNumTokens = _context35.sent;
+              nextNumTokens = _context40.sent;
 
               if (!amount.lt(nextNumTokens)) {
-                _context35.next = 10;
+                _context40.next = 10;
                 break;
               }
 
               throw new Error('next position is invalid, nextPollID: ' + nextPollID.toString() + ',\n      numTokens: ' + nextNumTokens.toString() + ',\n      amount: ' + amount.toString());
 
             case 10:
-              return _context35.abrupt('return', true);
+              return _context40.abrupt('return', true);
 
             case 11:
             case 'end':
-              return _context35.stop();
+              return _context40.stop();
           }
         }
       }, null, this);
@@ -1664,25 +1865,25 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     key: 'getNumTokens',
     value: function getNumTokens(voterAddress, pollID) {
       var tcrPLCRVoting, numTokens;
-      return _regenerator2.default.async(function getNumTokens$(_context36) {
+      return _regenerator2.default.async(function getNumTokens$(_context41) {
         while (1) {
-          switch (_context36.prev = _context36.next) {
+          switch (_context41.prev = _context41.next) {
             case 0:
-              _context36.next = 2;
+              _context41.next = 2;
               return _regenerator2.default.awrap(this.eth.getContract('TcrPLCRVoting'));
 
             case 2:
-              tcrPLCRVoting = _context36.sent;
-              _context36.next = 5;
+              tcrPLCRVoting = _context41.sent;
+              _context41.next = 5;
               return _regenerator2.default.awrap(tcrPLCRVoting.methods.getNumTokens(voterAddress, pollID).call());
 
             case 5:
-              numTokens = _context36.sent;
-              return _context36.abrupt('return', numTokens);
+              numTokens = _context41.sent;
+              return _context41.abrupt('return', numTokens);
 
             case 7:
             case 'end':
-              return _context36.stop();
+              return _context41.stop();
           }
         }
       }, null, this);
@@ -1698,53 +1899,53 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     key: 'requestVotingRights',
     value: function requestVotingRights(amount) {
       var tcrPLCRVoting, balance, allowance, tx;
-      return _regenerator2.default.async(function requestVotingRights$(_context37) {
+      return _regenerator2.default.async(function requestVotingRights$(_context42) {
         while (1) {
-          switch (_context37.prev = _context37.next) {
+          switch (_context42.prev = _context42.next) {
             case 0:
-              _context37.next = 2;
+              _context42.next = 2;
               return _regenerator2.default.awrap(this.eth.getContract('TcrPLCRVoting'));
 
             case 2:
-              tcrPLCRVoting = _context37.sent;
-              _context37.next = 5;
+              tcrPLCRVoting = _context42.sent;
+              _context42.next = 5;
               return _regenerator2.default.awrap(this.eth.balanceOf(this.eth.getAccount(), 'PTI'));
 
             case 5:
-              balance = _context37.sent;
+              balance = _context42.sent;
 
               if (!balance.lt(amount)) {
-                _context37.next = 8;
+                _context42.next = 8;
                 break;
               }
 
               throw new Error(this.eth.getAccount() + ' balance (' + balance.toString() + ') is insufficient (amount = ' + amount.toString() + ')');
 
             case 8:
-              _context37.next = 10;
+              _context42.next = 10;
               return _regenerator2.default.awrap(this.eth.allowance(this.eth.getAccount(), tcrPLCRVoting.options.address));
 
             case 10:
-              allowance = _context37.sent;
+              allowance = _context42.sent;
 
               if (!allowance.lt(amount)) {
-                _context37.next = 13;
+                _context42.next = 13;
                 break;
               }
 
               throw new Error('PLCRVoting Contract allowance (' + allowance.toString() + ') is < amount (' + amount.toString() + ')');
 
             case 13:
-              _context37.next = 15;
+              _context42.next = 15;
               return _regenerator2.default.awrap(tcrPLCRVoting.methods.requestVotingRights(amount).send());
 
             case 15:
-              tx = _context37.sent;
-              return _context37.abrupt('return', tx);
+              tx = _context42.sent;
+              return _context42.abrupt('return', tx);
 
             case 17:
             case 'end':
-              return _context37.stop();
+              return _context42.stop();
           }
         }
       }, null, this);
@@ -1760,45 +1961,45 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     key: 'withdrawVotingRights',
     value: function withdrawVotingRights(amount) {
       var tcrPLCRVoting, voterBalance, lockedTokens, balanceAfter, tx;
-      return _regenerator2.default.async(function withdrawVotingRights$(_context38) {
+      return _regenerator2.default.async(function withdrawVotingRights$(_context43) {
         while (1) {
-          switch (_context38.prev = _context38.next) {
+          switch (_context43.prev = _context43.next) {
             case 0:
-              _context38.next = 2;
+              _context43.next = 2;
               return _regenerator2.default.awrap(this.eth.getContract('TcrPLCRVoting'));
 
             case 2:
-              tcrPLCRVoting = _context38.sent;
-              _context38.next = 5;
+              tcrPLCRVoting = _context43.sent;
+              _context43.next = 5;
               return _regenerator2.default.awrap(tcrPLCRVoting.methods.voteTokenBalance(this.eth.getAccount()).call());
 
             case 5:
-              voterBalance = _context38.sent;
-              _context38.next = 8;
+              voterBalance = _context43.sent;
+              _context43.next = 8;
               return _regenerator2.default.awrap(this.getLockedTokens(this.eth.getAccount()));
 
             case 8:
-              lockedTokens = _context38.sent;
+              lockedTokens = _context43.sent;
               balanceAfter = voterBalance.minus(lockedTokens);
 
               if (!balanceAfter.lt(amount)) {
-                _context38.next = 12;
+                _context43.next = 12;
                 break;
               }
 
               throw new Error('unlocked balance ' + balanceAfter.toString() + ' is < amount ' + amount.toString());
 
             case 12:
-              _context38.next = 14;
+              _context43.next = 14;
               return _regenerator2.default.awrap(tcrPLCRVoting.methods.withdrawVotingRights(amount).send());
 
             case 14:
-              tx = _context38.sent;
-              return _context38.abrupt('return', tx);
+              tx = _context43.sent;
+              return _context43.abrupt('return', tx);
 
             case 16:
             case 'end':
-              return _context38.stop();
+              return _context43.stop();
           }
         }
       }, null, this);
@@ -1814,44 +2015,44 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     key: 'rescueTokens',
     value: function rescueTokens(pollID) {
       var tcrPLCRVoting, poll, isExpired, tx;
-      return _regenerator2.default.async(function rescueTokens$(_context39) {
+      return _regenerator2.default.async(function rescueTokens$(_context44) {
         while (1) {
-          switch (_context39.prev = _context39.next) {
+          switch (_context44.prev = _context44.next) {
             case 0:
-              _context39.next = 2;
+              _context44.next = 2;
               return _regenerator2.default.awrap(this.eth.getContract('TcrPLCRVoting'));
 
             case 2:
-              tcrPLCRVoting = _context39.sent;
-              _context39.next = 5;
+              tcrPLCRVoting = _context44.sent;
+              _context44.next = 5;
               return _regenerator2.default.awrap(tcrPLCRVoting.methods.pollMap(pollID).call());
 
             case 5:
-              poll = _context39.sent;
-              _context39.next = 8;
+              poll = _context44.sent;
+              _context44.next = 8;
               return _regenerator2.default.awrap(this.isExpired(poll.revealEndDate));
 
             case 8:
-              isExpired = _context39.sent;
+              isExpired = _context44.sent;
 
               if (isExpired) {
-                _context39.next = 11;
+                _context44.next = 11;
                 break;
               }
 
               throw new Error('poll ' + pollID.toString() + ' did not expire just yet.');
 
             case 11:
-              _context39.next = 13;
+              _context44.next = 13;
               return _regenerator2.default.awrap(tcrPLCRVoting.methods.rescueTokens(pollID).send());
 
             case 13:
-              tx = _context39.sent;
-              return _context39.abrupt('return', tx);
+              tx = _context44.sent;
+              return _context44.abrupt('return', tx);
 
             case 15:
             case 'end':
-              return _context39.stop();
+              return _context44.stop();
           }
         }
       }, null, this);
@@ -1863,25 +2064,25 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     key: 'isExpired',
     value: function isExpired(deadline) {
       var tcrPLCRVoting, isExpired;
-      return _regenerator2.default.async(function isExpired$(_context40) {
+      return _regenerator2.default.async(function isExpired$(_context45) {
         while (1) {
-          switch (_context40.prev = _context40.next) {
+          switch (_context45.prev = _context45.next) {
             case 0:
-              _context40.next = 2;
+              _context45.next = 2;
               return _regenerator2.default.awrap(this.eth.getContract('TcrPLCRVoting'));
 
             case 2:
-              tcrPLCRVoting = _context40.sent;
-              _context40.next = 5;
+              tcrPLCRVoting = _context45.sent;
+              _context45.next = 5;
               return _regenerator2.default.awrap(tcrPLCRVoting.methods.isExpired(deadline).call());
 
             case 5:
-              isExpired = _context40.sent;
-              return _context40.abrupt('return', isExpired);
+              isExpired = _context45.sent;
+              return _context45.abrupt('return', isExpired);
 
             case 7:
             case 'end':
-              return _context40.stop();
+              return _context45.stop();
           }
         }
       }, null, this);
@@ -1890,28 +2091,28 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     key: 'getLockedTokens',
     value: function getLockedTokens(voterAddress) {
       var tcrPLCRVoting, lockedTokens;
-      return _regenerator2.default.async(function getLockedTokens$(_context41) {
+      return _regenerator2.default.async(function getLockedTokens$(_context46) {
         while (1) {
-          switch (_context41.prev = _context41.next) {
+          switch (_context46.prev = _context46.next) {
             case 0:
               if (!voterAddress) {
                 voterAddress = this.eth.getAccount();
               }
-              _context41.next = 3;
+              _context46.next = 3;
               return _regenerator2.default.awrap(this.eth.getContract('TcrPLCRVoting'));
 
             case 3:
-              tcrPLCRVoting = _context41.sent;
-              _context41.next = 6;
+              tcrPLCRVoting = _context46.sent;
+              _context46.next = 6;
               return _regenerator2.default.awrap(tcrPLCRVoting.methods.getLockedTokens(voterAddress).call());
 
             case 6:
-              lockedTokens = _context41.sent;
-              return _context41.abrupt('return', lockedTokens);
+              lockedTokens = _context46.sent;
+              return _context46.abrupt('return', lockedTokens);
 
             case 8:
             case 'end':
-              return _context41.stop();
+              return _context46.stop();
           }
         }
       }, null, this);
@@ -1920,25 +2121,25 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     key: 'commitPeriodActive',
     value: function commitPeriodActive(pollID) {
       var tcrPLCRVoting, isCommitPeriodActive;
-      return _regenerator2.default.async(function commitPeriodActive$(_context42) {
+      return _regenerator2.default.async(function commitPeriodActive$(_context47) {
         while (1) {
-          switch (_context42.prev = _context42.next) {
+          switch (_context47.prev = _context47.next) {
             case 0:
-              _context42.next = 2;
+              _context47.next = 2;
               return _regenerator2.default.awrap(this.eth.getContract('TcrPLCRVoting'));
 
             case 2:
-              tcrPLCRVoting = _context42.sent;
-              _context42.next = 5;
+              tcrPLCRVoting = _context47.sent;
+              _context47.next = 5;
               return _regenerator2.default.awrap(tcrPLCRVoting.methods.commitPeriodActive(pollID).call());
 
             case 5:
-              isCommitPeriodActive = _context42.sent;
-              return _context42.abrupt('return', isCommitPeriodActive);
+              isCommitPeriodActive = _context47.sent;
+              return _context47.abrupt('return', isCommitPeriodActive);
 
             case 7:
             case 'end':
-              return _context42.stop();
+              return _context47.stop();
           }
         }
       }, null, this);
@@ -1954,28 +2155,28 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     key: 'getLastNode',
     value: function getLastNode(voter) {
       var tcrPLCRVoting, lastNode;
-      return _regenerator2.default.async(function getLastNode$(_context43) {
+      return _regenerator2.default.async(function getLastNode$(_context48) {
         while (1) {
-          switch (_context43.prev = _context43.next) {
+          switch (_context48.prev = _context48.next) {
             case 0:
               if (!voter) {
                 voter = this.eth.getAccount();
               }
-              _context43.next = 3;
+              _context48.next = 3;
               return _regenerator2.default.awrap(this.eth.getContract('TcrPLCRVoting'));
 
             case 3:
-              tcrPLCRVoting = _context43.sent;
-              _context43.next = 6;
+              tcrPLCRVoting = _context48.sent;
+              _context48.next = 6;
               return _regenerator2.default.awrap(tcrPLCRVoting.methods.getLastNode(voter).call());
 
             case 6:
-              lastNode = _context43.sent;
-              return _context43.abrupt('return', lastNode);
+              lastNode = _context48.sent;
+              return _context48.abrupt('return', lastNode);
 
             case 8:
             case 'end':
-              return _context43.stop();
+              return _context48.stop();
           }
         }
       }, null, this);

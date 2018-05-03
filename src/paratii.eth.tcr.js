@@ -657,6 +657,75 @@ export class ParatiiEthTcr {
   }
 
   /**
+   * Reveals vote with choice and secret salt used in generating commitHash to attribute committed tokens
+   * @param  {BigNumber}  pollID     poll Id of the vote to reveal.
+   * @param  {uint}  voteOption 1 for yes, 0 or other for no.
+   * @param  {string}  salt       salt used when commiting the vote.
+   * @return {Promise}            revealVote tx
+   */
+  async revealVote (pollID, voteOption, salt) {
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+
+    // check if reveal Period is active
+    let isRevealPeriodActive = await this.revealPeriodActive(pollID)
+    if (!isRevealPeriodActive) {
+      throw new Error(`Reveal Period for poll ${pollID.toString()} is not active`)
+    }
+
+    let didCommit = await this.didCommit(this.eth.getAccount(), pollID)
+    if (!didCommit) {
+      throw new Error(`user ${this.eth.getAccount()} didn't commit to vote ${pollID.toString()}`)
+    }
+
+    let didReveal = await this.didReveal(this.eth.getAccount(), pollID)
+    if (didReveal) {
+      throw new Error(`user ${this.eth.getAccount()} already revealed vote ${pollID.toString()}`)
+    }
+
+    let secretHash = this.eth.web3.utils.soliditySha3(voteOption, salt)
+    let commitHash = await this.getCommitHash(this.eth.getAccount(), pollID)
+    if (commitHash !== secretHash) {
+      throw new Error(`commitHash ${commitHash} !== secretHash ${secretHash}`)
+    }
+
+    let tx = await tcrPLCRVoting.methods.revealVote(
+      pollID,
+      voteOption,
+      salt
+    ).send()
+
+    return tx
+  }
+
+  async revealPeriodActive (pollID) {
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+
+    let isRevealPeriodActive = await tcrPLCRVoting.methods.revealPeriodActive(pollID).call()
+    return isRevealPeriodActive
+  }
+
+  async didCommit (voterAddress, pollID) {
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+
+    let didCommit = await tcrPLCRVoting.methods.didCommit(voterAddress, pollID).call()
+    return didCommit
+  }
+
+  async didReveal (voterAddress, pollID) {
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+
+    let didReveal = await tcrPLCRVoting.methods.didReveal(voterAddress, pollID).call()
+    return didReveal
+  }
+
+  async getCommitHash (voterAddress, pollID) {
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+
+    let commitHash = await tcrPLCRVoting.methods.getCommitHash(voterAddress, pollID).call()
+    return commitHash
+  }
+
+  /**
    * Compares previous and next poll's committed tokens for sorting purposes
    * @param  {bignumber}  prevPollID uint of the previous PollID
    * @param  {BigNumber}  nextPollID uint of the next PollID
