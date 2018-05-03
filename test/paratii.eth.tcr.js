@@ -1,5 +1,5 @@
 import { Paratii } from '../src/paratii.js'
-import { address, testConfig } from './utils.js'
+import { address, testConfig, privateKey17 } from './utils.js'
 import { assert } from 'chai'
 import { BigNumber } from 'bignumber.js'
 
@@ -159,23 +159,45 @@ describe('paratii.eth.tcr:', function () {
     assert.equal(paratii.eth.tcr.getLocalStorage().length, 0)
   })
 
-  it.skip('challengeExists() implemented in the lib and challengeExists() implemented in the tcr contract should always return the same value', async function () {
-    // fresh paratii instance
-    let paratii2 = new Paratii(testConfig)
-    tcrConfig = require('sol-tcr/conf/config.json')
-    await paratii2.eth.deployContracts()
+  it('challengeExists() implemented in the lib and challengeExists() implemented in the tcr contract should always return the same value', async function () {
+    let tcrRegistry = await paratii.eth.tcr.getTcrContract()
 
-    // application for videoId5
-    let amount = 5
-    let result = await paratii.eth.tcr.checkEligiblityAndApply(videoId5, paratii.eth.web3.utils.toWei(amount.toString()))
+    // application for videoId5 --------------------------------------------------
+    let result = await paratii.eth.tcr.checkEligiblityAndApply(videoId5, paratii.eth.web3.utils.toWei('5'))
     assert.isOk(result, result)
     let didVideoApply = await paratii.eth.tcr.appWasMade(videoId5)
     assert.isOk(didVideoApply)
 
-    let pollID = await paratii.eth.tcr.startChallenge(videoId5)
-    console.log(pollID)
+    // create challenger account --------------------------------------------------
+    let challengerAccount = await paratii.eth.web3.eth.accounts.wallet.add({
+      privateKey: privateKey17
+    })
+    assert.isOk(challengerAccount)
 
-    // assert.equal(paratii2.eth.tcr.challengeExists(),)
+    // fund address1
+    let token = await paratii.eth.getContract('ParatiiToken')
+    assert.isOk(token)
+    let transferTx = await token.methods.transfer(
+      challengerAccount.address,
+      paratii.eth.web3.utils.toWei('40')
+    ).send()
+
+    assert.isOk(transferTx)
+    let balanceOfAddress1 = await token.methods.balanceOf(challengerAccount.address).call()
+    assert.equal(balanceOfAddress1, paratii.eth.web3.utils.toWei('40'))
+
+    let challengeTx = await tcrRegistry.methods.challenge(
+      paratii.eth.tcr.getHash(videoId5),
+      ''
+    ).send({from: paratii.eth.web3.eth.accounts[1]})
+
+    assert.isOk(challengeTx)
+    assert.isOk(challengeTx.events._Challenge)
+    let challengeID = challengeTx.events._Challenge.returnValues.challengeID
+    assert.isOk(challengeID)
+
+    console.log(paratii.eth.tcr.challengeExists(videoId5))
+    // assert.equal(paratii.eth.tcr.challengeExists(),)
   })
   it.skip('exit() should throw errors if conditions aren\'t fulfilled', async function () {
     // need to be implemented after the challenge implementation
