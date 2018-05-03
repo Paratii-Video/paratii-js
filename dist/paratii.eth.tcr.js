@@ -983,11 +983,19 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         while (1) {
           switch (_context26.prev = _context26.next) {
             case 0:
-              challengeID = this.getChallengeId(videoId);
-              challenge = this.getChallenge(challengeID);
+              _context26.next = 2;
+              return _regenerator2.default.awrap(this.getChallengeId(videoId));
+
+            case 2:
+              challengeID = _context26.sent;
+              _context26.next = 5;
+              return _regenerator2.default.awrap(this.getChallenge(challengeID));
+
+            case 5:
+              challenge = _context26.sent;
               return _context26.abrupt('return', challengeID > 0 && !challenge.resolved);
 
-            case 3:
+            case 7:
             case 'end':
               return _context26.stop();
           }

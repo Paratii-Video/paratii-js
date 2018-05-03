@@ -202,8 +202,11 @@ describe('paratii.eth.tcr:', function () {
     let challengeID = challengeTx.events._Challenge.returnValues.challengeID
     assert.isOk(challengeID)
 
-    console.log(paratii.eth.tcr.challengeExists(videoId5))
-    // assert.equal(paratii.eth.tcr.challengeExists(),)
+    let res = await tcrRegistry.methods.challengeExists(
+      paratii.eth.tcr.getHash(videoId5)
+    ).call()
+
+    assert.equal(await paratii.eth.tcr.challengeExists(videoId5), res)
   })
   it.skip('exit() should throw errors if conditions aren\'t fulfilled', async function () {
     // need to be implemented after the challenge implementation

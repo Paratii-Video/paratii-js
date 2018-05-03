@@ -400,8 +400,8 @@ export class ParatiiEthTcr {
      * @example let challenge = await paratii.eth.tcr.challengeExists(1)
      */
   async challengeExists (videoId) {
-    let challengeID = this.getChallengeId(videoId)
-    let challenge = this.getChallenge(challengeID)
+    let challengeID = await this.getChallengeId(videoId)
+    let challenge = await this.getChallenge(challengeID)
 
     return (challengeID > 0 && !challenge.resolved)
   }
