@@ -15,7 +15,7 @@ describe('Paratii configuration:', function () {
         mnemonic: null
       },
       eth: {
-        provider: 'ws://localhost:8546',
+        provider: 'http://localhost:8545',
         registryAddress: null,
         isTestNet: true
       }

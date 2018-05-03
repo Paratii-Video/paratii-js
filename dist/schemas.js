@@ -24,7 +24,7 @@ var accountSchema = joi.object({
   * @property {boolean=} isTestNet true if it's on test net, false otherwise
  */
 var ethSchema = joi.object({
-  provider: joi.string().default('ws://localhost:8546'),
+  provider: joi.string().default('http://localhost:8545'),
   registryAddress: joi.string().default(null).allow(null)
 }).default();
 
