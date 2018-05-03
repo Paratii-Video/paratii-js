@@ -130,6 +130,9 @@ describe('paratii.eth.tcr:', function () {
     await assert.isRejected(paratii2.eth.tcr.getChallenge(1), Error, /doesn't exists/g)
   })
 
+  it.skip('challengeExists() implemented in the lib and challengeExists() implemented in the tcr contract should always return the same value', async function () {
+      // need to be implemented after the challenge implementation
+  })
   it.skip('exit() should throw errors if conditions aren\'t fulfilled', async function () {
     // need to be implemented after the challenge implementation
   })
