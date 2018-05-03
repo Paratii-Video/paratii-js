@@ -641,7 +641,10 @@ export class ParatiiEthTcr {
     let prevNode = await this.getLastNode(this.eth.getAccount())
 
     // Check if the position is valid.
-    // let isValidPosition = await this.validPosition(prevNode, pollID, this.eth.getAccount(), amount)
+    let isValidPosition = await this.validPosition(prevNode, pollID, this.eth.getAccount(), amount)
+    if (!isValidPosition) {
+      throw new Error(`position is invalid`)
+    }
 
     let tx = await tcrPLCRVoting.methods.commitVote(
       pollID,
@@ -653,8 +656,47 @@ export class ParatiiEthTcr {
     return tx
   }
 
+  /**
+   * Compares previous and next poll's committed tokens for sorting purposes
+   * @param  {bignumber}  prevPollID uint of the previous PollID
+   * @param  {BigNumber}  nextPollID uint of the next PollID
+   * @param  {address}  voter      eth address of the voter
+   * @param  {BigNumber}  amount     the amount to commit to the current vote.
+   * @return {Promise}            returns true if both prev and next positions are valid.
+   */
   async validPosition (prevPollID, nextPollID, voter, amount) {
-    // TODO
+    // check the validity of the prevPollID
+    let prevNumTokens = await this.getNumTokens(voter, prevPollID)
+    if (amount.lt(prevNumTokens)) {
+      throw new Error(`prev position is invalid, prevPollID: ${prevPollID.toString()},
+      numTokens: ${prevNumTokens.toString()},
+      amount: ${amount.toString()}`)
+    }
+
+    let nextNumTokens = await this.getNumTokens(voter, nextPollID)
+    if (amount.lt(nextNumTokens)) {
+      throw new Error(`next position is invalid, nextPollID: ${nextPollID.toString()},
+      numTokens: ${nextNumTokens.toString()},
+      amount: ${amount.toString()}`)
+    }
+
+    return true
+  }
+
+  /**
+   * Wrapper for getAttribute with attrName="numTokens"
+   * @param  {address}  voterAddress eth voter address
+   * @param  {BigNumber}  pollID       uint of the pollID
+   * @return {Promise}              bignumber of commited tokens.
+   */
+  async getNumTokens (voterAddress, pollID) {
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+    let numTokens = await tcrPLCRVoting.methods.getNumTokens(
+      voterAddress,
+      pollID
+    ).call()
+
+    return numTokens
   }
 
   /**
