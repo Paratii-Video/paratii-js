@@ -17,6 +17,7 @@ describe('paratii.eth.tcr:', function () {
   let videoId2 = 'some-other-video-id'
   let videoId3 = 'another-one'
   let videoId4 = 'not-applied'
+  let videoId5 = 'test-id'
 
   it('should be able to get minDeposit', async function () {
     let amount = await paratii.eth.tcr.getMinDeposit()
@@ -60,6 +61,7 @@ describe('paratii.eth.tcr:', function () {
       .sub(paratii.eth.web3.utils.toBN(balanceAfter.toString())).toString()
     , paratii.eth.web3.utils.toWei(amount.toString()).toString())
   })
+
   it('checkEligiblityAndApply should work', async function () {
     let amount = 5
     let result = await paratii.eth.tcr.checkEligiblityAndApply(videoId2, paratii.eth.web3.utils.toWei(amount.toString()))
@@ -131,7 +133,22 @@ describe('paratii.eth.tcr:', function () {
   })
 
   it.skip('challengeExists() implemented in the lib and challengeExists() implemented in the tcr contract should always return the same value', async function () {
-      // need to be implemented after the challenge implementation
+    // fresh paratii instance
+    let paratii2 = new Paratii(testConfig)
+    tcrConfig = require('sol-tcr/conf/config.json')
+    await paratii2.eth.deployContracts()
+
+    // application for videoId5
+    let amount = 5
+    let result = await paratii.eth.tcr.checkEligiblityAndApply(videoId5, paratii.eth.web3.utils.toWei(amount.toString()))
+    assert.isOk(result, result)
+    let didVideoApply = await paratii.eth.tcr.appWasMade(videoId5)
+    assert.isOk(didVideoApply)
+
+    let pollID = await paratii.eth.tcr.startChallenge(videoId5)
+    console.log(pollID)
+
+    // assert.equal(paratii2.eth.tcr.challengeExists(),)
   })
   it.skip('exit() should throw errors if conditions aren\'t fulfilled', async function () {
     // need to be implemented after the challenge implementation
