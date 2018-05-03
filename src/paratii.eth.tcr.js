@@ -725,6 +725,25 @@ export class ParatiiEthTcr {
     return commitHash
   }
 
+  async isPassed (pollID) {
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+
+    let didPass = await tcrPLCRVoting.methods.isPassed(pollID).call()
+    return didPass
+  }
+
+  async getNumPassingTokens (voterAddress, pollID, salt) {
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+
+    let winnings = await tcrPLCRVoting.methods.getNumPassingTokens(
+      voterAddress,
+      pollID,
+      salt
+    ).call()
+
+    return winnings
+  }
+
   /**
    * Compares previous and next poll's committed tokens for sorting purposes
    * @param  {bignumber}  prevPollID uint of the previous PollID
