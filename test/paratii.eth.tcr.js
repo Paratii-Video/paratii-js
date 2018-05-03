@@ -19,6 +19,9 @@ describe('paratii.eth.tcr:', function () {
   let videoId4 = 'not-applied'
   let videoId5 = 'test-id'
 
+  let videoId6 = 'test'
+  let videoId7 = 'test2'
+
   it('should be able to get minDeposit', async function () {
     let amount = await paratii.eth.tcr.getMinDeposit()
     assert.isOk(amount)
@@ -130,6 +133,30 @@ describe('paratii.eth.tcr:', function () {
     await paratii2.eth.deployContracts()
 
     await assert.isRejected(paratii2.eth.tcr.getChallenge(1), Error, /doesn't exists/g)
+  })
+
+  it('localStorage storing should work also in tests', async function () {
+    paratii.eth.tcr.clearNodeLocalStorage()
+
+    let hash1 = paratii.eth.tcr.getAndStoreHash(videoId6)
+    let hash2 = paratii.eth.tcr.getAndStoreHash(videoId7)
+
+    assert.equal(paratii.eth.tcr.hashToId(hash1), videoId6)
+    assert.equal(paratii.eth.tcr.hashToId(hash2), videoId7)
+
+    let salt1 = paratii.eth.tcr.generateSalt()
+    let salt2 = paratii.eth.tcr.generateSalt(12)
+
+    paratii.eth.tcr.storeSalt(videoId6, salt1)
+    paratii.eth.tcr.storeSalt(videoId7, salt2)
+
+    assert.equal(paratii.eth.tcr.getSalt(videoId6), salt1)
+    assert.equal(paratii.eth.tcr.getSalt(videoId7), salt2)
+  })
+  it('clearNodeLocalStorage() should delete all the key value pairs', async function () {
+    paratii.eth.tcr.clearNodeLocalStorage()
+
+    assert.equal(paratii.eth.tcr.getLocalStorage().length, 0)
   })
 
   it.skip('challengeExists() implemented in the lib and challengeExists() implemented in the tcr contract should always return the same value', async function () {

@@ -443,10 +443,9 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
     /**
      * get the value of the param passed on the Parametrizer contract
-     * @param  {String}  param name of the param
+     * @param  {string}  param name of the param
      * @return {Promise}       that resolves in the value of the parameter
      * @example  let minDeposit = await paratii.eth.tcr.get('minDeposit')
-     * @private
      */
 
   }, {
@@ -853,7 +852,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
     /**
      * get the listing of that videoId
-     * @param  {String}  videoId id of the video
+     * @param  {string}  videoId id of the video
      * @return {Promise}        that resolves in the listings
      * @example let listing = await paratii.eth.tcr.getListing('video-id')
      */
@@ -942,7 +941,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
     /**
      * get the challenge Id of that video
-     * @param  {integer}  videoId univocal id of the video
+     * @param  {string}  videoId univocal id of the video
      * @return {Promise}         id of the challenge of that video
      */
 
@@ -971,7 +970,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
     /**
      * checks whether the video has an unresolved challenge or not
-     * @param  {integer}  videoId id of the video
+     * @param  {string}  videoId id of the video
      * @return {Promise}        true if the video has an unresolved challenge, false otherwise
      * @example let challenge = await paratii.eth.tcr.challengeExists(1)
      */
@@ -999,7 +998,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     /**
      * Determines whether voting has concluded in a challenge for a given
      * videoId. Throws if no challenge exists.
-     * @param  {integer}  videoId univocal video id
+     * @param  {string}  videoId univocal video id
      * @return {Promise}         true if voting has concluded,false otherwise
      */
 
@@ -1042,9 +1041,8 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
     /**
      * get the hash of the video Id to be inserted in the TCR contract
-     * @param  {String} videoId univocal id of the video
-     * @return {String}         sha3 of the id
-     * @private
+     * @param  {string} videoId univocal id of the video
+     * @return {string}         sha3 of the id
      */
 
   }, {
@@ -1192,7 +1190,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
     /**
      * remove the video given by videoId from the listing (and returns the stake to the staker)
-     * @param videoId {string} video identifier
+     * @param {string} videoId video identifier
      * @return information about the transaction
      * @example let tx = await paratii.eth.tcr.exit('some-video-id')
      */
@@ -1886,18 +1884,57 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
     // ---------------------------[ utils ]---------------------------------------
 
+    /**
+     * utility function to get the right localStorage
+     * @return {Object} localStorage
+     */
+
+  }, {
+    key: 'getLocalStorage',
+    value: function getLocalStorage() {
+      var localStorage = void 0;
+
+      if (typeof window !== 'undefined' && window.localStorage) {
+        localStorage = window.localStorage;
+      } else {
+        var LocalStorage = require('node-localstorage').LocalStorage;
+        localStorage = new LocalStorage('./test/data/nodeLocalstorage');
+      }
+
+      return localStorage;
+    }
+  }, {
+    key: 'clearNodeLocalStorage',
+    value: function clearNodeLocalStorage() {
+      var LocalStorage = require('node-localstorage').LocalStorage;
+      var localStorage = new LocalStorage('./test/data/nodeLocalstorage');
+
+      localStorage.clear();
+    }
+
+    /**
+     * get the hash to be inserted in the tcr and save it in localStorage
+     * @param  {string} videoId univocal id of the video
+     * @return {string}         hash of the id
+     */
+
   }, {
     key: 'getAndStoreHash',
     value: function getAndStoreHash(videoId) {
       var hash = this.getHash(videoId);
-      if (window && window.localStorage) {
-        window.localStorage.setItem(HASH_TO_KEY_PREFIX + hash.toString(), videoId);
-      } else {
-        console.warn('localStorage isn\'t available. TODO: levelDB integration.');
-      }
+      var localStorage = this.getLocalStorage();
+
+      localStorage.setItem(HASH_TO_KEY_PREFIX + hash.toString(), videoId);
 
       return hash;
     }
+
+    /**
+     * generates random salt
+     * @param  {integer} size size of the generated salt (default 32)
+     * @return {hex}      random salt (hexadecimal)
+     */
+
   }, {
     key: 'generateSalt',
     value: function generateSalt(size) {
@@ -1907,32 +1944,47 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
       return this.eth.web3.utils.randomHex(size);
     }
+
+    /**
+     * store salt
+     * @param  {string} videoId univocal video id
+     * @param  {hex} salt    hexadecimal salt
+     */
+
   }, {
     key: 'storeSalt',
     value: function storeSalt(videoId, salt) {
-      if (window && window.localStorage) {
-        window.localStorage.setItem(SALT_KEY_PREFIX + videoId, salt);
-      } else {
-        console.warn('localStorage isn\'t available. TODO: levelDB integration.');
-      }
+      var localStorage = this.getLocalStorage();
+
+      localStorage.setItem(SALT_KEY_PREFIX + videoId, salt);
     }
+
+    /**
+     * get the salt related to that videoId
+     * @param  {string} videoId univocal videoId
+     * @return {hex}          hexadecimal salt
+     */
+
   }, {
     key: 'getSalt',
     value: function getSalt(videoId) {
-      if (window && window.localStorage) {
-        return window.localStorage.getItem(SALT_KEY_PREFIX + videoId);
-      } else {
-        console.warn('localStorage isn\'t available. TODO: levelDB integration.');
-      }
+      var localStorage = this.getLocalStorage();
+
+      return localStorage.getItem(SALT_KEY_PREFIX + videoId);
     }
+
+    /**
+     * get the videoId related to that hash
+     * @param  {string} hash hash of the videoId
+     * @return {string}      the videoId
+     */
+
   }, {
     key: 'hashToId',
     value: function hashToId(hash) {
-      if (window && window.localStorage) {
-        return window.localStorage.getItem(HASH_TO_KEY_PREFIX + hash.toString());
-      } else {
-        console.warn('localStorage isn\'t available. TODO: levelDB integration.');
-      }
+      var localStorage = this.getLocalStorage();
+
+      return localStorage.getItem(HASH_TO_KEY_PREFIX + hash.toString());
     }
   }]);
   return ParatiiEthTcr;
