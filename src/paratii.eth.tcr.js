@@ -43,6 +43,19 @@ export class ParatiiEthTcr {
     return contract
   }
 
+  /**
+   * get PLCRVoting contract instance.
+   * @return {Promise} The PLCRVoting Contract instance.
+   * @example let contract = await paratii.eth.tcr.getPLCRVotingContract()
+   */
+  async getPLCRVotingContract () {
+    let contract = await this.eth.getContract('TcrPLCRVoting')
+    if (contract.options.address === '0x0') {
+      throw Error('There is no PLCRVoting contract known in the registry')
+    }
+    return contract
+  }
+
   // -----------------------
   // TCR PARAMETERS GETTERS
   // -----------------------
