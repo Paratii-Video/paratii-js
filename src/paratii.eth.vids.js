@@ -57,7 +57,6 @@ export class ParatiiEthVids {
   makeId () {
     // create a fresh ID
     let id = makeId()
-    console.log('created id: ', id)
     return id
   }
   /**

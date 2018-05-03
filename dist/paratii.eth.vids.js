@@ -159,7 +159,6 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
     value: function makeId() {
       // create a fresh ID
       var id = (0, _utils.makeId)();
-      console.log('created id: ', id);
       return id;
     }
     /**

@@ -5,6 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ParatiiEth = undefined;
 
+var _keys = require('babel-runtime/core-js/object/keys');
+
+var _keys2 = _interopRequireDefault(_keys);
+
 var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
@@ -84,10 +88,12 @@ var ParatiiEth = exports.ParatiiEth = function () {
     } else {
       this.web3 = new Web3();
       if (config.eth.provider.substring(0, 2) === 'ws') {
-        this.web3.setProvider(new this.web3.providers.WebsocketProvider(config.eth.provider));
+        this._provider = new this.web3.providers.WebsocketProvider(config.eth.provider);
       } else {
-        this.web3.setProvider(new this.web3.providers.HttpProvider(config.eth.provider));
+        this._provider = new this.web3.providers.HttpProvider(config.eth.provider);
       }
+
+      this.web3.setProvider(this._provider);
     }
     this.config = config;
 
@@ -106,6 +112,11 @@ var ParatiiEth = exports.ParatiiEth = function () {
     this.contracts.Views = this.requireContract('Views');
     this.contracts.Vouchers = this.requireContract('Vouchers');
     this.contracts.TcrPlaceholder = this.requireContract('TcrPlaceholder');
+    this.contracts.TcrRegistry = this.requireContract('sol-tcr/Registry');
+    this.contracts.TcrPLCRVoting = this.requireContract('sol-tcr/PLCRVoting');
+    this.contracts.TcrParameterizer = this.requireContract('sol-tcr/Parameterizer');
+    this.contracts.TcrDLL = this.requireContract('sol-tcr/DLL');
+    this.contracts.TcrAttributeStore = this.requireContract('sol-tcr/AttributeStore');
 
     this.vids = new _paratiiEthVids.ParatiiEthVids(this);
     this.users = new _paratiiEthUsers.ParatiiEthUsers(this);
@@ -229,17 +240,81 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: 'requireContract',
     value: function requireContract(contractName) {
-      var artifact = require('paratii-contracts/build/contracts/' + contractName + '.json');
+      // console.log('requiring ', contractName)
+      var artifact = void 0,
+          contract = void 0;
       var from = this.config.account.address;
 
-      var contract = new this.web3.eth.Contract(artifact.abi, {
+      var contractArr = contractName.split('/');
+      if (contractArr[0] === 'sol-tcr') {
+        artifact = require('sol-tcr/build/contracts/' + contractArr[1] + '.json');
+        // contract = truffleContract(artifact)
+        // contract.setProvider(this._provider)
+        // contract.defaults({
+        //   from: from,
+        //   gas: this.web3.utils.toHex(4e6)
+        // })
+      } else {
+        artifact = require('paratii-contracts/build/contracts/' + contractName + '.json');
+      }
+
+      contract = new this.web3.eth.Contract(artifact.abi, {
         from: from,
         gas: this.web3.utils.toHex(4e6),
         data: artifact.bytecode
       });
       // contract.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
+      // if (contractArr[1] === 'DLL') {
+      //   console.log('DLL required!')
+      // }
       return contract;
     }
+
+    // requireTruffleContract (contractName) {
+    //   let artifact, contract
+    //   let from = this.config.account.address
+    //
+    //   let contractArr = contractName.split('/')
+    //   if (contractArr[0] === 'sol-tcr') {
+    //     artifact = require(`sol-tcr/build/contracts/${contractArr[1]}.json`)
+    //   } else {
+    //     artifact = require(`paratii-contracts/build/contracts/${contractName}.json`)
+    //   }
+    //   // console.log('artifact: ', this.web3.currentProvider)
+    //   contract = truffleContract(artifact)
+    //   contract.setProvider(this.web3.currentProvider)
+    //
+    //   // dirty hack for web3@1.0.0 support for localhost testrpc, see https://github.com/trufflesuite/truffle-contract/issues/56#issuecomment-331084530
+    //   // thanks https://github.com/trufflesuite/truffle-contract/issues/57#issuecomment-331300494
+    //   if (typeof contract.currentProvider.sendAsync !== 'function') {
+    //     contract.currentProvider.sendAsync = function () {
+    //       return contract.currentProvider.send.apply(
+    //         contract.currentProvider, arguments
+    //       )
+    //     }
+    //   }
+    //
+    //   contract.defaults({
+    //     from: from,
+    //     gas: this.web3.utils.toHex(4e6)
+    //   })
+    //
+    //   return contract
+    // }
+
+  }, {
+    key: 'linkByteCode',
+    value: function linkByteCode(bytecode, links) {
+      (0, _keys2.default)(links).forEach(function (libraryName) {
+        var libraryAddress = links[libraryName];
+        var regex = new RegExp('__' + libraryName + '_+', 'g');
+
+        bytecode = bytecode.replace(regex, libraryAddress.replace('0x', ''));
+      });
+
+      return bytecode;
+    }
+
     /**
      * deploys contract on the blockchain
      * @param  {string}  name name of the contract
@@ -285,6 +360,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
               // deployedContract.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
               this.contracts[name] = deployedContract;
+              // console.log('deployed ', name)
               return _context2.abrupt('return', deployedContract);
 
             case 11:
@@ -294,6 +370,263 @@ var ParatiiEth = exports.ParatiiEth = function () {
         }
       }, null, this);
     }
+
+    // async deployTcr (paratiiRegistry, paratiiToken) {
+    //   // Deployment steps.
+    //   // 1. deploy DLL and AttributeStore
+    //   // 2. deploy PLCRVoting and link the DLL and AttributeStore
+    //   // 3. deploy Parameterizer with default configs for now.
+    //   // 4. deploy TcrRegistry
+    //   // 5. register TcrRegistry to Registry (lol)
+    //   let tcrConfig = require('sol-tcr/conf/config.json')
+    //   let parameterizerConfig = tcrConfig.paramDefaults
+    //   // this.truffleContracts = {}
+    //   // this.truffleContracts.TcrRegistry = this.requireTruffleContract('sol-tcr/Registry')
+    //   // this.truffleContracts.TcrPLCRVoting = this.requireTruffleContract('sol-tcr/PLCRVoting')
+    //   // this.truffleContracts.TcrParameterizer = this.requireTruffleContract('sol-tcr/Parameterizer')
+    //   // this.truffleContracts.TcrDLL = this.requireTruffleContract('sol-tcr/DLL')
+    //   // this.truffleContracts.TcrAttributeStore = this.requireTruffleContract('sol-tcr/AttributeStore')
+    //   //
+    //   // this.truffleContracts.TcrDLL.new({from: this.config.account.address}).then((instance) => {
+    //   //   console.log('DLL: ', instance)
+    //   //   resolve(instance)
+    //   // }).catch((e) => {
+    //   //   console.log('gotcha : ', e)
+    //   //   reject(e)
+    //   // })
+    //   // console.log('TcrDLL: ', this.contracts.TcrDLL)
+    //   // console.log('TcrAttributeStore: ', this.contracts.TcrAttributeStore)
+    //   // console.log('TcrPLCR: ', this.contracts.TcrPLCRVoting)
+    //   // console.log('Avatar: ', this.contracts.Avatar)
+    //   // console.log('Registry Address: ', this.contracts.Registry.options.address)
+    //   // let deployedDLL = await this.contracts.TcrDLL.deploy({arguments: []}).send()
+    //   // deployedDLL.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
+    //   // this.contracts.TcrDLL = deployedDLL
+    //   //
+    //   // let deployedAttributeStore = await this.contracts.TcrAttributeStore.deploy({arguments: []}).send()
+    //   // deployedAttributeStore.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
+    //   // this.contracts.TcrAttributeStore = deployedAttributeStore
+    //
+    //   // link both libs to PLCRVoting and deploy it.
+    //   let linkedByteCode = this.linkByteCode(
+    //     this.contracts.TcrPLCRVoting.options.data, {
+    //       DLL: this.contracts.TcrDLL.options.address,
+    //       AttributeStore: this.contracts.TcrAttributeStore.options.address
+    //     })
+    //
+    //   this.contracts.TcrPLCRVoting.options.data = linkedByteCode
+    //
+    //   let deployedPLCRVoting = await this.contracts.TcrPLCRVoting.deploy({
+    //     arguments: [paratiiToken]
+    //   }).send()
+    //   deployedPLCRVoting.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
+    //   this.contracts.TcrPLCRVoting = deployedPLCRVoting
+    //
+    //   // ---------------------------------------------
+    //
+    //   linkedByteCode = null
+    //   linkedByteCode = this.linkByteCode(
+    //     this.contracts.TcrParameterizer.options.data,
+    //     {
+    //       DLL: this.contracts.TcrDLL.options.address,
+    //       AttributeStore: this.contracts.TcrAttributeStore.options.address
+    //     }
+    //   )
+    //   this.contracts.TcrParameterizer.options.data = linkedByteCode
+    //   let deployedParameterizer = await this.contracts.TcrParameterizer.deploy({
+    //     arguments: [
+    //       paratiiToken,
+    //       this.contracts.TcrPLCRVoting.options.address,
+    //       parameterizerConfig.minDeposit,
+    //       parameterizerConfig.pMinDeposit,
+    //       parameterizerConfig.applyStageLength,
+    //       parameterizerConfig.pApplyStageLength,
+    //       parameterizerConfig.commitStageLength,
+    //       parameterizerConfig.pCommitStageLength,
+    //       parameterizerConfig.revealStageLength,
+    //       parameterizerConfig.pRevealStageLength,
+    //       parameterizerConfig.dispensationPct,
+    //       parameterizerConfig.pDispensationPct,
+    //       parameterizerConfig.voteQuorum,
+    //       parameterizerConfig.pVoteQuorum
+    //     ]
+    //   }).send()
+    //
+    //   deployedParameterizer.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
+    //   this.contracts.TcrParameterizer = deployedParameterizer
+    //
+    //   // --------------------------------------------------
+    //
+    //   linkedByteCode = null
+    //   linkedByteCode = this.linkByteCode(
+    //     this.contracts.TcrRegistry.options.data,
+    //     {
+    //       DLL: this.contracts.TcrDLL.options.address,
+    //       AttributeStore: this.contracts.TcrAttributeStore.options.address
+    //     }
+    //   )
+    //   this.contracts.TcrRegistry.options.data = linkedByteCode
+    //   let deployedRegistry = await this.contracts.TcrRegistry.deploy({
+    //     arguments: [
+    //       paratiiToken,
+    //       this.contracts.TcrPLCRVoting.options.address,
+    //       this.contracts.TcrParameterizer.options.address,
+    //       'paratii test TCR integration'
+    //     ]
+    //   }).send()
+    //
+    //   deployedRegistry.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
+    //   this.contracts.TcrRegistry = deployedRegistry
+    //
+    //   return {deployedRegistry, deployedPLCRVoting, deployedParameterizer}
+    // }
+
+  }, {
+    key: 'deployWithLinks',
+    value: function deployWithLinks(name, links) {
+      for (var _len2 = arguments.length, args = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+        args[_key2 - 2] = arguments[_key2];
+      }
+
+      var linkedByteCode, deployedContract;
+      return _regenerator2.default.async(function deployWithLinks$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              linkedByteCode = this.linkByteCode(this.contracts[name].options.data, links);
+
+
+              this.contracts[name].options.data = linkedByteCode;
+
+              _context3.next = 4;
+              return _regenerator2.default.awrap(this.contracts[name].deploy({
+                arguments: args
+              }).send());
+
+            case 4:
+              deployedContract = _context3.sent;
+
+              // deployedContract.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
+              this.contracts[name] = deployedContract;
+              // console.log('deployed ', name)
+              return _context3.abrupt('return', deployedContract);
+
+            case 7:
+            case 'end':
+              return _context3.stop();
+          }
+        }
+      }, null, this);
+    }
+    // async deployTcr (paratiiRegistry, paratiiToken) {
+    //   // Deployment steps.
+    //   // 1. deploy DLL and AttributeStore
+    //   // 2. deploy PLCRVoting and link the DLL and AttributeStore
+    //   // 3. deploy Parameterizer with default configs for now.
+    //   // 4. deploy TcrRegistry
+    //   // 5. register TcrRegistry to Registry (lol)
+    //   let tcrConfig = require('sol-tcr/conf/config.json')
+    //   let parameterizerConfig = tcrConfig.paramDefaults
+    //   // this.truffleContracts = {}
+    //   // this.truffleContracts.TcrRegistry = this.requireTruffleContract('sol-tcr/Registry')
+    //   // this.truffleContracts.TcrPLCRVoting = this.requireTruffleContract('sol-tcr/PLCRVoting')
+    //   // this.truffleContracts.TcrParameterizer = this.requireTruffleContract('sol-tcr/Parameterizer')
+    //   // this.truffleContracts.TcrDLL = this.requireTruffleContract('sol-tcr/DLL')
+    //   // this.truffleContracts.TcrAttributeStore = this.requireTruffleContract('sol-tcr/AttributeStore')
+    //   //
+    //   // this.truffleContracts.TcrDLL.new({from: this.config.account.address}).then((instance) => {
+    //   //   console.log('DLL: ', instance)
+    //   //   resolve(instance)
+    //   // }).catch((e) => {
+    //   //   console.log('gotcha : ', e)
+    //   //   reject(e)
+    //   // })
+    //   // console.log('TcrDLL: ', this.contracts.TcrDLL)
+    //   // console.log('TcrAttributeStore: ', this.contracts.TcrAttributeStore)
+    //   // console.log('TcrPLCR: ', this.contracts.TcrPLCRVoting)
+    //   // console.log('Avatar: ', this.contracts.Avatar)
+    //   // console.log('Registry Address: ', this.contracts.Registry.options.address)
+    //   // let deployedDLL = await this.contracts.TcrDLL.deploy({arguments: []}).send()
+    //   // deployedDLL.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
+    //   // this.contracts.TcrDLL = deployedDLL
+    //   //
+    //   // let deployedAttributeStore = await this.contracts.TcrAttributeStore.deploy({arguments: []}).send()
+    //   // deployedAttributeStore.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
+    //   // this.contracts.TcrAttributeStore = deployedAttributeStore
+    //
+    //   // link both libs to PLCRVoting and deploy it.
+    //   let linkedByteCode = this.linkByteCode(
+    //     this.contracts.TcrPLCRVoting.options.data, {
+    //       DLL: this.contracts.TcrDLL.options.address,
+    //       AttributeStore: this.contracts.TcrAttributeStore.options.address
+    //     })
+    //
+    //   this.contracts.TcrPLCRVoting.options.data = linkedByteCode
+    //
+    //   let deployedPLCRVoting = await this.contracts.TcrPLCRVoting.deploy({
+    //     arguments: [paratiiToken]
+    //   }).send()
+    //   deployedPLCRVoting.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
+    //   this.contracts.TcrPLCRVoting = deployedPLCRVoting
+    //
+    //   // ---------------------------------------------
+    //
+    //   linkedByteCode = null
+    //   linkedByteCode = this.linkByteCode(
+    //     this.contracts.TcrParameterizer.options.data,
+    //     {
+    //       DLL: this.contracts.TcrDLL.options.address,
+    //       AttributeStore: this.contracts.TcrAttributeStore.options.address
+    //     }
+    //   )
+    //   this.contracts.TcrParameterizer.options.data = linkedByteCode
+    //   let deployedParameterizer = await this.contracts.TcrParameterizer.deploy({
+    //     arguments: [
+    //       paratiiToken,
+    //       this.contracts.TcrPLCRVoting.options.address,
+    //       parameterizerConfig.minDeposit,
+    //       parameterizerConfig.pMinDeposit,
+    //       parameterizerConfig.applyStageLength,
+    //       parameterizerConfig.pApplyStageLength,
+    //       parameterizerConfig.commitStageLength,
+    //       parameterizerConfig.pCommitStageLength,
+    //       parameterizerConfig.revealStageLength,
+    //       parameterizerConfig.pRevealStageLength,
+    //       parameterizerConfig.dispensationPct,
+    //       parameterizerConfig.pDispensationPct,
+    //       parameterizerConfig.voteQuorum,
+    //       parameterizerConfig.pVoteQuorum
+    //     ]
+    //   }).send()
+    //
+    //   deployedParameterizer.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
+    //   this.contracts.TcrParameterizer = deployedParameterizer
+    //
+    //   // --------------------------------------------------
+    //
+    //   linkedByteCode = null
+    //   linkedByteCode = this.linkByteCode(
+    //     this.contracts.TcrRegistry.options.data,
+    //     {
+    //       DLL: this.contracts.TcrDLL.options.address,
+    //       AttributeStore: this.contracts.TcrAttributeStore.options.address
+    //     }
+    //   )
+    //   this.contracts.TcrRegistry.options.data = linkedByteCode
+    //   let deployedRegistry = await this.contracts.TcrRegistry.deploy({
+    //     arguments: [
+    //       paratiiToken,
+    //       this.contracts.TcrPLCRVoting.options.address,
+    //       this.contracts.TcrParameterizer.options.address,
+    //       'paratii test TCR integration'
+    //     ]
+    //   }).send()
+    //
+    //   deployedRegistry.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
+    //   this.contracts.TcrRegistry = deployedRegistry
+    //
+    //   return {deployedRegistry, deployedPLCRVoting, deployedParameterizer}
+    // }
 
     /**
      * deploy all Paratii contracts on the blockchain, and register them the registry contract
@@ -305,176 +638,210 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: 'deployContracts',
     value: function deployContracts() {
-      var paratiiRegistry, paratiiRegistryAddress, paratiiAvatar, paratiiToken, sendEther, userRegistry, videoRegistry, videoStore, likes, views, vouchers, tcrPlaceholder;
-      return _regenerator2.default.async(function deployContracts$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.next = 2;
-              return _regenerator2.default.awrap(this.deployContract('Registry'));
-
-            case 2:
-              paratiiRegistry = _context3.sent;
-              paratiiRegistryAddress = paratiiRegistry.options.address;
-              _context3.next = 6;
-              return _regenerator2.default.awrap(this.setRegistryAddress(paratiiRegistry.options.address));
-
-            case 6:
-              _context3.next = 8;
-              return _regenerator2.default.awrap(this.deployContract('Avatar', paratiiRegistryAddress));
-
-            case 8:
-              paratiiAvatar = _context3.sent;
-              _context3.next = 11;
-              return _regenerator2.default.awrap(this.deployContract('ParatiiToken'));
-
-            case 11:
-              paratiiToken = _context3.sent;
-              _context3.next = 14;
-              return _regenerator2.default.awrap(this.deployContract('SendEther'));
-
-            case 14:
-              sendEther = _context3.sent;
-              _context3.next = 17;
-              return _regenerator2.default.awrap(this.deployContract('Users', paratiiRegistryAddress));
-
-            case 17:
-              userRegistry = _context3.sent;
-              _context3.next = 20;
-              return _regenerator2.default.awrap(this.deployContract('Videos', paratiiRegistryAddress));
-
-            case 20:
-              videoRegistry = _context3.sent;
-              _context3.next = 23;
-              return _regenerator2.default.awrap(this.deployContract('Store', paratiiRegistryAddress));
-
-            case 23:
-              videoStore = _context3.sent;
-              _context3.next = 26;
-              return _regenerator2.default.awrap(this.deployContract('Likes', paratiiRegistryAddress));
-
-            case 26:
-              likes = _context3.sent;
-              _context3.next = 29;
-              return _regenerator2.default.awrap(this.deployContract('Views', paratiiRegistryAddress));
-
-            case 29:
-              views = _context3.sent;
-              _context3.next = 32;
-              return _regenerator2.default.awrap(this.deployContract('Vouchers', paratiiRegistryAddress));
-
-            case 32:
-              vouchers = _context3.sent;
-              _context3.next = 35;
-              return _regenerator2.default.awrap(this.deployContract('TcrPlaceholder', paratiiRegistryAddress, paratiiToken.options.address, this.web3.utils.toWei('5'), 100));
-
-            case 35:
-              tcrPlaceholder = _context3.sent;
-              _context3.next = 38;
-              return _regenerator2.default.awrap(this.getContract('Registry'));
-
-            case 38:
-              paratiiRegistry = _context3.sent;
-              _context3.next = 41;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Avatar', paratiiAvatar.options.address).send());
-
-            case 41:
-              _context3.next = 43;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('ParatiiToken', paratiiToken.options.address).send());
-
-            case 43:
-              _context3.next = 45;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('SendEther', sendEther.options.address).send());
-
-            case 45:
-              _context3.next = 47;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Videos', videoRegistry.options.address).send());
-
-            case 47:
-              _context3.next = 49;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Store', videoStore.options.address).send());
-
-            case 49:
-              _context3.next = 51;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Users', userRegistry.options.address).send());
-
-            case 51:
-              _context3.next = 53;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Likes', likes.options.address).send());
-
-            case 53:
-              _context3.next = 55;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Views', views.options.address).send());
-
-            case 55:
-              _context3.next = 57;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Vouchers', vouchers.options.address).send());
-
-            case 57:
-              _context3.next = 59;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('TcrPlaceholder', tcrPlaceholder.options.address).send());
-
-            case 59:
-              _context3.next = 61;
-              return _regenerator2.default.awrap(paratiiRegistry.methods.registerUint('VideoRedistributionPoolShare', this.web3.utils.toWei('0.3')));
-
-            case 61:
-              _context3.next = 63;
-              return _regenerator2.default.awrap(paratiiAvatar.methods.addToWhitelist(videoStore.address));
-
-            case 63:
-
-              this.contracts = {
-                Avatar: paratiiAvatar,
-                Registry: paratiiRegistry,
-                ParatiiToken: paratiiToken,
-                SendEther: sendEther,
-                Users: userRegistry,
-                Videos: videoRegistry,
-                Likes: likes,
-                Views: views,
-                Vouchers: vouchers,
-                Store: videoStore,
-                TcrPlaceholder: tcrPlaceholder
-              };
-
-              this.setRegistryAddress(paratiiRegistryAddress);
-
-              return _context3.abrupt('return', this.contracts);
-
-            case 66:
-            case 'end':
-              return _context3.stop();
-          }
-        }
-      }, null, this);
-    }
-
-    /**
-     * Set the provider on all the contracts
-     * @example await paratii.eth.setContractsProvider()
-     * @private
-     */
-
-  }, {
-    key: 'setContractsProvider',
-    value: function setContractsProvider() {
-      var key;
-      return _regenerator2.default.async(function setContractsProvider$(_context4) {
+      var tcrConfig, parameterizerConfig, paratiiRegistry, paratiiRegistryAddress, paratiiAvatar, paratiiToken, sendEther, userRegistry, videoRegistry, videoStore, likes, views, vouchers, tcrPlaceholder, tcrDLL, tcrAttributeStore, tcrPLCRVoting, tcrParameterizer, tcrRegistry;
+      return _regenerator2.default.async(function deployContracts$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
-              for (key in this.contracts) {
-                this.contracts[key].setProvider(this.web3.currentProvider, this.web3.eth.accounts);
-              }
+              tcrConfig = require('sol-tcr/conf/config.json');
+              parameterizerConfig = tcrConfig.paramDefaults;
+              _context4.next = 4;
+              return _regenerator2.default.awrap(this.deployContract('Registry'));
 
-            case 1:
+            case 4:
+              paratiiRegistry = _context4.sent;
+              paratiiRegistryAddress = paratiiRegistry.options.address;
+              _context4.next = 8;
+              return _regenerator2.default.awrap(this.setRegistryAddress(paratiiRegistry.options.address));
+
+            case 8:
+              _context4.next = 10;
+              return _regenerator2.default.awrap(this.deployContract('Avatar', paratiiRegistryAddress));
+
+            case 10:
+              paratiiAvatar = _context4.sent;
+              _context4.next = 13;
+              return _regenerator2.default.awrap(this.deployContract('ParatiiToken'));
+
+            case 13:
+              paratiiToken = _context4.sent;
+              _context4.next = 16;
+              return _regenerator2.default.awrap(this.deployContract('SendEther'));
+
+            case 16:
+              sendEther = _context4.sent;
+              _context4.next = 19;
+              return _regenerator2.default.awrap(this.deployContract('Users', paratiiRegistryAddress));
+
+            case 19:
+              userRegistry = _context4.sent;
+              _context4.next = 22;
+              return _regenerator2.default.awrap(this.deployContract('Videos', paratiiRegistryAddress));
+
+            case 22:
+              videoRegistry = _context4.sent;
+              _context4.next = 25;
+              return _regenerator2.default.awrap(this.deployContract('Store', paratiiRegistryAddress));
+
+            case 25:
+              videoStore = _context4.sent;
+              _context4.next = 28;
+              return _regenerator2.default.awrap(this.deployContract('Likes', paratiiRegistryAddress));
+
+            case 28:
+              likes = _context4.sent;
+              _context4.next = 31;
+              return _regenerator2.default.awrap(this.deployContract('Views', paratiiRegistryAddress));
+
+            case 31:
+              views = _context4.sent;
+              _context4.next = 34;
+              return _regenerator2.default.awrap(this.deployContract('Vouchers', paratiiRegistryAddress));
+
+            case 34:
+              vouchers = _context4.sent;
+              _context4.next = 37;
+              return _regenerator2.default.awrap(this.deployContract('TcrPlaceholder', paratiiRegistryAddress, paratiiToken.options.address, this.web3.utils.toWei('5'), 100));
+
+            case 37:
+              tcrPlaceholder = _context4.sent;
+              _context4.next = 40;
+              return _regenerator2.default.awrap(this.deployContract('TcrDLL'));
+
+            case 40:
+              tcrDLL = _context4.sent;
+              _context4.next = 43;
+              return _regenerator2.default.awrap(this.deployContract('TcrAttributeStore'));
+
+            case 43:
+              tcrAttributeStore = _context4.sent;
+              _context4.next = 46;
+              return _regenerator2.default.awrap(this.deployWithLinks('TcrPLCRVoting', {
+                DLL: tcrDLL.options.address,
+                AttributeStore: tcrAttributeStore.options.address
+              }, paratiiToken.options.address));
+
+            case 46:
+              tcrPLCRVoting = _context4.sent;
+              _context4.next = 49;
+              return _regenerator2.default.awrap(this.deployWithLinks('TcrParameterizer', {
+                DLL: tcrDLL.options.address,
+                AttributeStore: tcrAttributeStore.options.address
+              }, paratiiToken.options.address, tcrPLCRVoting.options.address, parameterizerConfig.minDeposit, parameterizerConfig.pMinDeposit, parameterizerConfig.applyStageLength, parameterizerConfig.pApplyStageLength, parameterizerConfig.commitStageLength, parameterizerConfig.pCommitStageLength, parameterizerConfig.revealStageLength, parameterizerConfig.pRevealStageLength, parameterizerConfig.dispensationPct, parameterizerConfig.pDispensationPct, parameterizerConfig.voteQuorum, parameterizerConfig.pVoteQuorum));
+
+            case 49:
+              tcrParameterizer = _context4.sent;
+              _context4.next = 52;
+              return _regenerator2.default.awrap(this.deployWithLinks('TcrRegistry', {
+                DLL: tcrDLL.options.address,
+                AttributeStore: tcrAttributeStore.options.address
+              }, paratiiToken.options.address, tcrPLCRVoting.options.address, tcrParameterizer.options.address, 'paratii test TCR integration'));
+
+            case 52:
+              tcrRegistry = _context4.sent;
+              _context4.next = 55;
+              return _regenerator2.default.awrap(this.getContract('Registry'));
+
+            case 55:
+              paratiiRegistry = _context4.sent;
+              _context4.next = 58;
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Avatar', paratiiAvatar.options.address).send());
+
+            case 58:
+              _context4.next = 60;
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('ParatiiToken', paratiiToken.options.address).send());
+
+            case 60:
+              _context4.next = 62;
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('SendEther', sendEther.options.address).send());
+
+            case 62:
+              _context4.next = 64;
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Videos', videoRegistry.options.address).send());
+
+            case 64:
+              _context4.next = 66;
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Store', videoStore.options.address).send());
+
+            case 66:
+              _context4.next = 68;
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Users', userRegistry.options.address).send());
+
+            case 68:
+              _context4.next = 70;
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Likes', likes.options.address).send());
+
+            case 70:
+              _context4.next = 72;
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Views', views.options.address).send());
+
+            case 72:
+              _context4.next = 74;
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('Vouchers', vouchers.options.address).send());
+
+            case 74:
+              _context4.next = 76;
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('TcrPlaceholder', tcrPlaceholder.options.address).send());
+
+            case 76:
+              _context4.next = 78;
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('TcrDLL', tcrDLL.options.address).send());
+
+            case 78:
+              _context4.next = 80;
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('TcrAttributeStore', tcrAttributeStore.options.address).send());
+
+            case 80:
+              _context4.next = 82;
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('TcrRegistry', tcrRegistry.options.address).send());
+
+            case 82:
+              _context4.next = 84;
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('TcrPLCRVoting', tcrPLCRVoting.options.address).send());
+
+            case 84:
+              _context4.next = 86;
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerAddress('TcrParameterizer', tcrParameterizer.options.address).send());
+
+            case 86:
+              _context4.next = 88;
+              return _regenerator2.default.awrap(paratiiRegistry.methods.registerUint('VideoRedistributionPoolShare', this.web3.utils.toWei('0.3')));
+
+            case 88:
+              _context4.next = 90;
+              return _regenerator2.default.awrap(paratiiAvatar.methods.addToWhitelist(videoStore.address));
+
+            case 90:
+
+              this.contracts.Avatar = paratiiAvatar;
+              this.contracts.Registry = paratiiRegistry;
+              this.contracts.ParatiiToken = paratiiToken;
+              this.contracts.SendEther = sendEther;
+              this.contracts.Users = userRegistry;
+              this.contracts.Videos = videoRegistry;
+              this.contracts.Likes = likes;
+              this.contracts.Views = views;
+              this.contracts.Vouchers = vouchers;
+              this.contracts.Store = videoStore;
+              this.contracts.TcrPlaceholder = tcrPlaceholder;
+              this.contracts.TcrDLL = tcrDLL;
+              this.contracts.TcrAttributeStore = tcrAttributeStore;
+              this.contracts.TcrRegistry = tcrRegistry;
+              this.contracts.TcrPLCRVoting = tcrPLCRVoting;
+              this.contracts.TcrParameterizer = tcrParameterizer;
+
+              this.setRegistryAddress(paratiiRegistryAddress);
+
+              return _context4.abrupt('return', this.contracts);
+
+            case 108:
             case 'end':
               return _context4.stop();
           }
         }
       }, null, this);
     }
+
     /**
      * return all the contracts
      * @return {Promise}
@@ -640,6 +1007,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
     value: function setRegistryAddress(registryAddress) {
       this.config.eth.registryAddress = registryAddress;
       for (var name in this.contracts) {
+        // console.log('contractName: ', name)
         var contract = this.contracts[name];
         contract.options.address = undefined;
       }

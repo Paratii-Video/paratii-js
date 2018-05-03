@@ -85,8 +85,8 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
               schema = joi.object({
                 'owner': joi.string().empty(),
                 'keyword': joi.string().empty(),
-                'offset': joi.string().empty(),
-                'limit': joi.string().empty(),
+                'offset': joi.number().integer().empty(),
+                'limit': joi.number().integer().empty(),
                 'staked': joi.boolean().empty()
               });
               result = joi.validate(options, schema);
@@ -104,9 +104,11 @@ var ParatiiDbVids = exports.ParatiiDbVids = function () {
 
               for (keyword in options) {
                 k += keyword + '=' + options[keyword];
+                k += '&';
               }
               if (k !== '') {
                 k = '?' + k;
+                k = k.slice(0, -1);
               }
               _context2.next = 10;
               return _regenerator2.default.awrap(fetch(this.config.db.provider + this.apiVideos + k, {

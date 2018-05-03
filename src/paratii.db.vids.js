@@ -33,8 +33,8 @@ export class ParatiiDbVids {
     const schema = joi.object({
       'owner': joi.string().empty(),
       'keyword': joi.string().empty(),
-      'offset': joi.string().empty(),
-      'limit': joi.string().empty(),
+      'offset': joi.number().integer().empty(),
+      'limit': joi.number().integer().empty(),
       'staked': joi.boolean().empty()
     })
 
@@ -44,9 +44,11 @@ export class ParatiiDbVids {
     let k = ''
     for (let keyword in options) {
       k += `${keyword}=${options[keyword]}`
+      k += '&'
     }
     if (k !== '') {
       k = `?${k}`
+      k = k.slice(0, -1)
     }
     let videos = await fetch(this.config.db.provider + this.apiVideos + k, {
       method: 'get'

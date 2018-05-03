@@ -58,9 +58,9 @@ export class ParatiiIPFSLocal extends EventEmitter {
       }
     }
     emitter = this.upload(result, emitter)
-    emitter.on('done', (hashedFiles) => {
-      // console.log(hashedFiles)
-    })
+    // emitter.on('done', (hashedFiles) => {
+    //   // console.log(hashedFiles)
+    // })
     // emitter.on('error', (err) => reject(err))
     return emitter
   }

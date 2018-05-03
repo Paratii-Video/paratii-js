@@ -70,10 +70,6 @@ export class ParatiiIPFSRemote extends EventEmitter {
       maxFileSize: this.config.ipfs.maxFileSize
     })
 
-    r.on('fileAdded', (file, ev) => {
-      console.log('file ', file, 'added')
-    })
-
     r.on('fileProgress', (file) => {
       ev.emit('progress', r.progress() * 100)
     })
@@ -113,7 +109,6 @@ export class ParatiiIPFSRemote extends EventEmitter {
       const error = result.error
       if (error) reject(error)
       let opts = result.value
-      console.log('opts: ', opts)
       let ev
       if (opts.ev) {
         ev = opts.ev
@@ -166,7 +161,6 @@ export class ParatiiIPFSRemote extends EventEmitter {
                   break
                 case 'getMetaData:done':
                   if (argsObj.hash === fileHash) {
-                    console.log('data: ', argsObj.data)
                     let result = argsObj.data
                     resolve(result)
                   }
@@ -215,7 +209,6 @@ export class ParatiiIPFSRemote extends EventEmitter {
     }
 
     let msg = this._ipfs.protocol.createCommand('pin', {hash: fileHash, author: opts.author, size: opts.size})
-    // FIXME : This is for dev, so we just signal our transcoder node.
     // This needs to be dynamic later on.
     this._node.swarm.connect(opts.transcoder, (err, success) => {
       if (err) return ev.emit('pin:error', err)

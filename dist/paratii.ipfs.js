@@ -119,7 +119,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
 
       return new _promise2.default(function (resolve, reject) {
         if (_this2.ipfs && _this2.ipfs.isOnline()) {
-          console.log('IPFS is already running');
+          // console.log('IPFS is already running')
           return resolve(_this2.ipfs);
         }
 
