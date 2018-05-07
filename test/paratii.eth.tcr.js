@@ -33,7 +33,7 @@ describe('paratii.eth.tcr:', function () {
     assert.isFalse(isWhitelisted)
   })
 
-  it('should be able to apply a video to whitelist', async function () {
+  it('should be able to apply a video to whitelist (without using checkEligiblityAndApply)', async function () {
     let amount = 5
     // get some tokens
     let token = await paratii.eth.getContract('ParatiiToken')
@@ -68,7 +68,7 @@ describe('paratii.eth.tcr:', function () {
     , paratii.eth.web3.utils.toWei(amount.toString()).toString())
   })
 
-  it('checkEligiblityAndApply should work', async function () {
+  it('checkEligiblityAndApply() should work', async function () {
     let amount = 5
     let result = await paratii.eth.tcr.checkEligiblityAndApply(videoId2, paratii.eth.web3.utils.toWei(amount.toString()))
     assert.isOk(result, result)
@@ -86,7 +86,7 @@ describe('paratii.eth.tcr:', function () {
      )
   })
 
-  it('exit() should delist the video and return the money', async function () {
+  it('should be able to apply and balances should be correct', async function () {
     let amount = new BigNumber(paratii.eth.web3.utils.toWei('5'))
     let balance1 = new BigNumber(await paratii.eth.balanceOf(paratii.config.account.address, 'PTI'))
     await paratii.eth.tcr.checkEligiblityAndApply('yetanothervid', amount)
