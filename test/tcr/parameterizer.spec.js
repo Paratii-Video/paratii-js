@@ -4,6 +4,7 @@ import { assert } from 'chai'
 // import { BigNumber } from 'bignumber.js'
 
 let tcrConfig = require('sol-tcr/conf/config.json')
+let parameterizerConfig = tcrConfig.paramDefaults
 
 describe('Parameterizer:', function () {
   let paratii, tcrRegistry, tcrParameterizer
@@ -31,21 +32,18 @@ describe('Parameterizer:', function () {
     assert.equal(_voting, tcrPLCRVoting.options.address)
   })
 
-  it('getters for the parametrizer contract should return correct values', async function () {
-    assert.equal(await paratii.eth.tcr.getpMinDeposit(), tcrConfig.paramDefaults.pMinDeposit)
-    assert.equal(await paratii.eth.tcr.getpApplyStageLen(), tcrConfig.paramDefaults.pApplyStageLength)
-    assert.equal(await paratii.eth.tcr.getpDispensationPct(), tcrConfig.paramDefaults.pDispensationPct)
-    assert.equal(await paratii.eth.tcr.getpCommitStageLen(), tcrConfig.paramDefaults.pCommitStageLength)
-    assert.equal(await paratii.eth.tcr.getpRevealStageLen(), tcrConfig.paramDefaults.pRevealStageLength)
-    assert.equal(await paratii.eth.tcr.getpVoteQuorum(), tcrConfig.paramDefaults.pVoteQuorum)
-  })
+  it('params should equal default config', async function () {
+    let deposit = await tcrParameterizer.methods.get('minDeposit').call()
+    assert.isOk(deposit)
+    assert.equal(deposit, 10)
 
-  it('getters for the tcr contract should return correct values', async function () {
-    assert.equal(await paratii.eth.tcr.getMinDeposit(), tcrConfig.paramDefaults.minDeposit)
-    assert.equal(await paratii.eth.tcr.getApplyStageLen(), tcrConfig.paramDefaults.applyStageLength)
-    assert.equal(await paratii.eth.tcr.getDispensationPct(), tcrConfig.paramDefaults.dispensationPct)
-    assert.equal(await paratii.eth.tcr.getCommitStageLen(), tcrConfig.paramDefaults.commitStageLength)
-    assert.equal(await paratii.eth.tcr.getRevealStageLen(), tcrConfig.paramDefaults.revealStageLength)
-    assert.equal(await paratii.eth.tcr.getVoteQuorum(), tcrConfig.paramDefaults.voteQuorum)
+    let params = ['voteQuorum', 'commitStageLen', 'revealStageLen']
+    // let params = Object.keys(parameterizerConfig)
+    params.forEach(async (param) => {
+      let val = await tcrParameterizer.methods.get(param).call()
+      console.log(`${param}: ${val}`)
+      assert.equal(param, parameterizerConfig[param])
+    })
+    // TODO all the other params.
   })
 })
