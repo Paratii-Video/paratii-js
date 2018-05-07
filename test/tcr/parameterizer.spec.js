@@ -42,7 +42,6 @@ describe('Parameterizer:', function () {
 
   it('getters for the tcr contract should return correct values', async function () {
     assert.equal(await paratii.eth.tcr.getMinDeposit(), tcrConfig.paramDefaults.minDeposit)
-    assert.equal(await paratii.eth.tcr.getMinDeposit(), 10)
     assert.equal(await paratii.eth.tcr.getApplyStageLen(), tcrConfig.paramDefaults.applyStageLength)
     assert.equal(await paratii.eth.tcr.getDispensationPct(), tcrConfig.paramDefaults.dispensationPct)
     assert.equal(await paratii.eth.tcr.getCommitStageLen(), tcrConfig.paramDefaults.commitStageLength)
