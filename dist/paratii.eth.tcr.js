@@ -990,7 +990,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
             case 3:
               challengeID = _context26.sent;
 
-              if (!(challengeID !== 0)) {
+              if (!(parseInt(challengeID) !== 0)) {
                 _context26.next = 8;
                 break;
               }

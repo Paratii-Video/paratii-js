@@ -403,7 +403,7 @@ export class ParatiiEthTcr {
     let challenge
     let challengeID = await this.getChallengeId(videoId)
 
-    if (challengeID !== 0) { challenge = await this.getChallenge(challengeID) }
+    if (parseInt(challengeID) !== 0) { challenge = await this.getChallenge(challengeID) }
 
     return (challengeID > 0 && !challenge.resolved)
   }
