@@ -646,7 +646,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
-              tcrConfig = require('sol-tcr/conf/config.json');
+              tcrConfig = require(this.config.eth.tcrConfigFile);
               parameterizerConfig = tcrConfig.paramDefaults;
               _context4.next = 4;
               return _regenerator2.default.awrap(this.deployContract('Registry'));

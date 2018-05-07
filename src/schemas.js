@@ -17,10 +17,12 @@ const accountSchema = joi.object({
   * @property {string=} provider provider of the parity node
   * @property {string=} registryAddress address of the TCR
   * @property {boolean=} isTestNet true if it's on test net, false otherwise
+  * @property {string=} tcrConfigFile path of the config file chosen for the tcr
  */
 const ethSchema = joi.object({
   provider: joi.string().default('ws://localhost:8546'),
-  registryAddress: joi.string().default(null).allow(null)
+  registryAddress: joi.string().default(null).allow(null),
+  tcrConfigFile: joi.string().default('sol-tcr/conf/config.json')
 }).default()
 
 /**

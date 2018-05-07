@@ -500,7 +500,7 @@ export class ParatiiEth {
    * for (contractName in contracts) { console.log(contracts[contractName])}
    */
   async deployContracts () {
-    let tcrConfig = require('sol-tcr/conf/config.json')
+    let tcrConfig = require(this.config.eth.tcrConfigFile)
     let parameterizerConfig = tcrConfig.paramDefaults
 
     let paratiiRegistry = await this.deployContract('Registry')

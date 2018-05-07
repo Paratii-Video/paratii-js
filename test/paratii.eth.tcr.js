@@ -9,7 +9,7 @@ describe('paratii.eth.tcr:', function () {
 
   before(async function () {
     paratii = new Paratii(testConfig)
-    tcrConfig = require('sol-tcr/conf/config.json')
+    tcrConfig = require(paratii.config.eth.tcrConfigFile)
     await paratii.eth.deployContracts()
   })
 
@@ -132,7 +132,6 @@ describe('paratii.eth.tcr:', function () {
   it('getChallenge() should throw an error if the challenge does not exist', async function () {
     // new paratii --> contracts are re-deployed --> no challenges are present
     let paratii2 = new Paratii(testConfig)
-    tcrConfig = require('sol-tcr/conf/config.json')
     await paratii2.eth.deployContracts()
 
     await assert.isRejected(paratii2.eth.tcr.getChallenge(1), Error, /doesn't exists/g)
