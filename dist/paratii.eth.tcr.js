@@ -1234,41 +1234,49 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
               throw new Error('The video must be whitelisted in order to exit');
 
             case 5:
-              listing = this.getListing(videoId);
+              _context30.next = 7;
+              return _regenerator2.default.awrap(this.getListing(videoId));
+
+            case 7:
+              listing = _context30.sent;
               sender = this.eth.getAccount();
 
               if (!(sender !== listing.owner)) {
-                _context30.next = 9;
+                _context30.next = 11;
                 break;
               }
 
               throw new Error('You must be the owner of the listing to exit the whitelist');
 
-            case 9:
-              if (!(listing.challengeID !== 0)) {
-                _context30.next = 13;
+            case 11:
+              if (!(parseInt(listing.challengeID) !== 0)) {
+                _context30.next = 17;
                 break;
               }
 
-              challenge = this.getChallenge(listing.challengeID);
+              _context30.next = 14;
+              return _regenerator2.default.awrap(this.getChallenge(listing.challengeID));
 
-              if (!(challenge.resolved !== 1)) {
-                _context30.next = 13;
+            case 14:
+              challenge = _context30.sent;
+
+              if (!(parseInt(challenge.resolved) !== 1)) {
+                _context30.next = 17;
                 break;
               }
 
               throw new Error('You can\'t exit during a challenge');
 
-            case 13:
-              _context30.next = 15;
+            case 17:
+              _context30.next = 19;
               return _regenerator2.default.awrap(this.getTcrContract());
 
-            case 15:
+            case 19:
               contract = _context30.sent;
               hash = this.getHash(videoId);
               return _context30.abrupt('return', contract.methods.exit(hash).send());
 
-            case 18:
+            case 22:
             case 'end':
               return _context30.stop();
           }

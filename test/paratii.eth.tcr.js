@@ -22,6 +22,8 @@ describe('paratii.eth.tcr:', function () {
   let videoId6 = 'test'
   let videoId7 = 'test2'
 
+  let id = 'some-new-id'
+
   it('should be able to get minDeposit', async function () {
     let amount = await paratii.eth.tcr.getMinDeposit()
     assert.isOk(amount)
@@ -213,7 +215,6 @@ describe('paratii.eth.tcr:', function () {
   })
 
   it('video should enter the whitelist succesfully if no challenge is made in the application stage', async function () {
-    let id = 'some-new-id'
     let amount = 5
 
     // haven't applied yet
@@ -255,5 +256,49 @@ describe('paratii.eth.tcr:', function () {
     // the video should be isWhitelisted
     isWhitelisted = await paratii.eth.tcr.isWhitelisted(id)
     assert.isTrue(isWhitelisted)
+  })
+
+  it('exit() should work correctly', async function () {
+    // there should already be an application (see previous test)
+    let appWasMade = await paratii.eth.tcr.appWasMade(id)
+    assert.isTrue(appWasMade)
+
+    // should be already whitelisted (see previous test)
+    let isWhitelisted = await paratii.eth.tcr.isWhitelisted(id)
+    assert.isTrue(isWhitelisted)
+
+    // there shouldn't be challenges going on
+    let challengeExists = await paratii.eth.tcr.challengeExists(id)
+    assert.isFalse(challengeExists)
+
+    // save the balance before
+    let balanceBefore = await paratii.eth.balanceOf(paratii.eth.getAccount(), 'PTI')
+
+    // get the deposit of the listing
+    let l = await paratii.eth.tcr.getListing(id)
+    let unstakedDeposit = l.unstakedDeposit
+
+    // exit the whitelist
+    let tx = await paratii.eth.tcr.exit(id)
+    assert.isOk(tx)
+    assert.isOk(tx.events._ListingRemoved)
+    assert.isOk(tx.events._ListingWithdrawn)
+
+    // get the balance after
+    let balanceAfter = await paratii.eth.balanceOf(paratii.eth.getAccount(), 'PTI')
+
+    // token should be returned to the owner
+    assert.equal(
+      paratii.eth.web3.utils.toBN(balanceBefore.toString())
+      .add(paratii.eth.web3.utils.toBN(unstakedDeposit.toString())).toString()
+    , paratii.eth.web3.utils.toBN(balanceAfter.toString()).toString())
+
+    // there shouldn't be an application
+    appWasMade = await paratii.eth.tcr.appWasMade(id)
+    assert.isFalse(appWasMade)
+
+    // the video shouldn't be isWhitelisted
+    isWhitelisted = await paratii.eth.tcr.isWhitelisted(id)
+    assert.isFalse(isWhitelisted)
   })
 })
