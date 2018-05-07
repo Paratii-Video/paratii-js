@@ -978,24 +978,33 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'challengeExists',
     value: function challengeExists(videoId) {
-      var challengeID, challenge;
+      var challenge, challengeID;
       return _regenerator2.default.async(function challengeExists$(_context26) {
         while (1) {
           switch (_context26.prev = _context26.next) {
             case 0:
-              _context26.next = 2;
+              challenge = void 0;
+              _context26.next = 3;
               return _regenerator2.default.awrap(this.getChallengeId(videoId));
 
-            case 2:
+            case 3:
               challengeID = _context26.sent;
-              _context26.next = 5;
+
+              if (!(challengeID !== 0)) {
+                _context26.next = 8;
+                break;
+              }
+
+              _context26.next = 7;
               return _regenerator2.default.awrap(this.getChallenge(challengeID));
 
-            case 5:
+            case 7:
               challenge = _context26.sent;
+
+            case 8:
               return _context26.abrupt('return', challengeID > 0 && !challenge.resolved);
 
-            case 7:
+            case 9:
             case 'end':
               return _context26.stop();
           }

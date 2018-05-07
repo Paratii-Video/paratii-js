@@ -1,5 +1,5 @@
 import { Paratii } from '../src/paratii.js'
-import { address, testConfig, privateKey17 } from './utils.js'
+import { address, testConfig, privateKey17, address17 } from './utils.js'
 import { assert } from 'chai'
 import { BigNumber } from 'bignumber.js'
 
@@ -39,12 +39,15 @@ describe('paratii.eth.tcr:', function () {
     let token = await paratii.eth.getContract('ParatiiToken')
     let tcr = await paratii.eth.tcr.getTcrContract()
 
+    // just in case, this address should already have the max supply of the token
     let tx = await token.methods.transfer(address, 1000).send()
     assert.isOk(tx)
     let balanceBefore = await token.methods.balanceOf(address).call()
+
     // console.log('balanceBefore: ', balanceBefore)
     // let balance = await token.methods.balanceOf(address).call()
     // assert.equal(balanceBefore, 1000)
+
     let amountToAllowWei = paratii.eth.web3.utils.toWei('100')
     let amountToAllowInHex = paratii.eth.web3.utils.toHex(amountToAllowWei)
     let tx2 = await token.methods.approve(tcr.options.address, amountToAllowInHex).send()
@@ -153,6 +156,7 @@ describe('paratii.eth.tcr:', function () {
     assert.equal(paratii.eth.tcr.getSalt(videoId6), salt1)
     assert.equal(paratii.eth.tcr.getSalt(videoId7), salt2)
   })
+
   it('clearNodeLocalStorage() should delete all the key value pairs', async function () {
     paratii.eth.tcr.clearNodeLocalStorage()
 
@@ -208,7 +212,49 @@ describe('paratii.eth.tcr:', function () {
 
     assert.equal(await paratii.eth.tcr.challengeExists(videoId5), res)
   })
-  it.skip('exit() should throw errors if conditions aren\'t fulfilled', async function () {
-    // need to be implemented after the challenge implementation
+
+  it('video should enter the whitelist succesfully if no challenge is made in the application stage', async function () {
+    let id = 'some-new-id'
+    let amount = 5
+
+    // haven't applied yet
+    let appWasMade = await paratii.eth.tcr.appWasMade(id)
+    assert.isFalse(appWasMade)
+
+    // apply
+    let result = await paratii.eth.tcr.checkEligiblityAndApply(id, paratii.eth.web3.utils.toWei(amount.toString()))
+    assert.isTrue(result)
+
+    // applied
+    appWasMade = await paratii.eth.tcr.appWasMade(id)
+    assert.isTrue(appWasMade)
+
+    // shouldn't be whitelisted yet
+    let isWhitelisted = await paratii.eth.tcr.isWhitelisted(id)
+    assert.isFalse(isWhitelisted)
+
+    // there shouldn't be challenges going on
+    let challengeExists = await paratii.eth.tcr.challengeExists(id)
+    assert.isFalse(challengeExists)
+
+    // make tx so that the apply stage length is passed
+    let i
+    let n = await paratii.eth.tcr.getApplyStageLen()
+    for (i = 0; i <= n; i++) {
+      await paratii.eth.transfer(address17, 1, 'PTI')
+    }
+
+    // should be true because no challenges are going on and the apply stage should be finished
+    let canBeWhitelisted = await paratii.eth.tcr.canBeWhitelisted(id)
+    assert.isTrue(canBeWhitelisted)
+
+    // the video should enter the whitelist succesfully
+    let updateTx = await paratii.eth.tcr.updateStatus(id)
+    assert.isOk(updateTx)
+    assert.isOk(updateTx.events._ApplicationWhitelisted)
+
+    // the video should be isWhitelisted
+    isWhitelisted = await paratii.eth.tcr.isWhitelisted(id)
+    assert.isTrue(isWhitelisted)
   })
 })

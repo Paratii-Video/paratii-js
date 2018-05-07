@@ -400,8 +400,10 @@ export class ParatiiEthTcr {
      * @example let challenge = await paratii.eth.tcr.challengeExists(1)
      */
   async challengeExists (videoId) {
+    let challenge
     let challengeID = await this.getChallengeId(videoId)
-    let challenge = await this.getChallenge(challengeID)
+
+    if (challengeID !== 0) { challenge = await this.getChallenge(challengeID) }
 
     return (challengeID > 0 && !challenge.resolved)
   }
@@ -643,7 +645,7 @@ export class ParatiiEthTcr {
     // Check if the position is valid.
     let isValidPosition = await this.validPosition(prevNode, pollID, this.eth.getAccount(), amount)
     if (!isValidPosition) {
-      throw new Error(`position is invalid`)
+      throw new Error('position is invalid')
     }
 
     let tx = await tcrPLCRVoting.methods.commitVote(
