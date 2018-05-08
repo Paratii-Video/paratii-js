@@ -4,6 +4,8 @@
 
 `paratii.js` is the main entry point and abstraction layer to interact with Paratii, a decentralized platform for video distribution.
 
+Documentation on `paratii.js` can be found [here](https://docs.paratii.video/).
+
 More information about the Paratii Project can be found on [paratii.video](http://paratii.video/), or in our [blueprint](https://github.com/Paratii-Video/paratii-player/wiki/Paratii-Blueprint). Join the discussion on [gitter](https://gitter.im/Paratii-Video).
 
 ## Installation

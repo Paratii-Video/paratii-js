@@ -19,18 +19,22 @@ export class ParatiiUsers {
   }
   /**
    * @typedef {Array} userSchema
-   * @property {string=} id univocal video identifier
+   * @property {string} id the Ethereum address of the user
    * @property {string=} name
    * @property {string=} email
    */
+
   /**
    * Creates a user, fields id, name and email go to the smart contract Users, other fields are stored on IPFS.
    * @param  {userSchema}  options information about the video ( id, name, email ... )
    * @return {Promise}         the id of the newly created user
-   * @example await paratii.users.create({
-   *   id: 'some-user-id', //must be a valid ethereum address
-   *   name: 'A user name',
-   *   email: 'some@email.com',
+   * @example let userData = {
+   *                    id: '0x12456....',
+   *                    name: 'Humbert Humbert',
+   *                    email: 'humbert@humbert.ru',
+   *                    ipfsData: 'some-hash'
+   *              }
+   *   let result = await paratii.eth.users.create(userData)
    *  })
    */
   // FIXME: do some joi validation here
