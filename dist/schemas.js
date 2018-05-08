@@ -40,6 +40,7 @@ var ethSchema = joi.object({
  * @property {Array=} swarm signaling server for finding ipfs nodes
  * @property {string=} transcoderDropUrl url for the express uploader
  * @property {number=} xhrChunkSize max chunk size for the express uploader
+ * @property {Ipfs=} instance a pre-existing IPFS instance.
  * @example {
  *   bitswap.maxMessageSize: 262144
  *   chunkSize : 131072
@@ -61,8 +62,8 @@ var ipfsSchema = joi.object({
   maxFileSize: joi.number().default(800 * 1024 * 1024),
   defaultTranscoder: joi.string().default('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'),
   remoteIPFSNode: joi.string().default('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'),
-  transcoderDropUrl: joi.string().default('https://uploader.paratii.video/api/v1/transcode')
-
+  transcoderDropUrl: joi.string().default('https://uploader.paratii.video/api/v1/transcode'),
+  instance: joi.any().default(null)
 }).default();
 
 /**

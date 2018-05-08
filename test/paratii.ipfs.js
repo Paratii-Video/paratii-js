@@ -1,6 +1,7 @@
 import Paratii from '../src/paratii.js'
 import { ParatiiIPFS } from '../src/paratii.ipfs.js'
 import { assert, expect } from 'chai'
+import Ipfs from 'ipfs'
 
 describe('ParatiiIPFS: :', function () {
   let paratiiIPFS
@@ -74,5 +75,20 @@ describe('ParatiiIPFS: :', function () {
     let paratii = await new Paratii()
     let result = await paratii.ipfs.addAndPinJSON({test: 1})
     assert.isOk(result)
+  })
+
+  it('should be able to use a pre-existing ipfs instance', async function () {
+    let repoPath = '/tmp/pre-existing-ipfs'
+    let existingIPFS = new ParatiiIPFS({
+      ipfs: {
+        instance: new Ipfs({
+          repo: repoPath
+        })
+      }
+    })
+
+    assert.isOk(existingIPFS)
+    assert.isOk(existingIPFS.ipfs)
+    assert.equal(existingIPFS.ipfs._repo.path, repoPath)
   })
 })

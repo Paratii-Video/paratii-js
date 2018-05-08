@@ -36,7 +36,15 @@ export class ParatiiIPFS extends EventEmitter {
     this.config = config
     this.config.ipfs = result.value.ipfs
     this.config.account = result.value.account
+    // TODO change this to some other name. this is wrong.
+    // because `this` isn't an ipfs instance.
     this.config.ipfsInstance = this
+
+    // ability to use a pre-existing IPFS instance.
+    if (this.config.ipfs && this.config.ipfs.instance) {
+      this.ipfs = this.config.ipfs.instance
+    }
+
     this.local = new ParatiiIPFSLocal(config)
     this.remote = new ParatiiIPFSRemote({ipfs: this.config.ipfs, paratiiIPFS: this})
     this.transcoder = new ParatiiTranscoder({ipfs: this.config.ipfs, paratiiIPFS: this})
