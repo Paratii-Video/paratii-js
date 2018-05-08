@@ -79,15 +79,21 @@ describe('ParatiiIPFS: :', function () {
 
   it('should be able to use a pre-existing ipfs instance', async function () {
     let repoPath = '/tmp/pre-existing-ipfs'
+    let ipfs = new Ipfs({
+      bitswap: {
+        maxMessageSize: 256 * 1024
+      },
+      repo: repoPath,
+      start: true
+    })
     let existingIPFS = new ParatiiIPFS({
       ipfs: {
-        instance: new Ipfs({
-          repo: repoPath
-        })
+        instance: ipfs
       }
     })
 
     assert.isOk(existingIPFS)
+    await existingIPFS.getIPFSInstance()
     assert.isOk(existingIPFS.ipfs)
     assert.equal(existingIPFS.ipfs._repo.path, repoPath)
   })

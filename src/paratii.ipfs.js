@@ -40,11 +40,6 @@ export class ParatiiIPFS extends EventEmitter {
     // because `this` isn't an ipfs instance.
     this.config.ipfsInstance = this
 
-    // ability to use a pre-existing IPFS instance.
-    if (this.config.ipfs && this.config.ipfs.instance) {
-      this.ipfs = this.config.ipfs.instance
-    }
-
     this.local = new ParatiiIPFSLocal(config)
     this.remote = new ParatiiIPFSRemote({ipfs: this.config.ipfs, paratiiIPFS: this})
     this.transcoder = new ParatiiTranscoder({ipfs: this.config.ipfs, paratiiIPFS: this})
@@ -180,27 +175,32 @@ export class ParatiiIPFS extends EventEmitter {
         // there will be no joi in IPFS (pun indended)
         import(/* webpackChunkName: 'ipfs' */ 'ipfs') // eslint-disable-line
         .then((Ipfs) => {
-          let ipfs = new Ipfs({
-            bitswap: {
-              // maxMessageSize: 256 * 1024
-              maxMessageSize: this.config.ipfs['bitswap.maxMessageSize']
-            },
-            start: true,
-            repo: config.ipfs.repo || '/tmp/test-repo-' + String(Math.random()),
-            config: {
-              Addresses: {
-                Swarm: this.config.ipfs.swarm
-                // [
-                //   '/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star',
-                //   '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/'
-                // ]
+          let ipfs
+          if (this.config.ipfs.instance) {
+            ipfs = this.config.ipfs.instance
+          } else {
+            ipfs = new Ipfs({
+              bitswap: {
+                // maxMessageSize: 256 * 1024
+                maxMessageSize: this.config.ipfs['bitswap.maxMessageSize']
               },
-              Bootstrap: this.config.ipfs.bootstrap
-              // [
-              //   '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
-              // ]
-            }
-          })
+              start: true,
+              repo: config.ipfs.repo || '/tmp/test-repo-' + String(Math.random()),
+              config: {
+                Addresses: {
+                  Swarm: this.config.ipfs.swarm
+                  // [
+                  //   '/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star',
+                  //   '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/'
+                  // ]
+                },
+                Bootstrap: this.config.ipfs.bootstrap
+                // [
+                //   '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
+                // ]
+              }
+            })
+          }
 
           this.ipfs = ipfs
 
@@ -220,25 +220,8 @@ export class ParatiiIPFS extends EventEmitter {
               let peerInfo = id
               this.id = id
               this.log(`[IPFS] id:  ${peerInfo}`)
-              let ptiAddress = this.config.account.address || 'no_address'
-              this.protocol = new Protocol(
-                ipfs._libp2pNode,
-                ipfs._repo.blocks,
-                // add ETH Address here.
-                ptiAddress
-              )
 
-              this._node = ipfs
-              this.remote._node = ipfs
-
-              this.protocol.notifications.on('message:new', (peerId, msg) => {
-                this.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg)
-              })
-              // emit all commands.
-              // NOTE : this will be changed once protocol upgrades are ready.
-              this.protocol.notifications.on('command', (peerId, command) => {
-                this.emit('protocol:incoming', peerId, command)
-              })
+              this.initProtocol(ipfs)
 
               this.ipfs = ipfs
               this.protocol.start(() => {
@@ -258,6 +241,28 @@ export class ParatiiIPFS extends EventEmitter {
           })
         })
       }
+    })
+  }
+
+  initProtocol (ipfs) {
+    let ptiAddress = this.config.account.address || 'no_address'
+    this.protocol = new Protocol(
+      ipfs._libp2pNode,
+      ipfs._repo.blocks,
+      // add ETH Address here.
+      ptiAddress
+    )
+
+    this._node = ipfs
+    this.remote._node = ipfs
+
+    this.protocol.notifications.on('message:new', (peerId, msg) => {
+      this.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg)
+    })
+    // emit all commands.
+    // NOTE : this will be changed once protocol upgrades are ready.
+    this.protocol.notifications.on('command', (peerId, command) => {
+      this.emit('protocol:incoming', peerId, command)
     })
   }
 }
