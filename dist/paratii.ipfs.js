@@ -98,7 +98,10 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     _this.config = config;
     _this.config.ipfs = result.value.ipfs;
     _this.config.account = result.value.account;
+    // TODO change this to some other name. this is wrong.
+    // because `this` isn't an ipfs instance.
     _this.config.ipfsInstance = _this;
+
     _this.local = new _paratiiIpfsLocal.ParatiiIPFSLocal(config);
     _this.remote = new _paratiiIpfsRemote.ParatiiIPFSRemote({ ipfs: _this.config.ipfs, paratiiIPFS: _this });
     _this.transcoder = new _paratiiTranscoder.ParatiiTranscoder({ ipfs: _this.config.ipfs, paratiiIPFS: _this });
@@ -301,27 +304,32 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
             return require('ipfs');
           }) // eslint-disable-line
           .then(function (Ipfs) {
-            var ipfs = new Ipfs({
-              bitswap: {
-                // maxMessageSize: 256 * 1024
-                maxMessageSize: _this5.config.ipfs['bitswap.maxMessageSize']
-              },
-              start: true,
-              repo: config.ipfs.repo || '/tmp/test-repo-' + String(Math.random()),
-              config: {
-                Addresses: {
-                  Swarm: _this5.config.ipfs.swarm
-                  // [
-                  //   '/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star',
-                  //   '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/'
-                  // ]
+            var ipfs = void 0;
+            if (_this5.config.ipfs.instance) {
+              ipfs = _this5.config.ipfs.instance;
+            } else {
+              ipfs = new Ipfs({
+                bitswap: {
+                  // maxMessageSize: 256 * 1024
+                  maxMessageSize: _this5.config.ipfs['bitswap.maxMessageSize']
                 },
-                Bootstrap: _this5.config.ipfs.bootstrap
-                // [
-                //   '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
-                // ]
-              }
-            });
+                start: true,
+                repo: config.ipfs.repo || '/tmp/test-repo-' + String(Math.random()),
+                config: {
+                  Addresses: {
+                    Swarm: _this5.config.ipfs.swarm
+                    // [
+                    //   '/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star',
+                    //   '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/'
+                    // ]
+                  },
+                  Bootstrap: _this5.config.ipfs.bootstrap
+                  // [
+                  //   '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
+                  // ]
+                }
+              });
+            }
 
             _this5.ipfs = ipfs;
 
@@ -341,22 +349,8 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
                 var peerInfo = id;
                 _this5.id = id;
                 _this5.log('[IPFS] id:  ' + peerInfo);
-                var ptiAddress = _this5.config.account.address || 'no_address';
-                _this5.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
-                // add ETH Address here.
-                ptiAddress);
 
-                _this5._node = ipfs;
-                _this5.remote._node = ipfs;
-
-                _this5.protocol.notifications.on('message:new', function (peerId, msg) {
-                  _this5.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
-                });
-                // emit all commands.
-                // NOTE : this will be changed once protocol upgrades are ready.
-                _this5.protocol.notifications.on('command', function (peerId, command) {
-                  _this5.emit('protocol:incoming', peerId, command);
-                });
+                _this5.initProtocol(ipfs);
 
                 _this5.ipfs = ipfs;
                 _this5.protocol.start(function () {
@@ -376,6 +370,28 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
             });
           });
         }
+      });
+    }
+  }, {
+    key: 'initProtocol',
+    value: function initProtocol(ipfs) {
+      var _this6 = this;
+
+      var ptiAddress = this.config.account.address || 'no_address';
+      this.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
+      // add ETH Address here.
+      ptiAddress);
+
+      this._node = ipfs;
+      this.remote._node = ipfs;
+
+      this.protocol.notifications.on('message:new', function (peerId, msg) {
+        _this6.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
+      });
+      // emit all commands.
+      // NOTE : this will be changed once protocol upgrades are ready.
+      this.protocol.notifications.on('command', function (peerId, command) {
+        _this6.emit('protocol:incoming', peerId, command);
       });
     }
   }]);
