@@ -1,5 +1,5 @@
 import { Paratii } from '../src/paratii.js'
-import { address, testConfig, privateKey17, address17 } from './utils.js'
+import { address, testConfig, privateKey17, address17, challengeFromDifferentAccount } from './utils.js'
 import { assert } from 'chai'
 import { BigNumber } from 'bignumber.js'
 
@@ -13,6 +13,7 @@ describe('paratii.eth.tcr:', function () {
     await paratii.eth.deployContracts()
   })
 
+  // some are declared directly in test, be careful with that
   let videoId = 'some-video-id'
   let videoId2 = 'some-other-video-id'
   let videoId3 = 'another-one'
@@ -170,42 +171,10 @@ describe('paratii.eth.tcr:', function () {
     // application for videoId5 --------------------------------------------------
     let result = await paratii.eth.tcr.checkEligiblityAndApply(videoId5, paratii.eth.web3.utils.toWei('5'))
     assert.isOk(result, result)
-    let didVideoApply = await paratii.eth.tcr.appWasMade(videoId5)
-    assert.isOk(didVideoApply)
+    let appWasMade = await paratii.eth.tcr.appWasMade(videoId5)
+    assert.isOk(appWasMade)
 
-    // create challenger account --------------------------------------------------
-    let challengerAccount = await paratii.eth.web3.eth.accounts.wallet.add({
-      privateKey: privateKey17
-    })
-    assert.isOk(challengerAccount)
-
-    // fund address1
-    let token = await paratii.eth.getContract('ParatiiToken')
-    assert.isOk(token)
-    let transferTx = await token.methods.transfer(
-      challengerAccount.address,
-      paratii.eth.web3.utils.toWei('40')
-    ).send()
-
-    assert.isOk(transferTx)
-    let balanceOfAddress1 = await token.methods.balanceOf(challengerAccount.address).call()
-    assert.equal(balanceOfAddress1, paratii.eth.web3.utils.toWei('40'))
-
-    let approval = await token.methods.approve(
-      tcrRegistry.options.address, paratii.eth.web3.utils.toWei('40')
-    ).send({from: paratii.eth.web3.eth.accounts[1]}) // send from challengerAccount
-    assert.isOk(approval)
-    assert.isOk(approval.events.Approval)
-
-    let challengeTx = await tcrRegistry.methods.challenge(
-      paratii.eth.tcr.getHash(videoId5),
-      ''
-    ).send({from: paratii.eth.web3.eth.accounts[1]})
-
-    assert.isOk(challengeTx)
-    assert.isOk(challengeTx.events._Challenge)
-    let challengeID = challengeTx.events._Challenge.returnValues.challengeID
-    assert.isOk(challengeID)
+    await challengeFromDifferentAccount(privateKey17, videoId5, 40, paratii)
 
     let res = await tcrRegistry.methods.challengeExists(
       paratii.eth.tcr.getHash(videoId5)
@@ -300,5 +269,9 @@ describe('paratii.eth.tcr:', function () {
     // the video shouldn't be isWhitelisted
     isWhitelisted = await paratii.eth.tcr.isWhitelisted(id)
     assert.isFalse(isWhitelisted)
+  })
+
+  it.skip('user should be able to vote on a non-whitelisted video', async function () {
+    // TODO
   })
 })

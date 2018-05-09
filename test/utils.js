@@ -139,6 +139,60 @@ const mockDb = function () {
     .reply(200, search)
 }
 
+/**
+ * utility function for testing. make the challenge from the privateKey passed
+ * @param  {string} privateKey   private key of the challenger
+ * @param  {string} videoId      videoId to be challenged
+ * @param  {integer} amountToFund amount to fund the challenger
+ * @param  {Object} paratii      paratii instance
+ * @private
+ */
+async function challengeFromDifferentAccount (privateKey, videoId, amountToFund, paratii) {
+  let tcrRegistry = await paratii.eth.tcr.getTcrContract()
+  chai.assert.isOk(tcrRegistry)
+
+  // create challenger account --------------------------------------------------
+  let challengerAccount = await paratii.eth.web3.eth.accounts.wallet.add({
+    privateKey: privateKey17
+  })
+  chai.assert.isOk(challengerAccount)
+  // index of the last added accounts
+  let index = paratii.eth.web3.eth.accounts.wallet.length - 1
+  chai.assert.equal(challengerAccount.address, paratii.eth.web3.eth.accounts.wallet[index].address)
+
+  // fund address1 of the challenger account -------------------------------------
+  let token = await paratii.eth.getContract('ParatiiToken')
+  chai.assert.isOk(token)
+  let transferTx = await token.methods.transfer(
+    challengerAccount.address,
+    paratii.eth.web3.utils.toWei(amountToFund.toString())
+  ).send()
+  chai.assert.isOk(transferTx)
+  let balanceOfAddress1 = await token.methods.balanceOf(challengerAccount.address).call()
+  chai.assert.equal(balanceOfAddress1, paratii.eth.web3.utils.toWei(amountToFund.toString()))
+
+  // approve the tcr to spend address1 tokens ------------------------------------
+  let approval = await token.methods.approve(
+    tcrRegistry.options.address, paratii.eth.web3.utils.toWei(amountToFund.toString())
+  ).send({from: challengerAccount.address}) // send from challengerAccount
+  chai.assert.isOk(approval)
+  chai.assert.isOk(approval.events.Approval)
+
+  // start the challenge from the challenger account -----------------------------
+  let challengeTx = await tcrRegistry.methods.challenge(
+    paratii.eth.tcr.getHash(videoId),
+    ''
+  ).send({from: challengerAccount.address})
+  chai.assert.isOk(challengeTx)
+  chai.assert.isOk(challengeTx.events._Challenge)
+  let challengeID = challengeTx.events._Challenge.returnValues.challengeID
+  chai.assert.isOk(challengeID)
+
+  // check that the challenge is actually from the challengerAccount and not from the default one
+  let challenge = await tcrRegistry.methods.challenges(challengeID).call()
+  chai.assert.equal(challengerAccount.address, challenge.challenger)
+}
+
 export {
   address,
   address1,
@@ -157,5 +211,6 @@ export {
   hashedVoucherCode11,
   testConfig,
   testConfigWS,
-  testAccount
+  testAccount,
+  challengeFromDifferentAccount
 }
