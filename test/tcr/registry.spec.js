@@ -111,18 +111,24 @@ describe('TCR Registry:', function () {
   })
 
   it('should be able to start a challenge', async function () {
-    await challengeFromDifferentAccount(privateKey17, 'test_video_id', 40, paratii)
+    challengeID = await challengeFromDifferentAccount(privateKey17, 'test_video_id', 40, paratii)
   })
 
-  it.skip('should be able to vote on existing challenge', async function () {
+  it('should be able to vote on existing challenge', async function () {
     // create Voter account.
     let voterAccount = await paratii.eth.web3.eth.accounts.create('54674321§3456764321§3456743')
     let addedVoterAccount = await paratii.eth.web3.eth.accounts.wallet.add({
       privateKey: voterAccount.privateKey
     })
+    // index of the last added accounts
+    let index = paratii.eth.web3.eth.accounts.wallet.length - 1
 
     assert.isOk(voterAccount)
     assert.isOk(addedVoterAccount)
+    assert.isOk(paratii.eth.web3.eth.accounts.wallet[index])
+    assert.equal(voterAccount.address, paratii.eth.web3.eth.accounts.wallet[index].address)
+    assert.equal(voterAccount.address, addedVoterAccount.address)
+
     // console.log('voterAccount: ', voterAccount)
     // console.log('addedVoterAccount: ', addedVoterAccount)
 
@@ -133,18 +139,20 @@ describe('TCR Registry:', function () {
       voterAccount.address,
       paratii.eth.web3.utils.toWei('40')
     ).send()
-
     assert.isOk(transferTx)
     let balanceOfVoter = await token.methods.balanceOf(voterAccount.address).call()
     assert.equal(balanceOfVoter, paratii.eth.web3.utils.toWei('40'))
     // console.log('balanceOfVoter: ', balanceOfVoter)
+
     // approve PLCRVoting
     let approveTx = await token.methods.approve(
       tcrPLCRVoting.options.address,
       paratii.eth.web3.utils.toWei('1')
-    ).send({from: paratii.eth.web3.eth.accounts[2]})
+    ).send({from: voterAccount.address})
     assert.isOk(approveTx)
+    assert.isOk(approveTx.events.Approval)
     // console.log('approveTx', approveTx)
+
     // voting process.
     // 1. create voteSaltHash
     let vote = 1
@@ -155,11 +163,12 @@ describe('TCR Registry:', function () {
     // 2. request voting rights as voter.
     let requestVotingRightsTx = await tcrPLCRVoting.methods.requestVotingRights(
       amount
-    ).send({from: paratii.eth.web3.eth.accounts[2]})
+    ).send({from: voterAccount.address})
 
     // console.log('requestVotingRightsTx: ', requestVotingRightsTx)
     assert.isOk(requestVotingRightsTx)
     assert.isOk(requestVotingRightsTx.events._VotingRightsGranted)
+
     // 3. getPrevious PollID
     let prevPollID = await tcrPLCRVoting.methods.getInsertPointForNumTokens(
       voterAccount.address,
@@ -175,7 +184,7 @@ describe('TCR Registry:', function () {
       voteSaltHash,
       amount,
       prevPollID
-    ).send({from: paratii.eth.web3.eth.accounts[2]})
+    ).send({from: voterAccount.address})
 
     // console.log('commitVoteTx', commitVoteTx)
     assert.isOk(commitVoteTx)

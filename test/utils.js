@@ -145,6 +145,7 @@ const mockDb = function () {
  * @param  {string} videoId      videoId to be challenged
  * @param  {integer} amountToFund amount to fund the challenger
  * @param  {Object} paratii      paratii instance
+ * @return {Promise} that resolves in the challengeId
  * @private
  */
 async function challengeFromDifferentAccount (privateKey, videoId, amountToFund, paratii) {
@@ -191,6 +192,8 @@ async function challengeFromDifferentAccount (privateKey, videoId, amountToFund,
   // check that the challenge is actually from the challengerAccount and not from the default one
   let challenge = await tcrRegistry.methods.challenges(challengeID).call()
   chai.assert.equal(challengerAccount.address, challenge.challenger)
+
+  return challengeID
 }
 
 export {
