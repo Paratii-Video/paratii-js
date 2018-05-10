@@ -1,5 +1,6 @@
 import nock from 'nock'
 import chai from 'chai'
+import { BigNumber } from 'bignumber.js'
 
 chai.use(require('chai-as-promised'))
 chai.use(require('chai-bignumber')())
@@ -140,7 +141,11 @@ const mockDb = function () {
 }
 
 /**
- * utility function for testing. make the challenge from the privateKey passed
+ * utility function for testing.
+ * 1. Creates the account and adds it to the wallet
+ * 2. fund the account
+ * 3. gives the approval to the tcr
+ * 4. starts the challenge
  * @param  {string} privateKey   private key of the challenger
  * @param  {string} videoId      videoId to be challenged
  * @param  {integer} amountToFund amount to fund the challenger
@@ -154,27 +159,33 @@ async function challengeFromDifferentAccount (privateKey, videoId, amountToFund,
 
   // create challenger account --------------------------------------------------
   let challengerAccount = await paratii.eth.web3.eth.accounts.wallet.add({
-    privateKey: privateKey17
+    privateKey: privateKey
   })
   chai.assert.isOk(challengerAccount)
-  // index of the last added accounts
   let index = paratii.eth.web3.eth.accounts.wallet.length - 1
   chai.assert.equal(challengerAccount.address, paratii.eth.web3.eth.accounts.wallet[index].address)
 
-  // fund address1 of the challenger account -------------------------------------
   let token = await paratii.eth.getContract('ParatiiToken')
   chai.assert.isOk(token)
+
+  let startingFund = new BigNumber(await token.methods.balanceOf(challengerAccount.address).call())
+
+  // fund address1 of the challenger account -------------------------------------
+  let amountToTransferInWei = paratii.eth.web3.utils.toWei(amountToFund.toString())
+  let amountToTransferInHex = paratii.eth.web3.utils.toHex(amountToTransferInWei)
   let transferTx = await token.methods.transfer(
     challengerAccount.address,
-    paratii.eth.web3.utils.toWei(amountToFund.toString())
+    amountToTransferInHex
   ).send()
   chai.assert.isOk(transferTx)
-  let balanceOfAddress1 = await token.methods.balanceOf(challengerAccount.address).call()
-  chai.assert.equal(balanceOfAddress1, paratii.eth.web3.utils.toWei(amountToFund.toString()))
+  let balanceOfAddress1 = new BigNumber(await token.methods.balanceOf(challengerAccount.address).call())
+  let amount = new BigNumber(paratii.eth.web3.utils.toWei(amountToFund.toString()))
+  chai.assert.equal(Number(balanceOfAddress1), Number(amount.plus(startingFund)))
 
   // approve the tcr to spend address1 tokens ------------------------------------
   let approval = await token.methods.approve(
-    tcrRegistry.options.address, paratii.eth.web3.utils.toWei(amountToFund.toString())
+    tcrRegistry.options.address,
+    amountToTransferInHex
   ).send({from: challengerAccount.address}) // send from challengerAccount
   chai.assert.isOk(approval)
   chai.assert.isOk(approval.events.Approval)

@@ -1,5 +1,5 @@
 import { Paratii } from '../src/paratii.js'
-import { address, testConfig, privateKey17, address17, challengeFromDifferentAccount } from './utils.js'
+import { address, testConfig, address17, challengeFromDifferentAccount } from './utils.js'
 import { assert } from 'chai'
 import { BigNumber } from 'bignumber.js'
 
@@ -19,11 +19,14 @@ describe('paratii.eth.tcr:', function () {
   let videoId3 = 'another-one'
   let videoId4 = 'not-applied'
   let videoId5 = 'test-id'
-
   let videoId6 = 'test'
   let videoId7 = 'test2'
 
   let id = 'some-new-id'
+
+  // to avoid problem with interaction with other tests
+  let myPrivateKey = '0x7aa336aece017378c50b56c0f831aaab2a61d44cf75f4e658a20926e2cfb74b5'
+  // let myAddress = '0x6631fe5E391AB7B6Cf61e5a3eb809943D46c2adD'
 
   it('should be able to get minDeposit', async function () {
     let amount = await paratii.eth.tcr.getMinDeposit()
@@ -168,13 +171,31 @@ describe('paratii.eth.tcr:', function () {
   it('challengeExists() implemented in the lib and challengeExists() implemented in the tcr contract should always return the same value', async function () {
     let tcrRegistry = await paratii.eth.tcr.getTcrContract()
 
+    // haven't applied yet
+    let appWasMade = await paratii.eth.tcr.appWasMade(videoId5)
+    assert.isFalse(appWasMade)
+
     // application for videoId5 --------------------------------------------------
     let result = await paratii.eth.tcr.checkEligiblityAndApply(videoId5, paratii.eth.web3.utils.toWei('5'))
     assert.isOk(result, result)
-    let appWasMade = await paratii.eth.tcr.appWasMade(videoId5)
-    assert.isOk(appWasMade)
 
-    await challengeFromDifferentAccount(privateKey17, videoId5, 40, paratii)
+    // application should be successful
+    appWasMade = await paratii.eth.tcr.appWasMade(videoId5)
+    assert.isTrue(appWasMade)
+
+    // shouldn't be whitelisted yet
+    let isWhitelisted = await paratii.eth.tcr.isWhitelisted(videoId5)
+    assert.isFalse(isWhitelisted)
+
+    // there shouldn't be challenges going on
+    let challengeExists = await paratii.eth.tcr.challengeExists(videoId5)
+    assert.isFalse(challengeExists)
+
+    await challengeFromDifferentAccount(myPrivateKey, videoId5, 40, paratii)
+
+    // there should be the challenges going on
+    challengeExists = await paratii.eth.tcr.challengeExists(videoId5)
+    assert.isTrue(challengeExists)
 
     let res = await tcrRegistry.methods.challengeExists(
       paratii.eth.tcr.getHash(videoId5)
@@ -271,7 +292,7 @@ describe('paratii.eth.tcr:', function () {
     assert.isFalse(isWhitelisted)
   })
 
-  it.skip('user should be able to vote on a non-whitelisted video', async function () {
-    // TODO
+  it('user should be able to vote on a non-whitelisted video (really just messing around now)', async function () {
+
   })
 })
