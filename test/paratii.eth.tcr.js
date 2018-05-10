@@ -388,7 +388,7 @@ describe('paratii.eth.tcr:', function () {
     challengeCanBeResolved = await paratii.eth.tcr.challengeCanBeResolved(id)
     assert.isFalse(challengeCanBeResolved)
 
-    // TODO finish this
+    // TODO finish this test
 
     // the video should enter the whitelist succesfully
     // let updateTx = await paratii.eth.tcr.updateStatus(id)
@@ -444,5 +444,43 @@ describe('paratii.eth.tcr:', function () {
     // there should be a challenges going on
     let challengeExists = await paratii.eth.tcr.challengeExists(id)
     assert.isTrue(challengeExists)
+  })
+
+  it('commit and reveal schema should work correctly', async function () {
+    let id = 'new-new-id'
+    let tcrPLCRVoting = await paratii.eth.tcr.getPLCRVotingContract()
+
+    // haven't applied yet
+    let appWasMade = await paratii.eth.tcr.appWasMade(id)
+    assert.isFalse(appWasMade)
+
+    // application for id --------------------------------------------------
+    let result = await paratii.eth.tcr.checkEligiblityAndApply(id, paratii.eth.web3.utils.toWei('5'))
+    assert.isOk(result, result)
+
+    // application should be successful
+    appWasMade = await paratii.eth.tcr.appWasMade(id)
+    assert.isTrue(appWasMade)
+
+    let challengeTx = await paratii.eth.tcr.approveAndStartChallenge(id)
+    assert.isOk(challengeTx)
+    assert.isOk(challengeTx.events._Challenge)
+
+    // there should be a challenges going on
+    let challengeExists = await paratii.eth.tcr.challengeExists(id)
+    assert.isTrue(challengeExists)
+
+    // commit period should still be going
+    let isCommitPeriodActive = await paratii.eth.tcr.commitPeriodActive(challengeTx.events._Challenge.returnValues.challengeID)
+    assert.isTrue(isCommitPeriodActive)
+
+    await paratii.eth.approve(tcrPLCRVoting.options.address, paratii.eth.web3.utils.toWei('10'))
+    let commitVoteTx = await paratii.eth.tcr.commitVote(id,1,paratii.eth.web3.utils.toWei('1'))
+
+    assert.isOk(commitVoteTx)
+    assert.isOk(commitVoteTx.events._VoteCommitted)
+
+    // TODO fix this test
+
   })
 })

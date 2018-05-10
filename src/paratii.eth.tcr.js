@@ -627,8 +627,9 @@ export class ParatiiEthTcr {
    * @param  {bignumber}  amount  amount of tokens to vote with.
    * @return {Promise}         commitVote tx
    */
-  async commitVote (videoId, vote, amount) {
+  async commitVote (videoId, vote, amountInWei) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+    let amount = new BigNumber(amountInWei)
 
     let listing = await this.getListing(videoId)
     if (!listing) {
@@ -636,17 +637,25 @@ export class ParatiiEthTcr {
     }
 
     let pollID = listing.challengeID
-    if (!pollID || pollID.toNumber() === 0) {
+    if (!pollID || parseInt(pollID) === 0) {
       throw new Error(`Video ${videoId} isn't currently being challenged`)
     }
 
+    // commit period should still be going
+    let isCommitPeriodActive = await this.commitPeriodActive(pollID)
+    if(!isCommitPeriodActive){
+      throw new Error('The challenge is not in commit period')
+    }
+
     // check balance and allowance
-    let balance = await this.eth.balanceOf(this.eth.getAccount())
+    let balancen = await this.eth.balanceOf(this.eth.getAccount(),'PTI')
+    let balance = new BigNumber(balancen)
     if (balance.lt(amount)) {
       throw new Error(`${this.eth.getAccount()} balance (${balance.toString()}) is insufficient (amount = ${amount.toString()})`)
     }
 
-    let allowance = await this.eth.allowance(this.eth.getAccount(), tcrPLCRVoting.options.address)
+    let allowancen = await this.eth.allowance(this.eth.getAccount(), tcrPLCRVoting.options.address)
+    let allowance = new BigNumber(allowancen)
     if (allowance.lt(amount)) {
       throw new Error(`PLCRVoting Contract allowance (${allowance.toString()}) is < amount (${amount.toString()})`)
     }

@@ -1551,8 +1551,8 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
   }, {
     key: 'commitVote',
-    value: function commitVote(videoId, vote, amount) {
-      var tcrPLCRVoting, listing, pollID, balance, allowance, salt, secretHash, prevNode, isValidPosition, tx;
+    value: function commitVote(videoId, vote, amountInWei) {
+      var tcrPLCRVoting, amount, listing, pollID, isCommitPeriodActive, balancen, balance, allowancen, allowance, salt, secretHash, prevNode, isValidPosition, tx;
       return _regenerator2.default.async(function commitVote$(_context35) {
         while (1) {
           switch (_context35.prev = _context35.next) {
@@ -1562,58 +1562,75 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 2:
               tcrPLCRVoting = _context35.sent;
-              _context35.next = 5;
+              amount = new _bignumber.BigNumber(amountInWei);
+              _context35.next = 6;
               return _regenerator2.default.awrap(this.getListing(videoId));
 
-            case 5:
+            case 6:
               listing = _context35.sent;
 
               if (listing) {
-                _context35.next = 8;
+                _context35.next = 9;
                 break;
               }
 
               throw new Error('Can\'t find listing for video ' + videoId);
 
-            case 8:
+            case 9:
               pollID = listing.challengeID;
 
-              if (!(!pollID || pollID.toNumber() === 0)) {
-                _context35.next = 11;
+              if (!(!pollID || parseInt(pollID) === 0)) {
+                _context35.next = 12;
                 break;
               }
 
               throw new Error('Video ' + videoId + ' isn\'t currently being challenged');
 
-            case 11:
-              _context35.next = 13;
-              return _regenerator2.default.awrap(this.eth.balanceOf(this.eth.getAccount()));
+            case 12:
+              _context35.next = 14;
+              return _regenerator2.default.awrap(this.commitPeriodActive(pollID));
 
-            case 13:
-              balance = _context35.sent;
+            case 14:
+              isCommitPeriodActive = _context35.sent;
+
+              if (isCommitPeriodActive) {
+                _context35.next = 17;
+                break;
+              }
+
+              throw new Error('The challenge is not in commit period');
+
+            case 17:
+              _context35.next = 19;
+              return _regenerator2.default.awrap(this.eth.balanceOf(this.eth.getAccount(), 'PTI'));
+
+            case 19:
+              balancen = _context35.sent;
+              balance = new _bignumber.BigNumber(balancen);
 
               if (!balance.lt(amount)) {
-                _context35.next = 16;
+                _context35.next = 23;
                 break;
               }
 
               throw new Error(this.eth.getAccount() + ' balance (' + balance.toString() + ') is insufficient (amount = ' + amount.toString() + ')');
 
-            case 16:
-              _context35.next = 18;
+            case 23:
+              _context35.next = 25;
               return _regenerator2.default.awrap(this.eth.allowance(this.eth.getAccount(), tcrPLCRVoting.options.address));
 
-            case 18:
-              allowance = _context35.sent;
+            case 25:
+              allowancen = _context35.sent;
+              allowance = new _bignumber.BigNumber(allowancen);
 
               if (!allowance.lt(amount)) {
-                _context35.next = 21;
+                _context35.next = 29;
                 break;
               }
 
               throw new Error('PLCRVoting Contract allowance (' + allowance.toString() + ') is < amount (' + amount.toString() + ')');
 
-            case 21:
+            case 29:
 
               // generate salt and store it.
               salt = this.generateSalt(32);
@@ -1623,33 +1640,33 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
               // get previous PollID
 
-              _context35.next = 26;
+              _context35.next = 34;
               return _regenerator2.default.awrap(this.getLastNode(this.eth.getAccount()));
 
-            case 26:
+            case 34:
               prevNode = _context35.sent;
-              _context35.next = 29;
+              _context35.next = 37;
               return _regenerator2.default.awrap(this.validPosition(prevNode, pollID, this.eth.getAccount(), amount));
 
-            case 29:
+            case 37:
               isValidPosition = _context35.sent;
 
               if (isValidPosition) {
-                _context35.next = 32;
+                _context35.next = 40;
                 break;
               }
 
               throw new Error('position is invalid');
 
-            case 32:
-              _context35.next = 34;
+            case 40:
+              _context35.next = 42;
               return _regenerator2.default.awrap(tcrPLCRVoting.methods.commitVote(pollID, secretHash, amount, prevNode).send());
 
-            case 34:
+            case 42:
               tx = _context35.sent;
               return _context35.abrupt('return', tx);
 
-            case 36:
+            case 44:
             case 'end':
               return _context35.stop();
           }
