@@ -172,10 +172,9 @@ async function challengeFromDifferentAccount (privateKey, videoId, amountToFund,
 
   // fund address1 of the challenger account -------------------------------------
   let amountToTransferInWei = paratii.eth.web3.utils.toWei(amountToFund.toString())
-  let amountToTransferInHex = paratii.eth.web3.utils.toHex(amountToTransferInWei)
   let transferTx = await token.methods.transfer(
     challengerAccount.address,
-    amountToTransferInHex
+    amountToTransferInWei
   ).send()
   chai.assert.isOk(transferTx)
   let balanceOfAddress1 = new BigNumber(await token.methods.balanceOf(challengerAccount.address).call())
@@ -185,7 +184,7 @@ async function challengeFromDifferentAccount (privateKey, videoId, amountToFund,
   // approve the tcr to spend address1 tokens ------------------------------------
   let approval = await token.methods.approve(
     tcrRegistry.options.address,
-    amountToTransferInHex
+    amountToTransferInWei
   ).send({from: challengerAccount.address}) // send from challengerAccount
   chai.assert.isOk(approval)
   chai.assert.isOk(approval.events.Approval)
@@ -218,11 +217,12 @@ async function challengeFromDifferentAccount (privateKey, videoId, amountToFund,
  * 7. commits the vote
  * @param  {string} privateKey   private key of the voter
  * @param  {string} videoId      challengeID to vote on
+ * @param {integer} vote         1/0
  * @param  {integer} amountToFund amount to fund the voter
  * @param  {Object} paratii      paratii instance
  * @private
  */
-async function voteFromDifferentAccount (privateKey, challengeID, amountToFund, paratii) {
+async function voteFromDifferentAccount (privateKey, challengeID, vote, amountToFund, paratii) {
   let tcrPLCRVoting = await paratii.eth.tcr.getPLCRVotingContract()
   chai.assert.isOk(tcrPLCRVoting)
 
@@ -241,9 +241,10 @@ async function voteFromDifferentAccount (privateKey, challengeID, amountToFund, 
 
   // fund it.
   chai.assert.isOk(token)
+  let amountToTransferInWei = paratii.eth.web3.utils.toWei(amountToFund.toString())
   let transferTx = await token.methods.transfer(
     voterAccount.address,
-    paratii.eth.web3.utils.toWei(amountToFund.toString())
+    amountToTransferInWei
   ).send()
   chai.assert.isOk(transferTx)
   let balanceOfVoter = new BigNumber(await token.methods.balanceOf(voterAccount.address).call())
@@ -251,23 +252,22 @@ async function voteFromDifferentAccount (privateKey, challengeID, amountToFund, 
   chai.assert.equal(Number(balanceOfVoter), Number(amount.plus(startingFund)))
 
   // approve PLCRVoting
+  let amountToVoteInWei = paratii.eth.web3.utils.toWei('1')
   let approveTx = await token.methods.approve(
     tcrPLCRVoting.options.address,
-    paratii.eth.web3.utils.toWei('1')
+    amountToVoteInWei
   ).send({from: voterAccount.address})
   chai.assert.isOk(approveTx)
   chai.assert.isOk(approveTx.events.Approval)
 
   // voting process.
   // 1. create voteSaltHash
-  let vote = 1
   let salt = 420 // this gotta be some random val
   let voteSaltHash = paratii.eth.web3.utils.soliditySha3(vote, salt)
-  let voteAmount = paratii.eth.web3.utils.toWei('1')
 
   // 2. request voting rights as voter.
   let requestVotingRightsTx = await tcrPLCRVoting.methods.requestVotingRights(
-    voteAmount
+    amountToVoteInWei
   ).send({from: voterAccount.address})
 
   chai.assert.isOk(requestVotingRightsTx)
@@ -276,7 +276,7 @@ async function voteFromDifferentAccount (privateKey, challengeID, amountToFund, 
   // 3. getPrevious PollID
   let prevPollID = await tcrPLCRVoting.methods.getInsertPointForNumTokens(
     voterAccount.address,
-    voteAmount,
+    amountToVoteInWei,
     challengeID
   ).call()
   chai.assert.isOk(prevPollID)
@@ -285,13 +285,48 @@ async function voteFromDifferentAccount (privateKey, challengeID, amountToFund, 
   let commitVoteTx = await tcrPLCRVoting.methods.commitVote(
     challengeID,
     voteSaltHash,
-    voteAmount,
+    amountToVoteInWei,
     prevPollID
   ).send({from: voterAccount.address})
 
   chai.assert.isOk(commitVoteTx)
   chai.assert.isOk(commitVoteTx.events._VoteCommitted)
 }
+
+// STILL TO BE DONE
+// async function revealVoteFromDifferentAccount (privateKey, challengeID, vote, amountToFund, paratii) {
+//   let tcrPLCRVoting = await paratii.eth.tcr.getPLCRVotingContract()
+//
+//   // check if reveal Period is active
+//   let isRevealPeriodActive = await paratii.eth.tcr.revealPeriodActive(pollID)
+//   if (!isRevealPeriodActive) {
+//     throw new Error(`Reveal Period for poll ${pollID.toString()} is not active`)
+//   }
+//
+//   let didCommit = await paratii.eth.tcr.didCommit(paratii.eth.getAccount(), pollID)
+//   if (!didCommit) {
+//     throw new Error(`user ${paratii.eth.getAccount()} didn't commit to vote ${pollID.toString()}`)
+//   }
+//
+//   let didReveal = await paratii.eth.tcr.didReveal(paratii.eth.getAccount(), pollID)
+//   if (didReveal) {
+//     throw new Error(`user ${paratii.eth.getAccount()} already revealed vote ${pollID.toString()}`)
+//   }
+//
+//   let secretHash = paratii.eth.web3.utils.soliditySha3(voteOption, salt)
+//   let commitHash = await paratii.getCommitHash(paratii.eth.getAccount(), pollID)
+//   if (commitHash !== secretHash) {
+//     throw new Error(`commitHash ${commitHash} !== secretHash ${secretHash}`)
+//   }
+//
+//   let tx = await tcrPLCRVoting.methods.revealVote(
+//     pollID,
+//     voteOption,
+//     salt
+//   ).send()
+//
+//   return tx
+// }
 
 export {
   address,

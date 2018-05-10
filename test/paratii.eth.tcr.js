@@ -1,5 +1,5 @@
 import { Paratii } from '../src/paratii.js'
-import { address, testConfig, address17, challengeFromDifferentAccount } from './utils.js'
+import { address, testConfig, address17, challengeFromDifferentAccount, voteFromDifferentAccount } from './utils.js'
 import { assert } from 'chai'
 import { BigNumber } from 'bignumber.js'
 
@@ -292,7 +292,157 @@ describe('paratii.eth.tcr:', function () {
     assert.isFalse(isWhitelisted)
   })
 
-  it('user should be able to vote on a non-whitelisted video (really just messing around now)', async function () {
+  it('user should be able to vote on a non-whitelisted video', async function () {
+    let id = 'i-need-a-new-id'
+    let amount = 5
 
+    // haven't applied yet
+    let appWasMade = await paratii.eth.tcr.appWasMade(id)
+    assert.isFalse(appWasMade)
+
+    // apply
+    let result = await paratii.eth.tcr.checkEligiblityAndApply(id, paratii.eth.web3.utils.toWei(amount.toString()))
+    assert.isTrue(result)
+
+    // applied
+    appWasMade = await paratii.eth.tcr.appWasMade(id)
+    assert.isTrue(appWasMade)
+
+    // should be in apply stage
+    let isInApplyStage = await paratii.eth.tcr.isInApplyStage(id)
+    assert.isTrue(isInApplyStage)
+
+    // shouldn't be whitelisted yet
+    let isWhitelisted = await paratii.eth.tcr.isWhitelisted(id)
+    assert.isFalse(isWhitelisted)
+
+    // there shouldn't be challenges going on
+    let challengeExists = await paratii.eth.tcr.challengeExists(id)
+    assert.isFalse(challengeExists)
+
+    let challengeID = await challengeFromDifferentAccount(myPrivateKey, id, 40, paratii)
+
+    // there should be a challenges going on
+    challengeExists = await paratii.eth.tcr.challengeExists(id)
+    assert.isTrue(challengeExists)
+
+    // shouldn't be whitelisted yet
+    isWhitelisted = await paratii.eth.tcr.isWhitelisted(id)
+    assert.isFalse(isWhitelisted)
+
+    // commit period should still be going
+    let isCommitPeriodActive = await paratii.eth.tcr.commitPeriodActive(challengeID)
+    assert.isTrue(isCommitPeriodActive)
+
+    // should be in apply stage
+    isInApplyStage = await paratii.eth.tcr.isInApplyStage(id)
+    assert.isTrue(isInApplyStage)
+
+    // should be false because apply stage is not finished
+    let canBeWhitelisted = await paratii.eth.tcr.canBeWhitelisted(id)
+    assert.isFalse(canBeWhitelisted)
+
+    // CURRENT SCENARIO ----------------------------------------------------------------------
+    // the video is still in apply stage, a challenge is going on and we are in commit period,
+    // nobody has voted
+
+    // vote for
+    await voteFromDifferentAccount(myPrivateKey, challengeID, 1, 1, paratii)
+    // vote for
+    await voteFromDifferentAccount(myPrivateKey, challengeID, 1, 1, paratii)
+    // vote against
+    await voteFromDifferentAccount(myPrivateKey, challengeID, 0, 1, paratii)
+
+    // commit period should still be going
+    isCommitPeriodActive = await paratii.eth.tcr.commitPeriodActive(challengeID)
+    assert.isTrue(isCommitPeriodActive)
+
+    // apply stage should be finished
+    isInApplyStage = await paratii.eth.tcr.isInApplyStage(id)
+    assert.isFalse(isInApplyStage)
+
+    // should be false even if the apply stage is finished because the challenge is not resolved
+    canBeWhitelisted = await paratii.eth.tcr.canBeWhitelisted(id)
+    assert.isFalse(canBeWhitelisted)
+
+    // challenge can't be resolved because we are still in commit period
+    let challengeCanBeResolved = await paratii.eth.tcr.challengeCanBeResolved(id)
+    assert.isFalse(challengeCanBeResolved)
+
+    // make tx so that the commit period is finished
+    do {
+      await paratii.eth.transfer(address17, 1, 'PTI')
+      isCommitPeriodActive = await paratii.eth.tcr.commitPeriodActive(challengeID)
+    } while (isCommitPeriodActive)
+
+    // CURRENT SCENARIO ----------------------------------------------------------------------
+    // the apply stage has finished but the video can't be whitelisted because a challenge is going on,
+    // a challenge is going on and we are in reveal period,
+    // there are 3 vote (2 for, 1 against) but nobody has revealed yet
+
+    // should be false because we are in reveal period
+    canBeWhitelisted = await paratii.eth.tcr.canBeWhitelisted(id)
+    assert.isFalse(canBeWhitelisted)
+
+    // challenge can't be resolved because we are in reveal period
+    challengeCanBeResolved = await paratii.eth.tcr.challengeCanBeResolved(id)
+    assert.isFalse(challengeCanBeResolved)
+
+    // TODO finish this
+
+    // the video should enter the whitelist succesfully
+    // let updateTx = await paratii.eth.tcr.updateStatus(id)
+    // assert.isOk(updateTx)
+    // assert.isOk(updateTx.events._ApplicationWhitelisted)
+    //
+    // // the video should be isWhitelisted
+    // isWhitelisted = await paratii.eth.tcr.isWhitelisted(id)
+    // assert.isTrue(isWhitelisted)
+  })
+  it('startChallenge() should work correctly', async function () {
+    let tcrRegistry = await paratii.eth.tcr.getTcrContract()
+    let id = 'another-new-id'
+
+    // haven't applied yet
+    let appWasMade = await paratii.eth.tcr.appWasMade(id)
+    assert.isFalse(appWasMade)
+
+    // application for id --------------------------------------------------
+    let result = await paratii.eth.tcr.checkEligiblityAndApply(id, paratii.eth.web3.utils.toWei('5'))
+    assert.isOk(result, result)
+
+    // application should be successful
+    appWasMade = await paratii.eth.tcr.appWasMade(id)
+    assert.isTrue(appWasMade)
+
+    // give approval to tcr
+    await paratii.eth.approve(tcrRegistry.options.address, paratii.eth.web3.utils.toWei('40'))
+
+    await paratii.eth.tcr.startChallenge(id)
+
+    // there should be a challenges going on
+    let challengeExists = await paratii.eth.tcr.challengeExists(id)
+    assert.isTrue(challengeExists)
+  })
+  it('approveAndStartChallenge() should work correctly', async function () {
+    let id = 'another-new-new-id'
+
+    // haven't applied yet
+    let appWasMade = await paratii.eth.tcr.appWasMade(id)
+    assert.isFalse(appWasMade)
+
+    // application for id --------------------------------------------------
+    let result = await paratii.eth.tcr.checkEligiblityAndApply(id, paratii.eth.web3.utils.toWei('5'))
+    assert.isOk(result, result)
+
+    // application should be successful
+    appWasMade = await paratii.eth.tcr.appWasMade(id)
+    assert.isTrue(appWasMade)
+
+    await paratii.eth.tcr.approveAndStartChallenge(id)
+
+    // there should be a challenges going on
+    let challengeExists = await paratii.eth.tcr.challengeExists(id)
+    assert.isTrue(challengeExists)
   })
 })

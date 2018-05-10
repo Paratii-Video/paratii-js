@@ -118,6 +118,6 @@ describe('TCR Registry:', function () {
     let voterAccount = await paratii.eth.web3.eth.accounts.create('54674321§3456764321§3456743')
     assert.isOk(voterAccount)
 
-    await voteFromDifferentAccount(voterAccount.privateKey, challengeID, 40, paratii)
+    await voteFromDifferentAccount(voterAccount.privateKey, challengeID, 1, 40, paratii)
   })
 })

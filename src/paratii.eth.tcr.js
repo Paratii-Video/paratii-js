@@ -1,5 +1,6 @@
 'use strict'
 import { getInfoFromLogs } from './utils.js'
+import { BigNumber } from 'bignumber.js'
 
 const HASH_TO_KEY_PREFIX = 'HASH_KEY_'
 const SALT_KEY_PREFIX = 'SALT_KEY_'
@@ -515,6 +516,18 @@ export class ParatiiEthTcr {
     return contract.methods.exit(hash).send()
   }
 
+  async approveAndStartChallenge (videoId, _data) {
+    let listing = await this.getListing(videoId)
+    let unstakedDeposit = listing.unstakedDeposit
+    let tcrRegistry = await this.getTcrContract()
+
+    // give approval to tcr
+    await this.eth.approve(tcrRegistry.options.address, unstakedDeposit)
+    let result = await this.startChallenge(videoId, _data)
+
+    return result
+  }
+
   async startChallenge (videoId, _data) {
     if (!_data) {
       _data = ''
@@ -525,9 +538,13 @@ export class ParatiiEthTcr {
 
     // 1. check if challenger has enough minDeposit and approved the
     // contract to spend that
-    let minDeposit = await this.getMinDeposit()
-    let balance = await this.eth.balanceOf(this.eth.config.account.address)
-    let allowance = await this.eth.allowance(this.eth.getAccount, tcrRegistry.options.address)
+    let minDepositn = await this.getMinDeposit()
+    let balancen = await this.eth.balanceOf(this.eth.config.account.address, 'PTI')
+    let allowancen = await this.eth.allowance(this.eth.getAccount(), tcrRegistry.options.address)
+
+    let allowance = new BigNumber(allowancen)
+    let balance = new BigNumber(balancen)
+    let minDeposit = new BigNumber(minDepositn)
 
     if (allowance.lt(minDeposit)) {
       throw new Error(`allowance ${allowance.toString()} is less than ${minDeposit.toString()}`)
@@ -547,7 +564,7 @@ export class ParatiiEthTcr {
 
     // Prevent multiple challenges
     let listing = await this.getListing(videoId)
-    if (listing.challengeID !== 0) {
+    if (parseInt(listing.challengeID) !== 0) {
       throw new Error(`challenge for ${videoId} already exist. challengeID ${listing.challengeID}`)
     }
 
@@ -869,6 +886,15 @@ export class ParatiiEthTcr {
     return isCommitPeriodActive
   }
 
+  /**
+   * THIS COULD CAUSE PROBLEM IN PRODUCTION
+   */
+  async isInApplyStage (videoId) {
+    let listing = await this.getListing(videoId)
+    let latestBlock = await this.eth.web3.eth.getBlock('latest')
+
+    return (listing.applicationExpiry > latestBlock.timestamp)
+  }
   /**
    * Gets top element of sorted poll-linked-list
    * @param  {address}  voter the address of the voter
