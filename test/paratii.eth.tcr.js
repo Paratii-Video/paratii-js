@@ -475,12 +475,11 @@ describe('paratii.eth.tcr:', function () {
     assert.isTrue(isCommitPeriodActive)
 
     await paratii.eth.approve(tcrPLCRVoting.options.address, paratii.eth.web3.utils.toWei('10'))
-    let commitVoteTx = await paratii.eth.tcr.commitVote(id,1,paratii.eth.web3.utils.toWei('1'))
+    let commitVoteTx = await paratii.eth.tcr.commitVote(id, 1, paratii.eth.web3.utils.toWei('1'))
 
     assert.isOk(commitVoteTx)
     assert.isOk(commitVoteTx.events._VoteCommitted)
 
     // TODO fix this test
-
   })
 })

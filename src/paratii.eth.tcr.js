@@ -643,12 +643,12 @@ export class ParatiiEthTcr {
 
     // commit period should still be going
     let isCommitPeriodActive = await this.commitPeriodActive(pollID)
-    if(!isCommitPeriodActive){
+    if (!isCommitPeriodActive) {
       throw new Error('The challenge is not in commit period')
     }
 
     // check balance and allowance
-    let balancen = await this.eth.balanceOf(this.eth.getAccount(),'PTI')
+    let balancen = await this.eth.balanceOf(this.eth.getAccount(), 'PTI')
     let balance = new BigNumber(balancen)
     if (balance.lt(amount)) {
       throw new Error(`${this.eth.getAccount()} balance (${balance.toString()}) is insufficient (amount = ${amount.toString()})`)
