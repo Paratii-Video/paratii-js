@@ -56,6 +56,31 @@ export class ParatiiUsers {
   }
 
   /**
+   * Update the information of the user if the user already exists, otherwise it creates it
+   * @param  {Object}  options user informations
+   * @return {Promise}         updated/new user informations
+   * @example let userData = {
+   *                    id: '0x12456....',
+   *                    name: 'Humbert Humbert',
+   *                    email: 'humbert@humbert.ru',
+   *                    ipfsData: 'some-hash'
+   *              }
+   *   let result = await paratii.eth.users.upsert(userData)
+   *  })
+   */
+  async upsert (options) {
+    let data = null
+    if (options.id) {
+      data = await this.get(options.id)
+    }
+    if (!data) {
+      return this.create(options)
+    } else {
+      return this.update(options.id, options, data)
+    }
+  }
+
+  /**
    * retrieve data about the user
    * @param  {string} id user univocal id
    * @return {Object}    data about the user
@@ -73,8 +98,8 @@ export class ParatiiUsers {
    */
   async update (userId, options) {
     const schema = joi.object({
-      name: joi.string().default(null),
-      email: joi.string().default(null)
+      name: joi.string().default(null).empty(),
+      email: joi.string().default(null).empty()
     })
 
     const result = joi.validate(options, schema)
