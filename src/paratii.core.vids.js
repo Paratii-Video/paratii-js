@@ -158,13 +158,16 @@ export class ParatiiVids {
    */
   async upsert (options) {
     let data = null
+    let videoId = ''
     if (options.id) {
-      data = await this.get(options.id)
+      videoId = options.id
+      data = await this.get(videoId)
     }
     if (!data) {
       return this.create(options)
     } else {
-      return this.update(options.id, options, data)
+      delete options.id
+      return this.update(videoId, options, data)
     }
   }
 
