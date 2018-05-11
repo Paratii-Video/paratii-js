@@ -274,36 +274,39 @@ var ParatiiVids = exports.ParatiiVids = function () {
   }, {
     key: 'upsert',
     value: function upsert(options) {
-      var data;
+      var data, videoId;
       return _regenerator2.default.async(function upsert$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
               data = null;
+              videoId = '';
 
               if (!options.id) {
-                _context3.next = 5;
+                _context3.next = 7;
                 break;
               }
 
-              _context3.next = 4;
-              return _regenerator2.default.awrap(this.get(options.id));
+              videoId = options.id;
+              _context3.next = 6;
+              return _regenerator2.default.awrap(this.get(videoId));
 
-            case 4:
+            case 6:
               data = _context3.sent;
 
-            case 5:
+            case 7:
               if (data) {
-                _context3.next = 9;
+                _context3.next = 11;
                 break;
               }
 
               return _context3.abrupt('return', this.create(options));
 
-            case 9:
-              return _context3.abrupt('return', this.update(options.id, options, data));
+            case 11:
+              delete options.id;
+              return _context3.abrupt('return', this.update(videoId, options, data));
 
-            case 10:
+            case 13:
             case 'end':
               return _context3.stop();
           }

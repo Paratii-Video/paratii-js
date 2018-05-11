@@ -122,36 +122,39 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
   }, {
     key: 'upsert',
     value: function upsert(options) {
-      var data;
+      var data, userId;
       return _regenerator2.default.async(function upsert$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
               data = null;
+              userId = '';
 
               if (!options.id) {
-                _context2.next = 5;
+                _context2.next = 7;
                 break;
               }
 
-              _context2.next = 4;
-              return _regenerator2.default.awrap(this.get(options.id));
+              userId = options.id;
+              _context2.next = 6;
+              return _regenerator2.default.awrap(this.get(userId));
 
-            case 4:
+            case 6:
               data = _context2.sent;
 
-            case 5:
+            case 7:
               if (data) {
-                _context2.next = 9;
+                _context2.next = 11;
                 break;
               }
 
               return _context2.abrupt('return', this.create(options));
 
-            case 9:
-              return _context2.abrupt('return', this.update(options.id, options, data));
+            case 11:
+              delete options.id;
+              return _context2.abrupt('return', this.update(userId, options, data));
 
-            case 10:
+            case 13:
             case 'end':
               return _context2.stop();
           }
@@ -188,8 +191,8 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
           switch (_context3.prev = _context3.next) {
             case 0:
               schema = joi.object({
-                name: joi.string().default(null).empty(),
-                email: joi.string().default(null).empty()
+                name: joi.string().default(null).empty(''),
+                email: joi.string().default(null).empty('')
               });
               result = joi.validate(options, schema);
               error = result.error;

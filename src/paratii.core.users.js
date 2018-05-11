@@ -70,13 +70,16 @@ export class ParatiiUsers {
    */
   async upsert (options) {
     let data = null
+    let userId = ''
     if (options.id) {
-      data = await this.get(options.id)
+      userId = options.id
+      data = await this.get(userId)
     }
     if (!data) {
       return this.create(options)
     } else {
-      return this.update(options.id, options, data)
+      delete options.id
+      return this.update(userId, options, data)
     }
   }
 
@@ -98,8 +101,8 @@ export class ParatiiUsers {
    */
   async update (userId, options) {
     const schema = joi.object({
-      name: joi.string().default(null).empty(),
-      email: joi.string().default(null).empty()
+      name: joi.string().default(null).empty(''),
+      email: joi.string().default(null).empty('')
     })
 
     const result = joi.validate(options, schema)
