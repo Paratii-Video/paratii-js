@@ -1,5 +1,5 @@
 import { Paratii } from '../src/paratii.js'
-import { address, testConfig, address17, challengeFromDifferentAccount, voteFromDifferentAccount } from './utils.js'
+import { address, testConfig, address17, challengeFromDifferentAccount, voteFromDifferentAccount, revealVoteFromDifferentAccount } from './utils.js'
 import { assert } from 'chai'
 import { BigNumber } from 'bignumber.js'
 
@@ -25,8 +25,14 @@ describe('paratii.eth.tcr:', function () {
   let id = 'some-new-id'
 
   // to avoid problem with interaction with other tests
-  let myPrivateKey = '0x7aa336aece017378c50b56c0f831aaab2a61d44cf75f4e658a20926e2cfb74b5'
-  // let myAddress = '0x6631fe5E391AB7B6Cf61e5a3eb809943D46c2adD'
+  let myPrivateKey = '0x55e23c060d7d5e836b776852772d7de52d1756fc857d0493b4374a21e03d9c18'
+  // let myAddress = '0x77Db6De1baD96E52492A25e0e86480F3a0A24Ae1'
+
+  let myPrivateKey1 = '0x0690816a7e30ab2865f81ab924e0009d092f5d4c937eb7b39070f93cf153d5c9'
+  // let myAddress2 = '0x246057C676E0EBA07F645A194E99B553b8afd2ad'
+
+  let myPrivateKey2 = '0x4fb2363a8880b279e38316b749ad163708a5dc4445e3f69fdc58475054d77601'
+  // let myAddress3 = '0x7d3f3a0c7ec67675ffc8B10b1F62D10096A14829'
 
   it('should be able to get minDeposit', async function () {
     let amount = await paratii.eth.tcr.getMinDeposit()
@@ -295,6 +301,7 @@ describe('paratii.eth.tcr:', function () {
   it('user should be able to vote on a non-whitelisted video', async function () {
     let id = 'i-need-a-new-id'
     let amount = 5
+    let salt = 420 // this gotta be some random val
 
     // haven't applied yet
     let appWasMade = await paratii.eth.tcr.appWasMade(id)
@@ -346,12 +353,9 @@ describe('paratii.eth.tcr:', function () {
     // the video is still in apply stage, a challenge is going on and we are in commit period,
     // nobody has voted
 
-    // vote for
-    await voteFromDifferentAccount(myPrivateKey, challengeID, 1, 1, paratii)
-    // vote for
-    await voteFromDifferentAccount(myPrivateKey, challengeID, 1, 1, paratii)
-    // vote against
-    await voteFromDifferentAccount(myPrivateKey, challengeID, 0, 1, paratii)
+    await voteFromDifferentAccount(myPrivateKey, challengeID, 1, salt, 1, paratii)
+    await voteFromDifferentAccount(myPrivateKey1, challengeID, 1, salt, 1, paratii)
+    await voteFromDifferentAccount(myPrivateKey2, challengeID, 0, salt, 1, paratii)
 
     // commit period should still be going
     isCommitPeriodActive = await paratii.eth.tcr.commitPeriodActive(challengeID)
@@ -388,16 +392,26 @@ describe('paratii.eth.tcr:', function () {
     challengeCanBeResolved = await paratii.eth.tcr.challengeCanBeResolved(id)
     assert.isFalse(challengeCanBeResolved)
 
-    // TODO finish this test
+    await revealVoteFromDifferentAccount(myPrivateKey, challengeID, 1, salt, paratii)
+    await revealVoteFromDifferentAccount(myPrivateKey1, challengeID, 1, salt, paratii)
+    await revealVoteFromDifferentAccount(myPrivateKey2, challengeID, 0, salt, paratii)
 
-    // the video should enter the whitelist succesfully
-    // let updateTx = await paratii.eth.tcr.updateStatus(id)
-    // assert.isOk(updateTx)
-    // assert.isOk(updateTx.events._ApplicationWhitelisted)
-    //
-    // // the video should be isWhitelisted
-    // isWhitelisted = await paratii.eth.tcr.isWhitelisted(id)
-    // assert.isTrue(isWhitelisted)
+    // make tx so that the reveal period is finished
+    let isRevealPeriodActive
+    do {
+      await paratii.eth.transfer(address17, 1, 'PTI')
+      isRevealPeriodActive = await paratii.eth.tcr.revealPeriodActive(challengeID)
+    } while (isRevealPeriodActive)
+
+    // the video should enter the whitelist succesfully because there are 2 votes for and 1 against
+    let updateTx = await paratii.eth.tcr.updateStatus(id)
+    assert.isOk(updateTx)
+    assert.isOk(updateTx.events._ApplicationWhitelisted)
+    assert.isOk(updateTx.events._ChallengeFailed)
+
+    // the video should be isWhitelisted
+    isWhitelisted = await paratii.eth.tcr.isWhitelisted(id)
+    assert.isTrue(isWhitelisted)
   })
   it('startChallenge() should work correctly', async function () {
     let tcrRegistry = await paratii.eth.tcr.getTcrContract()
@@ -510,6 +524,7 @@ describe('paratii.eth.tcr:', function () {
     assert.isOk(updateTx)
     // should succeed because there is only a vote against
     assert.isOk(updateTx.events._ChallengeSucceeded)
+    assert.isOk(updateTx.events._ApplicationRemoved)
 
     // should be false because there was just 1 vote against --> listing rejected
     let isWhitelisted = await paratii.eth.tcr.isWhitelisted(id)

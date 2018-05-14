@@ -223,7 +223,7 @@ async function challengeFromDifferentAccount (privateKey, videoId, amountToFund,
  * @param  {Object} paratii      paratii instance
  * @private
  */
-async function voteFromDifferentAccount (privateKey, challengeID, vote, amountToFund, paratii) {
+async function voteFromDifferentAccount (privateKey, challengeID, vote, salt, amountToFund, paratii) {
   let tcrPLCRVoting = await paratii.eth.tcr.getPLCRVotingContract()
   chai.assert.isOk(tcrPLCRVoting)
 
@@ -263,7 +263,6 @@ async function voteFromDifferentAccount (privateKey, challengeID, vote, amountTo
 
   // voting process.
   // 1. create voteSaltHash
-  let salt = 420 // this gotta be some random val
   let voteSaltHash = paratii.eth.web3.utils.soliditySha3(vote, salt)
 
   // 2. request voting rights as voter.
@@ -294,40 +293,45 @@ async function voteFromDifferentAccount (privateKey, challengeID, vote, amountTo
   chai.assert.isOk(commitVoteTx.events._VoteCommitted)
 }
 
-// STILL TO BE DONE
-// async function revealVoteFromDifferentAccount (privateKey, challengeID, vote, amountToFund, paratii) {
-//   let tcrPLCRVoting = await paratii.eth.tcr.getPLCRVotingContract()
-//
-//   // check if reveal Period is active
-//   let isRevealPeriodActive = await paratii.eth.tcr.revealPeriodActive(pollID)
-//   if (!isRevealPeriodActive) {
-//     throw new Error(`Reveal Period for poll ${pollID.toString()} is not active`)
-//   }
-//
-//   let didCommit = await paratii.eth.tcr.didCommit(paratii.eth.getAccount(), pollID)
-//   if (!didCommit) {
-//     throw new Error(`user ${paratii.eth.getAccount()} didn't commit to vote ${pollID.toString()}`)
-//   }
-//
-//   let didReveal = await paratii.eth.tcr.didReveal(paratii.eth.getAccount(), pollID)
-//   if (didReveal) {
-//     throw new Error(`user ${paratii.eth.getAccount()} already revealed vote ${pollID.toString()}`)
-//   }
-//
-//   let secretHash = paratii.eth.web3.utils.soliditySha3(voteOption, salt)
-//   let commitHash = await paratii.getCommitHash(paratii.eth.getAccount(), pollID)
-//   if (commitHash !== secretHash) {
-//     throw new Error(`commitHash ${commitHash} !== secretHash ${secretHash}`)
-//   }
-//
-//   let tx = await tcrPLCRVoting.methods.revealVote(
-//     pollID,
-//     voteOption,
-//     salt
-//   ).send()
-//
-//   return tx
-// }
+async function revealVoteFromDifferentAccount (privateKey, pollID, vote, salt, paratii) {
+  let tcrPLCRVoting = await paratii.eth.tcr.getPLCRVotingContract()
+
+  // add voter account.
+  let voterAccount = await paratii.eth.web3.eth.accounts.wallet.add({
+    privateKey: privateKey
+  })
+  // index of the last added accounts
+  let index = paratii.eth.web3.eth.accounts.wallet.length - 1
+  chai.assert.isOk(voterAccount)
+  chai.assert.isOk(paratii.eth.web3.eth.accounts.wallet[index])
+  chai.assert.equal(voterAccount.address, paratii.eth.web3.eth.accounts.wallet[index].address)
+
+  let isRevealPeriodActive = await paratii.eth.tcr.revealPeriodActive(pollID)
+  chai.assert.isTrue(isRevealPeriodActive)
+
+  let didCommit = await paratii.eth.tcr.didCommit(voterAccount.address, pollID)
+  chai.assert.isTrue(didCommit)
+
+  let didReveal = await paratii.eth.tcr.didReveal(voterAccount.address, pollID)
+  chai.assert.isFalse(didReveal)
+
+  let secretHash = paratii.eth.web3.utils.soliditySha3(vote, salt)
+
+  let commitHash = await paratii.eth.tcr.getCommitHash(voterAccount.address, pollID)
+
+  chai.assert.equal(secretHash, commitHash)
+
+  let revealTx = await tcrPLCRVoting.methods.revealVote(
+    pollID,
+    vote,
+    salt
+  ).send({from: voterAccount.address})
+
+  chai.assert.isOk(revealTx)
+  chai.assert.isOk(revealTx.events._VoteRevealed)
+
+  return revealTx
+}
 
 export {
   address,
@@ -349,5 +353,6 @@ export {
   testConfigWS,
   testAccount,
   challengeFromDifferentAccount,
-  voteFromDifferentAccount
+  voteFromDifferentAccount,
+  revealVoteFromDifferentAccount
 }
