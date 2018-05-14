@@ -19,18 +19,22 @@ export class ParatiiUsers {
   }
   /**
    * @typedef {Array} userSchema
-   * @property {string=} id univocal video identifier
+   * @property {string} id the Ethereum address of the user
    * @property {string=} name
    * @property {string=} email
    */
+
   /**
    * Creates a user, fields id, name and email go to the smart contract Users, other fields are stored on IPFS.
    * @param  {userSchema}  options information about the video ( id, name, email ... )
    * @return {Promise}         the id of the newly created user
-   * @example await paratii.users.create({
-   *   id: 'some-user-id', //must be a valid ethereum address
-   *   name: 'A user name',
-   *   email: 'some@email.com',
+   * @example let userData = {
+   *                    id: '0x12456....',
+   *                    name: 'Humbert Humbert',
+   *                    email: 'humbert@humbert.ru',
+   *                    ipfsData: 'some-hash'
+   *              }
+   *   let result = await paratii.eth.users.create(userData)
    *  })
    */
   // FIXME: do some joi validation here
@@ -52,6 +56,34 @@ export class ParatiiUsers {
   }
 
   /**
+   * Update the information of the user if the user already exists, otherwise it creates it
+   * @param  {Object}  options user informations
+   * @return {Promise}         updated/new user informations
+   * @example let userData = {
+   *                    id: '0x12456....',
+   *                    name: 'Humbert Humbert',
+   *                    email: 'humbert@humbert.ru',
+   *                    ipfsData: 'some-hash'
+   *              }
+   *   let result = await paratii.eth.users.upsert(userData)
+   *  })
+   */
+  async upsert (options) {
+    let data = null
+    let userId = ''
+    if (options.id) {
+      userId = options.id
+      data = await this.get(userId)
+    }
+    if (!data) {
+      return this.create(options)
+    } else {
+      delete options.id
+      return this.update(userId, options, data)
+    }
+  }
+
+  /**
    * retrieve data about the user
    * @param  {string} id user univocal id
    * @return {Object}    data about the user
@@ -69,8 +101,8 @@ export class ParatiiUsers {
    */
   async update (userId, options) {
     const schema = joi.object({
-      name: joi.string().default(null),
-      email: joi.string().default(null)
+      name: joi.string().default(null).empty(''),
+      email: joi.string().default(null).empty('')
     })
 
     const result = joi.validate(options, schema)

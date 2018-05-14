@@ -1,6 +1,6 @@
 {
   "name": "paratii-js",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Paratii JS Library",
   "main": "dist/paratii.js",
   "browser": {
@@ -43,7 +43,10 @@
     "resumablejs": "^1.1.0",
     "sol-tcr": "github:Paratii-Video/tcr#compiled",
     "stream-to-pull-stream": "^1.7.2",
-    "web3": "^1.0.0-beta.29"
+    "web3": "1.0.0-beta.33",
+    "web3-core-method": "1.0.0-beta.33",
+    "web3-eth": "1.0.0-beta.33",
+    "web3-eth-accounts": "1.0.0-beta.33"
   },
   "devDependencies": {
     "async_hooks": "^1.0.0",

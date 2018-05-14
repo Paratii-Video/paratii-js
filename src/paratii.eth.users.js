@@ -24,21 +24,14 @@ export class ParatiiEthUsers {
    * @param {string} options.name name of the user
    * @param {string} options.email email of the user
    * @param {string} options.ipfsData ipfs hash
-   * @return {Promise}         the id of the newly created user
-   * @example let userData = {
-   *                    id: 'some-id',
-   *                    name: 'Humbert Humbert',
-   *                    email: 'humbert@humbert.ru',
-   *                    ipfsData: 'some-hash'
-   *              }
-   *         let result = await paratii.eth.users.create(userData)
-
+   * @return {Promise<string>}         the id of the newly created user
+   * See {@link ParatiiCoreUsers#create}
    */
   async create (options) {
     const schema = joi.object({
       id: joi.string(),
-      name: joi.string(),
-      email: joi.string(),
+      name: joi.string().allow('').optional().default(''),
+      email: joi.string().allow('').optional().default(''),
       ipfsData: joi.string()
     })
 
@@ -61,7 +54,7 @@ export class ParatiiEthUsers {
    * @param  {string}  userId valid address
    * @return {Promise}        information about the user
    * @example user = await paratii.eth.users.get('some-id')
-
+   * See {@link ParatiiCoreUsers#get}
    */
   async get (userId) {
     let contract = await this.getRegistry()
@@ -80,7 +73,7 @@ export class ParatiiEthUsers {
    * @param  {Object}  options information to update. Left-out data is kept the same.
    * @return {Promise}         updated data
    * @example await paratii.eth.users.update('some-id', {ipfsData: 'new-hash'})
-
+   * See {@link ParatiiCoreUsers#update}
    */
   async update (userId, options) {
     options.id = userId

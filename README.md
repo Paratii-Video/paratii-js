@@ -1,8 +1,10 @@
-<img src="https://i.imgur.com/rH3YYYX.png" width="200">
-
 [![CircleCI](https://circleci.com/gh/Paratii-Video/paratii-js.svg?style=svg)](https://circleci.com/gh/Paratii-Video/paratii-js)
 
-`paratii.js` is the main entry point and abstraction layer to interact with Paratii, a decentralized platform for video distribution.
+<img align="center" src="https://i.imgur.com/iBoFbb2.png" height="250px" />
+
+`paratii.js` is the main entry point and abstraction layer to interact with Paratii. It's a library you can use to **put** a video stream and **get** a playable url for it, while it gets ingested, stored, transcoded and distributed behind the scenes, all through non-centralised means. With this, one can easily build out-of-the box decentralisable video-powered web applications. It has early functionalities for handling tokens too, meaning one will soon be able to use it to set monetisation models for videos, collect earnings, participate in curation, and else.
+
+Documentation on `paratii.js` can be found [here](https://docs.paratii.video/).
 
 More information about the Paratii Project can be found on [paratii.video](http://paratii.video/), or in our [blueprint](https://github.com/Paratii-Video/paratii-player/wiki/Paratii-Blueprint). Join the discussion on [gitter](https://gitter.im/Paratii-Video).
 

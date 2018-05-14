@@ -125,6 +125,7 @@ export class ParatiiTranscoder extends EventEmitter {
         this._ipfs.error('couldn\'t parse args, ', command.args.toString())
       }
 
+      console.log(`RECEIVED EVENT ${commandStr}`)
       switch (commandStr) {
         case 'transcoding:error':
           console.log('DEBUG TRANSCODER ERROR: fileHash: ', fileHash, ' , errHash: ', argsObj.hash)
@@ -191,8 +192,6 @@ export class ParatiiTranscoder extends EventEmitter {
       if (files.length < 1) {
         // FIXME THIS NEEDS TO BE REMOVED
         file = {hash: ''} // testing something ...
-        // this._ipfs.log('_signalTranscoder Got an empty Array. files: ', files)
-        // return
       } else {
         file = files[0]
       }
