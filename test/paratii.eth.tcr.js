@@ -477,7 +477,7 @@ describe('paratii.eth.tcr:', function () {
     assert.isTrue(isCommitPeriodActive)
 
     // one vote for
-    let commitVoteTx = await paratii.eth.tcr.requestRightsAndCommitVote(id, vote, paratii.eth.web3.utils.toWei('1'))
+    let commitVoteTx = await paratii.eth.tcr.approveAndGetRightsAndCommitVote(id, vote, paratii.eth.web3.utils.toWei('1'))
     assert.isOk(commitVoteTx)
     assert.isOk(commitVoteTx.events._VoteCommitted)
 

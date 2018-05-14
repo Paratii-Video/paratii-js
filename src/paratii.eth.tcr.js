@@ -18,6 +18,10 @@ export class ParatiiEthTcr {
     this.eth = context
   }
 
+  // -----------------------
+  // CONTRACT GETTERS
+  // -----------------------
+
   /**
    * get TCR contract instance.
    * @return {Promise} The TCR Contract instance.
@@ -58,190 +62,8 @@ export class ParatiiEthTcr {
   }
 
   // -----------------------
-  // TCR PARAMETERS GETTERS
+  // TCR FUNCTION
   // -----------------------
-
-  /**
-   * get the minimum amount required to stake a video.
-   * @return {integer} amount required, in PTI base units
-   * @todo return amount as bignumber.js Object
-   * @example let minDeposit = await paratii.eth.tcr.getMinDeposit()
-   */
-  async getMinDeposit () {
-    return this.get('minDeposit')
-  }
-
-  /**
-   * get the period over which applicants wait to be whitelisted
-   * @return {integer} length of the apply stage in seconds
-   * @example let applyStageLen = await paratii.eth.tcr.getApplyStageLen()
-   */
-  async getApplyStageLen () {
-    return this.get('applyStageLen')
-  }
-
-  /**
-   * get the percentage of losing party's deposit distributed to winning party
-   * @return {integer} percentage of losing party's deposit distributed to winning party
-   * @example let dispensationPct = await paratii.eth.tcr.getDispensationPct()
-   */
-  async getDispensationPct () {
-    return this.get('dispensationPct')
-  }
-
-  /**
-   * get the length of commit period for voting
-   * @return {integer} length of the commit stage in seconds
-   * @example let applyCommitLen = await paratii.eth.tcr.getCommitStageLen()
-   */
-  async getCommitStageLen () {
-    return this.get('commitStageLen')
-  }
-
-  /**
-   * get the length of reveal period for voting
-   * @return {integer} length of the reveal stage in seconds
-   * @example let applyRevealLen = await paratii.eth.tcr.getRevealStageLen()
-   */
-  async getRevealStageLen () {
-    return this.get('revealStageLen')
-  }
-
-  /**
-   * get the type of majority out of 100 necessary for vote success
-   * @return {integer} percentage needed for success
-   * @example let voteQuorum = await paratii.eth.tcr.getVoteQuorum()
-   */
-  async getVoteQuorum () {
-    return this.get('voteQuorum')
-  }
-
-  // -----------------------
-  // PARAMETRIZER PARAMETERS GETTERS
-  // -----------------------
-
-  /**
-   * get the minimum deposit to propose a reparameterization
-   * @return {integer} amount required, in PTI base units
-   * @todo return amount as bignumber.js Object
-   * @example let minpDeposit = await paratii.eth.tcr.getpMinDeposit()
-   */
-  async getpMinDeposit () {
-    return this.get('pMinDeposit')
-  }
-
-  /**
-   * get the period over which reparmeterization proposals wait to be processed
-   * @return {integer} length of the parametrizer apply stage in seconds
-   * @example let pApplyStageLen = await paratii.eth.tcr.getpApplyStageLen()
-   */
-  async getpApplyStageLen () {
-    return this.get('pApplyStageLen')
-  }
-
-  /**
-   * get the percentage of losing party's deposit distributed to winning party in parameterizer
-   * @return {integer} percentage of losing party's deposit distributed to winning party
-   * @example let pDispensationPct = await paratii.eth.tcr.getpDispensationPct()
-   */
-  async getpDispensationPct () {
-    return this.get('pDispensationPct')
-  }
-
-  /**
-   * get the length of commit period for voting in parametrizer
-   * @return {integer} length of the parametrizer commit stage in seconds
-   * @example let pCommitStageLen = await paratii.eth.tcr.getpCommitStageLen()
-   */
-  async getpCommitStageLen () {
-    return this.get('pCommitStageLen')
-  }
-
-  /**
-   * get the length of reveal period for voting in parametrizer
-   * @return {integer} length of the parametrizer reveal stage in seconds
-   * @example let pRevealStageLen = await paratii.eth.tcr.getpRevealStageLen()
-   */
-  async getpRevealStageLen () {
-    return this.get('pRevealStageLen')
-  }
-
-  /**
-   * get the type of majority out of 100 necessary for vote success in parametrizer
-   * @return {integer} percentage needed for success in parametrizer
-   * @example let pVoteQuorum = await paratii.eth.tcr.getpVoteQuorum()
-   */
-  async getpVoteQuorum () {
-    return this.get('pVoteQuorum')
-  }
-
-  /**
-   * get the value of the param passed on the Parametrizer contract
-   * @param  {string}  param name of the param
-   * @return {Promise}       that resolves in the value of the parameter
-   * @example  let minDeposit = await paratii.eth.tcr.get('minDeposit')
-   */
-  async get (param) {
-    let contract = await this.getParametrizerContract()
-
-    let value = await contract.methods.get(param).call()
-    return value
-  }
-
-  // ---------------------------------------------------------------------------
-
-  /**
-   * check if video is already whitelisted. note that this returns false
-   * till the video is actually whitelisted. use appWasMade in case you want
-   * to check whether the video is in application process.
-   * @param  {string}  videoId id of the video
-   * @return {boolean}         true if video is whitelisted, false otherwise
-   * @example let isWhitelisted = await paratii.eth.tcr.isWhitelisted('some-video-id')
-   */
-  async isWhitelisted (videoId) {
-    let contract = await this.getTcrContract()
-    let hash = this.getHash(videoId)
-    let isWhitelisted = await contract.methods.isWhitelisted(hash).call()
-    return isWhitelisted
-  }
-
-  /**
-   * Determines whether the given videoId be whitelisted.
-   * @param  {string}  videoId id of the video
-   * @return {Promise}         true if it can be whitelisted.
-   */
-  async canBeWhitelisted (videoId) {
-    let hash = this.getHash(videoId)
-    let tcrRegistry = await this.getTcrContract()
-    let canBeWhitelisted = await tcrRegistry.methods.canBeWhitelisted(hash).call()
-    return canBeWhitelisted
-  }
-
-  /**
-   * check whether a video started the application process
-   * @param  {string}  videoId id of the video
-   * @return {boolean}  true if video started the application process, false otherwise
-   * @example let appWasMade = await paratii.eth.tcr.appWasMade('some-video-id')
-   */
-  async appWasMade (videoId) {
-    let contract = await this.getTcrContract()
-    let hash = this.getHash(videoId)
-    let appWasMade = await contract.methods.appWasMade(hash).call()
-    return appWasMade
-  }
-
-  /**
-   * Calculates the provided voter's token reward for the given poll.
-   * @param  {string}  voterAddress address of the voter
-   * @param  {uint}  challengeID  challengeID ( in hex )
-   * @param  {string}  salt         the salt used for that vote.
-   * @return {Number}              returns the voterReward in BN format.
-   */
-  async voterReward (voterAddress, challengeID, salt) {
-    let tcrRegistry = await this.getTcrContract()
-    let voterReward = await tcrRegistry.methods.voterReward(voterAddress, challengeID, salt).call()
-    return voterReward
-  }
 
   /**
    * Start the application process.
@@ -351,86 +173,6 @@ export class ParatiiEthTcr {
 
     let result = await this.apply(videoId, amountToStake)
     return result
-  }
-
-  /**
-   * get the listing of that videoId
-   * @param  {string}  videoId id of the video
-   * @return {Promise}        that resolves in the listings
-   * @example let listing = await paratii.eth.tcr.getListing('video-id')
-   */
-  async getListing (videoId) {
-    let contract = await this.getTcrContract()
-
-    let hash = this.getHash(videoId)
-    let listing = await contract.methods.listings(hash).call()
-
-    if (listing.owner === '0x0000000000000000000000000000000000000000') { throw Error(`Listing with videoId ${videoId} doesn't exists`) }
-    return listing
-  }
-
-  /**
-   * get the challenge of that challengeId
-   * @param  {integer}  challengeId id of the challenge
-   * @return {Promise}        that resolves in the challenge
-   * @example let challenge = await paratii.eth.tcr.getChallenge(1)
-   */
-  async getChallenge (challengeId) {
-    let contract = await this.getTcrContract()
-
-    let challenge = await contract.methods.challenges(challengeId).call()
-
-    if (challenge.challenger === '0x0000000000000000000000000000000000000000') { throw Error(`Challenge with challengeId ${challengeId} doesn't exists`) }
-    return challenge
-  }
-
-  /**
-   * get the challenge Id of that video
-   * @param  {string}  videoId univocal id of the video
-   * @return {Promise}         id of the challenge of that video
-   */
-  async getChallengeId (videoId) {
-    let listing = await this.getListing(videoId)
-    return listing.challengeID
-  }
-
-    /**
-     * checks whether the video has an unresolved challenge or not
-     * @param  {string}  videoId id of the video
-     * @return {Promise}        true if the video has an unresolved challenge, false otherwise
-     * @example let challenge = await paratii.eth.tcr.challengeExists(1)
-     */
-  async challengeExists (videoId) {
-    let challenge
-    let challengeID = await this.getChallengeId(videoId)
-
-    if (parseInt(challengeID) !== 0) { challenge = await this.getChallenge(challengeID) }
-
-    return (challengeID > 0 && !challenge.resolved)
-  }
-
- /**
-  * Determines whether voting has concluded in a challenge for a given
-  * videoId. Throws if no challenge exists.
-  * @param  {string}  videoId univocal video id
-  * @return {Promise}         true if voting has concluded,false otherwise
-  */
-  async challengeCanBeResolved (videoId) {
-    let contract = await this.getTcrContract()
-
-    if (!this.challengeExists(videoId)) { throw Error(`No challenge is in progress for video with id = ${videoId}`) }
-
-    let result = await contract.methods.challengeCanBeResolved(this.getHash(videoId)).call()
-    return result
-  }
-
-  /**
-   * get the hash of the video Id to be inserted in the TCR contract
-   * @param  {string} videoId univocal id of the video
-   * @return {string}         sha3 of the id
-   */
-  getHash (videoId) {
-    return this.eth.web3.utils.soliditySha3(videoId)
   }
 
   /**
@@ -618,8 +360,11 @@ export class ParatiiEthTcr {
     return tx
   }
 
-  // --------------------[voting functions]-------------------------------------
-  async requestRightsAndCommitVote (videoId, vote, amountInWei) {
+  // -----------------------
+  // VOTING FUNCTIONS
+  // -----------------------
+
+  async approveAndGetRightsAndCommitVote (videoId, vote, amountInWei) {
     let tcrPLCRVoting = await this.getPLCRVotingContract()
     let listing = await this.getListing(videoId)
 
@@ -740,6 +485,215 @@ export class ParatiiEthTcr {
     return tx
   }
 
+  /**
+   * Loads amount ERC20 tokens into the voting contract for one-to-one voting rights
+   * @param  {bignumber}  amount amount to deposit into voting contract.
+   * @return {Promise}        `requestVotingRights` tx
+   */
+  async requestVotingRights (amount) {
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+    let balancen = await this.eth.balanceOf(this.eth.getAccount(), 'PTI')
+    let balance = new BigNumber(balancen)
+
+    if (balance.lt(amount)) {
+      throw new Error(`${this.eth.getAccount()} balance (${balance.toString()}) is insufficient (amount = ${amount.toString()})`)
+    }
+
+    let allowancen = await this.eth.allowance(this.eth.getAccount(), tcrPLCRVoting.options.address)
+    let allowance = new BigNumber(allowancen)
+
+    if (allowance.lt(amount)) {
+      throw new Error(`PLCRVoting Contract allowance (${allowance.toString()}) is < amount (${amount.toString()})`)
+    }
+
+    let tx = await tcrPLCRVoting.methods.requestVotingRights(amount).send()
+    return tx
+  }
+
+  /**
+   * Withdraw amount ERC20 tokens from the voting contract, revoking these voting rights
+   * @param  {bignumber}  amount amount to withdraw
+   * @return {Promise}        withdrawVotingRights tx
+   */
+  async withdrawVotingRights (amount) {
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+    let voterBalance = await tcrPLCRVoting.methods.voteTokenBalance(this.eth.getAccount()).call()
+    let lockedTokens = await this.getLockedTokens(this.eth.getAccount())
+    let balanceAfter = voterBalance.minus(lockedTokens)
+    if (balanceAfter.lt(amount)) {
+      throw new Error(`unlocked balance ${balanceAfter.toString()} is < amount ${amount.toString()}`)
+    }
+
+    let tx = await tcrPLCRVoting.methods.withdrawVotingRights(amount).send()
+    return tx
+  }
+
+  /**
+   * Unlocks tokens locked in unrevealed vote where poll has ended
+   * @param  {uint}  pollID the pollID , aka challengeID
+   * @return {Promise}        rescueTokens tx
+   */
+  async rescueTokens (pollID) {
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+    // TODO make sure pollID is a uint and is converted to hex
+    let poll = await tcrPLCRVoting.methods.pollMap(pollID).call()
+    let isExpired = await this.isExpired(poll.revealEndDate)
+    if (!isExpired) {
+      throw new Error(`poll ${pollID.toString()} did not expire just yet.`)
+    }
+
+    // TODO check the DLL if it contains this poll.
+    let tx = await tcrPLCRVoting.methods.rescueTokens(pollID).send()
+    return tx
+  }
+
+  // -----------------------
+  // TCR UTILS
+  // -----------------------
+
+  /**
+   * check if video is already whitelisted. note that this returns false
+   * till the video is actually whitelisted. use appWasMade in case you want
+   * to check whether the video is in application process.
+   * @param  {string}  videoId id of the video
+   * @return {boolean}         true if video is whitelisted, false otherwise
+   * @example let isWhitelisted = await paratii.eth.tcr.isWhitelisted('some-video-id')
+   */
+  async isWhitelisted (videoId) {
+    let contract = await this.getTcrContract()
+    let hash = this.getHash(videoId)
+    let isWhitelisted = await contract.methods.isWhitelisted(hash).call()
+    return isWhitelisted
+  }
+
+  /**
+   * Determines whether the given videoId be whitelisted.
+   * @param  {string}  videoId id of the video
+   * @return {Promise}         true if it can be whitelisted.
+   */
+  async canBeWhitelisted (videoId) {
+    let hash = this.getHash(videoId)
+    let tcrRegistry = await this.getTcrContract()
+    let canBeWhitelisted = await tcrRegistry.methods.canBeWhitelisted(hash).call()
+    return canBeWhitelisted
+  }
+
+  /**
+   * check whether a video started the application process
+   * @param  {string}  videoId id of the video
+   * @return {boolean}  true if video started the application process, false otherwise
+   * @example let appWasMade = await paratii.eth.tcr.appWasMade('some-video-id')
+   */
+  async appWasMade (videoId) {
+    let contract = await this.getTcrContract()
+    let hash = this.getHash(videoId)
+    let appWasMade = await contract.methods.appWasMade(hash).call()
+    return appWasMade
+  }
+
+  /**
+   * checks whether the video has an unresolved challenge or not
+   * @param  {string}  videoId id of the video
+   * @return {Promise}        true if the video has an unresolved challenge, false otherwise
+   * @example let challenge = await paratii.eth.tcr.challengeExists(1)
+   */
+  async challengeExists (videoId) {
+    let challenge
+    let challengeID = await this.getChallengeId(videoId)
+
+    if (parseInt(challengeID) !== 0) { challenge = await this.getChallenge(challengeID) }
+
+    return (challengeID > 0 && !challenge.resolved)
+  }
+
+/**
+* Determines whether voting has concluded in a challenge for a given
+* videoId. Throws if no challenge exists.
+* @param  {string}  videoId univocal video id
+* @return {Promise}         true if voting has concluded,false otherwise
+*/
+  async challengeCanBeResolved (videoId) {
+    let contract = await this.getTcrContract()
+
+    if (!this.challengeExists(videoId)) { throw Error(`No challenge is in progress for video with id = ${videoId}`) }
+
+    let result = await contract.methods.challengeCanBeResolved(this.getHash(videoId)).call()
+    return result
+  }
+/**
+ * get the listing of that videoId
+ * @param  {string}  videoId id of the video
+ * @return {Promise}        that resolves in the listings
+ * @example let listing = await paratii.eth.tcr.getListing('video-id')
+ */
+  async getListing (videoId) {
+    let contract = await this.getTcrContract()
+
+    let hash = this.getHash(videoId)
+    let listing = await contract.methods.listings(hash).call()
+
+    if (listing.owner === '0x0000000000000000000000000000000000000000') { throw Error(`Listing with videoId ${videoId} doesn't exists`) }
+    return listing
+  }
+
+/**
+ * get the challenge of that challengeId
+ * @param  {integer}  challengeId id of the challenge
+ * @return {Promise}        that resolves in the challenge
+ * @example let challenge = await paratii.eth.tcr.getChallenge(1)
+ */
+  async getChallenge (challengeId) {
+    let contract = await this.getTcrContract()
+
+    let challenge = await contract.methods.challenges(challengeId).call()
+
+    if (challenge.challenger === '0x0000000000000000000000000000000000000000') { throw Error(`Challenge with challengeId ${challengeId} doesn't exists`) }
+    return challenge
+  }
+
+/**
+ * get the challenge Id of that video
+ * @param  {string}  videoId univocal id of the video
+ * @return {Promise}         id of the challenge of that video
+ */
+  async getChallengeId (videoId) {
+    let listing = await this.getListing(videoId)
+    return listing.challengeID
+  }
+
+/**
+ * get the hash of the video Id to be inserted in the TCR contract
+ * @param  {string} videoId univocal id of the video
+ * @return {string}         sha3 of the id
+ */
+  getHash (videoId) {
+    return this.eth.web3.utils.soliditySha3(videoId)
+  }
+
+  // -----------------------
+  // VOTING UTILS
+  // -----------------------
+
+  async isExpired (deadline) {
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+    let isExpired = await tcrPLCRVoting.methods.isExpired(deadline).call()
+    return isExpired
+  }
+
+  async getLockedTokens (voterAddress) {
+    if (!voterAddress) {
+      voterAddress = this.eth.getAccount()
+    }
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+    let lockedTokens = await tcrPLCRVoting.methods.getLockedTokens(voterAddress).call()
+    return lockedTokens
+  }
+
+  async commitPeriodActive (pollID) {
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+    let isCommitPeriodActive = await tcrPLCRVoting.methods.commitPeriodActive(pollID).call()
+    return isCommitPeriodActive
+  }
   async revealPeriodActive (pollID) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
 
@@ -761,6 +715,41 @@ export class ParatiiEthTcr {
     return didReveal
   }
 
+    /**
+     * Calculates the provided voter's token reward for the given poll.
+     * @param  {string}  voterAddress address of the voter
+     * @param  {uint}  challengeID  challengeID ( in hex )
+     * @param  {string}  salt         the salt used for that vote.
+     * @return {Number}              returns the voterReward in BN format.
+     */
+  async voterReward (voterAddress, challengeID, salt) {
+    let tcrRegistry = await this.getTcrContract()
+    let voterReward = await tcrRegistry.methods.voterReward(voterAddress, challengeID, salt).call()
+    return voterReward
+  }
+
+  /**
+   * THIS COULD CAUSE PROBLEM IN PRODUCTION
+   */
+  async isInApplyStage (videoId) {
+    let listing = await this.getListing(videoId)
+    let latestBlock = await this.eth.web3.eth.getBlock('latest')
+
+    return (listing.applicationExpiry > latestBlock.timestamp)
+  }
+  /**
+   * Gets top element of sorted poll-linked-list
+   * @param  {address}  voter the address of the voter
+   * @return {Promise}       [description]
+   */
+  async getLastNode (voter) {
+    if (!voter) {
+      voter = this.eth.getAccount()
+    }
+    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
+    let lastNode = await tcrPLCRVoting.methods.getLastNode(voter).call()
+    return lastNode
+  }
   async getCommitHash (voterAddress, pollID) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
 
@@ -829,32 +818,6 @@ export class ParatiiEthTcr {
 
     return numTokens
   }
-
-  /**
-   * Loads amount ERC20 tokens into the voting contract for one-to-one voting rights
-   * @param  {bignumber}  amount amount to deposit into voting contract.
-   * @return {Promise}        `requestVotingRights` tx
-   */
-  async requestVotingRights (amount) {
-    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
-    let balancen = await this.eth.balanceOf(this.eth.getAccount(), 'PTI')
-    let balance = new BigNumber(balancen)
-
-    if (balance.lt(amount)) {
-      throw new Error(`${this.eth.getAccount()} balance (${balance.toString()}) is insufficient (amount = ${amount.toString()})`)
-    }
-
-    let allowancen = await this.eth.allowance(this.eth.getAccount(), tcrPLCRVoting.options.address)
-    let allowance = new BigNumber(allowancen)
-
-    if (allowance.lt(amount)) {
-      throw new Error(`PLCRVoting Contract allowance (${allowance.toString()}) is < amount (${amount.toString()})`)
-    }
-
-    let tx = await tcrPLCRVoting.methods.requestVotingRights(amount).send()
-    return tx
-  }
-
   async hasVotingRights (amount) {
     let PLCRVoting = await this.getPLCRVotingContract()
 
@@ -863,89 +826,9 @@ export class ParatiiEthTcr {
     return numTokens >= amount
   }
 
-  /**
-   * Withdraw amount ERC20 tokens from the voting contract, revoking these voting rights
-   * @param  {bignumber}  amount amount to withdraw
-   * @return {Promise}        withdrawVotingRights tx
-   */
-  async withdrawVotingRights (amount) {
-    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
-    let voterBalance = await tcrPLCRVoting.methods.voteTokenBalance(this.eth.getAccount()).call()
-    let lockedTokens = await this.getLockedTokens(this.eth.getAccount())
-    let balanceAfter = voterBalance.minus(lockedTokens)
-    if (balanceAfter.lt(amount)) {
-      throw new Error(`unlocked balance ${balanceAfter.toString()} is < amount ${amount.toString()}`)
-    }
-
-    let tx = await tcrPLCRVoting.methods.withdrawVotingRights(amount).send()
-    return tx
-  }
-
-  /**
-   * Unlocks tokens locked in unrevealed vote where poll has ended
-   * @param  {uint}  pollID the pollID , aka challengeID
-   * @return {Promise}        rescueTokens tx
-   */
-  async rescueTokens (pollID) {
-    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
-    // TODO make sure pollID is a uint and is converted to hex
-    let poll = await tcrPLCRVoting.methods.pollMap(pollID).call()
-    let isExpired = await this.isExpired(poll.revealEndDate)
-    if (!isExpired) {
-      throw new Error(`poll ${pollID.toString()} did not expire just yet.`)
-    }
-
-    // TODO check the DLL if it contains this poll.
-    let tx = await tcrPLCRVoting.methods.rescueTokens(pollID).send()
-    return tx
-  }
-
-  // ---------------------------[voting utils]----------------------------------
-  async isExpired (deadline) {
-    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
-    let isExpired = await tcrPLCRVoting.methods.isExpired(deadline).call()
-    return isExpired
-  }
-
-  async getLockedTokens (voterAddress) {
-    if (!voterAddress) {
-      voterAddress = this.eth.getAccount()
-    }
-    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
-    let lockedTokens = await tcrPLCRVoting.methods.getLockedTokens(voterAddress).call()
-    return lockedTokens
-  }
-
-  async commitPeriodActive (pollID) {
-    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
-    let isCommitPeriodActive = await tcrPLCRVoting.methods.commitPeriodActive(pollID).call()
-    return isCommitPeriodActive
-  }
-
-  /**
-   * THIS COULD CAUSE PROBLEM IN PRODUCTION
-   */
-  async isInApplyStage (videoId) {
-    let listing = await this.getListing(videoId)
-    let latestBlock = await this.eth.web3.eth.getBlock('latest')
-
-    return (listing.applicationExpiry > latestBlock.timestamp)
-  }
-  /**
-   * Gets top element of sorted poll-linked-list
-   * @param  {address}  voter the address of the voter
-   * @return {Promise}       [description]
-   */
-  async getLastNode (voter) {
-    if (!voter) {
-      voter = this.eth.getAccount()
-    }
-    let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
-    let lastNode = await tcrPLCRVoting.methods.getLastNode(voter).call()
-    return lastNode
-  }
-
-  // ---------------------------[ utils ]---------------------------------------
+  // -----------------------
+  // LOCALSTORAGE UTILS
+  // -----------------------
 
   /**
    * utility function to get the right localStorage
@@ -1029,5 +912,136 @@ export class ParatiiEthTcr {
     let localStorage = this.getLocalStorage()
 
     return localStorage.getItem(HASH_TO_KEY_PREFIX + hash.toString())
+  }
+
+// -----------------------
+// TCR PARAMETERS GETTERS
+// -----------------------
+
+/**
+ * get the minimum amount required to stake a video.
+ * @return {integer} amount required, in PTI base units
+ * @todo return amount as bignumber.js Object
+ * @example let minDeposit = await paratii.eth.tcr.getMinDeposit()
+ */
+  async getMinDeposit () {
+    return this.get('minDeposit')
+  }
+
+/**
+ * get the period over which applicants wait to be whitelisted
+ * @return {integer} length of the apply stage in seconds
+ * @example let applyStageLen = await paratii.eth.tcr.getApplyStageLen()
+ */
+  async getApplyStageLen () {
+    return this.get('applyStageLen')
+  }
+
+/**
+ * get the percentage of losing party's deposit distributed to winning party
+ * @return {integer} percentage of losing party's deposit distributed to winning party
+ * @example let dispensationPct = await paratii.eth.tcr.getDispensationPct()
+ */
+  async getDispensationPct () {
+    return this.get('dispensationPct')
+  }
+
+/**
+ * get the length of commit period for voting
+ * @return {integer} length of the commit stage in seconds
+ * @example let applyCommitLen = await paratii.eth.tcr.getCommitStageLen()
+ */
+  async getCommitStageLen () {
+    return this.get('commitStageLen')
+  }
+
+/**
+ * get the length of reveal period for voting
+ * @return {integer} length of the reveal stage in seconds
+ * @example let applyRevealLen = await paratii.eth.tcr.getRevealStageLen()
+ */
+  async getRevealStageLen () {
+    return this.get('revealStageLen')
+  }
+
+/**
+ * get the type of majority out of 100 necessary for vote success
+ * @return {integer} percentage needed for success
+ * @example let voteQuorum = await paratii.eth.tcr.getVoteQuorum()
+ */
+  async getVoteQuorum () {
+    return this.get('voteQuorum')
+  }
+
+// -----------------------
+// PARAMETRIZER PARAMETERS GETTERS
+// -----------------------
+
+/**
+ * get the minimum deposit to propose a reparameterization
+ * @return {integer} amount required, in PTI base units
+ * @todo return amount as bignumber.js Object
+ * @example let minpDeposit = await paratii.eth.tcr.getpMinDeposit()
+ */
+  async getpMinDeposit () {
+    return this.get('pMinDeposit')
+  }
+
+/**
+ * get the period over which reparmeterization proposals wait to be processed
+ * @return {integer} length of the parametrizer apply stage in seconds
+ * @example let pApplyStageLen = await paratii.eth.tcr.getpApplyStageLen()
+ */
+  async getpApplyStageLen () {
+    return this.get('pApplyStageLen')
+  }
+
+/**
+ * get the percentage of losing party's deposit distributed to winning party in parameterizer
+ * @return {integer} percentage of losing party's deposit distributed to winning party
+ * @example let pDispensationPct = await paratii.eth.tcr.getpDispensationPct()
+ */
+  async getpDispensationPct () {
+    return this.get('pDispensationPct')
+  }
+
+/**
+ * get the length of commit period for voting in parametrizer
+ * @return {integer} length of the parametrizer commit stage in seconds
+ * @example let pCommitStageLen = await paratii.eth.tcr.getpCommitStageLen()
+ */
+  async getpCommitStageLen () {
+    return this.get('pCommitStageLen')
+  }
+
+/**
+ * get the length of reveal period for voting in parametrizer
+ * @return {integer} length of the parametrizer reveal stage in seconds
+ * @example let pRevealStageLen = await paratii.eth.tcr.getpRevealStageLen()
+ */
+  async getpRevealStageLen () {
+    return this.get('pRevealStageLen')
+  }
+
+/**
+ * get the type of majority out of 100 necessary for vote success in parametrizer
+ * @return {integer} percentage needed for success in parametrizer
+ * @example let pVoteQuorum = await paratii.eth.tcr.getpVoteQuorum()
+ */
+  async getpVoteQuorum () {
+    return this.get('pVoteQuorum')
+  }
+
+/**
+ * get the value of the param passed on the Parametrizer contract
+ * @param  {string}  param name of the param
+ * @return {Promise}       that resolves in the value of the parameter
+ * @example  let minDeposit = await paratii.eth.tcr.get('minDeposit')
+ */
+  async get (param) {
+    let contract = await this.getParametrizerContract()
+
+    let value = await contract.methods.get(param).call()
+    return value
   }
 }
