@@ -25,7 +25,7 @@ var accountSchema = joi.object({
   * @property {string=} tcrConfigFile path of the config file chosen for the tcr
  */
 var ethSchema = joi.object({
-  provider: joi.string().default('ws://localhost:8545'),
+  provider: joi.string().default('http://localhost:8545'),
   registryAddress: joi.string().default(null).allow(null),
   tcrConfigFile: joi.string().default('sol-tcr/conf/config.json')
 }).default();
