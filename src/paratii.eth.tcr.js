@@ -619,7 +619,25 @@ export class ParatiiEthTcr {
   }
 
   // --------------------[voting functions]-------------------------------------
+  async requestRightsAndCommitVote (videoId, vote, amountInWei) {
+    let tcrPLCRVoting = await this.getPLCRVotingContract()
+    let listing = await this.getListing(videoId)
 
+    let challengeExists = await this.challengeExists(videoId)
+    if (!challengeExists) { throw new Error(`Challenge ${listing.challengeID} is finished`) }
+
+    let isCommitPeriodActive = await this.commitPeriodActive(listing.challengeID)
+    if (!isCommitPeriodActive) { throw new Error(`Commit period for Challenge ${listing.challengeID} is finished`) }
+
+    let approved = await this.eth.approve(tcrPLCRVoting.options.address, amountInWei)
+    if (!approved) { throw new Error('Token approvation failed') }
+
+    await this.requestVotingRights(amountInWei)
+
+    let commitVoteTx = await this.commitVote(videoId, vote, amountInWei)
+
+    return commitVoteTx
+  }
   /**
    * Commits vote using hash of choice and secret salt to conceal vote until reveal
    * @param  {string}  videoId videoId
@@ -654,11 +672,8 @@ export class ParatiiEthTcr {
       throw new Error(`${this.eth.getAccount()} balance (${balance.toString()}) is insufficient (amount = ${amount.toString()})`)
     }
 
-    let allowancen = await this.eth.allowance(this.eth.getAccount(), tcrPLCRVoting.options.address)
-    let allowance = new BigNumber(allowancen)
-    if (allowance.lt(amount)) {
-      throw new Error(`PLCRVoting Contract allowance (${allowance.toString()}) is < amount (${amount.toString()})`)
-    }
+    let hasVotingRights = await this.hasVotingRights(amountInWei)
+    if (!hasVotingRights) { throw new Error('You don\'t have enough voting rights') }
 
     // generate salt and store it.
     let salt = this.generateSalt(32)
@@ -822,18 +837,30 @@ export class ParatiiEthTcr {
    */
   async requestVotingRights (amount) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
-    let balance = await this.eth.balanceOf(this.eth.getAccount(), 'PTI')
+    let balancen = await this.eth.balanceOf(this.eth.getAccount(), 'PTI')
+    let balance = new BigNumber(balancen)
+
     if (balance.lt(amount)) {
       throw new Error(`${this.eth.getAccount()} balance (${balance.toString()}) is insufficient (amount = ${amount.toString()})`)
     }
 
-    let allowance = await this.eth.allowance(this.eth.getAccount(), tcrPLCRVoting.options.address)
+    let allowancen = await this.eth.allowance(this.eth.getAccount(), tcrPLCRVoting.options.address)
+    let allowance = new BigNumber(allowancen)
+
     if (allowance.lt(amount)) {
       throw new Error(`PLCRVoting Contract allowance (${allowance.toString()}) is < amount (${amount.toString()})`)
     }
 
     let tx = await tcrPLCRVoting.methods.requestVotingRights(amount).send()
     return tx
+  }
+
+  async hasVotingRights (amount) {
+    let PLCRVoting = await this.getPLCRVotingContract()
+
+    let numTokens = await PLCRVoting.methods.voteTokenBalance(this.eth.getAccount()).call()
+
+    return numTokens >= amount
   }
 
   /**

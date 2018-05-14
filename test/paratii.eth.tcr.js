@@ -448,7 +448,7 @@ describe('paratii.eth.tcr:', function () {
 
   it('commit and reveal schema should work correctly', async function () {
     let id = 'new-new-id'
-    let tcrPLCRVoting = await paratii.eth.tcr.getPLCRVotingContract()
+    let vote = 0
 
     // haven't applied yet
     let appWasMade = await paratii.eth.tcr.appWasMade(id)
@@ -466,6 +466,8 @@ describe('paratii.eth.tcr:', function () {
     assert.isOk(challengeTx)
     assert.isOk(challengeTx.events._Challenge)
 
+    let challengeID = await paratii.eth.tcr.getChallengeId(id)
+
     // there should be a challenges going on
     let challengeExists = await paratii.eth.tcr.challengeExists(id)
     assert.isTrue(challengeExists)
@@ -474,12 +476,43 @@ describe('paratii.eth.tcr:', function () {
     let isCommitPeriodActive = await paratii.eth.tcr.commitPeriodActive(challengeTx.events._Challenge.returnValues.challengeID)
     assert.isTrue(isCommitPeriodActive)
 
-    await paratii.eth.approve(tcrPLCRVoting.options.address, paratii.eth.web3.utils.toWei('10'))
-    let commitVoteTx = await paratii.eth.tcr.commitVote(id, 1, paratii.eth.web3.utils.toWei('1'))
-
+    // one vote for
+    let commitVoteTx = await paratii.eth.tcr.requestRightsAndCommitVote(id, vote, paratii.eth.web3.utils.toWei('1'))
     assert.isOk(commitVoteTx)
     assert.isOk(commitVoteTx.events._VoteCommitted)
 
-    // TODO fix this test
+    // make tx so that the commit period is finished
+    do {
+      await paratii.eth.transfer(address17, 1, 'PTI')
+      isCommitPeriodActive = await paratii.eth.tcr.commitPeriodActive(challengeID)
+    } while (isCommitPeriodActive)
+
+    // we should be in reveal period
+    let isRevealPeriodActive = await paratii.eth.tcr.revealPeriodActive(challengeID)
+    assert.isTrue(isRevealPeriodActive)
+
+    let revealTx = await paratii.eth.tcr.revealVote(challengeID, vote, paratii.eth.tcr.getSalt(id))
+    assert.isOk(revealTx)
+    assert.isOk(revealTx.events._VoteRevealed)
+
+    // make tx so that the reveal period is finished
+    do {
+      await paratii.eth.transfer(address17, 1, 'PTI')
+      isRevealPeriodActive = await paratii.eth.tcr.revealPeriodActive(challengeID)
+    } while (isRevealPeriodActive)
+
+    // reveal period is ended, challenge can be resolved
+    let challengeCanBeResolved = await paratii.eth.tcr.challengeCanBeResolved(id)
+    assert.isTrue(challengeCanBeResolved)
+
+    // resolves the challenge
+    let updateTx = await paratii.eth.tcr.updateStatus(id)
+    assert.isOk(updateTx)
+    // should succeed because there is only a vote against
+    assert.isOk(updateTx.events._ChallengeSucceeded)
+
+    // should be false because there was just 1 vote against --> listing rejected
+    let isWhitelisted = await paratii.eth.tcr.isWhitelisted(id)
+    assert.isFalse(isWhitelisted)
   })
 })

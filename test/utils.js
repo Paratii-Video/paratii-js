@@ -181,6 +181,7 @@ async function challengeFromDifferentAccount (privateKey, videoId, amountToFund,
   let amount = new BigNumber(paratii.eth.web3.utils.toWei(amountToFund.toString()))
   chai.assert.equal(Number(balanceOfAddress1), Number(amount.plus(startingFund)))
 
+  // await paratii.eth.setAccount(challengerAccount)
   // approve the tcr to spend address1 tokens ------------------------------------
   let approval = await token.methods.approve(
     tcrRegistry.options.address,
