@@ -212,7 +212,7 @@ async function challengeFromDifferentAccount (privateKey, videoId, amountToFund,
  * 1. Creates the account and adds it to the wallet
  * 2. fund the account
  * 3. gives the approval to the PLCRVoting
- * 4. creates a vote
+ * 4. creates a vote (NB it votes always with 1 wei)
  * 5. requests vote rights
  * 6. gets the previous pollID
  * 7. commits the vote

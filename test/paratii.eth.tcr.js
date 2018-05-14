@@ -34,6 +34,8 @@ describe('paratii.eth.tcr:', function () {
   let myPrivateKey2 = '0x4fb2363a8880b279e38316b749ad163708a5dc4445e3f69fdc58475054d77601'
   // let myAddress3 = '0x7d3f3a0c7ec67675ffc8B10b1F62D10096A14829'
 
+  let privateKeyWithNoFunds = '0x50b2c2cd6a226d3f102c35af1220f7b36c9656efdec2590a47c4544a7d2ef497'
+  // let addressWithNoFunds = '0xB7A4cE6D608BcF75d5d7219BcADAa0F45B5FcD0A'
   it('should be able to get minDeposit', async function () {
     let amount = await paratii.eth.tcr.getMinDeposit()
     assert.isOk(amount)
@@ -566,7 +568,56 @@ describe('paratii.eth.tcr:', function () {
     assert.isOk(commitVoteTx.events._VoteCommitted)
   })
   it('user can\'t vote if he doesn\'t have enough PTI', async function () {
-    // let id = 'joking'
-     // TODO implement this
+    let id = 'joking'
+
+    // application for id --------------------------------------------------
+    let result = await paratii.eth.tcr.checkEligiblityAndApply(id, paratii.eth.web3.utils.toWei('10'))
+    assert.isTrue(result)
+
+    // application should be successful
+    let appWasMade = await paratii.eth.tcr.appWasMade(id)
+    assert.isTrue(appWasMade)
+
+    let challengeTx = await paratii.eth.tcr.approveAndStartChallenge(id)
+    assert.isOk(challengeTx)
+    assert.isOk(challengeTx.events._Challenge)
+
+    let tcrPLCRVoting = await paratii.eth.tcr.getPLCRVotingContract()
+    assert.isOk(tcrPLCRVoting)
+
+    // add voter account.
+    let voterAccount = await paratii.eth.web3.eth.accounts.wallet.add({
+      privateKey: privateKeyWithNoFunds
+    })
+    // index of the last added accounts
+    let index = paratii.eth.web3.eth.accounts.wallet.length - 1
+    assert.isOk(voterAccount)
+    assert.isOk(paratii.eth.web3.eth.accounts.wallet[index])
+    assert.equal(voterAccount.address, paratii.eth.web3.eth.accounts.wallet[index].address)
+
+    // this address shouldn't have tokens
+    let token = await paratii.eth.getContract('ParatiiToken')
+    let startingFund = await token.methods.balanceOf(voterAccount.address).call()
+    assert.equal(startingFund, 0)
+
+    // approve PLCRVoting even if you don't have PTI
+    let amountToVoteInWei = paratii.eth.web3.utils.toWei('1')
+    let approveTx = await token.methods.approve(
+      tcrPLCRVoting.options.address,
+      amountToVoteInWei
+    ).send({from: voterAccount.address})
+    assert.isOk(approveTx)
+    assert.isOk(approveTx.events.Approval)
+
+    // request voting rights as voter. should fail given that you don't have tokens
+    let requestVotingRightsTx = await tcrPLCRVoting.methods.requestVotingRights(
+      amountToVoteInWei
+    ).send({from: voterAccount.address})
+
+    assert.isNotOk(requestVotingRightsTx.events._VotingRightsGranted)
+
+    // shouldn't be able to vote
+    let numTokens = await tcrPLCRVoting.methods.voteTokenBalance(voterAccount.address).call()
+    assert.equal(numTokens, 0)
   })
 })
