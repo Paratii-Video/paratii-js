@@ -83,7 +83,7 @@ describe('paratii.eth.tcr:', function () {
   it('checkEligiblityAndApply() should work', async function () {
     let amount = 5
     let result = await paratii.eth.tcr.checkEligiblityAndApply(videoId2, paratii.eth.web3.utils.toWei(amount.toString()))
-    assert.isOk(result, result)
+    assert.isTrue(result)
     let didVideoApply = await paratii.eth.tcr.appWasMade(videoId2)
     assert.isOk(didVideoApply)
   })
@@ -127,7 +127,7 @@ describe('paratii.eth.tcr:', function () {
   it('getListing should retrieve the listing inserted previously', async function () {
     let amount = 5
     let result = await paratii.eth.tcr.checkEligiblityAndApply(videoId3, paratii.eth.web3.utils.toWei(amount.toString()))
-    assert.isOk(result, result)
+    assert.isTrue(result)
     let didVideoApply = await paratii.eth.tcr.appWasMade(videoId3)
     assert.isOk(didVideoApply)
 
@@ -183,7 +183,7 @@ describe('paratii.eth.tcr:', function () {
 
     // application for videoId5 --------------------------------------------------
     let result = await paratii.eth.tcr.checkEligiblityAndApply(videoId5, paratii.eth.web3.utils.toWei('5'))
-    assert.isOk(result, result)
+    assert.isTrue(result)
 
     // application should be successful
     appWasMade = await paratii.eth.tcr.appWasMade(videoId5)
@@ -423,7 +423,7 @@ describe('paratii.eth.tcr:', function () {
 
     // application for id --------------------------------------------------
     let result = await paratii.eth.tcr.checkEligiblityAndApply(id, paratii.eth.web3.utils.toWei('5'))
-    assert.isOk(result, result)
+    assert.isTrue(result)
 
     // application should be successful
     appWasMade = await paratii.eth.tcr.appWasMade(id)
@@ -447,7 +447,7 @@ describe('paratii.eth.tcr:', function () {
 
     // application for id --------------------------------------------------
     let result = await paratii.eth.tcr.checkEligiblityAndApply(id, paratii.eth.web3.utils.toWei('5'))
-    assert.isOk(result, result)
+    assert.isTrue(result)
 
     // application should be successful
     appWasMade = await paratii.eth.tcr.appWasMade(id)
@@ -470,7 +470,7 @@ describe('paratii.eth.tcr:', function () {
 
     // application for id --------------------------------------------------
     let result = await paratii.eth.tcr.checkEligiblityAndApply(id, paratii.eth.web3.utils.toWei('5'))
-    assert.isOk(result, result)
+    assert.isTrue(result)
 
     // application should be successful
     appWasMade = await paratii.eth.tcr.appWasMade(id)
@@ -529,5 +529,44 @@ describe('paratii.eth.tcr:', function () {
     // should be false because there was just 1 vote against --> listing rejected
     let isWhitelisted = await paratii.eth.tcr.isWhitelisted(id)
     assert.isFalse(isWhitelisted)
+  })
+  it.skip('[SHOULD WORK] User can commit multiple votes, but can reveal just the last one', async function () {
+    let id = 'running-out-of-ids'
+
+    // application for id --------------------------------------------------
+    let result = await paratii.eth.tcr.checkEligiblityAndApply(id, paratii.eth.web3.utils.toWei('10'))
+    assert.isTrue(result)
+
+    // application should be successful
+    let appWasMade = await paratii.eth.tcr.appWasMade(id)
+    assert.isTrue(appWasMade)
+
+    let challengeTx = await paratii.eth.tcr.approveAndStartChallenge(id)
+    assert.isOk(challengeTx)
+    assert.isOk(challengeTx.events._Challenge)
+
+    let isCommitPeriodActive = await paratii.eth.tcr.commitPeriodActive(challengeTx.events._Challenge.returnValues.challengeID)
+    assert.isTrue(isCommitPeriodActive)
+
+    // TODO fix this
+
+    // one vote for
+    let commitVoteTx = await paratii.eth.tcr.approveAndGetRightsAndCommitVote(id, 1, paratii.eth.web3.utils.toWei('1'))
+    assert.isOk(commitVoteTx)
+    assert.isOk(commitVoteTx.events._VoteCommitted)
+
+    // two vote for
+    commitVoteTx = await paratii.eth.tcr.approveAndGetRightsAndCommitVote(id, 1, paratii.eth.web3.utils.toWei('1'))
+    assert.isOk(commitVoteTx)
+    assert.isOk(commitVoteTx.events._VoteCommitted)
+
+    // one vote against
+    commitVoteTx = await paratii.eth.tcr.approveAndGetRightsAndCommitVote(id, 0, paratii.eth.web3.utils.toWei('1'))
+    assert.isOk(commitVoteTx)
+    assert.isOk(commitVoteTx.events._VoteCommitted)
+  })
+  it('user can\'t vote if he doesn\'t have enough PTI', async function () {
+    // let id = 'joking'
+     // TODO implement this
   })
 })
