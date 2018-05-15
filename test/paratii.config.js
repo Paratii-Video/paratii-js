@@ -164,7 +164,7 @@ describe('Paratii configuration:', function () {
   })
 })
 
-it('paratii.eth.getContract() should throw a meaningful error if the registry address isn\'t correct', async function () {
+it.skip('paratii.eth.getContract() should throw a meaningful error if the registry address isn\'t correct', async function () {
   let paratii = new Paratii({
     account: testAccount,
     eth: {
@@ -175,7 +175,7 @@ it('paratii.eth.getContract() should throw a meaningful error if the registry ad
   await assert.isRejected(paratii.eth.getContract('Likes'), Error, /The registry address is not correct/g)
 })
 
-it('paratii.eth.getContract() should throw a meaningful error if no blockchain is available', async function () {
+it.skip('paratii.eth.getContract() should throw a meaningful error if no blockchain is available', async function () {
   let paratii = new Paratii({
     eth: { provider: 'http://localhost:8000', // wrong port
       registryAddress: '0xC83003a9B5c2C5bcce29f9c9Ee34b4ef246c781C'},
