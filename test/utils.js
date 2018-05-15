@@ -154,6 +154,9 @@ const mockDb = function () {
  * @private
  */
 async function challengeFromDifferentAccount (privateKey, videoId, amountToFund, paratii) {
+  // console.log('challengeFromDifferentAccount ', privateKey.slice(0, 6), videoId, amountToFund)
+  // let contracts = await paratii.eth.getContracts()
+  // console.log('contracts: ', Object.keys(contracts))
   let tcrRegistry = await paratii.eth.tcr.getTcrContract()
   chai.assert.isOk(tcrRegistry)
 
@@ -164,29 +167,40 @@ async function challengeFromDifferentAccount (privateKey, videoId, amountToFund,
   chai.assert.isOk(challengerAccount)
   let index = paratii.eth.web3.eth.accounts.wallet.length - 1
   chai.assert.equal(challengerAccount.address, paratii.eth.web3.eth.accounts.wallet[index].address)
-
+  // console.log('private key', privateKey.slice(0, 6), 'added, index: ', index)
   let token = await paratii.eth.getContract('ParatiiToken')
   chai.assert.isOk(token)
 
   let startingFund = new BigNumber(await token.methods.balanceOf(challengerAccount.address).call())
+  // console.log('startingFund', privateKey.slice(0, 6), startingFund.toString())
 
   // fund address1 of the challenger account -------------------------------------
   let amountToTransferInWei = paratii.eth.web3.utils.toWei(amountToFund.toString())
+  let smallerAmountToTransferInWei = paratii.eth.web3.utils.toWei('39')
+  // console.log('smallerAmountToTransferInWei: ', smallerAmountToTransferInWei.toString())
   let transferTx = await token.methods.transfer(
     challengerAccount.address,
     amountToTransferInWei
-  ).send()
+  ).send({from: paratii.eth.getAccount()})
+  // console.log('transferTx: ', transferTx)
   chai.assert.isOk(transferTx)
   let balanceOfAddress1 = new BigNumber(await token.methods.balanceOf(challengerAccount.address).call())
   let amount = new BigNumber(paratii.eth.web3.utils.toWei(amountToFund.toString()))
+  // console.log('amountToFund', privateKey.slice(0, 6), amountToTransferInWei.toString(), 'balance: ', balanceOfAddress1.toString())
   chai.assert.equal(Number(balanceOfAddress1), Number(amount.plus(startingFund)))
+
+  // console.log('tcrRegistry Address: ', tcrRegistry.options.address,
+  //   'challengerAccount: ', challengerAccount.address,
+  //   'wallet:', paratii.eth.web3.eth.accounts.wallet[index].address,
+  //   'token: ', token.options.address)
 
   // await paratii.eth.setAccount(challengerAccount)
   // approve the tcr to spend address1 tokens ------------------------------------
   let approval = await token.methods.approve(
     tcrRegistry.options.address,
-    amountToTransferInWei
-  ).send({from: challengerAccount.address}) // send from challengerAccount
+    smallerAmountToTransferInWei.toString()
+  ).send({from: paratii.eth.web3.eth.accounts.wallet[index].address}) // send from challengerAccount
+  // console.log('approval ', privateKey.slice(0, 6), approval)
   chai.assert.isOk(approval)
   chai.assert.isOk(approval.events.Approval)
 
@@ -195,15 +209,17 @@ async function challengeFromDifferentAccount (privateKey, videoId, amountToFund,
     paratii.eth.tcr.getHash(videoId),
     ''
   ).send({from: challengerAccount.address})
+  // console.log('challengeTx: ', challengeTx)
+
   chai.assert.isOk(challengeTx)
   chai.assert.isOk(challengeTx.events._Challenge)
   let challengeID = challengeTx.events._Challenge.returnValues.challengeID
   chai.assert.isOk(challengeID)
+  // console.log('CHALLENGEID : ', challengeID)
 
   // check that the challenge is actually from the challengerAccount and not from the default one
   let challenge = await tcrRegistry.methods.challenges(challengeID).call()
   chai.assert.equal(challengerAccount.address, challenge.challenger)
-
   return challengeID
 }
 

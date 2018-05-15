@@ -178,7 +178,7 @@ describe('paratii.eth.tcr:', function () {
   })
 
   it('challengeExists() implemented in the lib and challengeExists() implemented in the tcr contract should always return the same value', async function () {
-    console.log('starting challengeExists')
+    // console.log('starting challengeExists')
     let tcrRegistry = await paratii.eth.tcr.getTcrContract()
 
     // haven't applied yet
@@ -206,7 +206,7 @@ describe('paratii.eth.tcr:', function () {
       privateKey: privateKey17
     })
     assert.isOk(challengerAccount)
-    console.log('challengerAccount: ', challengerAccount)
+    // console.log('challengerAccount: ', challengerAccount)
 
     // fund address1
     let token = await paratii.eth.getContract('ParatiiToken')
@@ -219,8 +219,8 @@ describe('paratii.eth.tcr:', function () {
     assert.isOk(transferTx)
     let balanceOfAddress1 = await token.methods.balanceOf(challengerAccount.address).call()
     assert.equal(balanceOfAddress1, paratii.eth.web3.utils.toWei('40'))
-    console.log('transferTx: ', transferTx)
-    console.log('transferTx: ', transferTx.events.Transfer.returnValues)
+    // console.log('transferTx: ', transferTx)
+    // console.log('transferTx: ', transferTx.events.Transfer.returnValues)
 
     let approveTx = await token.methods.approve(
       tcrRegistry.options.address,
@@ -228,14 +228,15 @@ describe('paratii.eth.tcr:', function () {
     ).send({from: paratii.eth.web3.eth.accounts.wallet[1].address})
     // ).send()
     assert.isOk(approveTx)
-    console.log('approval: ', approveTx)
-    console.log('approval values: ', approveTx.events.Approval.raw)
+    // console.log('approval: ', approveTx)
+    // console.log('approval values: ', approveTx.events.Approval.raw)
 
     let challengeTx = await tcrRegistry.methods.challenge(
       paratii.eth.web3.utils.soliditySha3(videoId5),
       ''
     ).send({from: paratii.eth.web3.eth.accounts.wallet[1].address})
-    console.log('challengeTx: ', challengeTx)
+    assert.isOk(challengeTx)
+    // console.log('challengeTx: ', challengeTx)
 
     // there should be the challenges going on
     challengeExists = await paratii.eth.tcr.challengeExists(videoId5)
