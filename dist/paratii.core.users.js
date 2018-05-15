@@ -279,7 +279,7 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
 
             case 13:
               _context4.next = 15;
-              return _regenerator2.default.awrap(paratii.eth.tcr.didVideoApply(videoId));
+              return _regenerator2.default.awrap(paratii.eth.tcrPlaceholder.didVideoApply(videoId));
 
             case 15:
               didVideoApply = _context4.sent;
@@ -290,7 +290,7 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
               }
 
               _context4.next = 19;
-              return _regenerator2.default.awrap(paratii.eth.tcr.exit(videoId));
+              return _regenerator2.default.awrap(paratii.eth.tcrPlaceholder.exit(videoId));
 
             case 19:
               i++;

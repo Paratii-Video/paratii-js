@@ -4,6 +4,7 @@ import { ParatiiEthUsers } from './paratii.eth.users.js'
 import { ParatiiEthEvents } from './paratii.eth.events.js'
 import { ParatiiEthVouchers } from './paratii.eth.vouchers.js'
 import { ParatiiEthTcr } from './paratii.eth.tcr.js'
+import { ParatiiEthTcrPlaceholder } from './paratii.eth.tcrPlaceholder.js'
 import { patchWallet } from './paratii.eth.wallet.js'
 import { ethSchema, accountSchema } from './schemas.js'
 import joi from 'joi'
@@ -85,6 +86,7 @@ export class ParatiiEth {
     this.events = new ParatiiEthEvents(this)
     this.vouchers = new ParatiiEthVouchers(this)
     this.tcr = new ParatiiEthTcr(this)
+    this.tcrPlaceholder = new ParatiiEthTcrPlaceholder(this)
   }
   /**
    * [paratii.setAccount()](./Paratii.html#setAccount__anchor)
@@ -498,7 +500,7 @@ export class ParatiiEth {
    * for (contractName in contracts) { console.log(contracts[contractName])}
    */
   async deployContracts () {
-    let tcrConfig = require('sol-tcr/conf/config.json')
+    let tcrConfig = require(this.config.eth.tcrConfigFile)
     let parameterizerConfig = tcrConfig.paramDefaults
 
     let paratiiRegistry = await this.deployContract('Registry')
@@ -590,7 +592,7 @@ export class ParatiiEth {
     this.contracts.TcrPLCRVoting = tcrPLCRVoting
     this.contracts.TcrParameterizer = tcrParameterizer
 
-    this.setRegistryAddress(paratiiRegistryAddress)
+    await this.setRegistryAddress(paratiiRegistryAddress)
 
     return this.contracts
   }
@@ -605,6 +607,7 @@ export class ParatiiEth {
   async getContracts () {
     for (var name in this.contracts) {
       let contract = this.contracts[name]
+      console.log(`[${name}] = ${contract.options.address}`)
       if (!contract.options.address) {
         let address = await this.getContractAddress(name)
         if (address && address !== '0x0') {
@@ -709,6 +712,41 @@ export class ParatiiEth {
       return balances
     }
   }
+
+  /**
+   * get the amount the beneficiary is allowed to transferFrom the owner account.
+   * @param  {string}  ownerAddress       the address of the owner.
+   * @param  {string}  beneficiaryAddress address of the contract/person allowed to spend owners money
+   * @return {Promise}                    returns allowance in BN format.
+   */
+  async allowance (ownerAddress, beneficiaryAddress) {
+    let tokenContract = await this.getContract('ParatiiToken')
+    let allowance = await tokenContract.methods.allowance(ownerAddress, beneficiaryAddress).call()
+    return allowance
+  }
+
+  /**
+   * ERC20 token approval
+   * @param  {string}  beneficiary beneficiary ETH Address
+   * @param  {Number}  amount      bignumber of amount to approve.
+   * @return {Promise}             returns approved amount.
+   */
+  async approve (beneficiary, amount) {
+    let tokenContract = await this.getContract('ParatiiToken')
+    let approved = await tokenContract.methods.approve(beneficiary, amount).send({from: this.getAccount()})
+    if (!approved) {
+      throw new Error(`Couldn't Approve ${beneficiary} to spend ${amount.toString()} from ${this.getAccount()}`)
+    }
+
+    // check to make sure all is good.
+    let allowance = await this.allowance(this.getAccount(), beneficiary)
+    if (allowance.toString() !== amount.toString()) {
+      throw new Error(`allowance Error : allowance ${allowance.toString()} !== amount ${amount.toString()}`)
+    }
+
+    return approved
+  }
+
   /**
    * send ETH from current account to beneficiary
    * @param  {string}  beneficiary ETH address

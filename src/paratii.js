@@ -15,7 +15,7 @@ const utils = require('./utils.js')
  * and utilities to interact with the Paratii index.
 
  * @param {ParatiiConfigSchema} opts options object to configure paratii library
- * @property {ParatiiConfigSchema} config where the configuration of the paratii object is storeed
+ * @property {ParatiiConfigSchema} config where the configuration of the paratii object is stored
  * @property {ParatiiVids} vids operations on videos
  * @property {ParatiiUsers} users operations on users
  * @property {ParatiiEth} eth interact with the Ethereum blockchain

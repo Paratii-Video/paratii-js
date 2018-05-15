@@ -60,6 +60,9 @@ typings/
 # dotenv environment variables file
 .env
 
+# node js localstorage for testing the tcr
+test/data/nodeLocalstorage
+
 secrets/
 .eslintrc.js
 .eslintrc.json
