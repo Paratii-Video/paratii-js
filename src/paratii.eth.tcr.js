@@ -175,6 +175,18 @@ export class ParatiiEthTcr {
     return result
   }
 
+  async approveAndDeposit (videoId, amount) {
+    let tcrRegistry = await this.getTcrContract()
+
+    // give approval to tcr
+    let approved = await this.eth.approve(tcrRegistry.options.address, amount)
+
+    if (!approved) { throw new Error('error in the approvation phase') }
+
+    let depositTx = await this.deposit(videoId, amount)
+
+    return depositTx
+  }
   /**
    * Allows the owner of a listingHash to increase their unstaked deposit.
    * @param  {string}  videoId id of the video
@@ -191,7 +203,9 @@ export class ParatiiEthTcr {
 
     // check if tcrRegistry has the allowance
     let tcrRegistry = await this.getTcrContract()
-    let allowance = await this.eth.allowance(this.eth.getAccount(), tcrRegistry.options.address)
+    let allowancen = await this.eth.allowance(this.eth.getAccount(), tcrRegistry.options.address)
+    let allowance = new BigNumber(allowancen)
+
     if (allowance.lt(amount)) {
       throw new Error(`tcrRegistry doesn't have enough allowance (${allowance.toString()}) to deposit ${amount.toString()}`)
     }
@@ -210,17 +224,19 @@ export class ParatiiEthTcr {
     let tcrRegistry = await this.getTcrContract()
     let hash = this.getAndStoreHash(videoId)
     let listing = await this.getListing(videoId)
+
     if (listing.owner !== this.eth.getAccount()) {
       throw new Error(`Can't deposit tokens to video ${videoId} because ${this.eth.getAccount()} isn't the owner.`)
     }
 
-    if (listing.unstakedDeposit.lt(amount)) {
-      throw new Error(`unstakedDeposit ${listing.unstakedDeposit.toString()} is less than amount ${amount.toString()}`)
+    let unstakedDeposit = new BigNumber(listing.unstakedDeposit)
+    if (unstakedDeposit.lt(amount)) {
+      throw new Error(`unstakedDeposit ${unstakedDeposit.toString()} is less than amount ${amount.toString()}`)
     }
 
     let minDeposit = await this.getMinDeposit()
-    if (listing.unstakedDeposit.minus(amount).lt(minDeposit)) {
-      throw new Error(`can't withdraw amount (${amount.toString()}) from ${listing.unstakedDeposit.toString()} since it'd be under ${minDeposit.toString()}`)
+    if (unstakedDeposit.minus(amount).lt(minDeposit)) {
+      throw new Error(`can't withdraw amount (${amount.toString()}) from ${unstakedDeposit.toString()} since it'd be under ${minDeposit.toString()}`)
     }
 
     let tx = await tcrRegistry.methods.withdraw(hash, amount).send()
@@ -518,8 +534,10 @@ export class ParatiiEthTcr {
    */
   async withdrawVotingRights (amount) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
-    let voterBalance = await tcrPLCRVoting.methods.voteTokenBalance(this.eth.getAccount()).call()
+    let voterBalancen = await tcrPLCRVoting.methods.voteTokenBalance(this.eth.getAccount()).call()
     let lockedTokens = await this.getLockedTokens(this.eth.getAccount())
+    let voterBalance = new BigNumber(voterBalancen)
+
     let balanceAfter = voterBalance.minus(lockedTokens)
     if (balanceAfter.lt(amount)) {
       throw new Error(`unlocked balance ${balanceAfter.toString()} is < amount ${amount.toString()}`)

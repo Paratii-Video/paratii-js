@@ -660,4 +660,69 @@ describe('paratii.eth.tcr:', function () {
     let numTokens = await tcrPLCRVoting.methods.voteTokenBalance(voterAccount.address).call()
     assert.equal(numTokens, 0)
   })
+  it('user should be able to deposit and withdraw token from their listing', async function () {
+    let id = 'joking-man'
+
+    // application for id --------------------------------------------------
+    let result = await paratii.eth.tcr.checkEligiblityAndApply(id, 10)
+    assert.isTrue(result)
+
+    // application should be successful
+    let appWasMade = await paratii.eth.tcr.appWasMade(id)
+    assert.isTrue(appWasMade)
+
+    // should not be able to withdraw because mindeposit = 10 in tcr/devConfig
+    await assert.isRejected(
+      paratii.eth.tcr.withdraw(id, 1),
+      Error,
+       /withdraw/g
+     )
+
+    let depositTx = await paratii.eth.tcr.approveAndDeposit(id, 2)
+    assert.isOk(depositTx)
+    assert.isOk(depositTx.events._Deposit)
+
+     // now I should be able to withdraw up to 2
+    let withdrawTx = await paratii.eth.tcr.withdraw(id, 1)
+    assert.isOk(withdrawTx)
+    assert.isOk(withdrawTx.events._Withdrawal)
+  })
+  it('request and withdraw rights should work as expeceted', async function () {
+    let id = 'there-are-a-lot-of-tests'
+
+    let tcrPLCRVoting = await paratii.eth.tcr.getPLCRVotingContract()
+
+    let balanceBefore = new BigNumber(await paratii.eth.balanceOf(paratii.eth.getAccount(), 'PTI'))
+
+    let approveTx = await paratii.eth.approve(tcrPLCRVoting.options.address, 10)
+    assert.isOk(approveTx)
+    assert.isOk(approveTx.events.Approval)
+
+    let tx = await paratii.eth.tcr.requestVotingRights(10)
+    assert.isOk(tx)
+    assert.isOk(tx.events._VotingRightsGranted)
+
+    let balanceAfter = new BigNumber(await paratii.eth.balanceOf(paratii.eth.getAccount(), 'PTI'))
+
+    assert.equal(balanceBefore.toString(), balanceAfter.plus(10).toString())
+    // -----------------------------------------------------------------------
+    // application for id
+    let result = await paratii.eth.tcr.checkEligiblityAndApply(id, 10)
+    assert.isTrue(result)
+
+    // application should be successful
+    let appWasMade = await paratii.eth.tcr.appWasMade(id)
+    assert.isTrue(appWasMade)
+
+    await paratii.eth.tcr.approveAndStartChallenge(id)
+
+    // ------------------------------------------------------------------------
+    tx = await paratii.eth.tcr.withdrawVotingRights(10)
+    assert.isOk(tx)
+    assert.isOk(tx.events._VotingRightsWithdrawn)
+
+    // let balanceAfter2 = new BigNumber(await paratii.eth.balanceOf(paratii.eth.getAccount(), 'PTI'))
+
+    // assert.equal(balanceBefore.toString(),balanceAfter2.toString())
+  })
 })

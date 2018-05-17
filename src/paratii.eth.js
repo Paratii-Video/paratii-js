@@ -729,7 +729,7 @@ export class ParatiiEth {
    * ERC20 token approval
    * @param  {string}  beneficiary beneficiary ETH Address
    * @param  {Number}  amount      bignumber of amount to approve.
-   * @return {Promise}             returns approved amount.
+   * @return {Promise}             returns approvation tx
    */
   async approve (beneficiary, amount) {
     let tokenContract = await this.getContract('ParatiiToken')
