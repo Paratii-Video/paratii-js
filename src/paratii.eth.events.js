@@ -75,6 +75,14 @@ export class ParatiiEthEvents {
         contract: 'TcrRegistry',
         event: '_NewVideoWhitelisted'
       },
+      PHApplication: {
+        contract: 'TcrPlaceholder',
+        event: '_Application'
+      },
+      PHNewVideoWhitelisted: {
+        contract: 'TcrPlaceholder',
+        event: '_NewVideoWhitelisted'
+      },
       Distribute: {
         contract: 'PTIDistributor',
         event: 'LogDistribute'

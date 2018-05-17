@@ -294,6 +294,20 @@ describe('paratii.eth.events API: :', function () {
 
     paratii.eth.tcr.checkEligiblityAndApply(videoId, amount)
   })
+
+  it('subscription to Application TCR Placeholder should work as expected', function (done) {
+    let amount = 5
+    amount = paratii.eth.web3.utils.toWei(amount.toString())
+    let videoId = 'some-vide-id2'
+
+    paratii.eth.events.addListener('PHApplication', function (log) {
+      assert.equal(log.returnValues.videoId, videoId)
+      assert.equal(log.returnValues.deposit, amount)
+      done()
+    })
+
+    paratii.eth.tcrPlaceholder.checkEligiblityAndApply(videoId, amount)
+  })
   it.skip('TBI subscription to NewVideoWhitelisted TCR should work as expected', function (done) {
     let amount = 5
     amount = paratii.eth.web3.utils.toWei(amount.toString())
