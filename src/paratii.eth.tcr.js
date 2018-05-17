@@ -209,8 +209,7 @@ export class ParatiiEthTcr {
 
     // check if tcrRegistry has the allowance
     let tcrRegistry = await this.getTcrContract()
-    let allowancen = await this.eth.allowance(this.eth.getAccount(), tcrRegistry.options.address)
-    let allowance = new BigNumber(allowancen)
+    let allowance = await this.eth.allowance(this.eth.getAccount(), tcrRegistry.options.address)
 
     if (allowance.lt(amount)) {
       throw new Error(`tcrRegistry doesn't have enough allowance (${allowance.toString()}) to deposit ${amount.toString()}`)
@@ -314,13 +313,9 @@ export class ParatiiEthTcr {
 
     // 1. check if challenger has enough minDeposit and approved the
     // contract to spend that
-    let minDepositn = await this.getMinDeposit()
-    let balancen = await this.eth.balanceOf(this.eth.config.account.address, 'PTI')
-    let allowancen = await this.eth.allowance(this.eth.getAccount(), tcrRegistry.options.address)
-
-    let allowance = new BigNumber(allowancen)
-    let balance = new BigNumber(balancen)
-    let minDeposit = new BigNumber(minDepositn)
+    let minDeposit = await this.getMinDeposit()
+    let balance = await this.eth.balanceOf(this.eth.config.account.address, 'PTI')
+    let allowance = await this.eth.allowance(this.eth.getAccount(), tcrRegistry.options.address)
 
     if (allowance.lt(minDeposit)) {
       throw new Error(`allowance ${allowance.toString()} is less than ${minDeposit.toString()}`)
@@ -455,8 +450,8 @@ export class ParatiiEthTcr {
     }
 
     // check balance and allowance
-    let balancen = await this.eth.balanceOf(this.eth.getAccount(), 'PTI')
-    let balance = new BigNumber(balancen)
+    let balance = await this.eth.balanceOf(this.eth.getAccount(), 'PTI')
+
     if (balance.lt(amount)) {
       throw new Error(`${this.eth.getAccount()} balance (${balance.toString()}) is insufficient (amount = ${amount.toString()})`)
     }
@@ -536,15 +531,13 @@ export class ParatiiEthTcr {
    */
   async requestVotingRights (amount) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
-    let balancen = await this.eth.balanceOf(this.eth.getAccount(), 'PTI')
-    let balance = new BigNumber(balancen)
+    let balance = await this.eth.balanceOf(this.eth.getAccount(), 'PTI')
 
     if (balance.lt(amount)) {
       throw new Error(`${this.eth.getAccount()} balance (${balance.toString()}) is insufficient (amount = ${amount.toString()})`)
     }
 
-    let allowancen = await this.eth.allowance(this.eth.getAccount(), tcrPLCRVoting.options.address)
-    let allowance = new BigNumber(allowancen)
+    let allowance = await this.eth.allowance(this.eth.getAccount(), tcrPLCRVoting.options.address)
 
     if (allowance.lt(amount)) {
       throw new Error(`PLCRVoting Contract allowance (${allowance.toString()}) is < amount (${amount.toString()})`)
@@ -821,7 +814,6 @@ export class ParatiiEthTcr {
    * check if a video is still in apply stage
    * @param  {string}  videoId univocal video identifier
    * @return {Promise}         true if it's in apply stage, false otherwise
-   * THIS COULD CAUSE PROBLEM IN PRODUCTION
    */
   async isInApplyStage (videoId) {
     let listing = await this.getListing(videoId)
@@ -1041,7 +1033,7 @@ export class ParatiiEthTcr {
  * @example let minDeposit = await paratii.eth.tcr.getMinDeposit()
  */
   async getMinDeposit () {
-    return this.get('minDeposit')
+    return this.eth.web3.utils.toBN(await this.get('minDeposit'))
   }
 
 /**

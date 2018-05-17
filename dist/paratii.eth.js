@@ -1065,7 +1065,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 7:
               balance = _context7.sent;
 
-              balances.ETH = balance;
+              balances.ETH = this.web3.utils.toBN(balance);
 
             case 9:
               if (!(!symbol || symbol === 'PTI')) {
@@ -1084,7 +1084,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 15:
               balance = _context7.sent;
 
-              balances.PTI = balance;
+              balances.PTI = this.web3.utils.toBN(balance);
 
             case 17:
               if (!symbol) {
@@ -1092,7 +1092,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
                 break;
               }
 
-              return _context7.abrupt('return', balance);
+              return _context7.abrupt('return', this.web3.utils.toBN(balance));
 
             case 21:
               return _context7.abrupt('return', balances);
@@ -1130,7 +1130,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
             case 5:
               allowance = _context8.sent;
-              return _context8.abrupt('return', allowance);
+              return _context8.abrupt('return', this.web3.utils.toBN(allowance));
 
             case 7:
             case 'end':

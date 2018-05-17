@@ -450,7 +450,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'deposit',
     value: function deposit(videoId, amount) {
-      var hash, listing, tcrRegistry, allowancen, allowance, tx;
+      var hash, listing, tcrRegistry, allowance, tx;
       return _regenerator2.default.async(function deposit$(_context7) {
         while (1) {
           switch (_context7.prev = _context7.next) {
@@ -480,25 +480,24 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
               return _regenerator2.default.awrap(this.eth.allowance(this.eth.getAccount(), tcrRegistry.options.address));
 
             case 11:
-              allowancen = _context7.sent;
-              allowance = new _bignumber.BigNumber(allowancen);
+              allowance = _context7.sent;
 
               if (!allowance.lt(amount)) {
-                _context7.next = 15;
+                _context7.next = 14;
                 break;
               }
 
               throw new Error('tcrRegistry doesn\'t have enough allowance (' + allowance.toString() + ') to deposit ' + amount.toString());
 
-            case 15:
-              _context7.next = 17;
+            case 14:
+              _context7.next = 16;
               return _regenerator2.default.awrap(tcrRegistry.methods.deposit(hash, amount).send());
 
-            case 17:
+            case 16:
               tx = _context7.sent;
               return _context7.abrupt('return', tx);
 
-            case 19:
+            case 18:
             case 'end':
               return _context7.stop();
           }
@@ -714,7 +713,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'startChallenge',
     value: function startChallenge(videoId, _data) {
-      var tcrRegistry, hash, minDepositn, balancen, allowancen, allowance, balance, minDeposit, appWasMade, isWhitelisted, listing, challengeTx;
+      var tcrRegistry, hash, minDeposit, balance, allowance, appWasMade, isWhitelisted, listing, challengeTx;
       return _regenerator2.default.async(function startChallenge$(_context11) {
         while (1) {
           switch (_context11.prev = _context11.next) {
@@ -737,87 +736,84 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
               return _regenerator2.default.awrap(this.getMinDeposit());
 
             case 7:
-              minDepositn = _context11.sent;
+              minDeposit = _context11.sent;
               _context11.next = 10;
               return _regenerator2.default.awrap(this.eth.balanceOf(this.eth.config.account.address, 'PTI'));
 
             case 10:
-              balancen = _context11.sent;
+              balance = _context11.sent;
               _context11.next = 13;
               return _regenerator2.default.awrap(this.eth.allowance(this.eth.getAccount(), tcrRegistry.options.address));
 
             case 13:
-              allowancen = _context11.sent;
-              allowance = new _bignumber.BigNumber(allowancen);
-              balance = new _bignumber.BigNumber(balancen);
-              minDeposit = new _bignumber.BigNumber(minDepositn);
+              allowance = _context11.sent;
 
               if (!allowance.lt(minDeposit)) {
-                _context11.next = 19;
+                _context11.next = 16;
                 break;
               }
 
               throw new Error('allowance ' + allowance.toString() + ' is less than ' + minDeposit.toString());
 
-            case 19:
+            case 16:
               if (!balance.lt(minDeposit)) {
-                _context11.next = 21;
+                _context11.next = 18;
                 break;
               }
 
               throw new Error('balance ' + balance.toString() + ' is less than ' + minDeposit.toString());
 
-            case 21:
-              _context11.next = 23;
+            case 18:
+              _context11.next = 20;
               return _regenerator2.default.awrap(this.appWasMade(videoId));
 
-            case 23:
+            case 20:
               appWasMade = _context11.sent;
-              _context11.next = 26;
+              _context11.next = 23;
               return _regenerator2.default.awrap(this.isWhitelisted(videoId));
 
-            case 26:
+            case 23:
               isWhitelisted = _context11.sent;
 
               if (!(!appWasMade && !isWhitelisted)) {
-                _context11.next = 29;
+                _context11.next = 26;
                 break;
               }
 
               throw new Error('video ' + videoId + ' has no application or is not whitelisted');
 
-            case 29:
-              _context11.next = 31;
+            case 26:
+              _context11.next = 28;
               return _regenerator2.default.awrap(this.getListing(videoId));
 
-            case 31:
+            case 28:
               listing = _context11.sent;
 
               if (!(parseInt(listing.challengeID) !== 0)) {
-                _context11.next = 34;
+                _context11.next = 31;
                 break;
               }
 
               throw new Error('challenge for ' + videoId + ' already exist. challengeID ' + listing.challengeID);
 
-            case 34:
-              _context11.next = 36;
+            case 31:
+              _context11.next = 33;
               return _regenerator2.default.awrap(tcrRegistry.methods.challenge(hash, _data).send());
 
-            case 36:
+            case 33:
               challengeTx = _context11.sent;
 
               if (challengeTx.events._Challenge) {
-                _context11.next = 39;
+                _context11.next = 36;
                 break;
               }
 
               throw new Error('starting Challenge ' + videoId + ' failed!!');
 
-            case 39:
+            case 36:
               return _context11.abrupt('return', challengeTx);
 
-            case 40:
+            case 37:
             case 'end':
               return _context11.stop();
           }
@@ -1037,7 +1033,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'commitVote',
     value: function commitVote(videoId, vote, amountInWei) {
-      var tcrPLCRVoting, amount, listing, pollID, isCommitPeriodActive, balancen, balance, hasVotingRights, salt, secretHash, prevNode, isValidPosition, tx;
+      var tcrPLCRVoting, amount, listing, pollID, isCommitPeriodActive, balance, hasVotingRights, salt, secretHash, prevNode, isValidPosition, tx;
       return _regenerator2.default.async(function commitVote$(_context15) {
         while (1) {
           switch (_context15.prev = _context15.next) {
@@ -1090,31 +1086,30 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
               return _regenerator2.default.awrap(this.eth.balanceOf(this.eth.getAccount(), 'PTI'));
 
             case 19:
-              balancen = _context15.sent;
-              balance = new _bignumber.BigNumber(balancen);
+              balance = _context15.sent;
 
               if (!balance.lt(amount)) {
-                _context15.next = 23;
+                _context15.next = 22;
                 break;
               }
 
               throw new Error(this.eth.getAccount() + ' balance (' + balance.toString() + ') is insufficient (amount = ' + amount.toString() + ')');
 
-            case 23:
-              _context15.next = 25;
+            case 22:
+              _context15.next = 24;
               return _regenerator2.default.awrap(this.hasVotingRights(amountInWei));
 
-            case 25:
+            case 24:
               hasVotingRights = _context15.sent;
 
               if (hasVotingRights) {
-                _context15.next = 28;
+                _context15.next = 27;
                 break;
               }
 
               throw new Error('You don\'t have enough voting rights');
 
-            case 28:
+            case 27:
 
               // generate salt and store it.
               salt = this.generateSalt(32);
@@ -1124,33 +1119,33 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
               // get previous PollID
 
-              _context15.next = 33;
+              _context15.next = 32;
               return _regenerator2.default.awrap(this.getLastNode(this.eth.getAccount()));
 
-            case 33:
+            case 32:
               prevNode = _context15.sent;
-              _context15.next = 36;
+              _context15.next = 35;
               return _regenerator2.default.awrap(this.validPosition(prevNode, pollID, this.eth.getAccount(), amount));
 
-            case 36:
+            case 35:
               isValidPosition = _context15.sent;
 
               if (isValidPosition) {
-                _context15.next = 39;
+                _context15.next = 38;
                 break;
               }
 
               throw new Error('position is invalid');
 
-            case 39:
-              _context15.next = 41;
+            case 38:
+              _context15.next = 40;
               return _regenerator2.default.awrap(tcrPLCRVoting.methods.commitVote(pollID, secretHash, amount, prevNode).send());
 
-            case 41:
+            case 40:
               tx = _context15.sent;
               return _context15.abrupt('return', tx);
 
-            case 43:
+            case 42:
             case 'end':
               return _context15.stop();
           }
@@ -1260,7 +1255,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'requestVotingRights',
     value: function requestVotingRights(amount) {
-      var tcrPLCRVoting, balancen, balance, allowancen, allowance, tx;
+      var tcrPLCRVoting, balance, allowance, tx;
       return _regenerator2.default.async(function requestVotingRights$(_context17) {
         while (1) {
           switch (_context17.prev = _context17.next) {
@@ -1274,40 +1269,38 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
               return _regenerator2.default.awrap(this.eth.balanceOf(this.eth.getAccount(), 'PTI'));
 
             case 5:
-              balancen = _context17.sent;
-              balance = new _bignumber.BigNumber(balancen);
+              balance = _context17.sent;
 
               if (!balance.lt(amount)) {
-                _context17.next = 9;
+                _context17.next = 8;
                 break;
               }
 
               throw new Error(this.eth.getAccount() + ' balance (' + balance.toString() + ') is insufficient (amount = ' + amount.toString() + ')');
 
-            case 9:
-              _context17.next = 11;
+            case 8:
+              _context17.next = 10;
               return _regenerator2.default.awrap(this.eth.allowance(this.eth.getAccount(), tcrPLCRVoting.options.address));
 
-            case 11:
-              allowancen = _context17.sent;
-              allowance = new _bignumber.BigNumber(allowancen);
+            case 10:
+              allowance = _context17.sent;
 
               if (!allowance.lt(amount)) {
-                _context17.next = 15;
+                _context17.next = 13;
                 break;
               }
 
               throw new Error('PLCRVoting Contract allowance (' + allowance.toString() + ') is < amount (' + amount.toString() + ')');
 
-            case 15:
-              _context17.next = 17;
+            case 13:
+              _context17.next = 15;
               return _regenerator2.default.awrap(tcrPLCRVoting.methods.requestVotingRights(amount).send());
 
-            case 17:
+            case 15:
               tx = _context17.sent;
               return _context17.abrupt('return', tx);
 
-            case 19:
+            case 17:
             case 'end':
               return _context17.stop();
           }
@@ -2039,7 +2032,6 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
      * check if a video is still in apply stage
      * @param  {string}  videoId univocal video identifier
      * @return {Promise}         true if it's in apply stage, false otherwise
-     * THIS COULD CAUSE PROBLEM IN PRODUCTION
      */
 
   }, {
@@ -2461,9 +2453,15 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         while (1) {
           switch (_context44.prev = _context44.next) {
             case 0:
-              return _context44.abrupt('return', this.get('minDeposit'));
+              _context44.t0 = this.eth.web3.utils;
+              _context44.next = 3;
+              return _regenerator2.default.awrap(this.get('minDeposit'));
 
-            case 1:
+            case 3:
+              _context44.t1 = _context44.sent;
+              return _context44.abrupt('return', _context44.t0.toBN.call(_context44.t0, _context44.t1));
+
+            case 5:
             case 'end':
               return _context44.stop();
           }
