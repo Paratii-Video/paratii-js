@@ -310,34 +310,40 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
 
             case 25:
               tx = _context5.sent;
+
+              console.log(tx);
+
               claimant = (0, _utils.getInfoFromLogs)(tx, 'LogRedeemVoucher', '_claimant', 1);
               amount = (0, _utils.getInfoFromLogs)(tx, 'LogRedeemVoucher', '_amount', 1);
 
+              console.log(claimant);
+              console.log(amount);
+
               if (!(claimant === this.eth.getAccount())) {
-                _context5.next = 32;
+                _context5.next = 35;
                 break;
               }
 
               return _context5.abrupt('return', amount);
 
-            case 32:
+            case 35:
               return _context5.abrupt('return', false);
 
-            case 33:
-              _context5.next = 38;
+            case 36:
+              _context5.next = 41;
               break;
 
-            case 35:
-              _context5.prev = 35;
+            case 38:
+              _context5.prev = 38;
               _context5.t2 = _context5['catch'](22);
               throw Error('An unknown error occurred');
 
-            case 38:
+            case 41:
             case 'end':
               return _context5.stop();
           }
         }
-      }, null, this, [[22, 35]]);
+      }, null, this, [[22, 38]]);
     }
   }]);
   return ParatiiEthVouchers;

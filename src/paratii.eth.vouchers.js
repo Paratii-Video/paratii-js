@@ -107,6 +107,7 @@ export class ParatiiEthVouchers {
     let thisVoucherClaimant = thisVoucher[0].toString()
     let thisVoucherAmount = Number(thisVoucher[1])
     let vouchersContractBalance = Number(await this.eth.balanceOf(contract.options.address, 'PTI'))
+
     if (thisVoucherClaimant !== NULL_ADDRESS) {
       throw Error('This voucher was already used')
     }
@@ -116,10 +117,16 @@ export class ParatiiEthVouchers {
     if (thisVoucherAmount === Number(0)) {
       throw Error('This voucher doesn\'t exist')
     }
+
     try {
       let tx = await contract.methods.redeem(voucherCode).send()
+      console.log(tx)
+
       let claimant = getInfoFromLogs(tx, 'LogRedeemVoucher', '_claimant', 1)
       let amount = getInfoFromLogs(tx, 'LogRedeemVoucher', '_amount', 1)
+      console.log(claimant)
+      console.log(amount)
+
       if (claimant === this.eth.getAccount()) {
         return amount
       } else {

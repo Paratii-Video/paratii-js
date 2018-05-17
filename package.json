@@ -73,6 +73,7 @@
     "jsdoc": "^3.5.5",
     "mocha": "^4.1.0",
     "nock": "^9.1.6",
+    "path-is-absolute": "^1.0.1",
     "postinstall-prepare": "^1.0.1",
     "pre-commit": "^1.2.2",
     "standard": "^10.0.3",
