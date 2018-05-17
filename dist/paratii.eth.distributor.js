@@ -20,6 +20,8 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var joi = require('joi');
+var ethUtil = require('ethereumjs-util');
+
 /**
  * Functions for distribute pti
  * @param  {Object} context ParatiiEth instance
@@ -72,21 +74,64 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
       }, null, this);
     }
     /**
-     * Function for creating a voucher. Can only be called by the owner of the contract.
-     * @param  {Object}  options data about the voucher
-     * @param {string} options.voucherCode unique string associated to this voucher
-     * @param {number} options.amount amount of PTI in wei of this voucher
-     * @return {Promise}         the voucher id
-     * @example await paratii.eth.distribute.distribute({ voucherCode: 'some-id', amount: 10 })
+     * Function for generate a signature
+     * @param  {number} amount the amount to sign
+     * @param  {string} salt the bytes32 salt to sign
+     * @param  {string} reason the reason why to sign
+     * @param  {string} address the address that sign
+    */
+
+  }, {
+    key: 'generateSignature',
+    value: function generateSignature(amount, salt, reason, address) {
+      var hash, signature, signatureData, sig;
+      return _regenerator2.default.async(function generateSignature$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              hash = this.eth.web3.utils.soliditySha3('' + amount, '' + salt, '' + reason);
+              _context2.next = 3;
+              return _regenerator2.default.awrap(this.eth.web3.eth.sign(hash, address));
+
+            case 3:
+              signature = _context2.sent;
+              signatureData = ethUtil.fromRpcSig(signature);
+              sig = {};
+
+              sig.v = ethUtil.bufferToHex(signatureData.v);
+              sig.r = ethUtil.bufferToHex(signatureData.r);
+              sig.s = ethUtil.bufferToHex(signatureData.s);
+
+              return _context2.abrupt('return', sig);
+
+            case 10:
+            case 'end':
+              return _context2.stop();
+          }
+        }
+      }, null, this);
+    }
+    /**
+     * Function for distributing pti. Can only be called by a valid owner signature.
+     * @param  {Object}  options data about the amount and the signature
+     * @param {string} options.address recipient address
+     * @param {number} options.amount amount of PTI in wei of this distribution
+     * @param {string} options.salt an bytes32 hash
+     * @param {string} options.reason a reason for distribution
+     * @param {string} options.v signature
+     * @param {string} options.r signature
+     * @param {string} options.s signature
+      * @return {Promise}        none
+     * @example asd
      */
 
   }, {
     key: 'distribute',
     value: function distribute(options) {
       var schema, result, error, contract;
-      return _regenerator2.default.async(function distribute$(_context2) {
+      return _regenerator2.default.async(function distribute$(_context3) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
               schema = joi.object({
                 address: joi.string(),
@@ -101,7 +146,7 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
               error = result.error;
 
               if (!error) {
-                _context2.next = 5;
+                _context3.next = 5;
                 break;
               }
 
@@ -112,17 +157,17 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
 
               // TODO: implement type and missing value check
 
-              _context2.next = 8;
+              _context3.next = 8;
               return _regenerator2.default.awrap(this.getPTIDistributeContract());
 
             case 8:
-              contract = _context2.sent;
-              _context2.next = 11;
+              contract = _context3.sent;
+              _context3.next = 11;
               return _regenerator2.default.awrap(contract.methods.distribute(options.address, options.amount, options.salt, options.reason, options.v, options.r, options.s).send());
 
             case 11:
             case 'end':
-              return _context2.stop();
+              return _context3.stop();
           }
         }
       }, null, this);

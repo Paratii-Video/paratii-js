@@ -1,7 +1,6 @@
 import { Paratii } from '../src/paratii.js'
 import { testConfigWS, address, address1, voucherAmountInitial11 } from './utils.js'
 import { assert } from 'chai'
-import ethUtil from 'ethereumjs-util'
 
 describe('paratii.eth.events API: :', function () {
   let paratii
@@ -312,13 +311,11 @@ describe('paratii.eth.events API: :', function () {
     const amount = 5 ** 18
     const reason = 'email_verification'
     const salt = paratii.eth.web3.utils.sha3('' + Date.now())
-    const hash = paratii.eth.web3.utils.soliditySha3('' + amount, '' + salt, '' + reason)
 
-    paratii.eth.web3.eth.sign(hash, address).then(function (signature) {
-      const signatureData = ethUtil.fromRpcSig(signature)
-      let v = ethUtil.bufferToHex(signatureData.v)
-      let r = ethUtil.bufferToHex(signatureData.r)
-      let s = ethUtil.bufferToHex(signatureData.s)
+    paratii.eth.distributor.generateSignature(amount, salt, reason, address).then(function (signature) {
+      let v = signature.v
+      let r = signature.r
+      let s = signature.s
 
       paratii.eth.events.addListener('Distribute', function (log) {
         assert.equal(log.returnValues._amount, amount)

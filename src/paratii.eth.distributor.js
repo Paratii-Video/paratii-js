@@ -1,4 +1,6 @@
 const joi = require('joi')
+const ethUtil = require('ethereumjs-util')
+
 /**
  * Functions for distribute pti
  * @param  {Object} context ParatiiEth instance
@@ -22,12 +24,36 @@ export class ParatiiEthPTIDistributor {
     return contract
   }
   /**
-   * Function for creating a voucher. Can only be called by the owner of the contract.
-   * @param  {Object}  options data about the voucher
-   * @param {string} options.voucherCode unique string associated to this voucher
-   * @param {number} options.amount amount of PTI in wei of this voucher
-   * @return {Promise}         the voucher id
-   * @example await paratii.eth.distribute.distribute({ voucherCode: 'some-id', amount: 10 })
+   * Function for generate a signature
+   * @param  {number} amount the amount to sign
+   * @param  {string} salt the bytes32 salt to sign
+   * @param  {string} reason the reason why to sign
+   * @param  {string} address the address that sign
+  */
+  async generateSignature (amount, salt, reason, address) {
+    const hash = this.eth.web3.utils.soliditySha3('' + amount, '' + salt, '' + reason)
+    const signature = await this.eth.web3.eth.sign(hash, address)
+    const signatureData = ethUtil.fromRpcSig(signature)
+    let sig = {}
+    sig.v = ethUtil.bufferToHex(signatureData.v)
+    sig.r = ethUtil.bufferToHex(signatureData.r)
+    sig.s = ethUtil.bufferToHex(signatureData.s)
+
+    return sig
+  }
+  /**
+   * Function for distributing pti. Can only be called by a valid owner signature.
+   * @param  {Object}  options data about the amount and the signature
+   * @param {string} options.address recipient address
+   * @param {number} options.amount amount of PTI in wei of this distribution
+   * @param {string} options.salt an bytes32 hash
+   * @param {string} options.reason a reason for distribution
+   * @param {string} options.v signature
+   * @param {string} options.r signature
+   * @param {string} options.s signature
+
+   * @return {Promise}        none
+   * @example asd
    */
   async distribute (options) {
     const schema = joi.object({
