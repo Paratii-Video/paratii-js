@@ -281,9 +281,9 @@ export class ParatiiEthTcr {
 
     // give approval to tcr
     await this.eth.approve(tcrRegistry.options.address, unstakedDeposit)
-    let result = await this.startChallenge(videoId, _data)
+    let challengeTx = await this.startChallenge(videoId, _data)
 
-    return result
+    return challengeTx
   }
 
   async startChallenge (videoId, _data) {
@@ -326,12 +326,12 @@ export class ParatiiEthTcr {
       throw new Error(`challenge for ${videoId} already exist. challengeID ${listing.challengeID}`)
     }
 
-    let pollID = await tcrRegistry.methods.challenge(hash, _data).send()
-    if (!pollID) {
+    let challengeTx = await tcrRegistry.methods.challenge(hash, _data).send()
+    if (!challengeTx.events._Challenge) {
       throw new Error(`starting Challenge ${videoId} failed!!`)
     }
 
-    return pollID
+    return challengeTx
   }
 
   /**
@@ -354,23 +354,23 @@ export class ParatiiEthTcr {
    * @param  {string}  salt    salt used in that vote.
    * @return {Promise}         the claimReward tx
    */
-  async claimReward (videoId, salt) {
+  async claimReward (challengeID, salt) {
     let tcrRegistry = await this.getTcrContract()
-    let listing = await this.getListing(videoId)
-    let challengeID = listing.challengeID
 
     // Ensure the voter has not already claimed tokens and challenge results have been processed
     let challenge = await this.getChallenge(challengeID)
-    if (challenge.tokenClaims[this.eth.getAccount()] !== false) {
-      throw new Error(`Account ${this.eth.getAccount()} has already claimed reward. for video ${videoId}`)
+    let claim = await this.tokenClaims(challengeID)
+
+    if (claim !== false) {
+      throw new Error(`Account ${this.eth.getAccount()} has already claimed reward for challenge ${challengeID}`)
     }
 
     if (challenge.resolved !== true) {
-      throw new Error(`Challenge ${challengeID} (videoId: ${videoId}) hasn't been resolved`)
+      throw new Error(`Challenge ${challengeID} hasn't been resolved`)
     }
 
     let tx = await tcrRegistry.methods.claimReward(
-      this.eth.web3.utils.toHex(challengeID.toString()),
+      challengeID,
       salt
     ).send()
     return tx
@@ -670,6 +670,14 @@ export class ParatiiEthTcr {
     return challenge
   }
 
+  async tokenClaims (challengeID, voterAddress) {
+    if (!voterAddress) {
+      voterAddress = this.eth.getAccount()
+    }
+    let tcr = await this.getTcrContract()
+    let tokenClaim = await tcr.methods.tokenClaims(challengeID, voterAddress).call()
+    return tokenClaim
+  }
 /**
  * get the challenge Id of that video
  * @param  {string}  videoId univocal id of the video
