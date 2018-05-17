@@ -1,6 +1,7 @@
 import { Paratii } from '../src/paratii.js'
 import { testConfigWS, address, address1, voucherAmountInitial11 } from './utils.js'
 import { assert } from 'chai'
+import { ethUtil } from 'ethereumjs-util'
 
 describe('paratii.eth.events API: :', function () {
   let paratii
@@ -257,6 +258,7 @@ describe('paratii.eth.events API: :', function () {
     }
 
     paratii.eth.events.addListener('RedeemVoucher', function (log) {
+      console.log(log)
       assert.equal(log.returnValues._amount, voucher.amount)
       done()
     })
@@ -303,5 +305,25 @@ describe('paratii.eth.events API: :', function () {
       done()
     })
     paratii.eth.tcr.checkEligiblityAndApply(videoId, amount)
+  })
+
+  it('subscription to LogDistribute should work as expected', function (done) {
+    const amount = 5 ** 18
+    const reason = 'email_verification'
+    const salt = paratii.eth.web3.web3.utils.sha3(Date.now())
+    const hash = paratii.eth.web3.web3.utils.soliditySha3('' + amount, '' + salt, '' + reason)
+
+    const signature = paratii.eth.web3.eth.sign(address, hash)
+    const signatureData = ethUtil.fromRpcSig(signature)
+    let v = ethUtil.bufferToHex(signatureData.v)
+    let r = ethUtil.bufferToHex(signatureData.r)
+    let s = ethUtil.bufferToHex(signatureData.s)
+
+    paratii.eth.events.addListener('Distribute', function (log) {
+      console.log(log)
+      done()
+    })
+
+    paratii.eth.ptiDistributor.distribute(address1, amount, salt, reason, v, r, s)
   })
 })

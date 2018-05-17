@@ -31,6 +31,8 @@ var _paratiiEthEvents = require('./paratii.eth.events.js');
 
 var _paratiiEthVouchers = require('./paratii.eth.vouchers.js');
 
+var _paratiiEthDistributor = require('./paratii.eth.distributor.js');
+
 var _paratiiEthTcr = require('./paratii.eth.tcr.js');
 
 var _paratiiEthTcrPlaceholder = require('./paratii.eth.tcrPlaceholder.js');
@@ -113,6 +115,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
     this.contracts.Likes = this.requireContract('Likes');
     this.contracts.Views = this.requireContract('Views');
     this.contracts.Vouchers = this.requireContract('Vouchers');
+    this.contracts.PTIDistributor = this.requireContract('PTIDistributor');
     this.contracts.TcrPlaceholder = this.requireContract('TcrPlaceholder');
     this.contracts.TcrRegistry = this.requireContract('sol-tcr/Registry');
     this.contracts.TcrPLCRVoting = this.requireContract('sol-tcr/PLCRVoting');
@@ -125,6 +128,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
     this.events = new _paratiiEthEvents.ParatiiEthEvents(this);
     this.vouchers = new _paratiiEthVouchers.ParatiiEthVouchers(this);
     this.tcr = new _paratiiEthTcr.ParatiiEthTcr(this);
+    this.distributor = new _paratiiEthDistributor.ParatiiEthPTIDistributor(this);
     this.tcrPlaceholder = new _paratiiEthTcrPlaceholder.ParatiiEthTcrPlaceholder(this);
   }
   /**
