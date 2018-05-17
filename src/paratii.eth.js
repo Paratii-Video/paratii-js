@@ -3,6 +3,7 @@ import { ParatiiEthVids } from './paratii.eth.vids.js'
 import { ParatiiEthUsers } from './paratii.eth.users.js'
 import { ParatiiEthEvents } from './paratii.eth.events.js'
 import { ParatiiEthVouchers } from './paratii.eth.vouchers.js'
+import { ParatiiEthPTIDistributor } from './paratii.eth.distributor.js'
 import { ParatiiEthTcr } from './paratii.eth.tcr.js'
 import { ParatiiEthTcrPlaceholder } from './paratii.eth.tcrPlaceholder.js'
 import { patchWallet } from './paratii.eth.wallet.js'
@@ -74,6 +75,7 @@ export class ParatiiEth {
     this.contracts.Likes = this.requireContract('Likes')
     this.contracts.Views = this.requireContract('Views')
     this.contracts.Vouchers = this.requireContract('Vouchers')
+    this.contracts.PTIDistributor = this.requireContract('PTIDistributor')
     this.contracts.TcrPlaceholder = this.requireContract('TcrPlaceholder')
     this.contracts.TcrRegistry = this.requireContract('sol-tcr/Registry')
     this.contracts.TcrPLCRVoting = this.requireContract('sol-tcr/PLCRVoting')
@@ -86,6 +88,7 @@ export class ParatiiEth {
     this.events = new ParatiiEthEvents(this)
     this.vouchers = new ParatiiEthVouchers(this)
     this.tcr = new ParatiiEthTcr(this)
+    this.distributor = new ParatiiEthPTIDistributor(this)
     this.tcrPlaceholder = new ParatiiEthTcrPlaceholder(this)
   }
   /**
@@ -516,6 +519,7 @@ export class ParatiiEth {
     let likes = await this.deployContract('Likes', paratiiRegistryAddress)
     let views = await this.deployContract('Views', paratiiRegistryAddress)
     let vouchers = await this.deployContract('Vouchers', paratiiRegistryAddress)
+    let distributor = await this.deployContract('PTIDistributor', paratiiRegistryAddress)
     let tcrPlaceholder = await this.deployContract('TcrPlaceholder', paratiiRegistryAddress, paratiiToken.options.address, this.web3.utils.toWei('5'), 100)
     let tcrDLL = await this.deployContract('TcrDLL')
     let tcrAttributeStore = await this.deployContract('TcrAttributeStore')
@@ -564,6 +568,7 @@ export class ParatiiEth {
     await paratiiRegistry.methods.registerAddress('Likes', likes.options.address).send()
     await paratiiRegistry.methods.registerAddress('Views', views.options.address).send()
     await paratiiRegistry.methods.registerAddress('Vouchers', vouchers.options.address).send()
+    await paratiiRegistry.methods.registerAddress('PTIDistributor', distributor.options.address).send()
     await paratiiRegistry.methods.registerAddress('TcrPlaceholder', tcrPlaceholder.options.address).send()
     await paratiiRegistry.methods.registerAddress('TcrDLL', tcrDLL.options.address).send()
     await paratiiRegistry.methods.registerAddress('TcrAttributeStore', tcrAttributeStore.options.address).send()
@@ -584,6 +589,7 @@ export class ParatiiEth {
     this.contracts.Likes = likes
     this.contracts.Views = views
     this.contracts.Vouchers = vouchers
+    this.contracts.PTIDistributor = distributor
     this.contracts.Store = videoStore
     this.contracts.TcrPlaceholder = tcrPlaceholder
     this.contracts.TcrDLL = tcrDLL

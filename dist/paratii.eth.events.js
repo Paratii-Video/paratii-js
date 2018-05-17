@@ -97,6 +97,10 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
       NewVideoWhitelisted: {
         contract: 'TcrRegistry',
         event: '_NewVideoWhitelisted'
+      },
+      Distribute: {
+        contract: 'PTIDistributor',
+        event: 'LogDistribute'
       }
     };
   }

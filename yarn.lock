@@ -2564,10 +2564,6 @@ dot-prop@^4.1.0:
   dependencies:
     is-obj "^1.0.0"
 
-dotenv@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-4.0.0.tgz#864ef1379aced55ce6f95debecdce179f7a0cd1d"
-
 drbg.js@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/drbg.js/-/drbg.js-1.0.1.tgz#3e36b6c42b37043823cdbc332d58f31e2445480b"
@@ -3066,6 +3062,18 @@ ethereumjs-util@^5.0.0, ethereumjs-util@^5.0.1, ethereumjs-util@^5.1.3:
     safe-buffer "^5.1.1"
     secp256k1 "^3.0.1"
 
+ethereumjs-util@^5.1.2:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/ethereumjs-util/-/ethereumjs-util-5.2.0.tgz#3e0c0d1741471acf1036052d048623dee54ad642"
+  dependencies:
+    bn.js "^4.11.0"
+    create-hash "^1.1.2"
+    ethjs-util "^0.1.3"
+    keccak "^1.0.2"
+    rlp "^2.0.0"
+    safe-buffer "^5.1.1"
+    secp256k1 "^3.0.1"
+
 ethereumjs-vm@^2.0.2:
   version "2.3.4"
   resolved "https://registry.yarnpkg.com/ethereumjs-vm/-/ethereumjs-vm-2.3.4.tgz#f635d7cb047571a1840a6e9a74d29de4488f8ad6"
@@ -3097,14 +3105,6 @@ ethereumjs-wallet@0.6.0, ethereumjs-wallet@^0.6.0:
 ethjs-abi@0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/ethjs-abi/-/ethjs-abi-0.2.0.tgz#d3e2c221011520fc499b71682036c14fcc2f5b25"
-  dependencies:
-    bn.js "4.11.6"
-    js-sha3 "0.5.5"
-    number-to-bn "1.7.0"
-
-ethjs-abi@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/ethjs-abi/-/ethjs-abi-0.2.1.tgz#e0a7a93a7e81163a94477bad56ede524ab6de533"
   dependencies:
     bn.js "4.11.6"
     js-sha3 "0.5.5"
@@ -6947,6 +6947,12 @@ node-libs-browser@^2.0.0:
     util "^0.10.3"
     vm-browserify "0.0.4"
 
+node-localstorage@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/node-localstorage/-/node-localstorage-1.3.1.tgz#3177ef42837f398aee5dd75e319b281e40704243"
+  dependencies:
+    write-file-atomic "^1.1.4"
+
 node-notifier@^5.2.1:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/node-notifier/-/node-notifier-5.2.1.tgz#fa313dd08f5517db0e2502e5758d664ac69f9dea"
@@ -7285,16 +7291,19 @@ pako@~1.0.5:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.6.tgz#0101211baa70c4bca4a0f63f2206e97b7dfaf258"
 
-"paratii-contracts@github:Paratii-Video/paratii-contracts#6651984d0bf7f2a905631087975c5a412d5e4cb7":
-  version "0.0.2"
-  resolved "https://codeload.github.com/Paratii-Video/paratii-contracts/tar.gz/6651984d0bf7f2a905631087975c5a412d5e4cb7"
+"paratii-contracts@github:Paratii-Video/paratii-contracts#02bac48592d5e25f02a801a39dc458b1bb7f5a1e":
+  version "0.0.3"
+  resolved "https://codeload.github.com/Paratii-Video/paratii-contracts/tar.gz/02bac48592d5e25f02a801a39dc458b1bb7f5a1e"
   dependencies:
     async "^2.6.0"
     babel-cli "^6.26.0"
     default-options "^1.0.0"
+    ethereumjs-util "^5.1.2"
     promisify-node "^0.4.0"
-    web3 "^1.0.0-beta.27"
-    zeppelin-solidity "^1.3.0"
+    uuid "^3.2.1"
+    web3 "^1.0.0-beta2"
+    web3-utils "1.0.0-beta.33"
+    zeppelin-solidity "^1.8.0"
 
 "paratii-protocol@github:Paratii-Video/paratii-protocol#45aadcf300f1ad184d6d3db8f9c4b3d438b6f658":
   version "0.0.1"
@@ -8732,6 +8741,10 @@ slice-ansi@0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/slice-ansi/-/slice-ansi-0.0.4.tgz#edbf8903f66f7ce2f8eafd6ceed65e264c831b35"
 
+slide@^1.1.5:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/slide/-/slide-1.1.6.tgz#56eb027d65b4d2dce6cb2e2d32c4d4afc9e1d707"
+
 smart-buffer@^4.0.0:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/smart-buffer/-/smart-buffer-4.0.1.tgz#07ea1ca8d4db24eb4cac86537d7d18995221ace3"
@@ -8826,9 +8839,9 @@ socket.io@^2.0.4:
     socket.io-client "2.1.0"
     socket.io-parser "~3.2.0"
 
-"sol-tcr@github:ya7ya/tcr#compiled":
+"sol-tcr@github:Paratii-Video/tcr#compiled":
   version "0.0.1"
-  resolved "https://codeload.github.com/ya7ya/tcr/tar.gz/97bd944a5460781b4e0fc82ff076c0b63dc989f7"
+  resolved "https://codeload.github.com/Paratii-Video/tcr/tar.gz/0ee41c157ada40a2d3c2f3b71e41b664117e0a7f"
   dependencies:
     bignumber.js "5.0.0"
     bip39 "2.5.0"
@@ -10063,7 +10076,7 @@ web3-utils@1.0.0-beta.33:
     underscore "1.8.3"
     utf8 "2.1.1"
 
-web3@1.0.0-beta.33, web3@^1.0.0-beta.27:
+web3@1.0.0-beta.33:
   version "1.0.0-beta.33"
   resolved "https://registry.yarnpkg.com/web3/-/web3-1.0.0-beta.33.tgz#c6021b5769927726371c184b868445311b139295"
   dependencies:
@@ -10093,6 +10106,10 @@ web3@^0.18.2:
     utf8 "^2.1.1"
     xhr2 "*"
     xmlhttprequest "*"
+
+web3@^1.0.0-beta2:
+  version "1.0.0-beta2"
+  resolved "https://registry.yarnpkg.com/web3/-/web3-1.0.0-beta2.tgz#bde93e2b88c431673f25d81298221a1ec2b1a9ef"
 
 "webcrypto-shim@github:dignifiedquire/webcrypto-shim#master":
   version "0.1.1"
@@ -10256,6 +10273,14 @@ wreck@12.x.x:
   dependencies:
     boom "5.x.x"
     hoek "4.x.x"
+
+write-file-atomic@^1.1.4:
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/write-file-atomic/-/write-file-atomic-1.3.4.tgz#f807a4f0b1d9e913ae7a48112e6cc3af1991b45f"
+  dependencies:
+    graceful-fs "^4.1.11"
+    imurmurhash "^0.1.4"
+    slide "^1.1.5"
 
 write-file-atomic@^2.0.0, write-file-atomic@^2.1.0, write-file-atomic@^2.3.0:
   version "2.3.0"
@@ -10516,9 +10541,6 @@ zcash-bitcore-lib@^0.13.20-rc3:
     inherits "=2.0.1"
     lodash "=3.10.1"
 
-zeppelin-solidity@^1.3.0:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/zeppelin-solidity/-/zeppelin-solidity-1.8.0.tgz#049fcde7daea9fc85210f8c6db9f8cd1ab8a853a"
-  dependencies:
-    dotenv "^4.0.0"
-    ethjs-abi "^0.2.1"
+zeppelin-solidity@^1.8.0:
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/zeppelin-solidity/-/zeppelin-solidity-1.9.0.tgz#463ac7dc04480f8c9c4f9e1db3da96a39009fe6c"
