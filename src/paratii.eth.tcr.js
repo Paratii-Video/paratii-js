@@ -377,7 +377,8 @@ export class ParatiiEthTcr {
     let approved = await this.eth.approve(tcrPLCRVoting.options.address, amountInWei)
     if (!approved) { throw new Error('Token approvation failed') }
 
-    await this.requestVotingRights(amountInWei)
+    let tx = await this.requestVotingRights(amountInWei)
+    if (!tx.events._VotingRightsGranted) { throw new Error('Rights request failed') }
 
     let commitVoteTx = await this.commitVote(videoId, vote, amountInWei)
 

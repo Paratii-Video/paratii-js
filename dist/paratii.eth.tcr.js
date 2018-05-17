@@ -868,7 +868,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'approveAndGetRightsAndCommitVote',
     value: function approveAndGetRightsAndCommitVote(videoId, vote, amountInWei) {
-      var tcrPLCRVoting, listing, challengeExists, isCommitPeriodActive, approved, commitVoteTx;
+      var tcrPLCRVoting, listing, challengeExists, isCommitPeriodActive, approved, tx, commitVoteTx;
       return _regenerator2.default.async(function approveAndGetRightsAndCommitVote$(_context13) {
         while (1) {
           switch (_context13.prev = _context13.next) {
@@ -929,14 +929,24 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
               return _regenerator2.default.awrap(this.requestVotingRights(amountInWei));
 
             case 23:
-              _context13.next = 25;
+              tx = _context13.sent;
+
+              if (tx.events._VotingRightsGranted) {
+                _context13.next = 26;
+                break;
+              }
+
+              throw new Error('Rights request failed');
+
+            case 26:
+              _context13.next = 28;
               return _regenerator2.default.awrap(this.commitVote(videoId, vote, amountInWei));
 
-            case 25:
+            case 28:
               commitVoteTx = _context13.sent;
               return _context13.abrupt('return', commitVoteTx);
 
-            case 27:
+            case 30:
             case 'end':
               return _context13.stop();
           }

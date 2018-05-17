@@ -11,7 +11,7 @@ describe('paratii.eth.tcr:', function () {
     paratii = new Paratii(testConfig)
     tcrConfig = require(paratii.config.eth.tcrConfigFile)
     await paratii.eth.deployContracts()
-    console.log('tcrConfig: ', tcrConfig)
+    // console.log('tcrConfig: ', tcrConfig)
   })
 
   // some are declared directly in test, be careful with that
@@ -37,6 +37,7 @@ describe('paratii.eth.tcr:', function () {
 
   let privateKeyWithNoFunds = '0x50b2c2cd6a226d3f102c35af1220f7b36c9656efdec2590a47c4544a7d2ef497'
   // let addressWithNoFunds = '0xB7A4cE6D608BcF75d5d7219BcADAa0F45B5FcD0A'
+
   it('should be able to get minDeposit', async function () {
     let amount = await paratii.eth.tcr.getMinDeposit()
     assert.isOk(amount)
@@ -569,7 +570,7 @@ describe('paratii.eth.tcr:', function () {
     let isWhitelisted = await paratii.eth.tcr.isWhitelisted(id)
     assert.isFalse(isWhitelisted)
   })
-  it.skip('[SHOULD WORK] User can commit multiple votes, but can reveal just the last one', async function () {
+  it('User can commit multiple votes, but can reveal just the last one', async function () {
     let id = 'running-out-of-ids'
 
     // application for id --------------------------------------------------
@@ -587,22 +588,24 @@ describe('paratii.eth.tcr:', function () {
     let isCommitPeriodActive = await paratii.eth.tcr.commitPeriodActive(challengeTx.events._Challenge.returnValues.challengeID)
     assert.isTrue(isCommitPeriodActive)
 
-    // TODO fix this
+    let challengeID = challengeTx.events._Challenge.returnValues.challengeID
+    let salt = 420 // should be tandom in prod
+    await voteFromDifferentAccount(myPrivateKey, challengeID, 1, salt, 1, paratii)
+    salt++
+    await voteFromDifferentAccount(myPrivateKey, challengeID, 1, salt, 1, paratii)
+    salt++
+    await voteFromDifferentAccount(myPrivateKey, challengeID, 0, salt, 1, paratii)
 
-    // one vote for
-    let commitVoteTx = await paratii.eth.tcr.approveAndGetRightsAndCommitVote(id, 1, paratii.eth.web3.utils.toWei('1'))
-    assert.isOk(commitVoteTx)
-    assert.isOk(commitVoteTx.events._VoteCommitted)
+    // make tx so that the commit period is finished
+    do {
+      await paratii.eth.transfer(address17, 1, 'PTI')
+      isCommitPeriodActive = await paratii.eth.tcr.commitPeriodActive(challengeID)
+    } while (isCommitPeriodActive)
 
-    // two vote for
-    commitVoteTx = await paratii.eth.tcr.approveAndGetRightsAndCommitVote(id, 1, paratii.eth.web3.utils.toWei('1'))
-    assert.isOk(commitVoteTx)
-    assert.isOk(commitVoteTx.events._VoteCommitted)
-
-    // one vote against
-    commitVoteTx = await paratii.eth.tcr.approveAndGetRightsAndCommitVote(id, 0, paratii.eth.web3.utils.toWei('1'))
-    assert.isOk(commitVoteTx)
-    assert.isOk(commitVoteTx.events._VoteCommitted)
+    // user should be able to reveal only the last vote (the one against)
+    let revealTx = await revealVoteFromDifferentAccount(myPrivateKey, challengeID, 0, salt, paratii)
+    assert.isOk(revealTx)
+    assert.isOk(revealTx.events._VoteRevealed)
   })
   it('user can\'t vote if he doesn\'t have enough PTI', async function () {
     let id = 'joking'
