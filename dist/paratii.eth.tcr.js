@@ -391,6 +391,14 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         }
       }, null, this);
     }
+
+    /**
+     * give the approval to the tcr and deposit amount tokens on the videoId
+     * @param  {string}  videoId univocal video id
+     * @param  {integer}  amount  amount of token to be deposited
+     * @return {Promise}         tx of the deposit
+     */
+
   }, {
     key: 'approveAndDeposit',
     value: function approveAndDeposit(videoId, amount) {
@@ -650,6 +658,14 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         }
       }, null, this);
     }
+
+    /**
+     * give the approval to the tcr and starts the challenge
+     * @param  {string}  videoId video to challenge
+     * @param  {string}  _data   additional data
+     * @return {Promise}         challenge tx
+     */
+
   }, {
     key: 'approveAndStartChallenge',
     value: function approveAndStartChallenge(videoId, _data) {
@@ -687,6 +703,14 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         }
       }, null, this);
     }
+
+    /**
+     * starts the challenge
+     * @param  {string}  videoId univocal video id
+     * @param  {string}  _data   additional data
+     * @return {Promise}         challenge tx
+     */
+
   }, {
     key: 'startChallenge',
     value: function startChallenge(videoId, _data) {
@@ -903,6 +927,16 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     // -----------------------
     // VOTING FUNCTIONS
     // -----------------------
+
+    /**
+     * 1. gives the approval to PLCRVoting
+     * 2. get voting Rights
+     * 3. commit the vote
+     * @param  {string}  videoId     univocal video identifier
+     * @param  {integer}  vote        1 vote for, 0 vote against
+     * @param  {integer}  amountInWei amount for the vote
+     * @return {Promise}             commit tx
+     */
 
   }, {
     key: 'approveAndGetRightsAndCommitVote',
@@ -1677,6 +1711,13 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         }
       }, null, this);
     }
+    /**
+     * check if an address has already claimed for a challenge
+     * @param  {integer}  challengeID  id of the challenge
+     * @param  {address}  voterAddress address of the voter
+     * @return {Promise}              true if already claimed, false otherwise
+     */
+
   }, {
     key: 'tokenClaims',
     value: function tokenClaims(challengeID, voterAddress) {
@@ -1752,6 +1793,12 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     // VOTING UTILS
     // -----------------------
 
+    /**
+     * check if the deadline is already passed
+     * @param  {integer}  deadline deadline to check (timestamp)
+     * @return {Promise}          true if already passed, false otherwise
+     */
+
   }, {
     key: 'isExpired',
     value: function isExpired(deadline) {
@@ -1779,6 +1826,13 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         }
       }, null, this);
     }
+
+    /**
+     * get the number of locked tokens for a specified address
+     * @param  {address}  voterAddress address of the voter
+     * @return {Promise}              number of locked tokens
+     */
+
   }, {
     key: 'getLockedTokens',
     value: function getLockedTokens(voterAddress) {
@@ -1809,6 +1863,13 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         }
       }, null, this);
     }
+
+    /**
+     * check if the commit period is still active for a specified challenge
+     * @param  {integer}  pollID id of the challenge
+     * @return {Promise}        true if still active, false otherwise
+     */
+
   }, {
     key: 'commitPeriodActive',
     value: function commitPeriodActive(pollID) {
@@ -1836,6 +1897,12 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         }
       }, null, this);
     }
+    /**
+     * check if the reveal period is still active for a specified challenge
+     * @param  {integer}  pollID id of the challenge
+     * @return {Promise}        true if still active, false otherwise
+     */
+
   }, {
     key: 'revealPeriodActive',
     value: function revealPeriodActive(pollID) {
@@ -1863,6 +1930,13 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         }
       }, null, this);
     }
+    /**
+     * check if a voter has committed a vote on a specified challenge
+     * @param  {address}  voterAddress address of the voter
+     * @param  {integer}  pollID       id of the challenge
+     * @return {Promise}              true if he has already committed, false otherwise
+     */
+
   }, {
     key: 'didCommit',
     value: function didCommit(voterAddress, pollID) {
@@ -1890,6 +1964,13 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         }
       }, null, this);
     }
+    /**
+     * check if a voter has revealed a vote on a specified challenge
+     * @param  {address}  voterAddress address of the voter
+     * @param  {integer}  pollID       id of the challenge
+     * @return {Promise}              true if he has already revealed, false otherwise
+     */
+
   }, {
     key: 'didReveal',
     value: function didReveal(voterAddress, pollID) {
@@ -1955,6 +2036,9 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     }
 
     /**
+     * check if a video is still in apply stage
+     * @param  {string}  videoId univocal video identifier
+     * @return {Promise}         true if it's in apply stage, false otherwise
      * THIS COULD CAUSE PROBLEM IN PRODUCTION
      */
 
@@ -2021,6 +2105,13 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         }
       }, null, this);
     }
+    /**
+     * get the commit hash of a vote from the tcr contract
+     * @param  {address}  voterAddress address of the voter
+     * @param  {integer}  pollID       id of the challenge
+     * @return {Promise}              hash of the vote
+     */
+
   }, {
     key: 'getCommitHash',
     value: function getCommitHash(voterAddress, pollID) {
@@ -2048,6 +2139,12 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         }
       }, null, this);
     }
+    /**
+     * check if a challenge has succeeded
+     * @param  {integer}  pollID id of the challenge
+     * @return {Promise}        true if the challenge succeeded, false otherwise
+     */
+
   }, {
     key: 'isPassed',
     value: function isPassed(pollID) {
@@ -2075,6 +2172,15 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         }
       }, null, this);
     }
+
+    /**
+     * get the number of tokens voted for winning option
+     * @param  {address}  voterAddress address of the voter
+     * @param  {integer}  pollID       id of the challenge
+     * @param  {hex}  salt         salt of the vote
+     * @return {Promise}              Number of tokens voted for winning option
+     */
+
   }, {
     key: 'getNumPassingTokens',
     value: function getNumPassingTokens(voterAddress, pollID, salt) {
@@ -2192,6 +2298,12 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         }
       }, null, this);
     }
+    /**
+     * checks if a user has >= amount voting rights
+     * @param  {integer}  amount amount of token to check
+     * @return {Promise}        true if >= amount, false otherwise
+     */
+
   }, {
     key: 'hasVotingRights',
     value: function hasVotingRights(amount) {
@@ -2243,6 +2355,10 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
       return localStorage;
     }
+    /**
+     * clear the nodeLocalstorage
+     */
+
   }, {
     key: 'clearNodeLocalStorage',
     value: function clearNodeLocalStorage() {
