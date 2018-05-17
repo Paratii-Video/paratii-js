@@ -519,6 +519,7 @@ export class ParatiiEth {
     let likes = await this.deployContract('Likes', paratiiRegistryAddress)
     let views = await this.deployContract('Views', paratiiRegistryAddress)
     let vouchers = await this.deployContract('Vouchers', paratiiRegistryAddress)
+    let distributor = await this.deployContract('PTIDistributor', paratiiRegistryAddress)
     let tcrPlaceholder = await this.deployContract('TcrPlaceholder', paratiiRegistryAddress, paratiiToken.options.address, this.web3.utils.toWei('5'), 100)
     let tcrDLL = await this.deployContract('TcrDLL')
     let tcrAttributeStore = await this.deployContract('TcrAttributeStore')
@@ -567,6 +568,7 @@ export class ParatiiEth {
     await paratiiRegistry.methods.registerAddress('Likes', likes.options.address).send()
     await paratiiRegistry.methods.registerAddress('Views', views.options.address).send()
     await paratiiRegistry.methods.registerAddress('Vouchers', vouchers.options.address).send()
+    await paratiiRegistry.methods.registerAddress('PTIDistributor', distributor.options.address).send()
     await paratiiRegistry.methods.registerAddress('TcrPlaceholder', tcrPlaceholder.options.address).send()
     await paratiiRegistry.methods.registerAddress('TcrDLL', tcrDLL.options.address).send()
     await paratiiRegistry.methods.registerAddress('TcrAttributeStore', tcrAttributeStore.options.address).send()
@@ -587,6 +589,7 @@ export class ParatiiEth {
     this.contracts.Likes = likes
     this.contracts.Views = views
     this.contracts.Vouchers = vouchers
+    this.contracts.PTIDistributor = distributor
     this.contracts.Store = videoStore
     this.contracts.TcrPlaceholder = tcrPlaceholder
     this.contracts.TcrDLL = tcrDLL

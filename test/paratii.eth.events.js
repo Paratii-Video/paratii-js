@@ -1,7 +1,7 @@
 import { Paratii } from '../src/paratii.js'
 import { testConfigWS, address, address1, voucherAmountInitial11 } from './utils.js'
 import { assert } from 'chai'
-import { ethUtil } from 'ethereumjs-util'
+import ethUtil from 'ethereumjs-util'
 
 describe('paratii.eth.events API: :', function () {
   let paratii
@@ -10,7 +10,9 @@ describe('paratii.eth.events API: :', function () {
     await paratii.eth.deployContracts()
     let token = await paratii.eth.getContract('ParatiiToken')
     let vouchers = await paratii.eth.getContract('Vouchers')
+    let distributor = await paratii.eth.getContract('PTIDistributor')
     await token.methods.transfer(vouchers.options.address, voucherAmountInitial11).send()
+    await token.methods.transfer(distributor.options.address, voucherAmountInitial11).send()
     await paratii.eth.setRegistryAddress(paratii.config.eth.registryAddress)
   })
 
@@ -309,20 +311,23 @@ describe('paratii.eth.events API: :', function () {
   it('subscription to LogDistribute should work as expected', function (done) {
     const amount = 5 ** 18
     const reason = 'email_verification'
-    const salt = paratii.eth.web3.utils.sha3(Date.now())
+    const salt = paratii.eth.web3.utils.sha3('' + Date.now())
     const hash = paratii.eth.web3.utils.soliditySha3('' + amount, '' + salt, '' + reason)
 
-    const signature = paratii.eth.web3.eth.sign(address, hash)
-    const signatureData = ethUtil.fromRpcSig(signature)
-    let v = ethUtil.bufferToHex(signatureData.v)
-    let r = ethUtil.bufferToHex(signatureData.r)
-    let s = ethUtil.bufferToHex(signatureData.s)
+    paratii.eth.web3.eth.sign(hash, address).then(function (signature) {
+      const signatureData = ethUtil.fromRpcSig(signature)
+      let v = ethUtil.bufferToHex(signatureData.v)
+      let r = ethUtil.bufferToHex(signatureData.r)
+      let s = ethUtil.bufferToHex(signatureData.s)
 
-    paratii.eth.events.addListener('Distribute', function (log) {
-      console.log(log)
-      done()
+      paratii.eth.events.addListener('Distribute', function (log) {
+        assert.equal(log.returnValues._amount, amount)
+        assert.equal(log.returnValues._reason, reason)
+        assert.equal(log.returnValues._toAddress, address1)
+        done()
+      })
+
+      paratii.eth.distributor.distribute({address: address1, amount, salt, reason, v, r, s})
     })
-
-    paratii.eth.ptiDistributor.distribute(address1, amount, salt, reason, v, r, s)
   })
 })

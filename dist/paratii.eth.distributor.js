@@ -17,8 +17,6 @@ var _createClass2 = require('babel-runtime/helpers/createClass');
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
-var _utils = require('./utils.js');
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var joi = require('joi');
@@ -85,7 +83,7 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
   }, {
     key: 'distribute',
     value: function distribute(options) {
-      var schema, result, error, contract, tx, recipient;
+      var schema, result, error, contract;
       return _regenerator2.default.async(function distribute$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -120,14 +118,9 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
             case 8:
               contract = _context2.sent;
               _context2.next = 11;
-              return _regenerator2.default.awrap(contract.methods.distribute(options.address, options.amount, options.salt, options.reason, options.v, options.r, options.s).call());
+              return _regenerator2.default.awrap(contract.methods.distribute(options.address, options.amount, options.salt, options.reason, options.v, options.r, options.s).send());
 
             case 11:
-              tx = _context2.sent;
-              recipient = (0, _utils.getInfoFromLogs)(tx, 'LogDistribute', '_toAddress');
-              return _context2.abrupt('return', recipient);
-
-            case 14:
             case 'end':
               return _context2.stop();
           }

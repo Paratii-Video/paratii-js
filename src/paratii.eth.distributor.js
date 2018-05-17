@@ -1,4 +1,3 @@
-import { getInfoFromLogs } from './utils.js'
 const joi = require('joi')
 /**
  * Functions for distribute pti
@@ -49,10 +48,8 @@ export class ParatiiEthPTIDistributor {
     // TODO: implement type and missing value check
 
     let contract = await this.getPTIDistributeContract()
-    let tx = await contract.methods.distribute(options.address, options.amount, options.salt, options.reason, options.v, options.r, options.s).call()
-
-    let recipient = getInfoFromLogs(tx, 'LogDistribute', '_toAddress')
-
-    return recipient
+    await contract.methods.distribute(
+      options.address, options.amount, options.salt, options.reason, options.v, options.r, options.s
+    ).send()
   }
 }

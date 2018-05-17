@@ -7291,9 +7291,9 @@ pako@~1.0.5:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.6.tgz#0101211baa70c4bca4a0f63f2206e97b7dfaf258"
 
-"paratii-contracts@github:Paratii-Video/paratii-contracts#9ce4736017621844538e13dece6a25b117acdae1":
+"paratii-contracts@github:Paratii-Video/paratii-contracts#02bac48592d5e25f02a801a39dc458b1bb7f5a1e":
   version "0.0.3"
-  resolved "https://codeload.github.com/Paratii-Video/paratii-contracts/tar.gz/9ce4736017621844538e13dece6a25b117acdae1"
+  resolved "https://codeload.github.com/Paratii-Video/paratii-contracts/tar.gz/02bac48592d5e25f02a801a39dc458b1bb7f5a1e"
   dependencies:
     async "^2.6.0"
     babel-cli "^6.26.0"
@@ -7302,7 +7302,7 @@ pako@~1.0.5:
     promisify-node "^0.4.0"
     uuid "^3.2.1"
     web3 "^1.0.0-beta2"
-    web3-utils "^1.0.0-beta.34"
+    web3-utils "1.0.0-beta.33"
     zeppelin-solidity "^1.8.0"
 
 "paratii-protocol@github:Paratii-Video/paratii-protocol#45aadcf300f1ad184d6d3db8f9c4b3d438b6f658":
@@ -10067,18 +10067,6 @@ web3-shh@1.0.0-beta.33:
 web3-utils@1.0.0-beta.33:
   version "1.0.0-beta.33"
   resolved "https://registry.yarnpkg.com/web3-utils/-/web3-utils-1.0.0-beta.33.tgz#e091b7994f09b714b0198a4057d3ad2eb8cbe238"
-  dependencies:
-    bn.js "4.11.6"
-    eth-lib "0.1.27"
-    ethjs-unit "0.1.6"
-    number-to-bn "1.7.0"
-    randomhex "0.1.5"
-    underscore "1.8.3"
-    utf8 "2.1.1"
-
-web3-utils@^1.0.0-beta.34:
-  version "1.0.0-beta.34"
-  resolved "https://registry.yarnpkg.com/web3-utils/-/web3-utils-1.0.0-beta.34.tgz#9411fc39aaef39ca4e06169f762297d9ff020970"
   dependencies:
     bn.js "4.11.6"
     eth-lib "0.1.27"
