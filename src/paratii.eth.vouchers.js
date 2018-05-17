@@ -120,12 +120,9 @@ export class ParatiiEthVouchers {
 
     try {
       let tx = await contract.methods.redeem(voucherCode).send()
-      console.log(tx)
 
       let claimant = getInfoFromLogs(tx, 'LogRedeemVoucher', '_claimant', 1)
       let amount = getInfoFromLogs(tx, 'LogRedeemVoucher', '_amount', 1)
-      console.log(claimant)
-      console.log(amount)
 
       if (claimant === this.eth.getAccount()) {
         return amount

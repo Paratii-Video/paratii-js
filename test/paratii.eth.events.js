@@ -258,7 +258,6 @@ describe('paratii.eth.events API: :', function () {
     }
 
     paratii.eth.events.addListener('RedeemVoucher', function (log) {
-      console.log(log)
       assert.equal(log.returnValues._amount, voucher.amount)
       done()
     })
@@ -310,8 +309,8 @@ describe('paratii.eth.events API: :', function () {
   it('subscription to LogDistribute should work as expected', function (done) {
     const amount = 5 ** 18
     const reason = 'email_verification'
-    const salt = paratii.eth.web3.web3.utils.sha3(Date.now())
-    const hash = paratii.eth.web3.web3.utils.soliditySha3('' + amount, '' + salt, '' + reason)
+    const salt = paratii.eth.web3.utils.sha3(Date.now())
+    const hash = paratii.eth.web3.utils.soliditySha3('' + amount, '' + salt, '' + reason)
 
     const signature = paratii.eth.web3.eth.sign(address, hash)
     const signatureData = ethUtil.fromRpcSig(signature)
