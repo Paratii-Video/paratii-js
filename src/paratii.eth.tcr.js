@@ -2,6 +2,7 @@
 import { getInfoFromLogs } from './utils.js'
 import { BigNumber } from 'bignumber.js'
 
+var localStorage = null
 const HASH_TO_KEY_PREFIX = 'HASH_KEY_'
 const SALT_KEY_PREFIX = 'SALT_KEY_'
 
@@ -835,12 +836,28 @@ export class ParatiiEthTcr {
    * @return {Object} localStorage
    */
   getLocalStorage () {
-    let localStorage
+    if (localStorage) {
+      return localStorage
+    }
 
     if (typeof window !== 'undefined' && window.localStorage) {
       localStorage = window.localStorage
     } else {
-      localStorage = require('localforage')
+      localStorage = {
+        _data: {},
+        setItem: function (id, val) {
+          this._data[id] = String(val)
+          return this._data[id]
+        },
+        getItem: function (id) {
+          return this._data.hasOwnProperty(id) ? this._data[id] : undefined
+        },
+        removeItem: function (id) { return delete this._data[id] },
+        clear: function () {
+          this._data = {}
+          return this._data
+        }
+      }
     }
 
     return localStorage

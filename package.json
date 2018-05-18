@@ -33,7 +33,6 @@
     "ipfs": "github:Paratii-Video/js-ipfs#f02bfb4961eaf8fae077eb12e175cd518e602bc4",
     "isomorphic-fetch": "^2.2.1",
     "joi": "^13.1.2",
-    "localforage": "^1.7.1",
     "multiaddr": "^3.0.2",
     "once": "^1.4.0",
     "paratii-contracts": "github:Paratii-Video/paratii-contracts#02bac48592d5e25f02a801a39dc458b1bb7f5a1e",

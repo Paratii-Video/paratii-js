@@ -157,7 +157,8 @@ describe('paratii.eth.tcr:', function () {
 
     let hash1 = paratii.eth.tcr.getAndStoreHash(videoId6)
     let hash2 = paratii.eth.tcr.getAndStoreHash(videoId7)
-
+    console.log('hash1: ', hash1)
+    console.log('hashToId', paratii.eth.tcr.hashToId(hash1))
     assert.equal(paratii.eth.tcr.hashToId(hash1), videoId6)
     assert.equal(paratii.eth.tcr.hashToId(hash2), videoId7)
 
@@ -173,8 +174,13 @@ describe('paratii.eth.tcr:', function () {
 
   it('clearNodeLocalStorage() should delete all the key value pairs', async function () {
     paratii.eth.tcr.clearNodeLocalStorage()
-
-    assert.equal(paratii.eth.tcr.getLocalStorage().length, 0)
+    let localStorage = paratii.eth.tcr.getLocalStorage()
+    if (localStorage.length || localStorage.length === 0) {
+      assert.equal(localStorage.length, 0)
+    } else {
+      let length = Object.keys(localStorage._data).length
+      assert.equal(length, 0)
+    }
   })
 
   it('challengeExists() implemented in the lib and challengeExists() implemented in the tcr contract should always return the same value', async function () {
