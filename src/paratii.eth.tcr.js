@@ -840,16 +840,14 @@ export class ParatiiEthTcr {
     if (typeof window !== 'undefined' && window.localStorage) {
       localStorage = window.localStorage
     } else {
-      let LocalStorage = require('node-localstorage').LocalStorage
-      localStorage = new LocalStorage('./test/data/nodeLocalstorage')
+      localStorage = require('localforage')
     }
 
     return localStorage
   }
 
   clearNodeLocalStorage () {
-    let LocalStorage = require('node-localstorage').LocalStorage
-    let localStorage = new LocalStorage('./test/data/nodeLocalstorage')
+    let localStorage = this.getLocalStorage()
 
     localStorage.clear()
   }

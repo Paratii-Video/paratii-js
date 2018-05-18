@@ -2158,8 +2158,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
       if (typeof window !== 'undefined' && window.localStorage) {
         localStorage = window.localStorage;
       } else {
-        var LocalStorage = require('node-localstorage').LocalStorage;
-        localStorage = new LocalStorage('./test/data/nodeLocalstorage');
+        localStorage = require('localforage');
       }
 
       return localStorage;
@@ -2167,8 +2166,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'clearNodeLocalStorage',
     value: function clearNodeLocalStorage() {
-      var LocalStorage = require('node-localstorage').LocalStorage;
-      var localStorage = new LocalStorage('./test/data/nodeLocalstorage');
+      var localStorage = this.getLocalStorage();
 
       localStorage.clear();
     }
