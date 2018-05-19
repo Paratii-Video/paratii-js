@@ -128,7 +128,7 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
   }, {
     key: 'distribute',
     value: function distribute(options) {
-      var schema, result, error, contract;
+      var schema, result, error, contract, tx;
       return _regenerator2.default.async(function distribute$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -166,6 +166,10 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
               return _regenerator2.default.awrap(contract.methods.distribute(options.address, options.amount, options.salt, options.reason, options.v, options.r, options.s).send());
 
             case 11:
+              tx = _context3.sent;
+              return _context3.abrupt('return', tx);
+
+            case 13:
             case 'end':
               return _context3.stop();
           }
