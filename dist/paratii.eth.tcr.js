@@ -19,8 +19,6 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 var _utils = require('./utils.js');
 
-var _bignumber = require('bignumber.js');
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var localStorage = null;
@@ -171,7 +169,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
      * One of the preconditions for application is the client approve that the TCR contract can amount first before actually
      * transfer the stake. If this sounds unfamliar to you, use {@link ParatiiEthTcr#checkEligiblityAndApply} instead.
      * @param  {string} videoId id of the video
-     * @param  {integer}  amountToStake number of tokens to stake. must >= minDeposit
+     * @param  {number}  amountToStake number of tokens to stake. must >= minDeposit
      * @param  {string} data optional data for the application
      * @return {boolean}  returns true if the  application is successful
      * @example paratii.eth.tcr.apply('some-video-id', 3e18)
@@ -287,7 +285,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
      * - approve that the TCR contract can transfer amountToStake tokens
      * - apply to the TCR
      * @param  {string}  videoId       id of the video
-     * @param  {integer}  amountToStake amount (in base units) of tokens to stake
+     * @param  {number}  amountToStake amount (in base units) of tokens to stake
      * @return {Promise}  returns true if the application was successful, false otherwise
      * event.
      * @example let result = await paratii.eth.tcr.checkEligiblityAndApply('some-video-id', 31415926)
@@ -297,7 +295,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'checkEligiblityAndApply',
     value: function checkEligiblityAndApply(videoId, amountToStake) {
-      var minDeposit, isWhitelisted, appWasMade, token, tcr, tx2, allowance, result;
+      var minDeposit, amountToStakeBN, isWhitelisted, appWasMade, token, tcr, balance, tx2, allowance, result;
       return _regenerator2.default.async(function checkEligiblityAndApply$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
@@ -307,85 +305,100 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 2:
               minDeposit = _context5.sent;
+              amountToStakeBN = this.eth.web3.utils.toBN(amountToStake);
 
-              if (!this.eth.web3.utils.toBN(amountToStake).lt(minDeposit)) {
-                _context5.next = 5;
+              if (!amountToStakeBN.lt(minDeposit)) {
+                _context5.next = 6;
                 break;
               }
 
               throw new Error('amount to stake ' + amountToStake + ' is less than minDeposit ' + minDeposit.toString());
 
-            case 5:
-              _context5.next = 7;
+            case 6:
+              _context5.next = 8;
               return _regenerator2.default.awrap(this.isWhitelisted(videoId));
 
-            case 7:
+            case 8:
               isWhitelisted = _context5.sent;
 
               if (!isWhitelisted) {
-                _context5.next = 10;
+                _context5.next = 11;
                 break;
               }
 
               throw new Error('video ' + videoId + ' is already whitelisted');
 
-            case 10:
-              _context5.next = 12;
+            case 11:
+              _context5.next = 13;
               return _regenerator2.default.awrap(this.appWasMade(videoId));
 
-            case 12:
+            case 13:
               appWasMade = _context5.sent;
 
               if (!appWasMade) {
-                _context5.next = 15;
+                _context5.next = 16;
                 break;
               }
 
               throw new Error('video ' + videoId + ' already applied and awaiting decision');
 
-            case 15:
-              _context5.next = 17;
+            case 16:
+              _context5.next = 18;
               return _regenerator2.default.awrap(this.eth.getContract('ParatiiToken'));
 
-            case 17:
+            case 18:
               token = _context5.sent;
-              _context5.next = 20;
+              _context5.next = 21;
               return _regenerator2.default.awrap(this.getTcrContract());
 
-            case 20:
+            case 21:
               tcr = _context5.sent;
-              _context5.next = 23;
+              _context5.next = 24;
+              return _regenerator2.default.awrap(this.eth.balanceOf(this.eth.getAccount(), 'PTI'));
+
+            case 24:
+              balance = _context5.sent;
+
+              if (!balance.lt(amountToStakeBN)) {
+                _context5.next = 27;
+                break;
+              }
+
+              throw new Error('Your balance is to low: it is ' + balance.toString() + ', while a minimal deposit of ' + minDeposit.toString() + ' is required');
+
+            case 27:
+              _context5.next = 29;
               return _regenerator2.default.awrap(token.methods.approve(tcr.options.address, amountToStake).send());
 
-            case 23:
+            case 29:
               tx2 = _context5.sent;
 
               if (tx2) {
-                _context5.next = 26;
+                _context5.next = 32;
                 break;
               }
 
               throw new Error('checkEligiblityAndApply Error ', tx2);
 
-            case 26:
-              _context5.next = 28;
+            case 32:
+              _context5.next = 34;
               return _regenerator2.default.awrap(token.methods.allowance(this.eth.getAccount(), tcr.options.address).call());
 
-            case 28:
+            case 34:
               allowance = _context5.sent;
 
-              if (allowance.toString() !== amountToStake.toString()) {
+              if (allowance.toString() !== amountToStakeBN.toString()) {
                 console.warn('allowance ' + allowance.toString() + ' != ' + amountToStake.toString());
               }
 
-              _context5.next = 32;
+              _context5.next = 38;
               return _regenerator2.default.awrap(this.apply(videoId, amountToStake));
 
-            case 32:
+            case 38:
               result = _context5.sent;
               return _context5.abrupt('return', result);
 
-            case 34:
+            case 40:
             case 'end':
               return _context5.stop();
           }
@@ -396,7 +409,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     /**
      * give the approval to the tcr and deposit amount tokens on the videoId
      * @param  {string}  videoId univocal video id
-     * @param  {integer}  amount  amount of token to be deposited
+     * @param  {number}  amount  amount of token to be deposited
      * @return {Promise}         tx of the deposit
      */
 
@@ -444,14 +457,14 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     /**
      * Allows the owner of a listingHash to increase their unstaked deposit.
      * @param  {string}  videoId id of the video
-     * @param  {number}  amount  amount in bignumber format.
+     * @param  {number}  amount  amount to be deposited
      * @return {Promise}         the deposit tx
      */
 
   }, {
     key: 'deposit',
     value: function deposit(videoId, amount) {
-      var hash, listing, tcrRegistry, allowance, tx;
+      var hash, listing, amountBN, tcrRegistry, allowance, tx;
       return _regenerator2.default.async(function deposit$(_context7) {
         while (1) {
           switch (_context7.prev = _context7.next) {
@@ -463,42 +476,43 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 3:
               listing = _context7.sent;
+              amountBN = this.eth.web3.utils.toBN(amount);
 
               if (!(listing.owner !== this.eth.getAccount())) {
-                _context7.next = 6;
+                _context7.next = 7;
                 break;
               }
 
               throw new Error('Can\'t deposit tokens to video ' + videoId + ' because ' + this.eth.getAccount() + ' isn\'t the owner.');
 
-            case 6:
-              _context7.next = 8;
+            case 7:
+              _context7.next = 9;
               return _regenerator2.default.awrap(this.getTcrContract());
 
-            case 8:
+            case 9:
               tcrRegistry = _context7.sent;
-              _context7.next = 11;
+              _context7.next = 12;
               return _regenerator2.default.awrap(this.eth.allowance(this.eth.getAccount(), tcrRegistry.options.address));
 
-            case 11:
+            case 12:
               allowance = _context7.sent;
 
-              if (!allowance.lt(amount)) {
-                _context7.next = 14;
+              if (!allowance.lt(amountBN)) {
+                _context7.next = 15;
                 break;
               }
 
               throw new Error('tcrRegistry doesn\'t have enough allowance (' + allowance.toString() + ') to deposit ' + amount.toString());
 
-            case 14:
-              _context7.next = 16;
+            case 15:
+              _context7.next = 17;
               return _regenerator2.default.awrap(tcrRegistry.methods.deposit(hash, amount).send());
 
-            case 16:
+            case 17:
               tx = _context7.sent;
               return _context7.abrupt('return', tx);
 
-            case 18:
+            case 19:
             case 'end':
               return _context7.stop();
           }
@@ -516,7 +530,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'withdraw',
     value: function withdraw(videoId, amount) {
-      var tcrRegistry, hash, listing, unstakedDeposit, minDeposit, tx;
+      var tcrRegistry, hash, listing, amountBN, unstakedDeposit, minDeposit, tx;
       return _regenerator2.default.async(function withdraw$(_context8) {
         while (1) {
           switch (_context8.prev = _context8.next) {
@@ -532,47 +546,48 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 6:
               listing = _context8.sent;
+              amountBN = this.eth.web3.utils.toBN(amount);
 
               if (!(listing.owner !== this.eth.getAccount())) {
-                _context8.next = 9;
+                _context8.next = 10;
                 break;
               }
 
               throw new Error('Can\'t deposit tokens to video ' + videoId + ' because ' + this.eth.getAccount() + ' isn\'t the owner.');
 
-            case 9:
-              unstakedDeposit = new _bignumber.BigNumber(listing.unstakedDeposit);
+            case 10:
+              unstakedDeposit = this.eth.web3.utils.toBN(listing.unstakedDeposit);
 
-              if (!unstakedDeposit.lt(amount)) {
-                _context8.next = 12;
+              if (!unstakedDeposit.lt(amountBN)) {
+                _context8.next = 13;
                 break;
               }
 
               throw new Error('unstakedDeposit ' + unstakedDeposit.toString() + ' is less than amount ' + amount.toString());
 
-            case 12:
-              _context8.next = 14;
+            case 13:
+              _context8.next = 15;
               return _regenerator2.default.awrap(this.getMinDeposit());
 
-            case 14:
+            case 15:
               minDeposit = _context8.sent;
 
-              if (!unstakedDeposit.minus(amount).lt(minDeposit)) {
-                _context8.next = 17;
+              if (!unstakedDeposit.sub(amountBN).lt(minDeposit)) {
+                _context8.next = 18;
                 break;
               }
 
               throw new Error('can\'t withdraw amount (' + amount.toString() + ') from ' + unstakedDeposit.toString() + ' since it\'d be under ' + minDeposit.toString());
 
-            case 17:
-              _context8.next = 19;
+            case 18:
+              _context8.next = 20;
               return _regenerator2.default.awrap(tcrRegistry.methods.withdraw(hash, amount).send());
 
-            case 19:
+            case 20:
               tx = _context8.sent;
               return _context8.abrupt('return', tx);
 
-            case 21:
+            case 22:
             case 'end':
               return _context8.stop();
           }
@@ -931,7 +946,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
      * 3. commit the vote
      * @param  {string}  videoId     univocal video identifier
      * @param  {integer}  vote        1 vote for, 0 vote against
-     * @param  {integer}  amountInWei amount for the vote
+     * @param  {number}  amountInWei amount for the vote
      * @return {Promise}             commit tx
      */
 
@@ -1026,8 +1041,8 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     /**
      * Commits vote using hash of choice and secret salt to conceal vote until reveal
      * @param  {string}  videoId videoId
-     * @param  {bignumber}  vote    1 = yes, 0 = no
-     * @param  {bignumber}  amount  amount of tokens to vote with.
+     * @param  {integer}  vote    1 = yes, 0 = no
+     * @param  {number}  amount  amount of tokens to vote with.
      * @return {Promise}         commitVote tx
      */
 
@@ -1044,7 +1059,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 2:
               tcrPLCRVoting = _context15.sent;
-              amount = new _bignumber.BigNumber(amountInWei);
+              amount = this.eth.web3.utils.toBN(amountInWei);
               _context15.next = 6;
               return _regenerator2.default.awrap(this.getListing(videoId));
 
@@ -1156,7 +1171,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
     /**
      * Reveals vote with choice and secret salt used in generating commitHash to attribute committed tokens
-     * @param  {BigNumber}  pollID     poll Id of the vote to reveal.
+     * @param  {integer}  pollID     poll Id of the vote to reveal.
      * @param  {uint}  voteOption 1 for yes, 0 or other for no.
      * @param  {string}  salt       salt used when commiting the vote.
      * @return {Promise}            revealVote tx
@@ -1249,14 +1264,14 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
     /**
      * Loads amount ERC20 tokens into the voting contract for one-to-one voting rights
-     * @param  {bignumber}  amount amount to deposit into voting contract.
+     * @param  {number}  amount amount to deposit into voting contract.
      * @return {Promise}        `requestVotingRights` tx
      */
 
   }, {
     key: 'requestVotingRights',
     value: function requestVotingRights(amount) {
-      var tcrPLCRVoting, balance, allowance, tx;
+      var tcrPLCRVoting, balance, amountBN, allowance, tx;
       return _regenerator2.default.async(function requestVotingRights$(_context17) {
         while (1) {
           switch (_context17.prev = _context17.next) {
@@ -1271,37 +1286,38 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 5:
               balance = _context17.sent;
+              amountBN = this.eth.web3.utils.toBN(amount);
 
-              if (!balance.lt(amount)) {
-                _context17.next = 8;
+              if (!balance.lt(amountBN)) {
+                _context17.next = 9;
                 break;
               }
 
               throw new Error(this.eth.getAccount() + ' balance (' + balance.toString() + ') is insufficient (amount = ' + amount.toString() + ')');
 
-            case 8:
-              _context17.next = 10;
+            case 9:
+              _context17.next = 11;
               return _regenerator2.default.awrap(this.eth.allowance(this.eth.getAccount(), tcrPLCRVoting.options.address));
 
-            case 10:
+            case 11:
               allowance = _context17.sent;
 
-              if (!allowance.lt(amount)) {
-                _context17.next = 13;
+              if (!allowance.lt(amountBN)) {
+                _context17.next = 14;
                 break;
               }
 
               throw new Error('PLCRVoting Contract allowance (' + allowance.toString() + ') is < amount (' + amount.toString() + ')');
 
-            case 13:
-              _context17.next = 15;
+            case 14:
+              _context17.next = 16;
               return _regenerator2.default.awrap(tcrPLCRVoting.methods.requestVotingRights(amount).send());
 
-            case 15:
+            case 16:
               tx = _context17.sent;
               return _context17.abrupt('return', tx);
 
-            case 17:
+            case 18:
             case 'end':
               return _context17.stop();
           }
@@ -1311,14 +1327,14 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
     /**
      * Withdraw amount ERC20 tokens from the voting contract, revoking these voting rights
-     * @param  {bignumber}  amount amount to withdraw
+     * @param  {number}  amount amount to withdraw
      * @return {Promise}        withdrawVotingRights tx
      */
 
   }, {
     key: 'withdrawVotingRights',
     value: function withdrawVotingRights(amount) {
-      var tcrPLCRVoting, voterBalancen, lockedTokens, voterBalance, balanceAfter, tx;
+      var tcrPLCRVoting, voterBalancen, lockedTokens, voterBalance, amountBN, balanceAfter, tx;
       return _regenerator2.default.async(function withdrawVotingRights$(_context18) {
         while (1) {
           switch (_context18.prev = _context18.next) {
@@ -1338,25 +1354,26 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 8:
               lockedTokens = _context18.sent;
-              voterBalance = new _bignumber.BigNumber(voterBalancen);
-              balanceAfter = voterBalance.minus(lockedTokens);
+              voterBalance = this.eth.web3.utils.toBN(voterBalancen);
+              amountBN = this.eth.web3.utils.toBN(amount);
+              balanceAfter = voterBalance.sub(lockedTokens);
 
-              if (!balanceAfter.lt(amount)) {
-                _context18.next = 13;
+              if (!balanceAfter.lt(amountBN)) {
+                _context18.next = 14;
                 break;
               }
 
               throw new Error('unlocked balance ' + balanceAfter.toString() + ' is < amount ' + amount.toString());
 
-            case 13:
-              _context18.next = 15;
+            case 14:
+              _context18.next = 16;
               return _regenerator2.default.awrap(tcrPLCRVoting.methods.withdrawVotingRights(amount).send());
 
-            case 15:
+            case 16:
               tx = _context18.sent;
               return _context18.abrupt('return', tx);
 
-            case 17:
+            case 18:
             case 'end':
               return _context18.stop();
           }
@@ -1824,7 +1841,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     /**
      * get the number of locked tokens for a specified address
      * @param  {address}  voterAddress address of the voter
-     * @return {Promise}              number of locked tokens
+     * @return {Promise}              number of locked tokens in BN format
      */
 
   }, {
@@ -1848,7 +1865,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 6:
               lockedTokens = _context30.sent;
-              return _context30.abrupt('return', lockedTokens);
+              return _context30.abrupt('return', this.eth.web3.utils.toBN(lockedTokens));
 
             case 8:
             case 'end':
@@ -2019,7 +2036,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 5:
               voterReward = _context35.sent;
-              return _context35.abrupt('return', voterReward);
+              return _context35.abrupt('return', this.eth.web3.utils.toBN(voterReward));
 
             case 7:
             case 'end':
@@ -2171,7 +2188,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
      * @param  {address}  voterAddress address of the voter
      * @param  {integer}  pollID       id of the challenge
      * @param  {hex}  salt         salt of the vote
-     * @return {Promise}              Number of tokens voted for winning option
+     * @return {Promise}              Number of tokens voted for winning option in BN format
      */
 
   }, {
@@ -2192,7 +2209,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 5:
               winnings = _context40.sent;
-              return _context40.abrupt('return', winnings);
+              return _context40.abrupt('return', this.eth.web3.utils.toBN(winnings));
 
             case 7:
             case 'end':
@@ -2204,10 +2221,10 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
     /**
      * Compares previous and next poll's committed tokens for sorting purposes
-     * @param  {bignumber}  prevPollID uint of the previous PollID
-     * @param  {BigNumber}  nextPollID uint of the next PollID
+     * @param  {integer}  prevPollID uint of the previous PollID
+     * @param  {integer}  nextPollID uint of the next PollID
      * @param  {address}  voter      eth address of the voter
-     * @param  {BigNumber}  amount     the amount to commit to the current vote.
+     * @param  {number}  amount     the amount to commit to the current vote.
      * @return {Promise}            returns true if both prev and next positions are valid.
      */
 
@@ -2260,8 +2277,8 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     /**
      * Wrapper for getAttribute with attrName="numTokens"
      * @param  {address}  voterAddress eth voter address
-     * @param  {BigNumber}  pollID       uint of the pollID
-     * @return {Promise}              bignumber of commited tokens.
+     * @param  {integer}  pollID       uint of the pollID
+     * @return {Promise}              BN of commited tokens.
      */
 
   }, {
@@ -2282,7 +2299,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 5:
               numTokens = _context42.sent;
-              return _context42.abrupt('return', numTokens);
+              return _context42.abrupt('return', this.eth.web3.utils.toBN(numTokens));
 
             case 7:
             case 'end':
@@ -2293,14 +2310,14 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     }
     /**
      * checks if a user has >= amount voting rights
-     * @param  {integer}  amount amount of token to check
+     * @param  {number}  amount amount of token to check
      * @return {Promise}        true if >= amount, false otherwise
      */
 
   }, {
     key: 'hasVotingRights',
     value: function hasVotingRights(amount) {
-      var PLCRVoting, numTokens;
+      var PLCRVoting, numTokens, numTokensBN, amountBN;
       return _regenerator2.default.async(function hasVotingRights$(_context43) {
         while (1) {
           switch (_context43.prev = _context43.next) {
@@ -2315,9 +2332,11 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 5:
               numTokens = _context43.sent;
-              return _context43.abrupt('return', numTokens >= amount);
+              numTokensBN = this.eth.web3.utils.toBN(numTokens);
+              amountBN = this.eth.web3.utils.toBN(amount);
+              return _context43.abrupt('return', numTokensBN.gte(amountBN));
 
-            case 7:
+            case 9:
             case 'end':
               return _context43.stop();
           }
@@ -2459,7 +2478,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     /**
      * get the minimum amount required to stake a video.
      * @return {integer} amount required, in PTI base units
-     * @todo return amount as bignumber.js Object
+     * @todo return amount as BN Object
      * @example let minDeposit = await paratii.eth.tcr.getMinDeposit()
      */
 
@@ -2608,7 +2627,6 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     /**
      * get the minimum deposit to propose a reparameterization
      * @return {integer} amount required, in PTI base units
-     * @todo return amount as bignumber.js Object
      * @example let minpDeposit = await paratii.eth.tcr.getpMinDeposit()
      */
 
@@ -2619,9 +2637,15 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
         while (1) {
           switch (_context50.prev = _context50.next) {
             case 0:
-              return _context50.abrupt('return', this.get('pMinDeposit'));
+              _context50.t0 = this.eth.web3.utils;
+              _context50.next = 3;
+              return _regenerator2.default.awrap(this.get('pMinDeposit'));
 
-            case 1:
+            case 3:
+              _context50.t1 = _context50.sent;
+              return _context50.abrupt('return', _context50.t0.toBN.call(_context50.t0, _context50.t1));
+
+            case 5:
             case 'end':
               return _context50.stop();
           }
