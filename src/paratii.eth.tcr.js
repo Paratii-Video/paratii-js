@@ -177,6 +177,24 @@ export class ParatiiEthTcr {
   }
 
   /**
+   * give the approval to the tcr and deposit amount tokens on the videoId
+   * @param  {string}  videoId univocal video id
+   * @param  {integer}  amount  amount of token to be deposited
+   * @return {Promise}         tx of the deposit
+   */
+  async approveAndDeposit (videoId, amount) {
+    let tcrRegistry = await this.getTcrContract()
+
+    // give approval to tcr
+    let approved = await this.eth.approve(tcrRegistry.options.address, amount)
+
+    if (!approved) { throw new Error('error in the approvation phase') }
+
+    let depositTx = await this.deposit(videoId, amount)
+
+    return depositTx
+  }
+  /**
    * Allows the owner of a listingHash to increase their unstaked deposit.
    * @param  {string}  videoId id of the video
    * @param  {number}  amount  amount in bignumber format.
@@ -193,6 +211,7 @@ export class ParatiiEthTcr {
     // check if tcrRegistry has the allowance
     let tcrRegistry = await this.getTcrContract()
     let allowance = await this.eth.allowance(this.eth.getAccount(), tcrRegistry.options.address)
+
     if (allowance.lt(amount)) {
       throw new Error(`tcrRegistry doesn't have enough allowance (${allowance.toString()}) to deposit ${amount.toString()}`)
     }
@@ -211,17 +230,19 @@ export class ParatiiEthTcr {
     let tcrRegistry = await this.getTcrContract()
     let hash = this.getAndStoreHash(videoId)
     let listing = await this.getListing(videoId)
+
     if (listing.owner !== this.eth.getAccount()) {
       throw new Error(`Can't deposit tokens to video ${videoId} because ${this.eth.getAccount()} isn't the owner.`)
     }
 
-    if (listing.unstakedDeposit.lt(amount)) {
-      throw new Error(`unstakedDeposit ${listing.unstakedDeposit.toString()} is less than amount ${amount.toString()}`)
+    let unstakedDeposit = new BigNumber(listing.unstakedDeposit)
+    if (unstakedDeposit.lt(amount)) {
+      throw new Error(`unstakedDeposit ${unstakedDeposit.toString()} is less than amount ${amount.toString()}`)
     }
 
     let minDeposit = await this.getMinDeposit()
-    if (listing.unstakedDeposit.minus(amount).lt(minDeposit)) {
-      throw new Error(`can't withdraw amount (${amount.toString()}) from ${listing.unstakedDeposit.toString()} since it'd be under ${minDeposit.toString()}`)
+    if (unstakedDeposit.minus(amount).lt(minDeposit)) {
+      throw new Error(`can't withdraw amount (${amount.toString()}) from ${unstakedDeposit.toString()} since it'd be under ${minDeposit.toString()}`)
     }
 
     let tx = await tcrRegistry.methods.withdraw(hash, amount).send()
@@ -259,6 +280,12 @@ export class ParatiiEthTcr {
     return contract.methods.exit(hash).send()
   }
 
+  /**
+   * give the approval to the tcr and starts the challenge
+   * @param  {string}  videoId video to challenge
+   * @param  {string}  _data   additional data
+   * @return {Promise}         challenge tx
+   */
   async approveAndStartChallenge (videoId, _data) {
     let listing = await this.getListing(videoId)
     let unstakedDeposit = listing.unstakedDeposit
@@ -266,11 +293,17 @@ export class ParatiiEthTcr {
 
     // give approval to tcr
     await this.eth.approve(tcrRegistry.options.address, unstakedDeposit)
-    let result = await this.startChallenge(videoId, _data)
+    let challengeTx = await this.startChallenge(videoId, _data)
 
-    return result
+    return challengeTx
   }
 
+  /**
+   * starts the challenge
+   * @param  {string}  videoId univocal video id
+   * @param  {string}  _data   additional data
+   * @return {Promise}         challenge tx
+   */
   async startChallenge (videoId, _data) {
     if (!_data) {
       _data = ''
@@ -281,13 +314,9 @@ export class ParatiiEthTcr {
 
     // 1. check if challenger has enough minDeposit and approved the
     // contract to spend that
-    let minDepositn = await this.getMinDeposit()
-    let balancen = await this.eth.balanceOf(this.eth.config.account.address, 'PTI')
-    let allowancen = await this.eth.allowance(this.eth.getAccount(), tcrRegistry.options.address)
-
-    let allowance = new BigNumber(allowancen)
-    let balance = new BigNumber(balancen)
-    let minDeposit = new BigNumber(minDepositn)
+    let minDeposit = await this.getMinDeposit()
+    let balance = await this.eth.balanceOf(this.eth.config.account.address, 'PTI')
+    let allowance = await this.eth.allowance(this.eth.getAccount(), tcrRegistry.options.address)
 
     if (allowance.lt(minDeposit)) {
       throw new Error(`allowance ${allowance.toString()} is less than ${minDeposit.toString()}`)
@@ -311,12 +340,12 @@ export class ParatiiEthTcr {
       throw new Error(`challenge for ${videoId} already exist. challengeID ${listing.challengeID}`)
     }
 
-    let pollID = await tcrRegistry.methods.challenge(hash, _data).send()
-    if (!pollID) {
+    let challengeTx = await tcrRegistry.methods.challenge(hash, _data).send()
+    if (!challengeTx.events._Challenge) {
       throw new Error(`starting Challenge ${videoId} failed!!`)
     }
 
-    return pollID
+    return challengeTx
   }
 
   /**
@@ -339,23 +368,23 @@ export class ParatiiEthTcr {
    * @param  {string}  salt    salt used in that vote.
    * @return {Promise}         the claimReward tx
    */
-  async claimReward (videoId, salt) {
+  async claimReward (challengeID, salt) {
     let tcrRegistry = await this.getTcrContract()
-    let listing = await this.getListing(videoId)
-    let challengeID = listing.challengeID
 
     // Ensure the voter has not already claimed tokens and challenge results have been processed
     let challenge = await this.getChallenge(challengeID)
-    if (challenge.tokenClaims[this.eth.getAccount()] !== false) {
-      throw new Error(`Account ${this.eth.getAccount()} has already claimed reward. for video ${videoId}`)
+    let claim = await this.tokenClaims(challengeID)
+
+    if (claim !== false) {
+      throw new Error(`Account ${this.eth.getAccount()} has already claimed reward for challenge ${challengeID}`)
     }
 
     if (challenge.resolved !== true) {
-      throw new Error(`Challenge ${challengeID} (videoId: ${videoId}) hasn't been resolved`)
+      throw new Error(`Challenge ${challengeID} hasn't been resolved`)
     }
 
     let tx = await tcrRegistry.methods.claimReward(
-      this.eth.web3.utils.toHex(challengeID.toString()),
+      challengeID,
       salt
     ).send()
     return tx
@@ -365,6 +394,15 @@ export class ParatiiEthTcr {
   // VOTING FUNCTIONS
   // -----------------------
 
+  /**
+   * 1. gives the approval to PLCRVoting
+   * 2. get voting Rights
+   * 3. commit the vote
+   * @param  {string}  videoId     univocal video identifier
+   * @param  {integer}  vote        1 vote for, 0 vote against
+   * @param  {integer}  amountInWei amount for the vote
+   * @return {Promise}             commit tx
+   */
   async approveAndGetRightsAndCommitVote (videoId, vote, amountInWei) {
     let tcrPLCRVoting = await this.getPLCRVotingContract()
     let listing = await this.getListing(videoId)
@@ -378,7 +416,8 @@ export class ParatiiEthTcr {
     let approved = await this.eth.approve(tcrPLCRVoting.options.address, amountInWei)
     if (!approved) { throw new Error('Token approvation failed') }
 
-    await this.requestVotingRights(amountInWei)
+    let tx = await this.requestVotingRights(amountInWei)
+    if (!tx.events._VotingRightsGranted) { throw new Error('Rights request failed') }
 
     let commitVoteTx = await this.commitVote(videoId, vote, amountInWei)
 
@@ -412,8 +451,8 @@ export class ParatiiEthTcr {
     }
 
     // check balance and allowance
-    let balancen = await this.eth.balanceOf(this.eth.getAccount(), 'PTI')
-    let balance = new BigNumber(balancen)
+    let balance = await this.eth.balanceOf(this.eth.getAccount(), 'PTI')
+
     if (balance.lt(amount)) {
       throw new Error(`${this.eth.getAccount()} balance (${balance.toString()}) is insufficient (amount = ${amount.toString()})`)
     }
@@ -493,15 +532,13 @@ export class ParatiiEthTcr {
    */
   async requestVotingRights (amount) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
-    let balancen = await this.eth.balanceOf(this.eth.getAccount(), 'PTI')
-    let balance = new BigNumber(balancen)
+    let balance = await this.eth.balanceOf(this.eth.getAccount(), 'PTI')
 
     if (balance.lt(amount)) {
       throw new Error(`${this.eth.getAccount()} balance (${balance.toString()}) is insufficient (amount = ${amount.toString()})`)
     }
 
-    let allowancen = await this.eth.allowance(this.eth.getAccount(), tcrPLCRVoting.options.address)
-    let allowance = new BigNumber(allowancen)
+    let allowance = await this.eth.allowance(this.eth.getAccount(), tcrPLCRVoting.options.address)
 
     if (allowance.lt(amount)) {
       throw new Error(`PLCRVoting Contract allowance (${allowance.toString()}) is < amount (${amount.toString()})`)
@@ -518,8 +555,10 @@ export class ParatiiEthTcr {
    */
   async withdrawVotingRights (amount) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
-    let voterBalance = await tcrPLCRVoting.methods.voteTokenBalance(this.eth.getAccount()).call()
+    let voterBalancen = await tcrPLCRVoting.methods.voteTokenBalance(this.eth.getAccount()).call()
     let lockedTokens = await this.getLockedTokens(this.eth.getAccount())
+    let voterBalance = new BigNumber(voterBalancen)
+
     let balanceAfter = voterBalance.minus(lockedTokens)
     if (balanceAfter.lt(amount)) {
       throw new Error(`unlocked balance ${balanceAfter.toString()} is < amount ${amount.toString()}`)
@@ -651,7 +690,20 @@ export class ParatiiEthTcr {
     if (challenge.challenger === '0x0000000000000000000000000000000000000000') { throw Error(`Challenge with challengeId ${challengeId} doesn't exists`) }
     return challenge
   }
-
+  /**
+   * check if an address has already claimed for a challenge
+   * @param  {integer}  challengeID  id of the challenge
+   * @param  {address}  voterAddress address of the voter
+   * @return {Promise}              true if already claimed, false otherwise
+   */
+  async tokenClaims (challengeID, voterAddress) {
+    if (!voterAddress) {
+      voterAddress = this.eth.getAccount()
+    }
+    let tcr = await this.getTcrContract()
+    let tokenClaim = await tcr.methods.tokenClaims(challengeID, voterAddress).call()
+    return tokenClaim
+  }
 /**
  * get the challenge Id of that video
  * @param  {string}  videoId univocal id of the video
@@ -675,12 +727,22 @@ export class ParatiiEthTcr {
   // VOTING UTILS
   // -----------------------
 
+  /**
+   * check if the deadline is already passed
+   * @param  {integer}  deadline deadline to check (timestamp)
+   * @return {Promise}          true if already passed, false otherwise
+   */
   async isExpired (deadline) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
     let isExpired = await tcrPLCRVoting.methods.isExpired(deadline).call()
     return isExpired
   }
 
+  /**
+   * get the number of locked tokens for a specified address
+   * @param  {address}  voterAddress address of the voter
+   * @return {Promise}              number of locked tokens
+   */
   async getLockedTokens (voterAddress) {
     if (!voterAddress) {
       voterAddress = this.eth.getAccount()
@@ -690,25 +752,45 @@ export class ParatiiEthTcr {
     return lockedTokens
   }
 
+  /**
+   * check if the commit period is still active for a specified challenge
+   * @param  {integer}  pollID id of the challenge
+   * @return {Promise}        true if still active, false otherwise
+   */
   async commitPeriodActive (pollID) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
     let isCommitPeriodActive = await tcrPLCRVoting.methods.commitPeriodActive(pollID).call()
     return isCommitPeriodActive
   }
+  /**
+   * check if the reveal period is still active for a specified challenge
+   * @param  {integer}  pollID id of the challenge
+   * @return {Promise}        true if still active, false otherwise
+   */
   async revealPeriodActive (pollID) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
 
     let isRevealPeriodActive = await tcrPLCRVoting.methods.revealPeriodActive(pollID).call()
     return isRevealPeriodActive
   }
-
+  /**
+   * check if a voter has committed a vote on a specified challenge
+   * @param  {address}  voterAddress address of the voter
+   * @param  {integer}  pollID       id of the challenge
+   * @return {Promise}              true if he has already committed, false otherwise
+   */
   async didCommit (voterAddress, pollID) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
 
     let didCommit = await tcrPLCRVoting.methods.didCommit(voterAddress, pollID).call()
     return didCommit
   }
-
+  /**
+   * check if a voter has revealed a vote on a specified challenge
+   * @param  {address}  voterAddress address of the voter
+   * @param  {integer}  pollID       id of the challenge
+   * @return {Promise}              true if he has already revealed, false otherwise
+   */
   async didReveal (voterAddress, pollID) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
 
@@ -730,7 +812,9 @@ export class ParatiiEthTcr {
   }
 
   /**
-   * THIS COULD CAUSE PROBLEM IN PRODUCTION
+   * check if a video is still in apply stage
+   * @param  {string}  videoId univocal video identifier
+   * @return {Promise}         true if it's in apply stage, false otherwise
    */
   async isInApplyStage (videoId) {
     let listing = await this.getListing(videoId)
@@ -751,13 +835,23 @@ export class ParatiiEthTcr {
     let lastNode = await tcrPLCRVoting.methods.getLastNode(voter).call()
     return lastNode
   }
+  /**
+   * get the commit hash of a vote from the tcr contract
+   * @param  {address}  voterAddress address of the voter
+   * @param  {integer}  pollID       id of the challenge
+   * @return {Promise}              hash of the vote
+   */
   async getCommitHash (voterAddress, pollID) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
 
     let commitHash = await tcrPLCRVoting.methods.getCommitHash(voterAddress, pollID).call()
     return commitHash
   }
-
+  /**
+   * check if a challenge has succeeded
+   * @param  {integer}  pollID id of the challenge
+   * @return {Promise}        true if the challenge succeeded, false otherwise
+   */
   async isPassed (pollID) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
 
@@ -765,6 +859,13 @@ export class ParatiiEthTcr {
     return didPass
   }
 
+  /**
+   * get the number of tokens voted for winning option
+   * @param  {address}  voterAddress address of the voter
+   * @param  {integer}  pollID       id of the challenge
+   * @param  {hex}  salt         salt of the vote
+   * @return {Promise}              Number of tokens voted for winning option
+   */
   async getNumPassingTokens (voterAddress, pollID, salt) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
 
@@ -819,6 +920,11 @@ export class ParatiiEthTcr {
 
     return numTokens
   }
+  /**
+   * checks if a user has >= amount voting rights
+   * @param  {integer}  amount amount of token to check
+   * @return {Promise}        true if >= amount, false otherwise
+   */
   async hasVotingRights (amount) {
     let PLCRVoting = await this.getPLCRVotingContract()
 
@@ -862,7 +968,9 @@ export class ParatiiEthTcr {
 
     return localStorage
   }
-
+  /**
+   * clear the nodeLocalstorage
+   */
   clearNodeLocalStorage () {
     let localStorage = this.getLocalStorage()
 
@@ -940,7 +1048,7 @@ export class ParatiiEthTcr {
  * @example let minDeposit = await paratii.eth.tcr.getMinDeposit()
  */
   async getMinDeposit () {
-    return this.get('minDeposit')
+    return this.eth.web3.utils.toBN(await this.get('minDeposit'))
   }
 
 /**

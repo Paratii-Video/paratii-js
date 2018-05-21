@@ -11,7 +11,7 @@ describe('paratii.eth.tcr:', function () {
     paratii = new Paratii(testConfig)
     tcrConfig = require(paratii.config.eth.tcrConfigFile)
     await paratii.eth.deployContracts()
-    console.log('tcrConfig: ', tcrConfig)
+    // console.log('tcrConfig: ', tcrConfig)
   })
 
   // some are declared directly in test, be careful with that
@@ -37,6 +37,7 @@ describe('paratii.eth.tcr:', function () {
 
   let privateKeyWithNoFunds = '0x50b2c2cd6a226d3f102c35af1220f7b36c9656efdec2590a47c4544a7d2ef497'
   // let addressWithNoFunds = '0xB7A4cE6D608BcF75d5d7219BcADAa0F45B5FcD0A'
+
   it('should be able to get minDeposit', async function () {
     let amount = await paratii.eth.tcr.getMinDeposit()
     assert.isOk(amount)
@@ -157,8 +158,7 @@ describe('paratii.eth.tcr:', function () {
 
     let hash1 = paratii.eth.tcr.getAndStoreHash(videoId6)
     let hash2 = paratii.eth.tcr.getAndStoreHash(videoId7)
-    console.log('hash1: ', hash1)
-    console.log('hashToId', paratii.eth.tcr.hashToId(hash1))
+
     assert.equal(paratii.eth.tcr.hashToId(hash1), videoId6)
     assert.equal(paratii.eth.tcr.hashToId(hash2), videoId7)
 
@@ -448,6 +448,9 @@ describe('paratii.eth.tcr:', function () {
       isRevealPeriodActive = await paratii.eth.tcr.revealPeriodActive(challengeID)
     } while (isRevealPeriodActive)
 
+    let isPassed = await paratii.eth.tcr.isPassed(challengeID)
+    assert.isTrue(isPassed)
+
     // the video should enter the whitelist succesfully because there are 2 votes for and 1 against
     let updateTx = await paratii.eth.tcr.updateStatus(id)
     assert.isOk(updateTx)
@@ -540,6 +543,9 @@ describe('paratii.eth.tcr:', function () {
     assert.isOk(commitVoteTx)
     assert.isOk(commitVoteTx.events._VoteCommitted)
 
+    let hasVotingRights = await paratii.eth.tcr.hasVotingRights(paratii.eth.web3.utils.toWei('1'))
+    assert.isTrue(hasVotingRights)
+
     // make tx so that the commit period is finished
     do {
       await paratii.eth.transfer(address17, 1, 'PTI')
@@ -575,7 +581,7 @@ describe('paratii.eth.tcr:', function () {
     let isWhitelisted = await paratii.eth.tcr.isWhitelisted(id)
     assert.isFalse(isWhitelisted)
   })
-  it.skip('[SHOULD WORK] User can commit multiple votes, but can reveal just the last one', async function () {
+  it('User can commit multiple votes, but can reveal just the last one', async function () {
     let id = 'running-out-of-ids'
 
     // application for id --------------------------------------------------
@@ -593,22 +599,24 @@ describe('paratii.eth.tcr:', function () {
     let isCommitPeriodActive = await paratii.eth.tcr.commitPeriodActive(challengeTx.events._Challenge.returnValues.challengeID)
     assert.isTrue(isCommitPeriodActive)
 
-    // TODO fix this
+    let challengeID = challengeTx.events._Challenge.returnValues.challengeID
+    let salt = 420 // should be tandom in prod
+    await voteFromDifferentAccount(myPrivateKey, challengeID, 1, salt, 1, paratii)
+    salt++
+    await voteFromDifferentAccount(myPrivateKey, challengeID, 1, salt, 1, paratii)
+    salt++
+    await voteFromDifferentAccount(myPrivateKey, challengeID, 0, salt, 1, paratii)
 
-    // one vote for
-    let commitVoteTx = await paratii.eth.tcr.approveAndGetRightsAndCommitVote(id, 1, paratii.eth.web3.utils.toWei('1'))
-    assert.isOk(commitVoteTx)
-    assert.isOk(commitVoteTx.events._VoteCommitted)
+    // make tx so that the commit period is finished
+    do {
+      await paratii.eth.transfer(address17, 1, 'PTI')
+      isCommitPeriodActive = await paratii.eth.tcr.commitPeriodActive(challengeID)
+    } while (isCommitPeriodActive)
 
-    // two vote for
-    commitVoteTx = await paratii.eth.tcr.approveAndGetRightsAndCommitVote(id, 1, paratii.eth.web3.utils.toWei('1'))
-    assert.isOk(commitVoteTx)
-    assert.isOk(commitVoteTx.events._VoteCommitted)
-
-    // one vote against
-    commitVoteTx = await paratii.eth.tcr.approveAndGetRightsAndCommitVote(id, 0, paratii.eth.web3.utils.toWei('1'))
-    assert.isOk(commitVoteTx)
-    assert.isOk(commitVoteTx.events._VoteCommitted)
+    // user should be able to reveal only the last vote (the one against)
+    let revealTx = await revealVoteFromDifferentAccount(myPrivateKey, challengeID, 0, salt, paratii)
+    assert.isOk(revealTx)
+    assert.isOk(revealTx.events._VoteRevealed)
   })
   it('user can\'t vote if he doesn\'t have enough PTI', async function () {
     let id = 'joking'
@@ -662,5 +670,195 @@ describe('paratii.eth.tcr:', function () {
     // shouldn't be able to vote
     let numTokens = await tcrPLCRVoting.methods.voteTokenBalance(voterAccount.address).call()
     assert.equal(numTokens, 0)
+  })
+  it('user should be able to deposit and withdraw token from their listing', async function () {
+    let id = 'joking-man'
+
+    // application for id --------------------------------------------------
+    let result = await paratii.eth.tcr.checkEligiblityAndApply(id, 10)
+    assert.isTrue(result)
+
+    // application should be successful
+    let appWasMade = await paratii.eth.tcr.appWasMade(id)
+    assert.isTrue(appWasMade)
+
+    // should not be able to withdraw because mindeposit = 10 in tcr/devConfig
+    await assert.isRejected(
+      paratii.eth.tcr.withdraw(id, 1),
+      Error,
+       /withdraw/g
+     )
+
+    let depositTx = await paratii.eth.tcr.approveAndDeposit(id, 2)
+    assert.isOk(depositTx)
+    assert.isOk(depositTx.events._Deposit)
+
+     // now I should be able to withdraw up to 2
+    let withdrawTx = await paratii.eth.tcr.withdraw(id, 1)
+    assert.isOk(withdrawTx)
+    assert.isOk(withdrawTx.events._Withdrawal)
+  })
+  it('request and withdraw rights should work as expected', async function () {
+    let tcrPLCRVoting = await paratii.eth.tcr.getPLCRVotingContract()
+
+    let balanceBefore = new BigNumber(await paratii.eth.balanceOf(paratii.eth.getAccount(), 'PTI'))
+
+    let approveTx = await paratii.eth.approve(tcrPLCRVoting.options.address, 10)
+    assert.isOk(approveTx)
+    assert.isOk(approveTx.events.Approval)
+
+    let tx = await paratii.eth.tcr.requestVotingRights(10)
+    assert.isOk(tx)
+    assert.isOk(tx.events._VotingRightsGranted)
+
+    let balanceAfter = new BigNumber(await paratii.eth.balanceOf(paratii.eth.getAccount(), 'PTI'))
+
+    assert.equal(balanceBefore.toString(), balanceAfter.plus(10).toString())
+
+    tx = await paratii.eth.tcr.withdrawVotingRights(10)
+    assert.isOk(tx)
+    assert.isOk(tx.events._VotingRightsWithdrawn)
+
+    let balanceAfter2 = new BigNumber(await paratii.eth.balanceOf(paratii.eth.getAccount(), 'PTI'))
+
+    assert.equal(balanceBefore.toString(), balanceAfter2.toString())
+  })
+  it('rescueTokens() should work as expected', async function () {
+    let id = 'there-are-a-lot-of-test'
+
+    // application for id --------------------------------------------------
+    let result = await paratii.eth.tcr.checkEligiblityAndApply(id, 10)
+    assert.isTrue(result)
+
+    // application should be successful
+    let appWasMade = await paratii.eth.tcr.appWasMade(id)
+    assert.isTrue(appWasMade)
+
+    let challengeTx = await paratii.eth.tcr.approveAndStartChallenge(id)
+    assert.isOk(challengeTx.events._Challenge)
+    let challengeID = challengeTx.events._Challenge.returnValues.challengeID
+
+    let balanceBeforeVoting = new BigNumber(await paratii.eth.balanceOf(paratii.eth.getAccount(), 'PTI'))
+
+    let commitVoteTx = await paratii.eth.tcr.approveAndGetRightsAndCommitVote(id, 1, 1)
+    assert.isOk(commitVoteTx)
+    assert.isOk(commitVoteTx.events._VoteCommitted)
+
+    let didCommit = await paratii.eth.tcr.didCommit(paratii.eth.getAccount(), challengeID)
+    assert.isTrue(didCommit)
+
+    let balanceAfterVoting = new BigNumber(await paratii.eth.balanceOf(paratii.eth.getAccount(), 'PTI'))
+
+    // make tx so that the commit period is finished
+    let isCommitPeriodActive
+    do {
+      await paratii.eth.transfer(address17, 0, 'PTI')
+      isCommitPeriodActive = await paratii.eth.tcr.commitPeriodActive(challengeID)
+    } while (isCommitPeriodActive)
+
+    // make tx so that the reveal period is finished
+    let isRevealPeriodActive
+    do {
+      await paratii.eth.transfer(address17, 0, 'PTI')
+      isRevealPeriodActive = await paratii.eth.tcr.revealPeriodActive(challengeID)
+    } while (isRevealPeriodActive)
+
+    let didReveal = await paratii.eth.tcr.didReveal(paratii.eth.getAccount(), challengeID)
+    assert.isFalse(didReveal)
+
+    // 1 token should be locked in the committed vote
+    assert.equal(balanceBeforeVoting.toString(), balanceAfterVoting.plus(1).toString())
+    let lockedTokens = await paratii.eth.tcr.getLockedTokens()
+    assert.equal(lockedTokens, 1)
+
+    let rescueTx = await paratii.eth.tcr.rescueTokens(challengeID)
+    assert.isOk(rescueTx)
+    assert.isOk(rescueTx.events._TokensRescued)
+
+    let tx = await paratii.eth.tcr.withdrawVotingRights(1)
+    assert.isOk(tx)
+    assert.isOk(tx.events._VotingRightsWithdrawn)
+
+    let balanceAfterRescue = new BigNumber(await paratii.eth.balanceOf(paratii.eth.getAccount(), 'PTI'))
+
+    assert.equal(balanceBeforeVoting.toString(), balanceAfterRescue.toString())
+    lockedTokens = await paratii.eth.tcr.getLockedTokens()
+    assert.equal(lockedTokens, 0)
+  })
+
+  it('token redistribution should be fine', async function () {
+    let id = 'final-one'
+
+    // application for id
+    let result = await paratii.eth.tcr.checkEligiblityAndApply(id, paratii.eth.web3.utils.toWei('10'))
+    assert.isTrue(result)
+
+    // application should be successful
+    let appWasMade = await paratii.eth.tcr.appWasMade(id)
+    assert.isTrue(appWasMade)
+
+    let challengeID = await challengeFromDifferentAccount(myPrivateKey, id, 10, paratii)
+
+    let commitVoteTx = await paratii.eth.tcr.approveAndGetRightsAndCommitVote(id, 1, paratii.eth.web3.utils.toWei('3'))
+    assert.isOk(commitVoteTx)
+    assert.isOk(commitVoteTx.events._VoteCommitted)
+
+    let numTokens = await paratii.eth.tcr.getNumTokens(paratii.eth.getAccount(), challengeID)
+    assert.equal(numTokens, paratii.eth.web3.utils.toWei('3'))
+
+    await voteFromDifferentAccount(myPrivateKey, challengeID, 0, 420, 1, paratii)
+    await voteFromDifferentAccount(myPrivateKey1, challengeID, 0, 420, 1, paratii)
+
+    // make tx so that the commit period is finished
+    let isCommitPeriodActive
+    do {
+      await paratii.eth.transfer(address17, 0, 'PTI')
+      isCommitPeriodActive = await paratii.eth.tcr.commitPeriodActive(challengeID)
+    } while (isCommitPeriodActive)
+
+    let revealTx = await paratii.eth.tcr.revealVote(challengeID, 1, paratii.eth.tcr.getSalt(id))
+    assert.isOk(revealTx)
+    assert.isOk(revealTx.events._VoteRevealed)
+
+    revealTx = await revealVoteFromDifferentAccount(myPrivateKey, challengeID, 0, 420, paratii)
+    assert.isOk(revealTx)
+    assert.isOk(revealTx.events._VoteRevealed)
+
+    revealTx = await revealVoteFromDifferentAccount(myPrivateKey1, challengeID, 0, 420, paratii)
+    assert.isOk(revealTx)
+    assert.isOk(revealTx.events._VoteRevealed)
+
+    // make tx so that the reveal period is finished
+    let isRevealPeriodActive
+    do {
+      await paratii.eth.transfer(address17, 0, 'PTI')
+      isRevealPeriodActive = await paratii.eth.tcr.revealPeriodActive(challengeID)
+    } while (isRevealPeriodActive)
+
+    let updateTx = await paratii.eth.tcr.updateStatus(id)
+    assert.isOk(updateTx)
+    assert.isOk(updateTx.events._ChallengeFailed)
+
+    let isPassed = await paratii.eth.tcr.isPassed(challengeID)
+    assert.isTrue(isPassed)
+
+    // check that the winnings are equal to the winning part vote
+    let winnings = await paratii.eth.tcr.getNumPassingTokens(paratii.eth.getAccount(), challengeID, paratii.eth.tcr.getSalt(id))
+    assert.equal(winnings, paratii.eth.web3.utils.toWei('3'))
+
+    let balanceBefore = new BigNumber(await paratii.eth.balanceOf(paratii.eth.getAccount(), 'PTI'))
+
+    let voterReward = await paratii.eth.tcr.voterReward(paratii.eth.getAccount(), challengeID, paratii.eth.tcr.getSalt(id))
+
+    let rewardTx = await paratii.eth.tcr.claimReward(challengeID, paratii.eth.tcr.getSalt(id))
+    assert.isOk(rewardTx)
+    assert.isOk(rewardTx.events._RewardClaimed)
+
+    let balanceAfter = new BigNumber(await paratii.eth.balanceOf(paratii.eth.getAccount(), 'PTI'))
+    let reward = rewardTx.events._RewardClaimed.returnValues.reward
+
+    assert.equal(voterReward, reward)
+
+    assert.equal(balanceBefore.plus(reward).toString(), balanceAfter.toString())
   })
 })
