@@ -23,6 +23,7 @@ var _bignumber = require('bignumber.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var localStorage = null;
 var HASH_TO_KEY_PREFIX = 'HASH_KEY_';
 var SALT_KEY_PREFIX = 'SALT_KEY_';
 
@@ -2336,13 +2337,30 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'getLocalStorage',
     value: function getLocalStorage() {
-      var localStorage = void 0;
+      if (localStorage) {
+        return localStorage;
+      }
 
       if (typeof window !== 'undefined' && window.localStorage) {
         localStorage = window.localStorage;
       } else {
-        var LocalStorage = require('node-localstorage').LocalStorage;
-        localStorage = new LocalStorage('./test/data/nodeLocalstorage');
+        localStorage = {
+          _data: {},
+          setItem: function setItem(id, val) {
+            this._data[id] = String(val);
+            return this._data[id];
+          },
+          getItem: function getItem(id) {
+            return this._data.hasOwnProperty(id) ? this._data[id] : undefined;
+          },
+          removeItem: function removeItem(id) {
+            return delete this._data[id];
+          },
+          clear: function clear() {
+            this._data = {};
+            return this._data;
+          }
+        };
       }
 
       return localStorage;
@@ -2354,8 +2372,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'clearNodeLocalStorage',
     value: function clearNodeLocalStorage() {
-      var LocalStorage = require('node-localstorage').LocalStorage;
-      var localStorage = new LocalStorage('./test/data/nodeLocalstorage');
+      var localStorage = this.getLocalStorage();
 
       localStorage.clear();
     }
