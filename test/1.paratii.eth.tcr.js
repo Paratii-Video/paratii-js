@@ -158,8 +158,7 @@ describe('paratii.eth.tcr:', function () {
 
     let hash1 = paratii.eth.tcr.getAndStoreHash(videoId6)
     let hash2 = paratii.eth.tcr.getAndStoreHash(videoId7)
-    console.log('hash1: ', hash1)
-    console.log('hashToId', paratii.eth.tcr.hashToId(hash1))
+
     assert.equal(paratii.eth.tcr.hashToId(hash1), videoId6)
     assert.equal(paratii.eth.tcr.hashToId(hash2), videoId7)
 
@@ -843,7 +842,13 @@ describe('paratii.eth.tcr:', function () {
     let isPassed = await paratii.eth.tcr.isPassed(challengeID)
     assert.isTrue(isPassed)
 
+    // check that the winnings are equal to the winning part vote
+    let winnings = await paratii.eth.tcr.getNumPassingTokens(paratii.eth.getAccount(), challengeID, paratii.eth.tcr.getSalt(id))
+    assert.equal(winnings, paratii.eth.web3.utils.toWei('3'))
+
     let balanceBefore = new BigNumber(await paratii.eth.balanceOf(paratii.eth.getAccount(), 'PTI'))
+
+    let voterReward = await paratii.eth.tcr.voterReward(paratii.eth.getAccount(), challengeID, paratii.eth.tcr.getSalt(id))
 
     let rewardTx = await paratii.eth.tcr.claimReward(challengeID, paratii.eth.tcr.getSalt(id))
     assert.isOk(rewardTx)
@@ -851,6 +856,8 @@ describe('paratii.eth.tcr:', function () {
 
     let balanceAfter = new BigNumber(await paratii.eth.balanceOf(paratii.eth.getAccount(), 'PTI'))
     let reward = rewardTx.events._RewardClaimed.returnValues.reward
+
+    assert.equal(voterReward, reward)
 
     assert.equal(balanceBefore.plus(reward).toString(), balanceAfter.toString())
   })
