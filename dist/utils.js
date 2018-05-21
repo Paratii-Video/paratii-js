@@ -31,7 +31,6 @@ exports.makeId = makeId;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var assert = require('assert');
 var NULL_ADDRESS = exports.NULL_ADDRESS = '0x0000000000000000000000000000000000000000';
 
 function add0x(input) {
@@ -69,7 +68,7 @@ function getInfoFromLogs(tx, eventName, arg) {
     var msg = 'There is no event logged with eventName ' + eventName;
     throw Error(msg);
   }
-  assert(log.logIndex === index);
+  // assert(log.logIndex === index)
   return log.returnValues[arg];
 }
 

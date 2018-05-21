@@ -7,7 +7,6 @@ chai.use(require('chai-bignumber')())
 
 let address = '0xCbe4f07b343171ac37055B25a5266f48f6945b7d'
 let privateKey = '0x399b141d0cc2b863b2f514ffe53edc6afc9416d5899da4d9bd2350074c38f1c6'
-
 let address1 = '0xa99dBd162ad5E1601E8d8B20703e5A3bA5c00Be7'
 
 // a valid address

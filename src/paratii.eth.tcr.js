@@ -1,6 +1,5 @@
 'use strict'
 import { getInfoFromLogs } from './utils.js'
-import { BigNumber } from 'bignumber.js'
 
 var localStorage = null
 const HASH_TO_KEY_PREFIX = 'HASH_KEY_'
@@ -71,7 +70,7 @@ export class ParatiiEthTcr {
    * One of the preconditions for application is the client approve that the TCR contract can amount first before actually
    * transfer the stake. If this sounds unfamliar to you, use {@link ParatiiEthTcr#checkEligiblityAndApply} instead.
    * @param  {string} videoId id of the video
-   * @param  {integer}  amountToStake number of tokens to stake. must >= minDeposit
+   * @param  {number}  amountToStake number of tokens to stake. must >= minDeposit
    * @param  {string} data optional data for the application
    * @return {boolean}  returns true if the  application is successful
    * @example paratii.eth.tcr.apply('some-video-id', 3e18)
@@ -128,7 +127,7 @@ export class ParatiiEthTcr {
    * - approve that the TCR contract can transfer amountToStake tokens
    * - apply to the TCR
    * @param  {string}  videoId       id of the video
-   * @param  {integer}  amountToStake amount (in base units) of tokens to stake
+   * @param  {number}  amountToStake amount (in base units) of tokens to stake
    * @return {Promise}  returns true if the application was successful, false otherwise
    * event.
    * @example let result = await paratii.eth.tcr.checkEligiblityAndApply('some-video-id', 31415926)
@@ -137,7 +136,8 @@ export class ParatiiEthTcr {
   async checkEligiblityAndApply (videoId, amountToStake) {
     let minDeposit = await this.getMinDeposit()
 
-    if (this.eth.web3.utils.toBN(amountToStake).lt(minDeposit)) {
+    let amountToStakeBN = this.eth.web3.utils.toBN(amountToStake)
+    if (amountToStakeBN.lt(minDeposit)) {
       throw new Error(`amount to stake ${amountToStake} is less than minDeposit ${minDeposit.toString()}`)
     }
 
@@ -156,11 +156,10 @@ export class ParatiiEthTcr {
     let token = await this.eth.getContract('ParatiiToken')
     let tcr = await this.getTcrContract()
 
-    // FIXME: restore this logic (it is broken!)
-    // let balance = await token.methods.balanceOf(this.eth.getAccount()).call()
-    // if (this.eth.web3.utils.toBN(balance.toString()).lt(amountToStake)) {
-    //   throw new Error(`Your balance is to low: it is ${balance.toString()}, while a minimal deposit of ${minDeposit.toString()} is required`)
-    // }
+    let balance = await this.eth.balanceOf(this.eth.getAccount(), 'PTI')
+    if (balance.lt(amountToStakeBN)) {
+      throw new Error(`Your balance is to low: it is ${balance.toString()}, while a minimal deposit of ${minDeposit.toString()} is required`)
+    }
 
     let tx2 = await token.methods.approve(tcr.options.address, amountToStake).send()
     if (!tx2) {
@@ -168,7 +167,7 @@ export class ParatiiEthTcr {
     }
 
     let allowance = await token.methods.allowance(this.eth.getAccount(), tcr.options.address).call()
-    if (allowance.toString() !== amountToStake.toString()) {
+    if (allowance.toString() !== amountToStakeBN.toString()) {
       console.warn(`allowance ${allowance.toString()} != ${amountToStake.toString()}`)
     }
 
@@ -179,7 +178,7 @@ export class ParatiiEthTcr {
   /**
    * give the approval to the tcr and deposit amount tokens on the videoId
    * @param  {string}  videoId univocal video id
-   * @param  {integer}  amount  amount of token to be deposited
+   * @param  {number}  amount  amount of token to be deposited
    * @return {Promise}         tx of the deposit
    */
   async approveAndDeposit (videoId, amount) {
@@ -197,13 +196,15 @@ export class ParatiiEthTcr {
   /**
    * Allows the owner of a listingHash to increase their unstaked deposit.
    * @param  {string}  videoId id of the video
-   * @param  {number}  amount  amount in bignumber format.
+   * @param  {number}  amount  amount to be deposited
    * @return {Promise}         the deposit tx
    */
   async deposit (videoId, amount) {
     // check if user is the listing owner.
     let hash = this.getAndStoreHash(videoId)
     let listing = await this.getListing(videoId)
+
+    let amountBN = this.eth.web3.utils.toBN(amount)
     if (listing.owner !== this.eth.getAccount()) {
       throw new Error(`Can't deposit tokens to video ${videoId} because ${this.eth.getAccount()} isn't the owner.`)
     }
@@ -212,7 +213,7 @@ export class ParatiiEthTcr {
     let tcrRegistry = await this.getTcrContract()
     let allowance = await this.eth.allowance(this.eth.getAccount(), tcrRegistry.options.address)
 
-    if (allowance.lt(amount)) {
+    if (allowance.lt(amountBN)) {
       throw new Error(`tcrRegistry doesn't have enough allowance (${allowance.toString()}) to deposit ${amount.toString()}`)
     }
 
@@ -230,18 +231,19 @@ export class ParatiiEthTcr {
     let tcrRegistry = await this.getTcrContract()
     let hash = this.getAndStoreHash(videoId)
     let listing = await this.getListing(videoId)
+    let amountBN = this.eth.web3.utils.toBN(amount)
 
     if (listing.owner !== this.eth.getAccount()) {
       throw new Error(`Can't deposit tokens to video ${videoId} because ${this.eth.getAccount()} isn't the owner.`)
     }
 
-    let unstakedDeposit = new BigNumber(listing.unstakedDeposit)
-    if (unstakedDeposit.lt(amount)) {
+    let unstakedDeposit = this.eth.web3.utils.toBN(listing.unstakedDeposit)
+    if (unstakedDeposit.lt(amountBN)) {
       throw new Error(`unstakedDeposit ${unstakedDeposit.toString()} is less than amount ${amount.toString()}`)
     }
 
     let minDeposit = await this.getMinDeposit()
-    if (unstakedDeposit.minus(amount).lt(minDeposit)) {
+    if (unstakedDeposit.sub(amountBN).lt(minDeposit)) {
       throw new Error(`can't withdraw amount (${amount.toString()}) from ${unstakedDeposit.toString()} since it'd be under ${minDeposit.toString()}`)
     }
 
@@ -400,7 +402,7 @@ export class ParatiiEthTcr {
    * 3. commit the vote
    * @param  {string}  videoId     univocal video identifier
    * @param  {integer}  vote        1 vote for, 0 vote against
-   * @param  {integer}  amountInWei amount for the vote
+   * @param  {number}  amountInWei amount for the vote
    * @return {Promise}             commit tx
    */
   async approveAndGetRightsAndCommitVote (videoId, vote, amountInWei) {
@@ -426,13 +428,13 @@ export class ParatiiEthTcr {
   /**
    * Commits vote using hash of choice and secret salt to conceal vote until reveal
    * @param  {string}  videoId videoId
-   * @param  {bignumber}  vote    1 = yes, 0 = no
-   * @param  {bignumber}  amount  amount of tokens to vote with.
+   * @param  {integer}  vote    1 = yes, 0 = no
+   * @param  {number}  amount  amount of tokens to vote with.
    * @return {Promise}         commitVote tx
    */
   async commitVote (videoId, vote, amountInWei) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
-    let amount = new BigNumber(amountInWei)
+    let amount = this.eth.web3.utils.toBN(amountInWei)
 
     let listing = await this.getListing(videoId)
     if (!listing) {
@@ -486,7 +488,7 @@ export class ParatiiEthTcr {
 
   /**
    * Reveals vote with choice and secret salt used in generating commitHash to attribute committed tokens
-   * @param  {BigNumber}  pollID     poll Id of the vote to reveal.
+   * @param  {integer}  pollID     poll Id of the vote to reveal.
    * @param  {uint}  voteOption 1 for yes, 0 or other for no.
    * @param  {string}  salt       salt used when commiting the vote.
    * @return {Promise}            revealVote tx
@@ -527,20 +529,21 @@ export class ParatiiEthTcr {
 
   /**
    * Loads amount ERC20 tokens into the voting contract for one-to-one voting rights
-   * @param  {bignumber}  amount amount to deposit into voting contract.
+   * @param  {number}  amount amount to deposit into voting contract.
    * @return {Promise}        `requestVotingRights` tx
    */
   async requestVotingRights (amount) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
     let balance = await this.eth.balanceOf(this.eth.getAccount(), 'PTI')
+    let amountBN = this.eth.web3.utils.toBN(amount)
 
-    if (balance.lt(amount)) {
+    if (balance.lt(amountBN)) {
       throw new Error(`${this.eth.getAccount()} balance (${balance.toString()}) is insufficient (amount = ${amount.toString()})`)
     }
 
     let allowance = await this.eth.allowance(this.eth.getAccount(), tcrPLCRVoting.options.address)
 
-    if (allowance.lt(amount)) {
+    if (allowance.lt(amountBN)) {
       throw new Error(`PLCRVoting Contract allowance (${allowance.toString()}) is < amount (${amount.toString()})`)
     }
 
@@ -550,17 +553,18 @@ export class ParatiiEthTcr {
 
   /**
    * Withdraw amount ERC20 tokens from the voting contract, revoking these voting rights
-   * @param  {bignumber}  amount amount to withdraw
+   * @param  {number}  amount amount to withdraw
    * @return {Promise}        withdrawVotingRights tx
    */
   async withdrawVotingRights (amount) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
     let voterBalancen = await tcrPLCRVoting.methods.voteTokenBalance(this.eth.getAccount()).call()
     let lockedTokens = await this.getLockedTokens(this.eth.getAccount())
-    let voterBalance = new BigNumber(voterBalancen)
+    let voterBalance = this.eth.web3.utils.toBN(voterBalancen)
+    let amountBN = this.eth.web3.utils.toBN(amount)
 
-    let balanceAfter = voterBalance.minus(lockedTokens)
-    if (balanceAfter.lt(amount)) {
+    let balanceAfter = voterBalance.sub(lockedTokens)
+    if (balanceAfter.lt(amountBN)) {
       throw new Error(`unlocked balance ${balanceAfter.toString()} is < amount ${amount.toString()}`)
     }
 
@@ -741,7 +745,7 @@ export class ParatiiEthTcr {
   /**
    * get the number of locked tokens for a specified address
    * @param  {address}  voterAddress address of the voter
-   * @return {Promise}              number of locked tokens
+   * @return {Promise}              number of locked tokens in BN format
    */
   async getLockedTokens (voterAddress) {
     if (!voterAddress) {
@@ -749,7 +753,7 @@ export class ParatiiEthTcr {
     }
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
     let lockedTokens = await tcrPLCRVoting.methods.getLockedTokens(voterAddress).call()
-    return lockedTokens
+    return this.eth.web3.utils.toBN(lockedTokens)
   }
 
   /**
@@ -808,7 +812,7 @@ export class ParatiiEthTcr {
   async voterReward (voterAddress, challengeID, salt) {
     let tcrRegistry = await this.getTcrContract()
     let voterReward = await tcrRegistry.methods.voterReward(voterAddress, challengeID, salt).call()
-    return voterReward
+    return this.eth.web3.utils.toBN(voterReward)
   }
 
   /**
@@ -864,7 +868,7 @@ export class ParatiiEthTcr {
    * @param  {address}  voterAddress address of the voter
    * @param  {integer}  pollID       id of the challenge
    * @param  {hex}  salt         salt of the vote
-   * @return {Promise}              Number of tokens voted for winning option
+   * @return {Promise}              Number of tokens voted for winning option in BN format
    */
   async getNumPassingTokens (voterAddress, pollID, salt) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
@@ -875,15 +879,15 @@ export class ParatiiEthTcr {
       salt
     ).call()
 
-    return winnings
+    return this.eth.web3.utils.toBN(winnings)
   }
 
   /**
    * Compares previous and next poll's committed tokens for sorting purposes
-   * @param  {bignumber}  prevPollID uint of the previous PollID
-   * @param  {BigNumber}  nextPollID uint of the next PollID
+   * @param  {integer}  prevPollID uint of the previous PollID
+   * @param  {integer}  nextPollID uint of the next PollID
    * @param  {address}  voter      eth address of the voter
-   * @param  {BigNumber}  amount     the amount to commit to the current vote.
+   * @param  {number}  amount     the amount to commit to the current vote.
    * @return {Promise}            returns true if both prev and next positions are valid.
    */
   async validPosition (prevPollID, nextPollID, voter, amount) {
@@ -908,8 +912,8 @@ export class ParatiiEthTcr {
   /**
    * Wrapper for getAttribute with attrName="numTokens"
    * @param  {address}  voterAddress eth voter address
-   * @param  {BigNumber}  pollID       uint of the pollID
-   * @return {Promise}              bignumber of commited tokens.
+   * @param  {integer}  pollID       uint of the pollID
+   * @return {Promise}              BN of commited tokens.
    */
   async getNumTokens (voterAddress, pollID) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
@@ -918,19 +922,21 @@ export class ParatiiEthTcr {
       pollID
     ).call()
 
-    return numTokens
+    return this.eth.web3.utils.toBN(numTokens)
   }
   /**
    * checks if a user has >= amount voting rights
-   * @param  {integer}  amount amount of token to check
+   * @param  {number}  amount amount of token to check
    * @return {Promise}        true if >= amount, false otherwise
    */
   async hasVotingRights (amount) {
     let PLCRVoting = await this.getPLCRVotingContract()
 
     let numTokens = await PLCRVoting.methods.voteTokenBalance(this.eth.getAccount()).call()
+    let numTokensBN = this.eth.web3.utils.toBN(numTokens)
+    let amountBN = this.eth.web3.utils.toBN(amount)
 
-    return numTokens >= amount
+    return numTokensBN.gte(amountBN)
   }
 
   // -----------------------
@@ -1044,7 +1050,7 @@ export class ParatiiEthTcr {
 /**
  * get the minimum amount required to stake a video.
  * @return {integer} amount required, in PTI base units
- * @todo return amount as bignumber.js Object
+ * @todo return amount as BN Object
  * @example let minDeposit = await paratii.eth.tcr.getMinDeposit()
  */
   async getMinDeposit () {
@@ -1103,11 +1109,10 @@ export class ParatiiEthTcr {
 /**
  * get the minimum deposit to propose a reparameterization
  * @return {integer} amount required, in PTI base units
- * @todo return amount as bignumber.js Object
  * @example let minpDeposit = await paratii.eth.tcr.getpMinDeposit()
  */
   async getpMinDeposit () {
-    return this.get('pMinDeposit')
+    return this.eth.web3.utils.toBN(await this.get('pMinDeposit'))
   }
 
 /**

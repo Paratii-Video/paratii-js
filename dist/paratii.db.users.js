@@ -92,11 +92,9 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
 
             case 2:
               users = _context2.sent;
-
-              console.log(users);
               return _context2.abrupt('return', users);
 
-            case 5:
+            case 4:
             case 'end':
               return _context2.stop();
           }
