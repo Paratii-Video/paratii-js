@@ -105,22 +105,22 @@ export class ParatiiEthVouchers {
     let voucherBytes = await contract.methods.hashVoucher(voucherCode).call()
     let thisVoucher = await contract.methods.vouchers(voucherBytes).call()
     let thisVoucherClaimant = thisVoucher[0].toString()
-    let thisVoucherAmount = Number(thisVoucher[1])
-    let vouchersContractBalance = Number(await this.eth.balanceOf(contract.options.address, 'PTI'))
+    let thisVoucherAmount = thisVoucher[1]
+    let vouchersContractBalance = await this.eth.balanceOf(contract.options.address, 'PTI')
 
     if (thisVoucherClaimant !== NULL_ADDRESS) {
       throw Error('This voucher was already used')
     }
-    if (thisVoucherAmount > vouchersContractBalance) {
+    if (this.eth.web3.utils.toBN(thisVoucherAmount).gt(vouchersContractBalance)) {
       throw Error('The Vouchers contract doesn\'t have enough PTI to redeem the voucher')
     }
-    if (thisVoucherAmount === Number(0)) {
+    if (this.eth.web3.utils.toBN(thisVoucherAmount).eq(0)) {
       throw Error('This voucher doesn\'t exist')
     }
 
     try {
       let tx = await contract.methods.redeem(voucherCode).send()
-
+      console.log(tx)
       let claimant = getInfoFromLogs(tx, 'LogRedeemVoucher', '_claimant', 1)
       let amount = getInfoFromLogs(tx, 'LogRedeemVoucher', '_amount', 1)
 
@@ -130,7 +130,7 @@ export class ParatiiEthVouchers {
         return false
       }
     } catch (e) {
-      throw Error('An unknown error occurred')
+      throw e
     }
   }
 }
