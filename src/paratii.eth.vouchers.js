@@ -114,13 +114,13 @@ export class ParatiiEthVouchers {
     if (this.eth.web3.utils.toBN(thisVoucherAmount).gt(vouchersContractBalance)) {
       throw Error('The Vouchers contract doesn\'t have enough PTI to redeem the voucher')
     }
-    if (this.eth.web3.utils.toBN(thisVoucherAmount).eq(0)) {
+
+    if (Number(thisVoucherAmount) === 0) {
       throw Error('This voucher doesn\'t exist')
     }
 
     try {
       let tx = await contract.methods.redeem(voucherCode).send()
-      console.log(tx)
       let claimant = getInfoFromLogs(tx, 'LogRedeemVoucher', '_claimant', 1)
       let amount = getInfoFromLogs(tx, 'LogRedeemVoucher', '_amount', 1)
 

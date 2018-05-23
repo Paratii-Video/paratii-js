@@ -294,7 +294,7 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
               throw Error('The Vouchers contract doesn\'t have enough PTI to redeem the voucher');
 
             case 18:
-              if (!this.eth.web3.utils.toBN(thisVoucherAmount).eq(0)) {
+              if (!(Number(thisVoucherAmount) === 0)) {
                 _context5.next = 20;
                 break;
               }
@@ -308,36 +308,34 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
 
             case 23:
               tx = _context5.sent;
-
-              console.log(tx);
               claimant = (0, _utils.getInfoFromLogs)(tx, 'LogRedeemVoucher', '_claimant', 1);
               amount = (0, _utils.getInfoFromLogs)(tx, 'LogRedeemVoucher', '_amount', 1);
 
               if (!(claimant === this.eth.getAccount())) {
-                _context5.next = 31;
+                _context5.next = 30;
                 break;
               }
 
               return _context5.abrupt('return', amount);
 
-            case 31:
+            case 30:
               return _context5.abrupt('return', false);
 
-            case 32:
-              _context5.next = 37;
+            case 31:
+              _context5.next = 36;
               break;
 
-            case 34:
-              _context5.prev = 34;
+            case 33:
+              _context5.prev = 33;
               _context5.t0 = _context5['catch'](20);
               throw _context5.t0;
 
-            case 37:
+            case 36:
             case 'end':
               return _context5.stop();
           }
         }
-      }, null, this, [[20, 34]]);
+      }, null, this, [[20, 33]]);
     }
   }]);
   return ParatiiEthVouchers;
