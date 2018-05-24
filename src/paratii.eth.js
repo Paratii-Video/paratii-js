@@ -1,3 +1,5 @@
+import fs from 'fs'
+import joi from 'joi'
 import { add0x } from './utils.js'
 import { ParatiiEthVids } from './paratii.eth.vids.js'
 import { ParatiiEthUsers } from './paratii.eth.users.js'
@@ -8,7 +10,6 @@ import { ParatiiEthTcr } from './paratii.eth.tcr.js'
 import { ParatiiEthTcrPlaceholder } from './paratii.eth.tcrPlaceholder.js'
 import { patchWallet } from './paratii.eth.wallet.js'
 import { ethSchema, accountSchema } from './schemas.js'
-import joi from 'joi'
 
 const Web3 = require('web3')
 // const joi = require('joi')
@@ -155,6 +156,7 @@ export class ParatiiEth {
 
     return contract
   }
+
   /**
    * creates the javascript contract object from the json file
    * @param  {string} contractName name of the contract
@@ -164,21 +166,18 @@ export class ParatiiEth {
    */
   requireContract (contractName) {
     // console.log('requiring ', contractName)
-    let artifact, contract
+    let contract, path
     let from = this.config.account.address
 
     let contractArr = contractName.split('/')
     if (contractArr[0] === 'sol-tcr') {
-      artifact = require(`sol-tcr/build/contracts/${contractArr[1]}.json`)
-      // contract = truffleContract(artifact)
-      // contract.setProvider(this._provider)
-      // contract.defaults({
-      //   from: from,
-      //   gas: this.web3.utils.toHex(4e6)
-      // })
+      path = `./node_modules/sol-tcr/build/contracts/${contractArr[1]}.json`
     } else {
-      artifact = require(`paratii-contracts/build/contracts/${contractName}.json`)
+      path = `./node_modules/paratii-contracts/build/contracts/${contractName}.json`
     }
+
+    const content = fs.readFileSync(path, 'utf8')
+    const artifact = JSON.parse(content)
 
     contract = new this.web3.eth.Contract(
       artifact.abi,
@@ -187,44 +186,8 @@ export class ParatiiEth {
         gas: this.web3.utils.toHex(4e6),
         data: artifact.bytecode
       })
-      // contract.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
-    // if (contractArr[1] === 'DLL') {
-    //   console.log('DLL required!')
-    // }
     return contract
   }
-
-  // requireTruffleContract (contractName) {
-  //   let artifact, contract
-  //   let from = this.config.account.address
-  //
-  //   let contractArr = contractName.split('/')
-  //   if (contractArr[0] === 'sol-tcr') {
-  //     artifact = require(`sol-tcr/build/contracts/${contractArr[1]}.json`)
-  //   } else {
-  //     artifact = require(`paratii-contracts/build/contracts/${contractName}.json`)
-  //   }
-  //   // console.log('artifact: ', this.web3.currentProvider)
-  //   contract = truffleContract(artifact)
-  //   contract.setProvider(this.web3.currentProvider)
-  //
-  //   // dirty hack for web3@1.0.0 support for localhost testrpc, see https://github.com/trufflesuite/truffle-contract/issues/56#issuecomment-331084530
-  //   // thanks https://github.com/trufflesuite/truffle-contract/issues/57#issuecomment-331300494
-  //   if (typeof contract.currentProvider.sendAsync !== 'function') {
-  //     contract.currentProvider.sendAsync = function () {
-  //       return contract.currentProvider.send.apply(
-  //         contract.currentProvider, arguments
-  //       )
-  //     }
-  //   }
-  //
-  //   contract.defaults({
-  //     from: from,
-  //     gas: this.web3.utils.toHex(4e6)
-  //   })
-  //
-  //   return contract
-  // }
 
   linkByteCode (bytecode, links) {
     Object.keys(links).forEach(function (libraryName) {
@@ -503,7 +466,9 @@ export class ParatiiEth {
    * for (contractName in contracts) { console.log(contracts[contractName])}
    */
   async deployContracts () {
-    let tcrConfig = require(this.config.eth.tcrConfigFile)
+    const content = fs.readFileSync(this.config.eth.tcrConfig, 'utf8')
+    const tcrConfig = JSON.parse(content)
+
     let parameterizerConfig = tcrConfig.paramDefaults
 
     let paratiiRegistry = await this.deployContract('Registry')
