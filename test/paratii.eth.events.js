@@ -11,7 +11,7 @@ describe('paratii.eth.events API: :', function () {
     let vouchers = await paratii.eth.getContract('Vouchers')
     let distributor = await paratii.eth.getContract('PTIDistributor')
     await token.methods.transfer(vouchers.options.address, voucherAmountInitial11).send()
-    await token.methods.transfer(distributor.options.address, voucherAmountInitial11).send()
+    await token.methods.transfer(distributor.options.address, paratii.eth.web3.utils.toWei('100', 'ether')).send()
     await paratii.eth.setRegistryAddress(paratii.config.eth.registryAddress)
   })
 
