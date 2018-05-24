@@ -21,7 +21,7 @@ jobs:
           # - v1-dependencies-
       - run: yarn --pure-lockfile
       # get the latest paratii-contracts version from the repo (and not from the cache)
-      - run: yarn upgrade paratii-contracts
+      # - run: yarn upgrade paratii-contracts
       - save_cache:
           paths:
             - node_modules

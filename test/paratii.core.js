@@ -2,7 +2,7 @@ import { Paratii } from '../src/paratii.js'
 import { searchVidsFixture, mockDb, testAccount, address, address23 } from './utils.js'
 import { assert } from 'chai'
 
-describe('paratii API: :', function () {
+describe('paratii.core:', function () {
   let paratii, paratiiCore
 
   beforeEach(async function () {
