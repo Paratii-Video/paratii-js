@@ -1226,13 +1226,13 @@ bignumber.js@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-6.0.0.tgz#bbfa047644609a5af093e9cbd83b0461fa3f6002"
 
+"bignumber.js@git+https://github.com/debris/bignumber.js#master":
+  version "2.0.7"
+  resolved "git+https://github.com/debris/bignumber.js#c7a38de919ed75e6fb6ba38051986e294b328df9"
+
 "bignumber.js@git+https://github.com/debris/bignumber.js.git#94d7146671b9719e00a09c29b01a691bc85048c2":
   version "2.0.7"
   resolved "git+https://github.com/debris/bignumber.js.git#94d7146671b9719e00a09c29b01a691bc85048c2"
-
-"bignumber.js@git+https://github.com/debris/bignumber.js.git#master":
-  version "2.0.7"
-  resolved "git+https://github.com/debris/bignumber.js.git#c7a38de919ed75e6fb6ba38051986e294b328df9"
 
 bignumber.js@~3.0.0:
   version "3.0.1"
@@ -7173,10 +7173,6 @@ onetime@^1.0.0:
   version "1.1.0"
   resolved "http://registry.npmjs.org/onetime/-/onetime-1.1.0.tgz#a1f7838f8314c516f05ecefcbc4ccfe04b4ed789"
 
-openzeppelin-solidity@^1.8.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/openzeppelin-solidity/-/openzeppelin-solidity-1.9.0.tgz#929c2e8eab5d1935a048390a77645b36dfc5cfad"
-
 optimist@^0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/optimist/-/optimist-0.6.1.tgz#da3ea74686fa21a19a111c326e90eb15a0196686"
@@ -7301,9 +7297,9 @@ pako@~1.0.5:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.6.tgz#0101211baa70c4bca4a0f63f2206e97b7dfaf258"
 
-"paratii-contracts@github:Paratii-Video/paratii-contracts#751a8b52a6bea0e877e2ac946232b3b34467fd6c":
+"paratii-contracts@github:Paratii-Video/paratii-contracts#f027181092fa3a18afaf34c323e7ffa4c0ec5d5c":
   version "0.0.3"
-  resolved "https://codeload.github.com/Paratii-Video/paratii-contracts/tar.gz/751a8b52a6bea0e877e2ac946232b3b34467fd6c"
+  resolved "https://codeload.github.com/Paratii-Video/paratii-contracts/tar.gz/f027181092fa3a18afaf34c323e7ffa4c0ec5d5c"
   dependencies:
     async "^2.6.0"
     babel-cli "^6.26.0"
@@ -7313,7 +7309,7 @@ pako@~1.0.5:
     uuid "^3.2.1"
     web3 "^1.0.0-beta2"
     web3-utils "1.0.0-beta.33"
-    zeppelin-solidity "^1.8.0"
+    zeppelin-solidity "1.3.0"
 
 "paratii-protocol@github:Paratii-Video/paratii-protocol#45aadcf300f1ad184d6d3db8f9c4b3d438b6f658":
   version "0.0.1"
@@ -10119,18 +10115,6 @@ web3-utils@1.0.0-beta.33:
     underscore "1.8.3"
     utf8 "2.1.1"
 
-web3-utils@^1.0.0-beta.34:
-  version "1.0.0-beta.34"
-  resolved "https://registry.yarnpkg.com/web3-utils/-/web3-utils-1.0.0-beta.34.tgz#9411fc39aaef39ca4e06169f762297d9ff020970"
-  dependencies:
-    bn.js "4.11.6"
-    eth-lib "0.1.27"
-    ethjs-unit "0.1.6"
-    number-to-bn "1.7.0"
-    randomhex "0.1.5"
-    underscore "1.8.3"
-    utf8 "2.1.1"
-
 web3@1.0.0-beta.33:
   version "1.0.0-beta.33"
   resolved "https://registry.yarnpkg.com/web3/-/web3-1.0.0-beta.33.tgz#c6021b5769927726371c184b868445311b139295"
@@ -10596,3 +10580,7 @@ zcash-bitcore-lib@^0.13.20-rc3:
     elliptic "=3.0.3"
     inherits "=2.0.1"
     lodash "=3.10.1"
+
+zeppelin-solidity@1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/zeppelin-solidity/-/zeppelin-solidity-1.3.0.tgz#066ab35d7e07510da391d1dbaaf319e0d06fcfc6"

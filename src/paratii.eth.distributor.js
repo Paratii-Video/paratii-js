@@ -72,7 +72,6 @@ export class ParatiiEthPTIDistributor {
     options = result.value
 
     // TODO: implement type and missing value check
-
     let contract = await this.getPTIDistributeContract()
     let tx = await contract.methods.distribute(
       options.address, options.amount, options.salt, options.reason, options.v, options.r, options.s

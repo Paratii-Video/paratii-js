@@ -156,7 +156,6 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
               options = result.value;
 
               // TODO: implement type and missing value check
-
               _context3.next = 8;
               return _regenerator2.default.awrap(this.getPTIDistributeContract());
 
