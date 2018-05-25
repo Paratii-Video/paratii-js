@@ -40,6 +40,7 @@ export class ParatiiDbUsers {
     })
     return users
   }
+
   /**
    * get information about all the videos of the user
    * @param  {string}  userId univocal user identifier

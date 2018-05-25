@@ -103,6 +103,7 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
         }
       }, null, this);
     }
+
     /**
      * get information about all the videos of the user
      * @param  {string}  userId univocal user identifier
