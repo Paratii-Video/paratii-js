@@ -9,11 +9,13 @@ describe('paratii.eth.events API: :', function () {
     await paratii.eth.deployContracts()
     let token = await paratii.eth.getContract('ParatiiToken')
     let vouchers = await paratii.eth.getContract('Vouchers')
+    let distributor = await paratii.eth.getContract('PTIDistributor')
     await token.methods.transfer(vouchers.options.address, voucherAmountInitial11).send()
+    await token.methods.transfer(distributor.options.address, paratii.eth.web3.utils.toWei('100', 'ether')).send()
     await paratii.eth.setRegistryAddress(paratii.config.eth.registryAddress)
   })
 
-  it('subscription to Tranfer PTI events should work as expected', function (done) {
+  it('subscription to Transfer PTI events should work as expected', function (done) {
     let beneficiary = '0xDbC8232Bd8DEfCbc034a0303dd3f0Cf41d1a55Cf'
     let amount = paratii.eth.web3.utils.toWei('4', 'ether')
     // console.log(testConfigWS)
@@ -33,7 +35,7 @@ describe('paratii.eth.events API: :', function () {
     paratii.eth.transfer(beneficiary, amount, 'PTI')
   })
 
-  it('subscription to Tranfer ETH events should work as expected', function (done) {
+  it('subscription to Transfer ETH events should work as expected', function (done) {
     let beneficiary = '0xDbC8232Bd8DEfCbc034a0303dd3f0Cf41d1a55Cf'
     let amount = paratii.eth.web3.utils.toWei('4', 'ether')
     let description = 'thanks for all the fish'
@@ -282,14 +284,29 @@ describe('paratii.eth.events API: :', function () {
     let amount = 5
     amount = paratii.eth.web3.utils.toWei(amount.toString())
     let videoId = 'some-vide-id'
+    let expectedBytes = paratii.eth.tcr.getHash(videoId)
 
     paratii.eth.events.addListener('Application', function (log) {
-      assert.equal(log.returnValues.videoId, videoId)
+      assert.equal(log.returnValues.listingHash, expectedBytes)
       assert.equal(log.returnValues.deposit, amount)
       done()
     })
 
     paratii.eth.tcr.checkEligiblityAndApply(videoId, amount)
+  })
+
+  it('subscription to Application TCR Placeholder should work as expected', function (done) {
+    let amount = 5
+    amount = paratii.eth.web3.utils.toWei(amount.toString())
+    let videoId = 'some-vide-id2'
+
+    paratii.eth.events.addListener('PHApplication', function (log) {
+      assert.equal(log.returnValues.videoId, videoId)
+      assert.equal(log.returnValues.deposit, amount)
+      done()
+    })
+
+    paratii.eth.tcrPlaceholder.checkEligiblityAndApply(videoId, amount)
   })
   it.skip('TBI subscription to NewVideoWhitelisted TCR should work as expected', function (done) {
     let amount = 5
@@ -302,5 +319,26 @@ describe('paratii.eth.events API: :', function () {
       done()
     })
     paratii.eth.tcr.checkEligiblityAndApply(videoId, amount)
+  })
+
+  it('subscription to LogDistribute should work as expected', function (done) {
+    const amount = 5 ** 18
+    const reason = 'email_verification'
+    const salt = paratii.eth.web3.utils.sha3('' + Date.now())
+
+    paratii.eth.distributor.generateSignature(address1, amount, salt, reason, address).then(function (signature) {
+      let v = signature.v
+      let r = signature.r
+      let s = signature.s
+
+      paratii.eth.events.addListener('Distribute', function (log) {
+        assert.equal(log.returnValues._amount, amount)
+        assert.equal(log.returnValues._reason, reason)
+        assert.equal(log.returnValues._toAddress, address1)
+        done()
+      })
+
+      paratii.eth.distributor.distribute({address: address1, amount, salt, reason, v, r, s})
+    })
   })
 })

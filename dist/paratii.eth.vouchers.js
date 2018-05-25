@@ -271,73 +271,71 @@ var ParatiiEthVouchers = exports.ParatiiEthVouchers = function () {
             case 8:
               thisVoucher = _context5.sent;
               thisVoucherClaimant = thisVoucher[0].toString();
-              thisVoucherAmount = Number(thisVoucher[1]);
-              _context5.t0 = Number;
-              _context5.next = 14;
+              thisVoucherAmount = thisVoucher[1];
+              _context5.next = 13;
               return _regenerator2.default.awrap(this.eth.balanceOf(contract.options.address, 'PTI'));
 
-            case 14:
-              _context5.t1 = _context5.sent;
-              vouchersContractBalance = (0, _context5.t0)(_context5.t1);
+            case 13:
+              vouchersContractBalance = _context5.sent;
 
               if (!(thisVoucherClaimant !== _utils.NULL_ADDRESS)) {
-                _context5.next = 18;
+                _context5.next = 16;
                 break;
               }
 
               throw Error('This voucher was already used');
 
-            case 18:
-              if (!(thisVoucherAmount > vouchersContractBalance)) {
-                _context5.next = 20;
+            case 16:
+              if (!this.eth.web3.utils.toBN(thisVoucherAmount).gt(vouchersContractBalance)) {
+                _context5.next = 18;
                 break;
               }
 
               throw Error('The Vouchers contract doesn\'t have enough PTI to redeem the voucher');
 
-            case 20:
-              if (!(thisVoucherAmount === Number(0))) {
-                _context5.next = 22;
+            case 18:
+              if (!(Number(thisVoucherAmount) === 0)) {
+                _context5.next = 20;
                 break;
               }
 
               throw Error('This voucher doesn\'t exist');
 
-            case 22:
-              _context5.prev = 22;
-              _context5.next = 25;
+            case 20:
+              _context5.prev = 20;
+              _context5.next = 23;
               return _regenerator2.default.awrap(contract.methods.redeem(voucherCode).send());
 
-            case 25:
+            case 23:
               tx = _context5.sent;
               claimant = (0, _utils.getInfoFromLogs)(tx, 'LogRedeemVoucher', '_claimant', 1);
               amount = (0, _utils.getInfoFromLogs)(tx, 'LogRedeemVoucher', '_amount', 1);
 
               if (!(claimant === this.eth.getAccount())) {
-                _context5.next = 32;
+                _context5.next = 30;
                 break;
               }
 
               return _context5.abrupt('return', amount);
 
-            case 32:
+            case 30:
               return _context5.abrupt('return', false);
 
-            case 33:
-              _context5.next = 38;
+            case 31:
+              _context5.next = 36;
               break;
 
-            case 35:
-              _context5.prev = 35;
-              _context5.t2 = _context5['catch'](22);
-              throw Error('An unknown error occurred');
+            case 33:
+              _context5.prev = 33;
+              _context5.t0 = _context5['catch'](20);
+              throw _context5.t0;
 
-            case 38:
+            case 36:
             case 'end':
               return _context5.stop();
           }
         }
-      }, null, this, [[22, 35]]);
+      }, null, this, [[20, 33]]);
     }
   }]);
   return ParatiiEthVouchers;

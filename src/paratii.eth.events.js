@@ -12,9 +12,9 @@
  * - RemoveUser, triggered when a user is removed through the Users contract <br>
  * - ReedemVoucher, triggered when a voucher is reedemed through the Vouchers contract <br>
  * - RemoveVoucher, triggered when a voucher is removed through the Vouchers contract <br>
- * - Application, triggered when a video applies through the TcrPlaceholder contract <br>
+ * - Application, triggered when a video applies through the TcrRegistry contract <br>
  * @param {Object} config configuration object to initialize Paratii object
- * - NewVideoWhitelisted, triggered when a video is whitelisted through the TcrPlaceholder contract
+ * - NewVideoWhitelisted, triggered when a video is whitelisted through the TcrRegistry contract
  */
 export class ParatiiEthEvents {
   constructor (config) {
@@ -68,12 +68,24 @@ export class ParatiiEthEvents {
         event: 'LogRedeemVoucher'
       },
       Application: {
-        contract: 'TcrPlaceholder',
+        contract: 'TcrRegistry',
         event: '_Application'
       },
       NewVideoWhitelisted: {
+        contract: 'TcrRegistry',
+        event: '_NewVideoWhitelisted'
+      },
+      PHApplication: {
+        contract: 'TcrPlaceholder',
+        event: '_Application'
+      },
+      PHNewVideoWhitelisted: {
         contract: 'TcrPlaceholder',
         event: '_NewVideoWhitelisted'
+      },
+      Distribute: {
+        contract: 'PTIDistributor',
+        event: 'LogDistribute'
       }
     }
   }

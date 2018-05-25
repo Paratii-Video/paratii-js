@@ -30,6 +30,18 @@ describe('paratii.users: ', function () {
     await paratii.eth.deployContracts()
   })
 
+  it('users.create() "name" is optional and can be empty', async function () {
+    let result = await paratii.users.create({
+      id: '0xa99dBd162ad5E1601E8d8B20703e5A3bA5c00Be7'
+    })
+    assert.equal(result, newUserId)
+    result = await paratii.users.create({
+      id: '0xa99dBd162ad5E1601E8d8B20703e5A3bA5c00Be7',
+      name: ''
+    })
+    assert.equal(result, newUserId)
+  })
+
   it('users.create() should work as expected', async function () {
     let result = await paratii.users.create(newUserData)
     assert.equal(result, newUserId)

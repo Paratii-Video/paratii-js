@@ -36,7 +36,6 @@ export class ParatiiDbUsers {
     }).then(function (response) {
       return response.json()
     })
-    console.log(users)
     return users
   }
 }

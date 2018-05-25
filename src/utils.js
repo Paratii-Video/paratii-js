@@ -1,4 +1,3 @@
-let assert = require('assert')
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export function add0x (input) {
@@ -34,7 +33,7 @@ export function getInfoFromLogs (tx, eventName, arg, index = 0) {
     let msg = `There is no event logged with eventName ${eventName}`
     throw Error(msg)
   }
-  assert(log.logIndex === index)
+  // assert(log.logIndex === index)
   return log.returnValues[arg]
 }
 

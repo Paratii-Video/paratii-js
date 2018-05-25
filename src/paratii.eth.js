@@ -3,7 +3,9 @@ import { ParatiiEthVids } from './paratii.eth.vids.js'
 import { ParatiiEthUsers } from './paratii.eth.users.js'
 import { ParatiiEthEvents } from './paratii.eth.events.js'
 import { ParatiiEthVouchers } from './paratii.eth.vouchers.js'
+import { ParatiiEthPTIDistributor } from './paratii.eth.distributor.js'
 import { ParatiiEthTcr } from './paratii.eth.tcr.js'
+import { ParatiiEthTcrPlaceholder } from './paratii.eth.tcrPlaceholder.js'
 import { patchWallet } from './paratii.eth.wallet.js'
 import { ethSchema, accountSchema } from './schemas.js'
 import joi from 'joi'
@@ -73,6 +75,7 @@ export class ParatiiEth {
     this.contracts.Likes = this.requireContract('Likes')
     this.contracts.Views = this.requireContract('Views')
     this.contracts.Vouchers = this.requireContract('Vouchers')
+    this.contracts.PTIDistributor = this.requireContract('PTIDistributor')
     this.contracts.TcrPlaceholder = this.requireContract('TcrPlaceholder')
     this.contracts.TcrRegistry = this.requireContract('sol-tcr/Registry')
     this.contracts.TcrPLCRVoting = this.requireContract('sol-tcr/PLCRVoting')
@@ -85,6 +88,8 @@ export class ParatiiEth {
     this.events = new ParatiiEthEvents(this)
     this.vouchers = new ParatiiEthVouchers(this)
     this.tcr = new ParatiiEthTcr(this)
+    this.distributor = new ParatiiEthPTIDistributor(this)
+    this.tcrPlaceholder = new ParatiiEthTcrPlaceholder(this)
   }
   /**
    * [paratii.setAccount()](./Paratii.html#setAccount__anchor)
@@ -498,7 +503,7 @@ export class ParatiiEth {
    * for (contractName in contracts) { console.log(contracts[contractName])}
    */
   async deployContracts () {
-    let tcrConfig = require('sol-tcr/conf/config.json')
+    let tcrConfig = require(this.config.eth.tcrConfigFile)
     let parameterizerConfig = tcrConfig.paramDefaults
 
     let paratiiRegistry = await this.deployContract('Registry')
@@ -514,6 +519,7 @@ export class ParatiiEth {
     let likes = await this.deployContract('Likes', paratiiRegistryAddress)
     let views = await this.deployContract('Views', paratiiRegistryAddress)
     let vouchers = await this.deployContract('Vouchers', paratiiRegistryAddress)
+    let distributor = await this.deployContract('PTIDistributor', paratiiRegistryAddress)
     let tcrPlaceholder = await this.deployContract('TcrPlaceholder', paratiiRegistryAddress, paratiiToken.options.address, this.web3.utils.toWei('5'), 100)
     let tcrDLL = await this.deployContract('TcrDLL')
     let tcrAttributeStore = await this.deployContract('TcrAttributeStore')
@@ -562,6 +568,7 @@ export class ParatiiEth {
     await paratiiRegistry.methods.registerAddress('Likes', likes.options.address).send()
     await paratiiRegistry.methods.registerAddress('Views', views.options.address).send()
     await paratiiRegistry.methods.registerAddress('Vouchers', vouchers.options.address).send()
+    await paratiiRegistry.methods.registerAddress('PTIDistributor', distributor.options.address).send()
     await paratiiRegistry.methods.registerAddress('TcrPlaceholder', tcrPlaceholder.options.address).send()
     await paratiiRegistry.methods.registerAddress('TcrDLL', tcrDLL.options.address).send()
     await paratiiRegistry.methods.registerAddress('TcrAttributeStore', tcrAttributeStore.options.address).send()
@@ -582,6 +589,7 @@ export class ParatiiEth {
     this.contracts.Likes = likes
     this.contracts.Views = views
     this.contracts.Vouchers = vouchers
+    this.contracts.PTIDistributor = distributor
     this.contracts.Store = videoStore
     this.contracts.TcrPlaceholder = tcrPlaceholder
     this.contracts.TcrDLL = tcrDLL
@@ -590,7 +598,7 @@ export class ParatiiEth {
     this.contracts.TcrPLCRVoting = tcrPLCRVoting
     this.contracts.TcrParameterizer = tcrParameterizer
 
-    this.setRegistryAddress(paratiiRegistryAddress)
+    await this.setRegistryAddress(paratiiRegistryAddress)
 
     return this.contracts
   }
@@ -605,6 +613,7 @@ export class ParatiiEth {
   async getContracts () {
     for (var name in this.contracts) {
       let contract = this.contracts[name]
+      console.log(`[${name}] = ${contract.options.address}`)
       if (!contract.options.address) {
         let address = await this.getContractAddress(name)
         if (address && address !== '0x0') {
@@ -696,19 +705,54 @@ export class ParatiiEth {
 
     if (!symbol || symbol === 'ETH') {
       balance = await this.web3.eth.getBalance(address)
-      balances.ETH = balance
+      balances.ETH = this.web3.utils.toBN(balance)
     }
     if (!symbol || symbol === 'PTI') {
       let contract = await this.getContract('ParatiiToken')
       balance = await contract.methods.balanceOf(address).call()
-      balances.PTI = balance
+      balances.PTI = this.web3.utils.toBN(balance)
     }
     if (symbol) {
-      return balance
+      return this.web3.utils.toBN(balance)
     } else {
       return balances
     }
   }
+
+  /**
+   * get the amount the beneficiary is allowed to transferFrom the owner account.
+   * @param  {string}  ownerAddress       the address of the owner.
+   * @param  {string}  beneficiaryAddress address of the contract/person allowed to spend owners money
+   * @return {Promise}                    returns allowance in BN format.
+   */
+  async allowance (ownerAddress, beneficiaryAddress) {
+    let tokenContract = await this.getContract('ParatiiToken')
+    let allowance = await tokenContract.methods.allowance(ownerAddress, beneficiaryAddress).call()
+    return this.web3.utils.toBN(allowance)
+  }
+
+  /**
+   * ERC20 token approval
+   * @param  {string}  beneficiary beneficiary ETH Address
+   * @param  {Number}  amount      bignumber of amount to approve.
+   * @return {Promise}             returns approvation tx
+   */
+  async approve (beneficiary, amount) {
+    let tokenContract = await this.getContract('ParatiiToken')
+    let approved = await tokenContract.methods.approve(beneficiary, amount).send({from: this.getAccount()})
+    if (!approved) {
+      throw new Error(`Couldn't Approve ${beneficiary} to spend ${amount.toString()} from ${this.getAccount()}`)
+    }
+
+    // check to make sure all is good.
+    let allowance = await this.allowance(this.getAccount(), beneficiary)
+    if (allowance.toString() !== amount.toString()) {
+      throw new Error(`allowance Error : allowance ${allowance.toString()} !== amount ${amount.toString()}`)
+    }
+
+    return approved
+  }
+
   /**
    * send ETH from current account to beneficiary
    * @param  {string}  beneficiary ETH address
