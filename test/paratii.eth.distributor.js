@@ -19,6 +19,7 @@ describe('paratii.eth.distributor:', function () {
     const reason = 'email_verification'
     const salt = paratii.eth.web3.utils.randomHex(32)
     const signature = await paratii.eth.distributor.generateSignature(
+      address1,
       amount,
       salt,
       reason,

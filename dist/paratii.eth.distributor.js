@@ -83,15 +83,15 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
 
   }, {
     key: 'generateSignature',
-    value: function generateSignature(amount, salt, reason, address) {
+    value: function generateSignature(address, amount, salt, reason, owner) {
       var hash, signature, signatureData, sig;
       return _regenerator2.default.async(function generateSignature$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              hash = this.eth.web3.utils.soliditySha3('' + amount, '' + salt, '' + reason);
+              hash = this.eth.web3.utils.soliditySha3('' + address, '' + amount, '' + salt, '' + reason);
               _context2.next = 3;
-              return _regenerator2.default.awrap(this.eth.web3.eth.sign(hash, address));
+              return _regenerator2.default.awrap(this.eth.web3.eth.sign(hash, owner));
 
             case 3:
               signature = _context2.sent;

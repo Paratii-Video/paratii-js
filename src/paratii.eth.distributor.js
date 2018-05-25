@@ -30,9 +30,9 @@ export class ParatiiEthPTIDistributor {
    * @param  {string} reason the reason why to sign
    * @param  {string} address the address that sign
   */
-  async generateSignature (amount, salt, reason, address) {
-    const hash = this.eth.web3.utils.soliditySha3('' + amount, '' + salt, '' + reason)
-    const signature = await this.eth.web3.eth.sign(hash, address)
+  async generateSignature (address, amount, salt, reason, owner) {
+    const hash = this.eth.web3.utils.soliditySha3('' + address, '' + amount, '' + salt, '' + reason)
+    const signature = await this.eth.web3.eth.sign(hash, owner)
     const signatureData = ethUtil.fromRpcSig(signature)
     let sig = {}
     sig.v = ethUtil.bufferToHex(signatureData.v)
