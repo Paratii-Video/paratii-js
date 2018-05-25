@@ -14,7 +14,7 @@
   "scripts": {
     "build": "babel ./src -d ./dist",
     "build-browser": "webpack --progress --colors",
-    "test": "mocha --require babel.js --exit --timeout 30000 test/*.js",
+    "test": "mocha --require babel.js --exit --timeout 35000 test/*.js",
     "parity": "parity --config parity-config.toml",
     "lint": "standard",
     "lint-fix": "standard --fix",
