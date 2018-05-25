@@ -128,7 +128,7 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
   }, {
     key: 'distribute',
     value: function distribute(options) {
-      var schema, result, error, contract, tx;
+      var schema, result, error, contract, isUsed, sig, hash, account, distributorOwner, tx;
       return _regenerator2.default.async(function distribute$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -162,13 +162,48 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
             case 8:
               contract = _context3.sent;
               _context3.next = 11;
-              return _regenerator2.default.awrap(contract.methods.distribute(options.address, options.amount, options.salt, options.reason, options.v, options.r, options.s).send());
+              return _regenerator2.default.awrap(contract.methods.isUsed(options.salt).call());
 
             case 11:
+              isUsed = _context3.sent;
+
+              if (!isUsed) {
+                _context3.next = 14;
+                break;
+              }
+
+              throw new Error('salt ' + options.salt + ' is already used ' + isUsed);
+
+            case 14:
+              sig = ethUtil.toRpcSig(this.eth.web3.utils.hexToNumber(options.v), Buffer.from(options.r), Buffer.from(options.s));
+              hash = this.eth.web3.utils.soliditySha3('' + options.amount, '' + options.salt, '' + options.reason);
+              _context3.next = 18;
+              return _regenerator2.default.awrap(this.eth.web3.eth.personal.ecRecover(hash, sig));
+
+            case 18:
+              account = _context3.sent;
+              _context3.next = 21;
+              return _regenerator2.default.awrap(contract.methods.owner().call());
+
+            case 21:
+              distributorOwner = _context3.sent;
+
+              if (!(account !== distributorOwner)) {
+                _context3.next = 24;
+                break;
+              }
+
+              throw new Error('Sig Mismatch acc: ' + account + ' != ' + distributorOwner);
+
+            case 24:
+              _context3.next = 26;
+              return _regenerator2.default.awrap(contract.methods.distribute(options.address, options.amount, options.salt, options.reason, options.v, options.r, options.s).send());
+
+            case 26:
               tx = _context3.sent;
               return _context3.abrupt('return', tx);
 
-            case 13:
+            case 28:
             case 'end':
               return _context3.stop();
           }
