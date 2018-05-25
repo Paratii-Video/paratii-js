@@ -24,7 +24,6 @@ export class ParatiiDbUsers {
     })
     return users
   }
-
  /**
   * create a user entry from a give public address and a mail
   * @param  {string}  userId user univocal id

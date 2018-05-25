@@ -68,7 +68,6 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
         }
       }, null, this);
     }
-
     /**
      * create a user entry from a give public address and a mail
      * @param  {string}  userId user univocal id
