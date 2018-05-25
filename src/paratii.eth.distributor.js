@@ -73,6 +73,30 @@ export class ParatiiEthPTIDistributor {
 
     // TODO: implement type and missing value check
     let contract = await this.getPTIDistributeContract()
+
+    let isUsed = await contract.methods.isUsed(options.salt).call()
+    if (isUsed) {
+      throw new Error(`salt ${options.salt} is already used ${isUsed}`)
+    }
+
+    let sig = ethUtil.toRpcSig(
+      this.eth.web3.utils.hexToNumber(options.v),
+      Buffer.from(options.r),
+      Buffer.from(options.s)
+    )
+
+    let hash = this.eth.web3.utils.soliditySha3(
+      '' + options.amount, '' + options.salt, '' + options.reason
+    )
+
+    let account = await this.eth.web3.eth.personal.ecRecover(hash, sig)
+    // console.log('account: ', account)
+    let distributorOwner = await contract.methods.owner().call()
+
+    if (account !== distributorOwner) {
+      throw new Error(`Sig Mismatch acc: ${account} != ${distributorOwner}`)
+    }
+
     let tx = await contract.methods.distribute(
       options.address, options.amount, options.salt, options.reason, options.v, options.r, options.s
     ).send()
