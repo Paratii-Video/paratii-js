@@ -91,7 +91,6 @@ describe('ParatiiIPFS: :', function () {
         instance: ipfs
       }
     })
-
     assert.isOk(existingIPFS)
     await existingIPFS.getIPFSInstance()
     assert.isOk(existingIPFS.ipfs)

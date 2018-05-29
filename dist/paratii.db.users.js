@@ -69,22 +69,23 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
       }, null, this);
     }
     /**
-     * get information about all the videos of the user
-     * @param  {string}  userId univocal user identifier
-     * @return {Promise}        Collection of all the videos of the user
-     * @example await paratii.db.users.videos('some-user-id')
+     * create a user entry from a give public address and a mail
+     * @param  {string}  userId user univocal id
+     * @param  {string}  email user email
+     * @return {Promise}        data about the user
+     * @example await paratii.db.users.create('some-user-id')
      */
 
   }, {
-    key: 'videos',
-    value: function videos(userId) {
+    key: 'create',
+    value: function create(userId, email) {
       var users;
-      return _regenerator2.default.async(function videos$(_context2) {
+      return _regenerator2.default.async(function create$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.next = 2;
-              return _regenerator2.default.awrap(fetch(this.config.db.provider + this.apiVersion + this.apiUsers + userId + this.apiVideos, {
+              return _regenerator2.default.awrap(fetch(this.config.db.provider + this.apiUsers + 'create/' + userId + '/' + email, {
                 method: 'get'
               }).then(function (response) {
                 return response.json();
@@ -97,6 +98,40 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
             case 4:
             case 'end':
               return _context2.stop();
+          }
+        }
+      }, null, this);
+    }
+
+    /**
+     * get information about all the videos of the user
+     * @param  {string}  userId univocal user identifier
+     * @return {Promise}        Collection of all the videos of the user
+     * @example await paratii.db.users.videos('some-user-id')
+     */
+
+  }, {
+    key: 'videos',
+    value: function videos(userId) {
+      var users;
+      return _regenerator2.default.async(function videos$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.next = 2;
+              return _regenerator2.default.awrap(fetch(this.config.db.provider + this.apiVersion + this.apiUsers + userId + this.apiVideos, {
+                method: 'get'
+              }).then(function (response) {
+                return response.json();
+              }));
+
+            case 2:
+              users = _context3.sent;
+              return _context3.abrupt('return', users);
+
+            case 4:
+            case 'end':
+              return _context3.stop();
           }
         }
       }, null, this);
