@@ -1,4 +1,3 @@
-import { add0x } from './utils.js'
 const joi = require('joi')
 const ethUtil = require('ethereumjs-util')
 
