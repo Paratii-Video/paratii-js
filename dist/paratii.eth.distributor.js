@@ -155,7 +155,6 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
             case 5:
               options = result.value;
 
-              // TODO: implement type and missing value check
               _context3.next = 8;
               return _regenerator2.default.awrap(this.getPTIDistributeContract());
 
@@ -177,33 +176,41 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
             case 14:
               sig = ethUtil.toRpcSig(this.eth.web3.utils.hexToNumber(options.v), Buffer.from(options.r), Buffer.from(options.s));
               hash = this.eth.web3.utils.soliditySha3('' + options.amount, '' + options.salt, '' + options.reason);
-              _context3.next = 18;
+
+              console.log(3);
+
+              console.log(hash);
+              console.log(sig);
+              _context3.next = 21;
               return _regenerator2.default.awrap(this.eth.web3.eth.personal.ecRecover(hash, sig));
 
-            case 18:
+            case 21:
               account = _context3.sent;
-              _context3.next = 21;
+
+              console.log(4);
+              // console.log('account: ', account)
+              _context3.next = 25;
               return _regenerator2.default.awrap(contract.methods.owner().call());
 
-            case 21:
+            case 25:
               distributorOwner = _context3.sent;
 
               if (!(account !== distributorOwner)) {
-                _context3.next = 24;
+                _context3.next = 28;
                 break;
               }
 
               throw new Error('Sig Mismatch acc: ' + account + ' != ' + distributorOwner);
 
-            case 24:
-              _context3.next = 26;
+            case 28:
+              _context3.next = 30;
               return _regenerator2.default.awrap(contract.methods.distribute(options.address, options.amount, options.salt, options.reason, options.v, options.r, options.s).send());
 
-            case 26:
+            case 30:
               tx = _context3.sent;
               return _context3.abrupt('return', tx);
 
-            case 28:
+            case 32:
             case 'end':
               return _context3.stop();
           }

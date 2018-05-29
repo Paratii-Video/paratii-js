@@ -11,6 +11,8 @@ reseal_on_uncle = true
 force_sealing = true
 [rpc]
 cors = []
+apis = ["web3", "eth", "pubsub", "net", "parity", "parity_pubsub", "personal", "traces", "rpc", "shh", "shh_pubsub"]
+
 [websockets]
 disable = false
 port = 8546
