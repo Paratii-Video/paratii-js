@@ -89,6 +89,7 @@ export class ParatiiEthPTIDistributor {
       '' + options.amount, '' + options.salt, '' + options.reason
     )
 
+    // when talking to a parity node, this call will only work if 'personal' is enabled in [rpc]
     let account = await this.eth.web3.eth.personal.ecRecover(hash, sig)
     // console.log('account: ', account)
     let distributorOwner = await contract.methods.owner().call()

@@ -1,5 +1,5 @@
 import { Paratii } from '../src/paratii.js'
-import { testConfig, voucherAmountInitial11, address1 } from './utils.js'
+import { testConfig, address1 } from './utils.js'
 import { assert } from 'chai'
 import { getInfoFromLogs } from '../src/utils.js'
 
@@ -11,7 +11,7 @@ describe('paratii.eth.distributor:', function () {
     await paratii.eth.deployContracts()
     let token = await paratii.eth.getContract('ParatiiToken')
     distributor = await paratii.eth.getContract('PTIDistributor')
-    await token.methods.transfer(distributor.options.address, voucherAmountInitial11).send()
+    await token.methods.transfer(distributor.options.address, '1e21').send()
   })
 
   it('should work as expected', async function () {
@@ -28,10 +28,10 @@ describe('paratii.eth.distributor:', function () {
     // console.log(await paratii.eth.getAccount())
 
     const opts = {
-      address: address1,
       v: signature.v,
       r: signature.r,
       s: signature.s,
+      address: address1,
       amount,
       salt,
       reason

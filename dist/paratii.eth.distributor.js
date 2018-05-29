@@ -155,6 +155,7 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
             case 5:
               options = result.value;
 
+              // TODO: implement type and missing value check
               _context3.next = 8;
               return _regenerator2.default.awrap(this.getPTIDistributeContract());
 
@@ -177,40 +178,35 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
               sig = ethUtil.toRpcSig(this.eth.web3.utils.hexToNumber(options.v), Buffer.from(options.r), Buffer.from(options.s));
               hash = this.eth.web3.utils.soliditySha3('' + options.amount, '' + options.salt, '' + options.reason);
 
-              console.log(3);
+              // when talking to a parity node, this call will only work if 'personal' is enabled in [rpc]
 
-              console.log(hash);
-              console.log(sig);
-              _context3.next = 21;
+              _context3.next = 18;
               return _regenerator2.default.awrap(this.eth.web3.eth.personal.ecRecover(hash, sig));
 
-            case 21:
+            case 18:
               account = _context3.sent;
-
-              console.log(4);
-              // console.log('account: ', account)
-              _context3.next = 25;
+              _context3.next = 21;
               return _regenerator2.default.awrap(contract.methods.owner().call());
 
-            case 25:
+            case 21:
               distributorOwner = _context3.sent;
 
               if (!(account !== distributorOwner)) {
-                _context3.next = 28;
+                _context3.next = 24;
                 break;
               }
 
               throw new Error('Sig Mismatch acc: ' + account + ' != ' + distributorOwner);
 
-            case 28:
-              _context3.next = 30;
+            case 24:
+              _context3.next = 26;
               return _regenerator2.default.awrap(contract.methods.distribute(options.address, options.amount, options.salt, options.reason, options.v, options.r, options.s).send());
 
-            case 30:
+            case 26:
               tx = _context3.sent;
               return _context3.abrupt('return', tx);
 
-            case 32:
+            case 28:
             case 'end':
               return _context3.stop();
           }
