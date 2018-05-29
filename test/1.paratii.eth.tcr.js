@@ -150,7 +150,7 @@ describe('paratii.eth.tcr:', function () {
     let paratii2 = new Paratii(testConfig)
     await paratii2.eth.deployContracts()
 
-    await assert.isRejected(paratii2.eth.tcr.getChallenge(1), Error, /doesn't exists/g)
+    await assert.isRejected(paratii2.eth.tcr.getChallenge(1), Error, /doesn't exist/g)
   })
 
   it('localStorage storing should work also in tests', async function () {
