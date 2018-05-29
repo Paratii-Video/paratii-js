@@ -142,7 +142,7 @@ describe('paratii.eth.tcr:', function () {
   it('getListing() should throw an error if the listing does not exist', async function () {
     assert.isFalse(await paratii.eth.tcr.appWasMade(videoId4))
 
-    await assert.isRejected(paratii.eth.tcr.getListing(videoId4), Error, /doesn't exists/g)
+    await assert.isRejected(paratii.eth.tcr.getListing(videoId4), Error, /doesn't exist/g)
   })
 
   it('getChallenge() should throw an error if the challenge does not exist', async function () {

@@ -1666,7 +1666,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
                 break;
               }
 
-              throw Error('Listing with videoId ' + videoId + ' doesn\'t exists');
+              throw Error('Listing with videoId ' + videoId + ' doesn\'t exist');
 
             case 9:
               return _context25.abrupt('return', listing);
@@ -1710,7 +1710,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
                 break;
               }
 
-              throw Error('Challenge with challengeId ' + challengeId + ' doesn\'t exists');
+              throw Error('Challenge with challengeId ' + challengeId + ' doesn\'t exist');
 
             case 8:
               return _context26.abrupt('return', challenge);

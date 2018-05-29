@@ -74,11 +74,11 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
       }, null, this);
     }
     /**
-     * Function for generate a signature
+     * Function to generate a signature
      * @param  {number} amount the amount to sign
      * @param  {string} salt the bytes32 salt to sign
      * @param  {string} reason the reason why to sign
-     * @param  {string} address the address that sign
+     * @param  {string} address the address that signs
     */
 
   }, {
@@ -101,7 +101,6 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
               sig.v = ethUtil.bufferToHex(signatureData.v);
               sig.r = ethUtil.bufferToHex(signatureData.r);
               sig.s = ethUtil.bufferToHex(signatureData.s);
-
               return _context2.abrupt('return', sig);
 
             case 10:
@@ -128,7 +127,7 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
   }, {
     key: 'distribute',
     value: function distribute(options) {
-      var schema, result, error, contract, isUsed, sig, hash, account, distributorOwner, tx;
+      var schema, result, contract, isUsed, hash, distributorOwner, account, tx;
       return _regenerator2.default.async(function distribute$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -143,70 +142,64 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
                 s: joi.string()
               });
               result = joi.validate(options, schema);
-              error = result.error;
 
-              if (!error) {
-                _context3.next = 5;
+              if (!result.error) {
+                _context3.next = 4;
                 break;
               }
 
-              throw error;
+              throw result.error;
 
-            case 5:
+            case 4:
               options = result.value;
 
-              // TODO: implement type and missing value check
-              _context3.next = 8;
+              _context3.next = 7;
               return _regenerator2.default.awrap(this.getPTIDistributeContract());
 
-            case 8:
+            case 7:
               contract = _context3.sent;
-              _context3.next = 11;
+              _context3.next = 10;
               return _regenerator2.default.awrap(contract.methods.isUsed(options.salt).call());
 
-            case 11:
+            case 10:
               isUsed = _context3.sent;
 
               if (!isUsed) {
-                _context3.next = 14;
+                _context3.next = 13;
                 break;
               }
 
-              throw new Error('salt ' + options.salt + ' is already used ' + isUsed);
+              throw new Error('Salt ' + options.salt + ' is already used');
 
-            case 14:
-              sig = ethUtil.toRpcSig(this.eth.web3.utils.hexToNumber(options.v), Buffer.from(options.r), Buffer.from(options.s));
-              hash = this.eth.web3.utils.soliditySha3('' + options.amount, '' + options.salt, '' + options.reason);
-
-              // when talking to a parity node, this call will only work if 'personal' is enabled in [rpc]
-
-              _context3.next = 18;
-              return _regenerator2.default.awrap(this.eth.web3.eth.personal.ecRecover(hash, sig));
-
-            case 18:
-              account = _context3.sent;
-              _context3.next = 21;
+            case 13:
+              hash = this.eth.web3.utils.soliditySha3(options.address, options.amount, options.salt, options.reason);
+              _context3.next = 16;
               return _regenerator2.default.awrap(contract.methods.owner().call());
 
-            case 21:
+            case 16:
               distributorOwner = _context3.sent;
+              _context3.next = 19;
+              return _regenerator2.default.awrap(contract.methods.checkOwner(hash, options.v, options.r, options.s).call());
+
+            case 19:
+              account = _context3.sent;
 
               if (!(account !== distributorOwner)) {
-                _context3.next = 24;
+                _context3.next = 22;
                 break;
               }
 
-              throw new Error('Sig Mismatch acc: ' + account + ' != ' + distributorOwner);
+              throw new Error('Signature does not correspond to owner of the contract (' + account + ' != ' + distributorOwner + ')');
 
-            case 24:
-              _context3.next = 26;
+            case 22:
+              _context3.next = 24;
               return _regenerator2.default.awrap(contract.methods.distribute(options.address, options.amount, options.salt, options.reason, options.v, options.r, options.s).send());
 
-            case 26:
+            case 24:
               tx = _context3.sent;
               return _context3.abrupt('return', tx);
 
-            case 28:
+            case 26:
             case 'end':
               return _context3.stop();
           }

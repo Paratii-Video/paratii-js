@@ -676,7 +676,7 @@ export class ParatiiEthTcr {
     let hash = this.getHash(videoId)
     let listing = await contract.methods.listings(hash).call()
 
-    if (listing.owner === '0x0000000000000000000000000000000000000000') { throw Error(`Listing with videoId ${videoId} doesn't exists`) }
+    if (listing.owner === '0x0000000000000000000000000000000000000000') { throw Error(`Listing with videoId ${videoId} doesn't exist`) }
     return listing
   }
 
@@ -691,7 +691,7 @@ export class ParatiiEthTcr {
 
     let challenge = await contract.methods.challenges(challengeId).call()
 
-    if (challenge.challenger === '0x0000000000000000000000000000000000000000') { throw Error(`Challenge with challengeId ${challengeId} doesn't exists`) }
+    if (challenge.challenger === '0x0000000000000000000000000000000000000000') { throw Error(`Challenge with challengeId ${challengeId} doesn't exist`) }
     return challenge
   }
   /**

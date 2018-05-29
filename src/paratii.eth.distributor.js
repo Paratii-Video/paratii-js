@@ -1,3 +1,4 @@
+import { add0x } from './utils.js'
 const joi = require('joi')
 const ethUtil = require('ethereumjs-util')
 
@@ -24,11 +25,11 @@ export class ParatiiEthPTIDistributor {
     return contract
   }
   /**
-   * Function for generate a signature
+   * Function to generate a signature
    * @param  {number} amount the amount to sign
    * @param  {string} salt the bytes32 salt to sign
    * @param  {string} reason the reason why to sign
-   * @param  {string} address the address that sign
+   * @param  {string} address the address that signs
   */
   async generateSignature (address, amount, salt, reason, owner) {
     const hash = this.eth.web3.utils.soliditySha3('' + address, '' + amount, '' + salt, '' + reason)
@@ -38,7 +39,6 @@ export class ParatiiEthPTIDistributor {
     sig.v = ethUtil.bufferToHex(signatureData.v)
     sig.r = ethUtil.bufferToHex(signatureData.r)
     sig.s = ethUtil.bufferToHex(signatureData.s)
-
     return sig
   }
   /**
@@ -67,35 +67,26 @@ export class ParatiiEthPTIDistributor {
     })
 
     const result = joi.validate(options, schema)
-    const error = result.error
-    if (error) throw error
+    if (result.error) throw result.error
     options = result.value
 
-    // TODO: implement type and missing value check
     let contract = await this.getPTIDistributeContract()
 
     let isUsed = await contract.methods.isUsed(options.salt).call()
+
     if (isUsed) {
-      throw new Error(`salt ${options.salt} is already used ${isUsed}`)
+      throw new Error(`Salt ${options.salt} is already used`)
     }
 
-    let sig = ethUtil.toRpcSig(
-      this.eth.web3.utils.hexToNumber(options.v),
-      Buffer.from(options.r),
-      Buffer.from(options.s)
-    )
-
     let hash = this.eth.web3.utils.soliditySha3(
-      '' + options.amount, '' + options.salt, '' + options.reason
+      options.address, options.amount, options.salt, options.reason
     )
 
-    // when talking to a parity node, this call will only work if 'personal' is enabled in [rpc]
-    let account = await this.eth.web3.eth.personal.ecRecover(hash, sig)
-    // console.log('account: ', account)
     let distributorOwner = await contract.methods.owner().call()
+    let account = await contract.methods.checkOwner(hash, options.v, options.r, options.s).call()
 
     if (account !== distributorOwner) {
-      throw new Error(`Sig Mismatch acc: ${account} != ${distributorOwner}`)
+      throw new Error(`Signature does not correspond to owner of the contract (${account} != ${distributorOwner})`)
     }
 
     let tx = await contract.methods.distribute(
