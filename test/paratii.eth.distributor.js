@@ -123,4 +123,17 @@ describe('paratii.eth.distributor:', function () {
     await paratii.eth.distributor.distribute(opts)
     await assert.isRejected(paratii.eth.distributor.distribute(opts), Error, /is already used/g)
   })
+
+  it('sign and check signature should work as expected', async function () {
+    const message = 'message'
+    const signedMessage = await paratii.eth.distributor.signMessage(message)
+    const check = await paratii.eth.distributor.checkSignedmessage(paratii.eth.web3.utils.soliditySha3(message), signedMessage, paratii.eth.getAccount())
+    assert.isTrue(check)
+  })
+  it('sign and check signature should throw error as expected', async function () {
+    const message = 'message'
+    const wrongmessage = 'wrongmessage'
+    const signedMessage = await paratii.eth.distributor.signMessage(message)
+    await assert.isRejected(paratii.eth.distributor.checkSignedmessage(paratii.eth.web3.utils.soliditySha3(wrongmessage), signedMessage, paratii.eth.getAccount()), Error, /You are try to do something nasty/g)
+  })
 })
