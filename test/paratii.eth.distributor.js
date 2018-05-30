@@ -14,7 +14,7 @@ describe('paratii.eth.distributor:', function () {
     await token.methods.transfer(distributor.options.address, '1e21').send()
   })
 
-  it.skip('should work as expected', async function () {
+  it('should work as expected', async function () {
     const amount = 20
     const reason = 'email_verification'
     const salt = paratii.eth.web3.utils.randomHex(32)
@@ -40,7 +40,7 @@ describe('paratii.eth.distributor:', function () {
     assert.equal(loggedAddress, address1)
   })
 
-  it.skip('should throw an error if the message is not signed by the contract owner', async function () {
+  it('should throw an error if the message is not signed by the contract owner', async function () {
     // change the conract owner
     const contract = await paratii.eth.distributor.getPTIDistributeContract()
 
@@ -69,7 +69,7 @@ describe('paratii.eth.distributor:', function () {
 
     await assert.isRejected(paratii.eth.distributor.distribute(opts), Error, /Signature does not correspond/g)
   })
-  it.skip('should throw an error if a different salt is passed', async function () {
+  it('should throw an error if a different salt is passed', async function () {
     // change the conract owner
     const contract = await paratii.eth.distributor.getPTIDistributeContract()
 
@@ -98,7 +98,7 @@ describe('paratii.eth.distributor:', function () {
 
     await assert.isRejected(paratii.eth.distributor.distribute(opts), Error, /Signature does not correspond/g)
   })
-  it.skip('should throw an error if the salt has already been used before', async function () {
+  it('should throw an error if the salt has already been used before', async function () {
     const amount = 20
     const reason = 'email_verification'
     const salt = paratii.eth.web3.utils.randomHex(32)
@@ -129,5 +129,11 @@ describe('paratii.eth.distributor:', function () {
     const signedMessage = await paratii.eth.distributor.signMessage(message)
     const check = await paratii.eth.distributor.checkSignedmessage(paratii.eth.web3.utils.soliditySha3(message), signedMessage, paratii.eth.getAccount())
     assert.isTrue(check)
+  })
+  it('sign and check signature should throw error as expected', async function () {
+    const message = 'message'
+    const wrongmessage = 'wrongmessage'
+    const signedMessage = await paratii.eth.distributor.signMessage(message)
+    await assert.isRejected(paratii.eth.distributor.checkSignedmessage(paratii.eth.web3.utils.soliditySha3(wrongmessage), signedMessage, paratii.eth.getAccount()), Error, /You are try to do something nasty/g)
   })
 })

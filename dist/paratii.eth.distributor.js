@@ -36,6 +36,15 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
     this.eth = context;
   }
 
+  /**
+   * Generate a signature for a message
+   * @return {Promise} Object representing the contract
+   * @param  {string} message to be sign
+   * @return {Promise} Signature
+   * @example let contract = await paratii.eth.distribute.signMessage('message')
+  */
+
+
   (0, _createClass3.default)(ParatiiEthPTIDistributor, [{
     key: 'signMessage',
     value: function signMessage(message) {
@@ -52,6 +61,17 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
         }
       }, null, this);
     }
+
+    /**
+     * Generate a signature for a message
+     * @return {Promise} Object representing the contract
+     * @param  {string} message hashed message
+     * @param  {string} signedMessage
+     * @param  {string} whoSigned
+     * @return {Boolean}
+     * @example let contract = await paratii.eth.distribute.signMessage('message')
+    */
+
   }, {
     key: 'checkSignedmessage',
     value: function checkSignedmessage(message, signedMessage, whoSigned) {
@@ -61,9 +81,18 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
           switch (_context2.prev = _context2.next) {
             case 0:
               recoveredAddress = this.eth.web3.eth.accounts.recover(message, signedMessage, false);
-              return _context2.abrupt('return', whoSigned === recoveredAddress);
 
-            case 2:
+              if (!(whoSigned === recoveredAddress)) {
+                _context2.next = 5;
+                break;
+              }
+
+              return _context2.abrupt('return', true);
+
+            case 5:
+              throw Error('You are try to do something nasty');
+
+            case 6:
             case 'end':
               return _context2.stop();
           }
