@@ -69,7 +69,8 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
       }, null, this);
     }
     /**
-     * create a user entry from a give public address and a mail
+     * save the email of a user in the database
+     *
      * @param  {string}  userId user univocal id
      * @param  {string}  email user email
      * @return {Promise}        data about the user
@@ -77,23 +78,22 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
      */
 
   }, {
-    key: 'create',
-    value: function create(userId, email) {
-      var users;
-      return _regenerator2.default.async(function create$(_context2) {
+    key: 'setEmail',
+    value: function setEmail(userId, email) {
+      var response;
+      return _regenerator2.default.async(function setEmail$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.next = 2;
-              return _regenerator2.default.awrap(fetch(this.config.db.provider + this.apiUsers + 'create/' + userId + '/' + email, {
-                method: 'get'
-              }).then(function (response) {
-                return response.json();
+              return _regenerator2.default.awrap(fetch(this.config.db.provider + this.apiUsers + userId, {
+                method: 'POST',
+                body: 'email=' + email
               }));
 
             case 2:
-              users = _context2.sent;
-              return _context2.abrupt('return', users);
+              response = _context2.sent;
+              return _context2.abrupt('return', response.json());
 
             case 4:
             case 'end':

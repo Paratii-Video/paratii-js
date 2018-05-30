@@ -25,19 +25,19 @@ export class ParatiiDbUsers {
     return users
   }
  /**
-  * create a user entry from a give public address and a mail
+  * save the email of a user in the database
+  *
   * @param  {string}  userId user univocal id
   * @param  {string}  email user email
   * @return {Promise}        data about the user
   * @example await paratii.db.users.create('some-user-id')
   */
-  async create (userId, email) {
-    let users = await fetch(this.config.db.provider + this.apiUsers + 'create/' + userId + '/' + email, {
-      method: 'get'
-    }).then(function (response) {
-      return response.json()
+  async setEmail (userId, email) {
+    let response = await fetch(this.config.db.provider + this.apiUsers + userId, {
+      method: 'POST',
+      body: `email=${email}`
     })
-    return users
+    return response.json()
   }
 
   /**
