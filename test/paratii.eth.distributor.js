@@ -40,7 +40,7 @@ describe('paratii.eth.distributor:', function () {
     assert.equal(loggedAddress, address1)
   })
 
-  it('should throw an error if the message is not signed by the conract owner', async function () {
+  it('should throw an error if the message is not signed by the contract owner', async function () {
     // change the conract owner
     const contract = await paratii.eth.distributor.getPTIDistributeContract()
 
@@ -69,7 +69,35 @@ describe('paratii.eth.distributor:', function () {
 
     await assert.isRejected(paratii.eth.distributor.distribute(opts), Error, /Signature does not correspond/g)
   })
+  it('should throw an error if a different salt is passed', async function () {
+    // change the conract owner
+    const contract = await paratii.eth.distributor.getPTIDistributeContract()
 
+    await contract.methods.transferOwnership(address99).send()
+
+    const amount = 20
+    const reason = 'email_verification'
+    const salt = paratii.eth.web3.utils.randomHex(32)
+    const signature = await paratii.eth.distributor.generateSignature(
+      address1,
+      amount,
+      salt,
+      reason,
+      paratii.eth.getAccount()
+    )
+
+    const opts = {
+      v: signature.v,
+      r: signature.r,
+      s: signature.s,
+      address: address1,
+      amount,
+      salt: paratii.eth.web3.utils.randomHex(32),
+      reason
+    }
+
+    await assert.isRejected(paratii.eth.distributor.distribute(opts), Error, /Signature does not correspond/g)
+  })
   it('should throw an error if the salt has already been used before', async function () {
     const amount = 20
     const reason = 'email_verification'
