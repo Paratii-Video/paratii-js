@@ -11,6 +11,15 @@ export class ParatiiEthPTIDistributor {
     // context is a ParatiiEth instance
     this.eth = context
   }
+
+  async signMessage (message) {
+    return this.eth.web3.eth.sign(this.eth.web3.utils.soliditySha3(message), this.eth.getAccount())
+  }
+
+  async checkSignedmessage (message, signedMessage, whoSigned) {
+    let recoveredAddress = this.eth.web3.eth.accounts.recover(message, signedMessage, false)
+    return whoSigned === recoveredAddress
+  }
   /**
    * Get the contract instance of the PTIDistributor contract
    * @return {Promise} Object representing the contract
