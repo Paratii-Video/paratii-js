@@ -35,6 +35,9 @@ export class ParatiiDbUsers {
   async setEmail (userId, email) {
     const paratii = this.config.paratii
     const signer = paratii.getAccount()
+    if (!signer) {
+      throw Error(`Account is not set - please set an account using paratii.setAccount()`)
+    }
     const signature = await paratii.eth.distributor.signMessage(email)
     const body = `email=${email}&signedEmail=${signature}&whosigned=${signer}`
     let response = await fetch(this.config.db.provider + this.apiUsers + userId, {

@@ -1,6 +1,6 @@
 import { assert } from 'chai'
 import { Paratii } from '../src/paratii.js'
-import { DB_PROVIDER } from './utils.js'
+import { DB_PROVIDER, testAccount } from './utils.js'
 import nock from 'nock'
 
 describe('paratii.db API: :', function () {
@@ -15,7 +15,8 @@ describe('paratii.db API: :', function () {
 
   beforeEach(async function () {
     paratii = new Paratii({
-      db: {provider: DB_PROVIDER}
+      db: {provider: DB_PROVIDER},
+      account: testAccount
     })
   })
 
@@ -28,7 +29,7 @@ describe('paratii.db API: :', function () {
     }
     const email = 'some@email.com'
     const signer = paratii.eth.getAccount()
-    const signature = paratii.eth.distributor.signMessage(email)
+    const signature = await paratii.eth.distributor.signMessage(email)
     const expectedBody = `email=${email}&signedEmail=${signature}&whosigned=${signer}`
     nock('https://db.paratii.video/api/v1')
       .persist()

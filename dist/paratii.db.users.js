@@ -87,23 +87,32 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
             case 0:
               paratii = this.config.paratii;
               signer = paratii.getAccount();
-              _context2.next = 4;
-              return _regenerator2.default.awrap(paratii.eth.distributor.signMessage(email));
+
+              if (signer) {
+                _context2.next = 4;
+                break;
+              }
+
+              throw Error('Account is not set - please set an account using paratii.setAccount()');
 
             case 4:
+              _context2.next = 6;
+              return _regenerator2.default.awrap(paratii.eth.distributor.signMessage(email));
+
+            case 6:
               signature = _context2.sent;
               body = 'email=' + email + '&signedEmail=' + signature + '&whosigned=' + signer;
-              _context2.next = 8;
+              _context2.next = 10;
               return _regenerator2.default.awrap(fetch(this.config.db.provider + this.apiUsers + userId, {
                 method: 'POST',
                 body: body
               }));
 
-            case 8:
+            case 10:
               response = _context2.sent;
               return _context2.abrupt('return', response.json());
 
-            case 10:
+            case 12:
             case 'end':
               return _context2.stop();
           }
