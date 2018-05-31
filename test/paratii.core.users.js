@@ -31,7 +31,11 @@ describe('paratii.core.users: ', function () {
     const email = newUserData.email
     const signer = paratii.getAccount()
     const signature = await paratii.eth.distributor.signMessage(email)
-    const expectedBody = `email=${email}&signedEmail=${signature}&whosigned=${signer}`
+    const expectedBody = JSON.stringify({
+      email: email,
+      signedEmail: signature,
+      whosigned: signer
+    })
     nock('https://db.paratii.video/api/v1')
       .persist()
       .post(`/users/${users[0]['_id']}`, expectedBody)

@@ -30,7 +30,11 @@ describe('paratii.db API: :', function () {
     const email = 'some@email.com'
     const signer = paratii.eth.getAccount()
     const signature = await paratii.eth.distributor.signMessage(email)
-    const expectedBody = `email=${email}&signedEmail=${signature}&whosigned=${signer}`
+    const expectedBody = JSON.stringify({
+      email: email,
+      signedEmail: signature,
+      whosigned: signer
+    })
     nock('https://db.paratii.video/api/v1')
       .persist()
       .post(`/users/${userId}`, expectedBody)

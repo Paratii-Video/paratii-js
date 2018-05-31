@@ -39,10 +39,20 @@ export class ParatiiDbUsers {
       throw Error(`Account is not set - please set an account using paratii.setAccount()`)
     }
     const signature = await paratii.eth.distributor.signMessage(email)
-    const body = `email=${email}&signedEmail=${signature}&whosigned=${signer}`
+    // const body = `email=${email}&signedEmail=${signature}&whosigned=${signer}`
+    const body = {
+      email: email,
+      signedEmail: signature,
+      whosigned: signer
+    }
+
     let response = await fetch(this.config.db.provider + this.apiUsers + userId, {
       method: 'POST',
-      body: body
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
     })
     return response.json()
   }

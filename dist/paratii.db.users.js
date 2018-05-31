@@ -5,6 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ParatiiDbUsers = undefined;
 
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
 var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
@@ -101,11 +105,21 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
 
             case 6:
               signature = _context2.sent;
-              body = 'email=' + email + '&signedEmail=' + signature + '&whosigned=' + signer;
+
+              // const body = `email=${email}&signedEmail=${signature}&whosigned=${signer}`
+              body = {
+                email: email,
+                signedEmail: signature,
+                whosigned: signer
+              };
               _context2.next = 10;
               return _regenerator2.default.awrap(fetch(this.config.db.provider + this.apiUsers + userId, {
                 method: 'POST',
-                body: body
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json'
+                },
+                body: (0, _stringify2.default)(body)
               }));
 
             case 10:
