@@ -65,18 +65,19 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
    *   let result = await paratii.eth.users.create(userData)
    *  })
    */
-  // FIXME: do some joi validation here
 
 
   (0, _createClass3.default)(ParatiiUsers, [{
     key: 'create',
     value: function create(options) {
-      var keysForBlockchain, optionsKeys, optionsBlockchain, optionsIpfs, hash;
+      var paratii, keysForBlockchain, optionsKeys, optionsBlockchain, optionsIpfs, hash;
       return _regenerator2.default.async(function create$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              keysForBlockchain = ['id', 'name', 'email'];
+              // FIXME: do some joi validation here
+              paratii = this.config.paratii;
+              keysForBlockchain = ['id', 'name'];
               optionsKeys = (0, _keys2.default)(options);
               optionsBlockchain = {};
               optionsIpfs = {};
@@ -88,16 +89,27 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
                   optionsIpfs[key] = options[key];
                 }
               });
-              _context.next = 7;
-              return _regenerator2.default.awrap(this.config.paratii.ipfs.local.addJSON(optionsIpfs));
+              _context.next = 8;
+              return _regenerator2.default.awrap(paratii.ipfs.local.addJSON(optionsIpfs));
 
-            case 7:
+            case 8:
               hash = _context.sent;
 
               optionsBlockchain['ipfsData'] = hash;
-              return _context.abrupt('return', this.config.paratii.eth.users.create(optionsBlockchain));
+              // FIXME: add error handling if call to db fails.
 
-            case 10:
+              if (!(options.email !== undefined)) {
+                _context.next = 13;
+                break;
+              }
+
+              _context.next = 13;
+              return _regenerator2.default.awrap(paratii.db.users.setEmail(options.id, options.email));
+
+            case 13:
+              return _context.abrupt('return', paratii.eth.users.create(optionsBlockchain));
+
+            case 14:
             case 'end':
               return _context.stop();
           }

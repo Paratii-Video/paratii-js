@@ -30,12 +30,16 @@ export class ParatiiDbUsers {
   * @param  {string}  userId user univocal id
   * @param  {string}  email user email
   * @return {Promise}        data about the user
-  * @example await paratii.db.users.create('some-user-id')
+  * @example await paratii.db.users.setEmail('some-user-id', 'some@email.com')
   */
   async setEmail (userId, email) {
+    const paratii = this.config.paratii
+    const signer = paratii.getAccount()
+    const signature = await paratii.eth.distributor.signMessage(email)
+    const body = `email=${email}&signedEmail=${signature}&whosigned=${signer}`
     let response = await fetch(this.config.db.provider + this.apiUsers + userId, {
       method: 'POST',
-      body: `email=${email}`
+      body: body
     })
     return response.json()
   }
