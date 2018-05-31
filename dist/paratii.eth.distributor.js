@@ -63,10 +63,10 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
     }
 
     /**
-     * Generate a signature for a message
+     * Check the signer of the signer
      * @return {Promise} Object representing the contract
      * @param  {string} message hashed message
-     * @param  {string} signedMessage
+     * @param  {string} signature
      * @param  {string} whoSigned
      * @return {Boolean}
      * @example let contract = await paratii.eth.distribute.signMessage('message')
@@ -74,13 +74,13 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
 
   }, {
     key: 'checkSignedmessage',
-    value: function checkSignedmessage(message, signedMessage, whoSigned) {
+    value: function checkSignedmessage(message, signature, whoSigned) {
       var recoveredAddress;
       return _regenerator2.default.async(function checkSignedmessage$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              recoveredAddress = this.eth.web3.eth.accounts.recover(message, signedMessage, false);
+              recoveredAddress = this.eth.web3.eth.accounts.recover(this.eth.web3.utils.soliditySha3(message), signature, false);
 
               if (!(whoSigned === recoveredAddress)) {
                 _context2.next = 5;
@@ -90,7 +90,7 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
               return _context2.abrupt('return', true);
 
             case 5:
-              throw Error('You are try to do something nasty');
+              throw Error('This message was signed by ' + recoveredAddress + ', not ' + whoSigned);
 
             case 6:
             case 'end':

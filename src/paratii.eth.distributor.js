@@ -24,21 +24,21 @@ export class ParatiiEthPTIDistributor {
   }
 
   /**
-   * Generate a signature for a message
+   * Check the signer of the signer
    * @return {Promise} Object representing the contract
    * @param  {string} message hashed message
-   * @param  {string} signedMessage
+   * @param  {string} signature
    * @param  {string} whoSigned
    * @return {Boolean}
    * @example let contract = await paratii.eth.distribute.signMessage('message')
   */
 
-  async checkSignedmessage (message, signedMessage, whoSigned) {
-    let recoveredAddress = this.eth.web3.eth.accounts.recover(message, signedMessage, false)
+  async checkSignedmessage (message, signature, whoSigned) {
+    let recoveredAddress = this.eth.web3.eth.accounts.recover(this.eth.web3.utils.soliditySha3(message), signature, false)
     if (whoSigned === recoveredAddress) {
       return true
     } else {
-      throw Error('You are try to do something nasty')
+      throw Error(`This message was signed by ${recoveredAddress}, not ${whoSigned}`)
     }
   }
   /**
