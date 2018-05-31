@@ -52,9 +52,17 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
+              if (!(typeof message !== 'string')) {
+                _context.next = 2;
+                break;
+              }
+
+              throw Error('Message should be a string (not "' + message + '")');
+
+            case 2:
               return _context.abrupt('return', this.eth.web3.eth.sign(this.eth.web3.utils.soliditySha3(message), this.eth.getAccount()));
 
-            case 1:
+            case 3:
             case 'end':
               return _context.stop();
           }

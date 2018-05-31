@@ -20,6 +20,9 @@ export class ParatiiEthPTIDistributor {
    * @example let contract = await paratii.eth.distribute.signMessage('message')
   */
   async signMessage (message) {
+    if (typeof message !== 'string') {
+      throw Error(`Message should be a string (not "${message}")`)
+    }
     return this.eth.web3.eth.sign(this.eth.web3.utils.soliditySha3(message), this.eth.getAccount())
   }
 

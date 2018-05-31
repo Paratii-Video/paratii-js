@@ -97,13 +97,19 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
 
               optionsBlockchain['ipfsData'] = hash;
               // FIXME: add error handling if call to db fails.
-              _context.next = 12;
+
+              if (!(options.email !== undefined)) {
+                _context.next = 13;
+                break;
+              }
+
+              _context.next = 13;
               return _regenerator2.default.awrap(paratii.db.users.setEmail(options.id, options.email));
 
-            case 12:
+            case 13:
               return _context.abrupt('return', paratii.eth.users.create(optionsBlockchain));
 
-            case 13:
+            case 14:
             case 'end':
               return _context.stop();
           }

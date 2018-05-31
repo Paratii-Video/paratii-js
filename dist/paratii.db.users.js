@@ -74,28 +74,36 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
      * @param  {string}  userId user univocal id
      * @param  {string}  email user email
      * @return {Promise}        data about the user
-     * @example await paratii.db.users.create('some-user-id')
+     * @example await paratii.db.users.setEmail('some-user-id', 'some@email.com')
      */
 
   }, {
     key: 'setEmail',
     value: function setEmail(userId, email) {
-      var response;
+      var paratii, signer, signature, body, response;
       return _regenerator2.default.async(function setEmail$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              _context2.next = 2;
+              paratii = this.config.paratii;
+              signer = paratii.getAccount();
+              _context2.next = 4;
+              return _regenerator2.default.awrap(paratii.eth.distributor.signMessage(email));
+
+            case 4:
+              signature = _context2.sent;
+              body = 'email=' + email + '&signedEmail=' + signature + '&whosigned=' + signer;
+              _context2.next = 8;
               return _regenerator2.default.awrap(fetch(this.config.db.provider + this.apiUsers + userId, {
                 method: 'POST',
-                body: 'email=' + email
+                body: body
               }));
 
-            case 2:
+            case 8:
               response = _context2.sent;
               return _context2.abrupt('return', response.json());
 
-            case 4:
+            case 10:
             case 'end':
               return _context2.stop();
           }
