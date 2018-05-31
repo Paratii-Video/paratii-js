@@ -20,6 +20,9 @@ export class ParatiiEthPTIDistributor {
    * @example let contract = await paratii.eth.distribute.signMessage('message')
   */
   async signMessage (message) {
+    if (typeof message !== 'string') {
+      throw Error(`Message should be a string (not "${message}")`)
+    }
     return this.eth.web3.eth.sign(this.eth.web3.utils.soliditySha3(message), this.eth.getAccount())
   }
 
@@ -28,17 +31,17 @@ export class ParatiiEthPTIDistributor {
    * @return {Promise} Object representing the contract
    * @param  {string} message hashed message
    * @param  {string} signature
-   * @param  {string} whoSigned
+   * @param  {string} signer
    * @return {Boolean}
-   * @example let contract = await paratii.eth.distribute.signMessage('message')
+   * @example let contract = await paratii.eth.distribute.checkSignedmessage('message', signature, signer)
   */
 
-  async checkSignedmessage (message, signature, whoSigned) {
+  async checkSignedmessage (message, signature, signer) {
     let recoveredAddress = this.eth.web3.eth.accounts.recover(this.eth.web3.utils.soliditySha3(message), signature, false)
-    if (whoSigned === recoveredAddress) {
+    if (signer === recoveredAddress) {
       return true
     } else {
-      throw Error(`This message was signed by ${recoveredAddress}, not ${whoSigned}`)
+      throw Error(`This message was signed by ${recoveredAddress}, not ${signer}`)
     }
   }
   /**

@@ -52,9 +52,17 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
+              if (!(typeof message !== 'string')) {
+                _context.next = 2;
+                break;
+              }
+
+              throw Error('Message should be a string (not "' + message + '")');
+
+            case 2:
               return _context.abrupt('return', this.eth.web3.eth.sign(this.eth.web3.utils.soliditySha3(message), this.eth.getAccount()));
 
-            case 1:
+            case 3:
             case 'end':
               return _context.stop();
           }
@@ -67,14 +75,14 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
      * @return {Promise} Object representing the contract
      * @param  {string} message hashed message
      * @param  {string} signature
-     * @param  {string} whoSigned
+     * @param  {string} signer
      * @return {Boolean}
-     * @example let contract = await paratii.eth.distribute.signMessage('message')
+     * @example let contract = await paratii.eth.distribute.checkSignedmessage('message', signature, signer)
     */
 
   }, {
     key: 'checkSignedmessage',
-    value: function checkSignedmessage(message, signature, whoSigned) {
+    value: function checkSignedmessage(message, signature, signer) {
       var recoveredAddress;
       return _regenerator2.default.async(function checkSignedmessage$(_context2) {
         while (1) {
@@ -82,7 +90,7 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
             case 0:
               recoveredAddress = this.eth.web3.eth.accounts.recover(this.eth.web3.utils.soliditySha3(message), signature, false);
 
-              if (!(whoSigned === recoveredAddress)) {
+              if (!(signer === recoveredAddress)) {
                 _context2.next = 5;
                 break;
               }
@@ -90,7 +98,7 @@ var ParatiiEthPTIDistributor = exports.ParatiiEthPTIDistributor = function () {
               return _context2.abrupt('return', true);
 
             case 5:
-              throw Error('This message was signed by ' + recoveredAddress + ', not ' + whoSigned);
+              throw Error('This message was signed by ' + recoveredAddress + ', not ' + signer);
 
             case 6:
             case 'end':
