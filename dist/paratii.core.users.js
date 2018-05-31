@@ -65,19 +65,18 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
    *   let result = await paratii.eth.users.create(userData)
    *  })
    */
+  // FIXME: do some joi validation here
 
 
   (0, _createClass3.default)(ParatiiUsers, [{
     key: 'create',
     value: function create(options) {
-      var paratii, keysForBlockchain, optionsKeys, optionsBlockchain, optionsIpfs, hash;
+      var keysForBlockchain, optionsKeys, optionsBlockchain, optionsIpfs, hash;
       return _regenerator2.default.async(function create$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              // FIXME: do some joi validation here
-              paratii = this.config.paratii;
-              keysForBlockchain = ['id', 'name'];
+              keysForBlockchain = ['id', 'name', 'email'];
               optionsKeys = (0, _keys2.default)(options);
               optionsBlockchain = {};
               optionsIpfs = {};
@@ -89,21 +88,16 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
                   optionsIpfs[key] = options[key];
                 }
               });
-              _context.next = 8;
-              return _regenerator2.default.awrap(paratii.ipfs.local.addJSON(optionsIpfs));
+              _context.next = 7;
+              return _regenerator2.default.awrap(this.config.paratii.ipfs.local.addJSON(optionsIpfs));
 
-            case 8:
+            case 7:
               hash = _context.sent;
 
               optionsBlockchain['ipfsData'] = hash;
-              // FIXME: add error handling if call to db fails.
-              _context.next = 12;
-              return _regenerator2.default.awrap(paratii.db.users.setEmail(options.id, options.email));
+              return _context.abrupt('return', this.config.paratii.eth.users.create(optionsBlockchain));
 
-            case 12:
-              return _context.abrupt('return', paratii.eth.users.create(optionsBlockchain));
-
-            case 13:
+            case 10:
             case 'end':
               return _context.stop();
           }
