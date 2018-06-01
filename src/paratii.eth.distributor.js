@@ -11,6 +11,39 @@ export class ParatiiEthPTIDistributor {
     // context is a ParatiiEth instance
     this.eth = context
   }
+
+  /**
+   * Generate a signature for a message
+   * @return {Promise} Object representing the contract
+   * @param  {string} message to be sign
+   * @return {Promise} Signature
+   * @example let contract = await paratii.eth.distribute.signMessage('message')
+  */
+  async signMessage (message) {
+    if (typeof message !== 'string') {
+      throw Error(`Message should be a string (not "${message}")`)
+    }
+    return this.eth.web3.eth.sign(this.eth.web3.utils.soliditySha3(message), this.eth.getAccount())
+  }
+
+  /**
+   * Check the signer of the signer
+   * @return {Promise} Object representing the contract
+   * @param  {string} message hashed message
+   * @param  {string} signature
+   * @param  {string} signer
+   * @return {Boolean}
+   * @example let contract = await paratii.eth.distribute.checkSignedmessage('message', signature, signer)
+  */
+
+  async checkSignedmessage (message, signature, signer) {
+    let recoveredAddress = this.eth.web3.eth.accounts.recover(this.eth.web3.utils.soliditySha3(message), signature, false)
+    if (signer === recoveredAddress) {
+      return true
+    } else {
+      throw Error(`This message was signed by ${recoveredAddress}, not ${signer}`)
+    }
+  }
   /**
    * Get the contract instance of the PTIDistributor contract
    * @return {Promise} Object representing the contract
@@ -24,21 +57,20 @@ export class ParatiiEthPTIDistributor {
     return contract
   }
   /**
-   * Function for generate a signature
+   * Function to generate a signature
    * @param  {number} amount the amount to sign
    * @param  {string} salt the bytes32 salt to sign
    * @param  {string} reason the reason why to sign
-   * @param  {string} address the address that sign
+   * @param  {string} address the address that signs
   */
-  async generateSignature (amount, salt, reason, address) {
-    const hash = this.eth.web3.utils.soliditySha3('' + amount, '' + salt, '' + reason)
-    const signature = await this.eth.web3.eth.sign(hash, address)
+  async generateSignature (address, amount, salt, reason, owner) {
+    const hash = this.eth.web3.utils.soliditySha3('' + address, '' + amount, '' + salt, '' + reason)
+    const signature = await this.eth.web3.eth.sign(hash, owner)
     const signatureData = ethUtil.fromRpcSig(signature)
     let sig = {}
     sig.v = ethUtil.bufferToHex(signatureData.v)
     sig.r = ethUtil.bufferToHex(signatureData.r)
     sig.s = ethUtil.bufferToHex(signatureData.s)
-
     return sig
   }
   /**
@@ -67,12 +99,28 @@ export class ParatiiEthPTIDistributor {
     })
 
     const result = joi.validate(options, schema)
-    const error = result.error
-    if (error) throw error
+    if (result.error) throw result.error
     options = result.value
 
-    // TODO: implement type and missing value check
     let contract = await this.getPTIDistributeContract()
+
+    let isUsed = await contract.methods.isUsed(options.salt).call()
+
+    if (isUsed) {
+      throw new Error(`Salt ${options.salt} is already used`)
+    }
+
+    let hash = this.eth.web3.utils.soliditySha3(
+      options.address, options.amount, options.salt, options.reason
+    )
+
+    let distributorOwner = await contract.methods.owner().call()
+    let account = await contract.methods.checkOwner(hash, options.v, options.r, options.s).call()
+
+    if (account !== distributorOwner) {
+      throw new Error(`Signature does not correspond to owner of the contract (${account} != ${distributorOwner})`)
+    }
+
     let tx = await contract.methods.distribute(
       options.address, options.amount, options.salt, options.reason, options.v, options.r, options.s
     ).send()

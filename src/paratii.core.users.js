@@ -37,9 +37,10 @@ export class ParatiiUsers {
    *   let result = await paratii.eth.users.create(userData)
    *  })
    */
-  // FIXME: do some joi validation here
   async create (options) {
-    let keysForBlockchain = ['id', 'name', 'email']
+    // FIXME: do some joi validation here
+    const paratii = this.config.paratii
+    let keysForBlockchain = ['id', 'name']
     let optionsKeys = Object.keys(options)
     let optionsBlockchain = {}
     let optionsIpfs = {}
@@ -50,9 +51,13 @@ export class ParatiiUsers {
         optionsIpfs[key] = options[key]
       }
     })
-    let hash = await this.config.paratii.ipfs.local.addJSON(optionsIpfs)
+    let hash = await paratii.ipfs.local.addJSON(optionsIpfs)
     optionsBlockchain['ipfsData'] = hash
-    return this.config.paratii.eth.users.create(optionsBlockchain)
+    // FIXME: add error handling if call to db fails.
+    if (options.email !== undefined) {
+      await paratii.db.users.setEmail(options.id, options.email)
+    }
+    return paratii.eth.users.create(optionsBlockchain)
   }
 
   /**

@@ -4,7 +4,7 @@ import { DB_PROVIDER, testAccount } from './utils.js'
 import nock from 'nock'
 const users = require('./users-fixtures')
 
-describe('paratii.users: ', function () {
+describe('paratii.core.users: ', function () {
   let paratii
   let newUserData = {
     id: '0xa99dBd162ad5E1601E8d8B20703e5A3bA5c00Be7',
@@ -16,9 +16,9 @@ describe('paratii.users: ', function () {
 
   before(function () {
     nock('https://db.paratii.video/api/v1')
-    .persist()
-    .get('/users/' + users[0]['_id'])
-    .reply(200, users[0])
+      .persist()
+      .get('/users/' + users[0]['_id'])
+      .reply(200, users[0])
   })
 
   beforeEach(async function () {
@@ -28,6 +28,18 @@ describe('paratii.users: ', function () {
       db: {provider: DB_PROVIDER}
     })
     await paratii.eth.deployContracts()
+    const email = newUserData.email
+    const signer = paratii.getAccount()
+    const signature = await paratii.eth.distributor.signMessage(email)
+    const expectedBody = JSON.stringify({
+      email: email,
+      signedEmail: signature,
+      whosigned: signer
+    })
+    nock('https://db.paratii.video/api/v1')
+      .persist()
+      .post(`/users/${users[0]['_id']}`, expectedBody)
+      .reply(200, users[0])
   })
 
   it('users.create() "name" is optional and can be empty', async function () {

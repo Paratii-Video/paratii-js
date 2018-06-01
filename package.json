@@ -14,7 +14,7 @@
   "scripts": {
     "build": "babel ./src -d ./dist",
     "build-browser": "webpack --progress --colors",
-    "test": "mocha --require babel.js --exit --timeout 30000 test/*.js",
+    "test": "mocha --require babel.js --exit --timeout 35000 test/*.js",
     "parity": "parity --config parity-config.toml",
     "lint": "standard",
     "lint-fix": "standard --fix",
@@ -35,7 +35,7 @@
     "joi": "^13.1.2",
     "multiaddr": "^3.0.2",
     "once": "^1.4.0",
-    "paratii-contracts": "github:Paratii-Video/paratii-contracts#f216b44302efa0f1914973785c68b20460f10fc8",
+    "paratii-contracts": "github:Paratii-Video/paratii-contracts#b876d8dff960842eb77f5788104f29fcfdc21633",
     "paratii-protocol": "github:Paratii-Video/paratii-protocol#45aadcf300f1ad184d6d3db8f9c4b3d438b6f658",
     "promisify-node": "^0.4.0",
     "pull-filereader": "^1.0.1",

@@ -5,6 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ParatiiDbUsers = undefined;
 
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
 var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
@@ -69,6 +73,68 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
       }, null, this);
     }
     /**
+     * save the email of a user in the database
+     *
+     * @param  {string}  userId user univocal id
+     * @param  {string}  email user email
+     * @return {Promise}        data about the user
+     * @example await paratii.db.users.setEmail('some-user-id', 'some@email.com')
+     */
+
+  }, {
+    key: 'setEmail',
+    value: function setEmail(userId, email) {
+      var paratii, signer, signature, body, response;
+      return _regenerator2.default.async(function setEmail$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              paratii = this.config.paratii;
+              signer = paratii.getAccount();
+
+              if (signer) {
+                _context2.next = 4;
+                break;
+              }
+
+              throw Error('Account is not set - please set an account using paratii.setAccount()');
+
+            case 4:
+              _context2.next = 6;
+              return _regenerator2.default.awrap(paratii.eth.distributor.signMessage(email));
+
+            case 6:
+              signature = _context2.sent;
+
+              // const body = `email=${email}&signedEmail=${signature}&whosigned=${signer}`
+              body = {
+                email: email,
+                signedEmail: signature,
+                whosigned: signer
+              };
+              _context2.next = 10;
+              return _regenerator2.default.awrap(fetch(this.config.db.provider + this.apiUsers + userId, {
+                method: 'POST',
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json'
+                },
+                body: (0, _stringify2.default)(body)
+              }));
+
+            case 10:
+              response = _context2.sent;
+              return _context2.abrupt('return', response.json());
+
+            case 12:
+            case 'end':
+              return _context2.stop();
+          }
+        }
+      }, null, this);
+    }
+
+    /**
      * get information about all the videos of the user
      * @param  {string}  userId univocal user identifier
      * @return {Promise}        Collection of all the videos of the user
@@ -79,11 +145,11 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
     key: 'videos',
     value: function videos(userId) {
       var users;
-      return _regenerator2.default.async(function videos$(_context2) {
+      return _regenerator2.default.async(function videos$(_context3) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
-              _context2.next = 2;
+              _context3.next = 2;
               return _regenerator2.default.awrap(fetch(this.config.db.provider + this.apiVersion + this.apiUsers + userId + this.apiVideos, {
                 method: 'get'
               }).then(function (response) {
@@ -91,12 +157,12 @@ var ParatiiDbUsers = exports.ParatiiDbUsers = function () {
               }));
 
             case 2:
-              users = _context2.sent;
-              return _context2.abrupt('return', users);
+              users = _context3.sent;
+              return _context3.abrupt('return', users);
 
             case 4:
             case 'end':
-              return _context2.stop();
+              return _context3.stop();
           }
         }
       }, null, this);

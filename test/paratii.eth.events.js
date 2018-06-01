@@ -326,7 +326,7 @@ describe('paratii.eth.events API: :', function () {
     const reason = 'email_verification'
     const salt = paratii.eth.web3.utils.sha3('' + Date.now())
 
-    paratii.eth.distributor.generateSignature(amount, salt, reason, address).then(function (signature) {
+    paratii.eth.distributor.generateSignature(address1, amount, salt, reason, address).then(function (signature) {
       let v = signature.v
       let r = signature.r
       let s = signature.s

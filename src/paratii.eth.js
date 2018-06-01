@@ -105,11 +105,11 @@ export class ParatiiEth {
     this.config.account.privateKey = privateKey
     this.web3.eth.testAccount = address
     if (privateKey) {
-      let account = wallet.add(privateKey)
-      if (this.config.account.address && this.config.account.address !== address) {
+      let walletAccount = wallet.add(privateKey)
+      if (address && walletAccount.address !== address) {
         throw Error('Private Key and Account address are not compatible! ')
       }
-      this.config.account.address = account.address
+      this.config.account.address = walletAccount.address
       this.config.account.privateKey = privateKey
     } else if (mnemonic) {
       wallet.create(1, mnemonic)
