@@ -12,7 +12,8 @@
     "test": "test"
   },
   "scripts": {
-    "build": "babel ./src -d ./dist",
+    "build": "babel-changed ./src -d ./dist",
+    "clean-build": "babel-changed --reset",
     "build-browser": "webpack --progress --colors",
     "test": "mocha --require babel.js --exit --timeout 35000 test/*.js",
     "parity": "parity --config parity-config.toml",
@@ -49,6 +50,7 @@
   },
   "devDependencies": {
     "async_hooks": "^1.0.0",
+    "babel-changed": "^7.0.0",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.2",
