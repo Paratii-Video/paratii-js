@@ -1,3 +1,4 @@
+import path from 'path'
 import { Paratii } from '../src/paratii.js'
 import { address, privateKey, mnemonic23, address23, testConfig, testAccount } from './utils.js'
 import { assert } from 'chai'
@@ -17,7 +18,7 @@ describe('Paratii configuration:', function () {
       eth: {
         provider: 'http://localhost:8545',
         registryAddress: null,
-        tcrConfigFile: 'sol-tcr/conf/config.json',
+        tcrConfigFile: path.join(require.resolve('sol-tcr'), '..', '/conf/config.json'),
         isTestNet: true
       }
     }
@@ -42,7 +43,7 @@ describe('Paratii configuration:', function () {
       eth: {
         provider: 'http://localhost:8545',
         registryAddress: paratii.config.eth.registryAddress,
-        tcrConfigFile: paratii.config.eth.tcrConfigFile
+        tcrConfigFile: testConfig.eth.tcrConfigFile
       }
     })
 
@@ -69,7 +70,7 @@ describe('Paratii configuration:', function () {
         provider: 'http://chain.paratii.video/',
         isTestNet: false,
         registryAddress: null,
-        tcrConfigFile: 'sol-tcr/conf/config.json'
+        tcrConfigFile: path.join(require.resolve('sol-tcr'), '..', '/conf/config.json')
       }
     }
     assert.deepInclude(paratii.config, expected)

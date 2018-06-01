@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+var path = require('path');
 var joi = require('joi');
 
 /**
@@ -27,7 +28,8 @@ var accountSchema = joi.object({
 var ethSchema = joi.object({
   provider: joi.string().default('http://localhost:8545'),
   registryAddress: joi.string().default(null).allow(null),
-  tcrConfigFile: joi.string().default('sol-tcr/conf/config.json')
+  tcrConfigFile: joi.string().default(path.join(require.resolve('sol-tcr'), '..', '/conf/config.json'))
+
 }).default();
 
 /**

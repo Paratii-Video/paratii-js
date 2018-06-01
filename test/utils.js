@@ -1,3 +1,4 @@
+import path from 'path'
 import nock from 'nock'
 import chai from 'chai'
 import { BigNumber } from 'bignumber.js'
@@ -35,7 +36,7 @@ const testAccount = {
 const testConfig = {
   eth: {
     provider: 'http://localhost:8545',
-    tcrConfigFile: 'sol-tcr/conf/devConfig.json'
+    tcrConfigFile: path.join(require.resolve('sol-tcr'), '..', '/conf/devConfig.json')
   },
   account: {
     address: address,

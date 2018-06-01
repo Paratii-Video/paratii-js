@@ -35,7 +35,7 @@
     "joi": "^13.1.2",
     "multiaddr": "^3.0.2",
     "once": "^1.4.0",
-    "paratii-contracts": "github:Paratii-Video/paratii-contracts#b876d8dff960842eb77f5788104f29fcfdc21633",
+    "paratii-contracts": "github:Paratii-Video/paratii-contracts#8ab08c1e114d96aa997bc03cf14d811317dd7b04",
     "paratii-protocol": "github:Paratii-Video/paratii-protocol#45aadcf300f1ad184d6d3db8f9c4b3d438b6f658",
     "promisify-node": "^0.4.0",
     "pull-filereader": "^1.0.1",
