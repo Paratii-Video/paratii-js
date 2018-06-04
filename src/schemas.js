@@ -85,6 +85,7 @@ const dbSchema = joi.object({
   * @typedef {Array} videoSchema
   * @property {string=} id id of the video
   * @property {string=} author author of the video
+  * @property {string=} ownershipProof ownership proof for the video
   * @property {string=} description description of the video
   * @property {string=} duration duration of the video
   * @property {string=} filename filename of the video
@@ -105,6 +106,7 @@ const dbSchema = joi.object({
 const videoSchema = joi.object({
   id: joi.string().default(null),
   author: joi.string().empty('').default('').allow(null),
+  ownershipProof: joi.string().empty('').default('').allow(null),
   description: joi.string().empty('').default(''),
   duration: joi.string().empty('').default('').allow(null),
   filename: joi.string().empty('').default('').allow(null).allow(''),
