@@ -152,11 +152,11 @@ var ParatiiEth = exports.ParatiiEth = function () {
       this.config.account.privateKey = privateKey;
       this.web3.eth.testAccount = address;
       if (privateKey) {
-        var account = wallet.add(privateKey);
-        if (this.config.account.address && this.config.account.address !== address) {
+        var walletAccount = wallet.add(privateKey);
+        if (address && walletAccount.address !== address) {
           throw Error('Private Key and Account address are not compatible! ');
         }
-        this.config.account.address = account.address;
+        this.config.account.address = walletAccount.address;
         this.config.account.privateKey = privateKey;
       } else if (mnemonic) {
         wallet.create(1, mnemonic);
@@ -1079,7 +1079,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 7:
               balance = _context7.sent;
 
-              balances.ETH = balance;
+              balances.ETH = this.web3.utils.toBN(balance);
 
             case 9:
               if (!(!symbol || symbol === 'PTI')) {
@@ -1098,7 +1098,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 15:
               balance = _context7.sent;
 
-              balances.PTI = balance;
+              balances.PTI = this.web3.utils.toBN(balance);
 
             case 17:
               if (!symbol) {
@@ -1106,7 +1106,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
                 break;
               }
 
-              return _context7.abrupt('return', balance);
+              return _context7.abrupt('return', this.web3.utils.toBN(balance));
 
             case 21:
               return _context7.abrupt('return', balances);
@@ -1144,7 +1144,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
             case 5:
               allowance = _context8.sent;
-              return _context8.abrupt('return', allowance);
+              return _context8.abrupt('return', this.web3.utils.toBN(allowance));
 
             case 7:
             case 'end':
@@ -1158,7 +1158,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
      * ERC20 token approval
      * @param  {string}  beneficiary beneficiary ETH Address
      * @param  {Number}  amount      bignumber of amount to approve.
-     * @return {Promise}             returns approved amount.
+     * @return {Promise}             returns approvation tx
      */
 
   }, {

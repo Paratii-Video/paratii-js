@@ -11,11 +11,11 @@ describe('paratii.eth.events API: :', function () {
     let vouchers = await paratii.eth.getContract('Vouchers')
     let distributor = await paratii.eth.getContract('PTIDistributor')
     await token.methods.transfer(vouchers.options.address, voucherAmountInitial11).send()
-    await token.methods.transfer(distributor.options.address, voucherAmountInitial11).send()
+    await token.methods.transfer(distributor.options.address, paratii.eth.web3.utils.toWei('100', 'ether')).send()
     await paratii.eth.setRegistryAddress(paratii.config.eth.registryAddress)
   })
 
-  it('subscription to Tranfer PTI events should work as expected', function (done) {
+  it('subscription to Transfer PTI events should work as expected', function (done) {
     let beneficiary = '0xDbC8232Bd8DEfCbc034a0303dd3f0Cf41d1a55Cf'
     let amount = paratii.eth.web3.utils.toWei('4', 'ether')
     // console.log(testConfigWS)
@@ -35,7 +35,7 @@ describe('paratii.eth.events API: :', function () {
     paratii.eth.transfer(beneficiary, amount, 'PTI')
   })
 
-  it('subscription to Tranfer ETH events should work as expected', function (done) {
+  it('subscription to Transfer ETH events should work as expected', function (done) {
     let beneficiary = '0xDbC8232Bd8DEfCbc034a0303dd3f0Cf41d1a55Cf'
     let amount = paratii.eth.web3.utils.toWei('4', 'ether')
     let description = 'thanks for all the fish'
@@ -326,7 +326,7 @@ describe('paratii.eth.events API: :', function () {
     const reason = 'email_verification'
     const salt = paratii.eth.web3.utils.sha3('' + Date.now())
 
-    paratii.eth.distributor.generateSignature(amount, salt, reason, address).then(function (signature) {
+    paratii.eth.distributor.generateSignature(address1, amount, salt, reason, address).then(function (signature) {
       let v = signature.v
       let r = signature.r
       let s = signature.s

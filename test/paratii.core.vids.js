@@ -30,6 +30,7 @@ describe('paratii.vids:', function () {
     videoFromCreate = await paratii.vids.create({
       id: 'some-id',
       owner: address1,
+      ownershipProof: 'this my video',
       title: 'some Title',
       author: 'Steven Spielberg',
       duration: '2h 32m',

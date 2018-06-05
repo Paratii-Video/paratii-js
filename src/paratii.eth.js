@@ -104,11 +104,11 @@ export class ParatiiEth {
     this.config.account.privateKey = privateKey
     this.web3.eth.testAccount = address
     if (privateKey) {
-      let account = wallet.add(privateKey)
-      if (this.config.account.address && this.config.account.address !== address) {
+      let walletAccount = wallet.add(privateKey)
+      if (address && walletAccount.address !== address) {
         throw Error('Private Key and Account address are not compatible! ')
       }
-      this.config.account.address = account.address
+      this.config.account.address = walletAccount.address
       this.config.account.privateKey = privateKey
     } else if (mnemonic) {
       wallet.create(1, mnemonic)
@@ -705,15 +705,15 @@ export class ParatiiEth {
 
     if (!symbol || symbol === 'ETH') {
       balance = await this.web3.eth.getBalance(address)
-      balances.ETH = balance
+      balances.ETH = this.web3.utils.toBN(balance)
     }
     if (!symbol || symbol === 'PTI') {
       let contract = await this.getContract('ParatiiToken')
       balance = await contract.methods.balanceOf(address).call()
-      balances.PTI = balance
+      balances.PTI = this.web3.utils.toBN(balance)
     }
     if (symbol) {
-      return balance
+      return this.web3.utils.toBN(balance)
     } else {
       return balances
     }
@@ -728,14 +728,14 @@ export class ParatiiEth {
   async allowance (ownerAddress, beneficiaryAddress) {
     let tokenContract = await this.getContract('ParatiiToken')
     let allowance = await tokenContract.methods.allowance(ownerAddress, beneficiaryAddress).call()
-    return allowance
+    return this.web3.utils.toBN(allowance)
   }
 
   /**
    * ERC20 token approval
    * @param  {string}  beneficiary beneficiary ETH Address
    * @param  {Number}  amount      bignumber of amount to approve.
-   * @return {Promise}             returns approved amount.
+   * @return {Promise}             returns approvation tx
    */
   async approve (beneficiary, amount) {
     let tokenContract = await this.getContract('ParatiiToken')
