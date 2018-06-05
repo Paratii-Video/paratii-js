@@ -89,6 +89,7 @@ var ParatiiVids = exports.ParatiiVids = function () {
               _context.next = 8;
               return _regenerator2.default.awrap(this.config.paratii.ipfs.addAndPinJSON({
                 author: options.author,
+                ownershipProof: options.ownershipProof,
                 description: options.description,
                 duration: options.duration,
                 filename: options.filename,
