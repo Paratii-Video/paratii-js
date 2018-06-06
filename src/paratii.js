@@ -81,6 +81,21 @@ class Paratii extends ParatiiCore {
     return this.eth.getAccount()
   }
   /**
+   * Pings the provider to which the web3 is configured to connect to (see the set up in paratii.eth.js constructor)
+   * @return {Promise} that resolves in an a boolean
+   */
+  async pingEth () {
+    return new Promise(resolve => {
+      this.eth.web3.eth.net.isListening()
+        .then(() => {
+          resolve(true)
+        })
+        .catch(e => {
+          resolve(false)
+        })
+    })
+  }
+  /**
    * Get some diagnostic info about the state of the system
    * @return {Promise} that resolves in an array of strings with diagnostic info
    * @example let diagnosticInfo = await paratii.diagnose()
@@ -93,14 +108,17 @@ class Paratii extends ParatiiCore {
     function log (msg) {
       msgs.push(msg)
     }
+    // Displaying the configuration
     log('Paratii was initialized with the following options:')
     log(this.config)
+    // Main account check
     log('Checking main account')
     if (this.config.account.address && this.config.account.privateKey) {
       log(`Your private key: ${this.config.account.privateKey}`)
       log(`Your private key: ${this.config.account.privateKey}`)
       log(`First wallet account: ${this.eth.web3.eth.accounts.wallet[0].address}`)
     }
+    // Test registry address
     address = this.eth.getRegistryAddress()
     if (!address) {
       log('*** No registry address found!')
@@ -126,6 +144,15 @@ class Paratii extends ParatiiCore {
           log(`address of ${name}: ${address}`)
         }
       }
+    }
+    // Pinging Eth provider
+    log('Pinging the eth provider')
+    const pEth = await this.pingEth()
+    if (pEth === true) {
+      log('The eth provider responds correctly.')
+    } else {
+      isOk = false
+      log('There seems to be a problem reaching the eth provider.')
     }
     if (isOk) {
       log('---- everything seems fine -----')

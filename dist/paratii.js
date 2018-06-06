@@ -9,6 +9,10 @@ var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
+var _promise = require('babel-runtime/core-js/promise');
+
+var _promise2 = _interopRequireDefault(_promise);
+
 var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -134,6 +138,35 @@ var Paratii = function (_ParatiiCore) {
       return this.eth.getAccount();
     }
     /**
+     * Pings the provider to which the web3 is configured to connect to (see the set up in paratii.eth.js constructor)
+     * @return {Promise} that resolves in an a boolean
+     */
+
+  }, {
+    key: 'pingEth',
+    value: function pingEth() {
+      var _this2 = this;
+
+      return _regenerator2.default.async(function pingEth$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              return _context.abrupt('return', new _promise2.default(function (resolve) {
+                _this2.eth.web3.eth.net.isListening().then(function () {
+                  resolve(true);
+                }).catch(function (e) {
+                  resolve(false);
+                });
+              }));
+
+            case 1:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, null, this);
+    }
+    /**
      * Get some diagnostic info about the state of the system
      * @return {Promise} that resolves in an array of strings with diagnostic info
      * @example let diagnosticInfo = await paratii.diagnose()
@@ -143,10 +176,10 @@ var Paratii = function (_ParatiiCore) {
   }, {
     key: 'diagnose',
     value: function diagnose() {
-      var msg, address, msgs, isOk, log, registry, name;
-      return _regenerator2.default.async(function diagnose$(_context) {
+      var msg, address, msgs, isOk, log, registry, name, pEth;
+      return _regenerator2.default.async(function diagnose$(_context2) {
         while (1) {
-          switch (_context.prev = _context.next) {
+          switch (_context2.prev = _context2.next) {
             case 0:
               log = function log(msg) {
                 msgs.push(msg);
@@ -157,34 +190,37 @@ var Paratii = function (_ParatiiCore) {
 
               msgs = [];
 
+              // Displaying the configuration
               log('Paratii was initialized with the following options:');
               log(this.config);
+              // Main account check
               log('Checking main account');
               if (this.config.account.address && this.config.account.privateKey) {
                 log('Your private key: ' + this.config.account.privateKey);
                 log('Your private key: ' + this.config.account.privateKey);
                 log('First wallet account: ' + this.eth.web3.eth.accounts.wallet[0].address);
               }
+              // Test registry address
               address = this.eth.getRegistryAddress();
 
               if (address) {
-                _context.next = 15;
+                _context2.next = 15;
                 break;
               }
 
               log('*** No registry address found!');
               log('Value of this.config[\'eth.registryAddress\']: ' + this.config['eth.registryAddress']);
               isOk = false;
-              _context.next = 35;
+              _context2.next = 35;
               break;
 
             case 15:
               log('checking deployed code of Registry...');
-              _context.next = 18;
+              _context2.next = 18;
               return _regenerator2.default.awrap(this.eth.web3.eth.getCode(address));
 
             case 18:
-              msg = _context.sent;
+              msg = _context2.sent;
 
               if (msg === '0x') {
                 log('ERROR: no code was found on the registry address ' + address);
@@ -195,51 +231,65 @@ var Paratii = function (_ParatiiCore) {
                 // log(msg)
               }
               log('checking for addresses on registry@' + address);
-              _context.next = 23;
+              _context2.next = 23;
               return _regenerator2.default.awrap(this.eth.getContract('Registry'));
 
             case 23:
-              registry = _context.sent;
+              registry = _context2.sent;
 
               log('(registry address is ' + registry.options.address + ')');
-              _context.t0 = _regenerator2.default.keys(this.eth.contracts);
+              _context2.t0 = _regenerator2.default.keys(this.eth.contracts);
 
             case 26:
-              if ((_context.t1 = _context.t0()).done) {
-                _context.next = 35;
+              if ((_context2.t1 = _context2.t0()).done) {
+                _context2.next = 35;
                 break;
               }
 
-              name = _context.t1.value;
+              name = _context2.t1.value;
 
               if (!(name !== 'Registry')) {
-                _context.next = 33;
+                _context2.next = 33;
                 break;
               }
 
-              _context.next = 31;
+              _context2.next = 31;
               return _regenerator2.default.awrap(registry.methods.getContract(name).call());
 
             case 31:
-              address = _context.sent;
+              address = _context2.sent;
 
               log('address of ' + name + ': ' + address);
 
             case 33:
-              _context.next = 26;
+              _context2.next = 26;
               break;
 
             case 35:
+              // Pinging Eth provider
+              log('Pinging the eth provider');
+              _context2.next = 38;
+              return _regenerator2.default.awrap(this.pingEth());
+
+            case 38:
+              pEth = _context2.sent;
+
+              if (pEth === true) {
+                log('The eth provider responds correctly.');
+              } else {
+                isOk = false;
+                log('There seems to be a problem reaching the eth provider.');
+              }
               if (isOk) {
                 log('---- everything seems fine -----');
               } else {
                 log('***** Something is wrong *****');
               }
-              return _context.abrupt('return', msgs);
+              return _context2.abrupt('return', msgs);
 
-            case 37:
+            case 42:
             case 'end':
-              return _context.stop();
+              return _context2.stop();
           }
         }
       }, null, this);
