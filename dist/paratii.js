@@ -139,7 +139,7 @@ var Paratii = function (_ParatiiCore) {
     }
     /**
      * Pings the provider to which the web3 is configured to connect to (see the set up in paratii.eth.js constructor)
-     * @return {Promise} that resolves in an a boolean
+     * @return {Promise} that resolves in a boolean
      */
 
   }, {
@@ -167,6 +167,37 @@ var Paratii = function (_ParatiiCore) {
       }, null, this);
     }
     /**
+     * Checks if the IPFS local node is running
+     * @return {Promise} that resolves in a boolean
+     */
+
+  }, {
+    key: 'checkIPFSState',
+    value: function checkIPFSState() {
+      var _this3 = this;
+
+      return _regenerator2.default.async(function checkIPFSState$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              return _context2.abrupt('return', new _promise2.default(function (resolve) {
+                _this3.ipfs.getIPFSInstance().then(function (ipfsInstance) {
+                  if (ipfsInstance.state.state() === 'running') {
+                    resolve(true);
+                  } else {
+                    resolve(false);
+                  }
+                });
+              }));
+
+            case 1:
+            case 'end':
+              return _context2.stop();
+          }
+        }
+      }, null, this);
+    }
+    /**
      * Get some diagnostic info about the state of the system
      * @return {Promise} that resolves in an array of strings with diagnostic info
      * @example let diagnosticInfo = await paratii.diagnose()
@@ -176,10 +207,10 @@ var Paratii = function (_ParatiiCore) {
   }, {
     key: 'diagnose',
     value: function diagnose() {
-      var msg, address, msgs, isOk, log, registry, name, pEth;
-      return _regenerator2.default.async(function diagnose$(_context2) {
+      var msg, address, msgs, isOk, log, registry, name, pEth, ipfsState;
+      return _regenerator2.default.async(function diagnose$(_context3) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
               log = function log(msg) {
                 msgs.push(msg);
@@ -204,23 +235,23 @@ var Paratii = function (_ParatiiCore) {
               address = this.eth.getRegistryAddress();
 
               if (address) {
-                _context2.next = 15;
+                _context3.next = 15;
                 break;
               }
 
               log('*** No registry address found!');
               log('Value of this.config[\'eth.registryAddress\']: ' + this.config['eth.registryAddress']);
               isOk = false;
-              _context2.next = 35;
+              _context3.next = 35;
               break;
 
             case 15:
               log('checking deployed code of Registry...');
-              _context2.next = 18;
+              _context3.next = 18;
               return _regenerator2.default.awrap(this.eth.web3.eth.getCode(address));
 
             case 18:
-              msg = _context2.sent;
+              msg = _context3.sent;
 
               if (msg === '0x') {
                 log('ERROR: no code was found on the registry address ' + address);
@@ -231,48 +262,48 @@ var Paratii = function (_ParatiiCore) {
                 // log(msg)
               }
               log('checking for addresses on registry@' + address);
-              _context2.next = 23;
+              _context3.next = 23;
               return _regenerator2.default.awrap(this.eth.getContract('Registry'));
 
             case 23:
-              registry = _context2.sent;
+              registry = _context3.sent;
 
               log('(registry address is ' + registry.options.address + ')');
-              _context2.t0 = _regenerator2.default.keys(this.eth.contracts);
+              _context3.t0 = _regenerator2.default.keys(this.eth.contracts);
 
             case 26:
-              if ((_context2.t1 = _context2.t0()).done) {
-                _context2.next = 35;
+              if ((_context3.t1 = _context3.t0()).done) {
+                _context3.next = 35;
                 break;
               }
 
-              name = _context2.t1.value;
+              name = _context3.t1.value;
 
               if (!(name !== 'Registry')) {
-                _context2.next = 33;
+                _context3.next = 33;
                 break;
               }
 
-              _context2.next = 31;
+              _context3.next = 31;
               return _regenerator2.default.awrap(registry.methods.getContract(name).call());
 
             case 31:
-              address = _context2.sent;
+              address = _context3.sent;
 
               log('address of ' + name + ': ' + address);
 
             case 33:
-              _context2.next = 26;
+              _context3.next = 26;
               break;
 
             case 35:
               // Pinging Eth provider
               log('Pinging the eth provider');
-              _context2.next = 38;
+              _context3.next = 38;
               return _regenerator2.default.awrap(this.pingEth());
 
             case 38:
-              pEth = _context2.sent;
+              pEth = _context3.sent;
 
               if (pEth === true) {
                 log('The eth provider responds correctly.');
@@ -280,16 +311,31 @@ var Paratii = function (_ParatiiCore) {
                 isOk = false;
                 log('There seems to be a problem reaching the eth provider.');
               }
+              // Check if IPFS node is running
+              log('Check if IPFS node is running');
+              _context3.next = 43;
+              return _regenerator2.default.awrap(this.checkIPFSState());
+
+            case 43:
+              ipfsState = _context3.sent;
+
+              if (ipfsState === true) {
+                log('The IPFS node seems to be running correctly.');
+              } else {
+                isOk = false;
+                log('The IPFS node doesn\'t seem to be running.');
+              }
+              // Recap
               if (isOk) {
                 log('---- everything seems fine -----');
               } else {
                 log('***** Something is wrong *****');
               }
-              return _context2.abrupt('return', msgs);
+              return _context3.abrupt('return', msgs);
 
-            case 42:
+            case 47:
             case 'end':
-              return _context2.stop();
+              return _context3.stop();
           }
         }
       }, null, this);

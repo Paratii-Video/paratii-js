@@ -82,7 +82,7 @@ class Paratii extends ParatiiCore {
   }
   /**
    * Pings the provider to which the web3 is configured to connect to (see the set up in paratii.eth.js constructor)
-   * @return {Promise} that resolves in an a boolean
+   * @return {Promise} that resolves in a boolean
    */
   async pingEth () {
     return new Promise(resolve => {
@@ -93,6 +93,21 @@ class Paratii extends ParatiiCore {
         .catch(e => {
           resolve(false)
         })
+    })
+  }
+  /**
+   * Checks if the IPFS local node is running
+   * @return {Promise} that resolves in a boolean
+   */
+  async checkIPFSState () {
+    return new Promise(resolve => {
+      this.ipfs.getIPFSInstance().then(function (ipfsInstance) {
+        if (ipfsInstance.state.state() === 'running') {
+          resolve(true)
+        } else {
+          resolve(false)
+        }
+      })
     })
   }
   /**
@@ -154,6 +169,16 @@ class Paratii extends ParatiiCore {
       isOk = false
       log('There seems to be a problem reaching the eth provider.')
     }
+    // Check if IPFS node is running
+    log('Check if IPFS node is running')
+    const ipfsState = await this.checkIPFSState()
+    if (ipfsState === true) {
+      log('The IPFS node seems to be running correctly.')
+    } else {
+      isOk = false
+      log('The IPFS node doesn\'t seem to be running.')
+    }
+    // Recap
     if (isOk) {
       log('---- everything seems fine -----')
     } else {
