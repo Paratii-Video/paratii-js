@@ -141,9 +141,11 @@ export class ParatiiUsers {
     const search = await paratii.vids.search({owner: oldAccount})
     const vids = search.results
     const originalUserRecord = await paratii.eth.users.get(oldAccount)
-    const newUserRecord = originalUserRecord
-    newUserRecord.id = newAccount
-    await paratii.eth.users.create(newUserRecord)
+    if (originalUserRecord.id) {
+      const newUserRecord = originalUserRecord
+      newUserRecord.id = newAccount
+      await paratii.eth.users.create(newUserRecord)
+    }
     if (vids) {
       for (let i = 0; i < vids.length; i++) {
         const vid = vids[i]

@@ -234,11 +234,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 18:
               contract = _context4.sent;
-
-              // let amountInWei = this.eth.web3.utils.toWei(amountToStake.toString())
               amountInHex = this.eth.web3.utils.toHex(amountToStake.toString());
-              // console.log('amountInHex: ', amountInHex)
-
               hash = this.getHash(videoId);
               tx = void 0;
               _context4.prev = 22;

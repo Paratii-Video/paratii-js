@@ -99,9 +99,7 @@ export class ParatiiEthTcr {
     }
 
     let contract = await this.getTcrContract()
-    // let amountInWei = this.eth.web3.utils.toWei(amountToStake.toString())
     let amountInHex = this.eth.web3.utils.toHex(amountToStake.toString())
-    // console.log('amountInHex: ', amountInHex)
     let hash = this.getHash(videoId)
 
     let tx
