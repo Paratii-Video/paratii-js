@@ -130,9 +130,16 @@ class Paratii extends ParatiiCore {
         }
       }
     }
+    // Firing all awaits
+    const checks = await Promise.all([this.eth.checkEth(),
+      this.ipfs.checkIPFSState(),
+      this.db.checkDBProviderStatus(),
+      this.ipfs.remote.checkTranscoderDropUrl(),
+      this.ipfs.remote.checkDefaultTranscoder(),
+      this.ipfs.remote.checkRemoteIPFSNode()])
     // Pinging Eth provider
     log('Pinging the eth provider')
-    let pEth = await this.eth.checkEth()
+    let pEth = checks[0]
     if (pEth === true) {
       log('The eth provider responds correctly.')
     } else {
@@ -141,7 +148,7 @@ class Paratii extends ParatiiCore {
     }
     // Check if IPFS node is running
     log('Check if IPFS node is running')
-    let ipfsState = await this.ipfs.checkIPFSState()
+    let ipfsState = checks[1]
     if (ipfsState === true) {
       log('The IPFS node seems to be running correctly.')
     } else {
@@ -150,7 +157,7 @@ class Paratii extends ParatiiCore {
     }
     // Check if DB provider is up
     log('Check if the DB provider is up.')
-    let dbProviderStatus = await this.db.checkDBProviderStatus()
+    let dbProviderStatus = checks[2]
     if (dbProviderStatus === true) {
       log('Able to reach the DB provder.')
     } else {
@@ -159,7 +166,7 @@ class Paratii extends ParatiiCore {
     }
     // Check if transcoder drop url is responding
     log('Check if transcoder drop url is responding.')
-    let transcoderDropUrlStatus = await this.ipfs.remote.checkTranscoderDropUrl()
+    let transcoderDropUrlStatus = checks[3]
     if (transcoderDropUrlStatus === true) {
       log('Able to reach the transcoder.')
     } else {
@@ -168,7 +175,7 @@ class Paratii extends ParatiiCore {
     }
     // Check if the default transcoder is responding
     log('Check if the default transcoder is responding.')
-    let defaultTranscoderCheck = await this.ipfs.remote.checkDefaultTranscoder()
+    let defaultTranscoderCheck = checks[4]
     if (defaultTranscoderCheck === true) {
       log('Able to reach the default transcoder dns.')
     } else {
@@ -177,7 +184,7 @@ class Paratii extends ParatiiCore {
     }
     // Check if the remote IPFS node is responding
     log('Check if the remote IPFS node is responding.')
-    let remoteIPFSNodeCheck = await this.ipfs.remote.checkRemoteIPFSNode()
+    let remoteIPFSNodeCheck = checks[5]
     if (remoteIPFSNodeCheck === true) {
       log('Able to reach the remote IPFS node dns.')
     } else {

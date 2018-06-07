@@ -9,6 +9,10 @@ var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
+var _promise = require('babel-runtime/core-js/promise');
+
+var _promise2 = _interopRequireDefault(_promise);
+
 var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -143,7 +147,7 @@ var Paratii = function (_ParatiiCore) {
   }, {
     key: 'diagnose',
     value: function diagnose() {
-      var msg, address, msgs, isOk, log, registry, name, pEth, ipfsState, dbProviderStatus, transcoderDropUrlStatus, defaultTranscoderCheck, remoteIPFSNodeCheck;
+      var msg, address, msgs, isOk, log, registry, name, checks, pEth, ipfsState, dbProviderStatus, transcoderDropUrlStatus, defaultTranscoderCheck, remoteIPFSNodeCheck;
       return _regenerator2.default.async(function diagnose$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -233,13 +237,15 @@ var Paratii = function (_ParatiiCore) {
               break;
 
             case 35:
+              _context.next = 37;
+              return _regenerator2.default.awrap(_promise2.default.all([this.eth.checkEth(), this.ipfs.checkIPFSState(), this.db.checkDBProviderStatus(), this.ipfs.remote.checkTranscoderDropUrl(), this.ipfs.remote.checkDefaultTranscoder(), this.ipfs.remote.checkRemoteIPFSNode()]));
+
+            case 37:
+              checks = _context.sent;
+
               // Pinging Eth provider
               log('Pinging the eth provider');
-              _context.next = 38;
-              return _regenerator2.default.awrap(this.eth.checkEth());
-
-            case 38:
-              pEth = _context.sent;
+              pEth = checks[0];
 
               if (pEth === true) {
                 log('The eth provider responds correctly.');
@@ -249,11 +255,7 @@ var Paratii = function (_ParatiiCore) {
               }
               // Check if IPFS node is running
               log('Check if IPFS node is running');
-              _context.next = 43;
-              return _regenerator2.default.awrap(this.ipfs.checkIPFSState());
-
-            case 43:
-              ipfsState = _context.sent;
+              ipfsState = checks[1];
 
               if (ipfsState === true) {
                 log('The IPFS node seems to be running correctly.');
@@ -263,11 +265,7 @@ var Paratii = function (_ParatiiCore) {
               }
               // Check if DB provider is up
               log('Check if the DB provider is up.');
-              _context.next = 48;
-              return _regenerator2.default.awrap(this.db.checkDBProviderStatus());
-
-            case 48:
-              dbProviderStatus = _context.sent;
+              dbProviderStatus = checks[2];
 
               if (dbProviderStatus === true) {
                 log('Able to reach the DB provder.');
@@ -277,11 +275,7 @@ var Paratii = function (_ParatiiCore) {
               }
               // Check if transcoder drop url is responding
               log('Check if transcoder drop url is responding.');
-              _context.next = 53;
-              return _regenerator2.default.awrap(this.ipfs.remote.checkTranscoderDropUrl());
-
-            case 53:
-              transcoderDropUrlStatus = _context.sent;
+              transcoderDropUrlStatus = checks[3];
 
               if (transcoderDropUrlStatus === true) {
                 log('Able to reach the transcoder.');
@@ -291,11 +285,7 @@ var Paratii = function (_ParatiiCore) {
               }
               // Check if the default transcoder is responding
               log('Check if the default transcoder is responding.');
-              _context.next = 58;
-              return _regenerator2.default.awrap(this.ipfs.remote.checkDefaultTranscoder());
-
-            case 58:
-              defaultTranscoderCheck = _context.sent;
+              defaultTranscoderCheck = checks[4];
 
               if (defaultTranscoderCheck === true) {
                 log('Able to reach the default transcoder dns.');
@@ -305,11 +295,7 @@ var Paratii = function (_ParatiiCore) {
               }
               // Check if the remote IPFS node is responding
               log('Check if the remote IPFS node is responding.');
-              _context.next = 63;
-              return _regenerator2.default.awrap(this.ipfs.remote.checkRemoteIPFSNode());
-
-            case 63:
-              remoteIPFSNodeCheck = _context.sent;
+              remoteIPFSNodeCheck = checks[5];
 
               if (remoteIPFSNodeCheck === true) {
                 log('Able to reach the remote IPFS node dns.');
@@ -326,7 +312,7 @@ var Paratii = function (_ParatiiCore) {
               }
               return _context.abrupt('return', msgs);
 
-            case 67:
+            case 58:
             case 'end':
               return _context.stop();
           }
