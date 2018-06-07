@@ -202,7 +202,7 @@ class Paratii extends ParatiiCore {
     }
     // Check if DB provider is up
     log('Check if the DB provider is up.')
-    let dbProviderStatus = await this.checkLinkStatus(this.config.db.provider)
+    let dbProviderStatus = await this.db.checkDBProviderStatus()
     if (dbProviderStatus === true) {
       log('Able to reach the DB provder.')
     } else {

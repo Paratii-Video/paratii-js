@@ -3,6 +3,9 @@ import { ParatiiDbUsers } from './paratii.db.users.js'
 import { dbSchema, accountSchema } from './schemas.js'
 import joi from 'joi'
 
+// Needed to check the DB provider status code
+const request = require('request')
+
 /**
  * ParatiiDb contains a functionality to interact with the Paratii Index.
  * @param {ParatiiDbSchema} config configuration object to initialize Paratii object
@@ -28,5 +31,23 @@ export class ParatiiDb {
     this.config.account = result.value.account
     this.vids = new ParatiiDbVids(this.config)
     this.users = new ParatiiDbUsers(this.config)
+  }
+  /**
+   * Requests a link to see if it's up (Easily adds a dozen seconds to check the status)
+   * @param {string} linkToCheck
+   * @return {Promise} that resolves in a boolean
+   */
+  async checkDBProviderStatus () {
+    return new Promise(resolve => {
+      request(this.config.db.provider, function (error, response) {
+        if (error) {
+          resolve(false)
+        } else if (response && response.statusCode === 200) { // We suppose for now that only 200 is the right status code (see: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
+          resolve(true)
+        } else {
+          resolve(false)
+        }
+      })
+    })
   }
 }

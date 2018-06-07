@@ -349,7 +349,7 @@ var Paratii = function (_ParatiiCore) {
               // Check if DB provider is up
               log('Check if the DB provider is up.');
               _context3.next = 48;
-              return _regenerator2.default.awrap(this.checkLinkStatus(this.config.db.provider));
+              return _regenerator2.default.awrap(this.db.checkDBProviderStatus());
 
             case 48:
               dbProviderStatus = _context3.sent;
