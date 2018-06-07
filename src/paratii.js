@@ -191,7 +191,6 @@ class Paratii extends ParatiiCore {
       isOk = false
       log('Can\'t reach the remote IPFS node dns.')
     }
-    // Todo Optimize the calls by running all the awaits at the same time
     // Recap
     if (isOk) {
       log('---- everything seems fine -----')
