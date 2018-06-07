@@ -243,6 +243,25 @@ export class ParatiiIPFS extends EventEmitter {
       }
     })
   }
+  /**
+   * Checks if the IPFS local node is running
+   * @return {Promise} that resolves in a boolean
+   */
+  async checkIPFSState () {
+    return new Promise(resolve => {
+      this.getIPFSInstance()
+        .then((ipfsInstance) => {
+          if (ipfsInstance.state.state() === 'running') {
+            resolve(true)
+          } else {
+            resolve(false)
+          }
+        })
+        .catch(e => {
+          resolve(false)
+        })
+    })
+  }
 
   initProtocol (ipfs) {
     let ptiAddress = this.config.account.address || 'no_address'

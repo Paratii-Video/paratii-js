@@ -86,25 +86,6 @@ class Paratii extends ParatiiCore {
     return this.eth.getAccount()
   }
   /**
-   * Checks if the IPFS local node is running
-   * @return {Promise} that resolves in a boolean
-   */
-  async checkIPFSState () {
-    return new Promise(resolve => {
-      this.ipfs.getIPFSInstance()
-        .then((ipfsInstance) => {
-          if (ipfsInstance.state.state() === 'running') {
-            resolve(true)
-          } else {
-            resolve(false)
-          }
-        })
-        .catch(e => {
-          resolve(false)
-        })
-    })
-  }
-  /**
    * Requests a link to see if it's up (Easily adds a dozen seconds to check the status)
    * @param {string} linkToCheck
    * @return {Promise} that resolves in a boolean
@@ -212,7 +193,7 @@ class Paratii extends ParatiiCore {
     }
     // Check if IPFS node is running
     log('Check if IPFS node is running')
-    let ipfsState = await this.checkIPFSState()
+    let ipfsState = await this.ipfs.checkIPFSState()
     if (ipfsState === true) {
       log('The IPFS node seems to be running correctly.')
     } else {

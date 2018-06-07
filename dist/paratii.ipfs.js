@@ -372,10 +372,43 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
         }
       });
     }
+    /**
+     * Checks if the IPFS local node is running
+     * @return {Promise} that resolves in a boolean
+     */
+
+  }, {
+    key: 'checkIPFSState',
+    value: function checkIPFSState() {
+      var _this6 = this;
+
+      return _regenerator2.default.async(function checkIPFSState$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              return _context3.abrupt('return', new _promise2.default(function (resolve) {
+                _this6.getIPFSInstance().then(function (ipfsInstance) {
+                  if (ipfsInstance.state.state() === 'running') {
+                    resolve(true);
+                  } else {
+                    resolve(false);
+                  }
+                }).catch(function (e) {
+                  resolve(false);
+                });
+              }));
+
+            case 1:
+            case 'end':
+              return _context3.stop();
+          }
+        }
+      }, null, this);
+    }
   }, {
     key: 'initProtocol',
     value: function initProtocol(ipfs) {
-      var _this6 = this;
+      var _this7 = this;
 
       var ptiAddress = this.config.account.address || 'no_address';
       this.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
@@ -386,12 +419,12 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
       this.remote._node = ipfs;
 
       this.protocol.notifications.on('message:new', function (peerId, msg) {
-        _this6.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
+        _this7.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
       });
       // emit all commands.
       // NOTE : this will be changed once protocol upgrades are ready.
       this.protocol.notifications.on('command', function (peerId, command) {
-        _this6.emit('protocol:incoming', peerId, command);
+        _this7.emit('protocol:incoming', peerId, command);
       });
     }
   }]);
