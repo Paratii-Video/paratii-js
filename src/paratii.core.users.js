@@ -39,7 +39,6 @@ export class ParatiiUsers {
    *  })
    */
   async create (options) {
-    // FIXME: do some joi validation here
     const result = joi.validate(options, userSchema, {allowUnknown: true})
     if (result.error) throw result.error
     const paratii = this.config.paratii
@@ -77,6 +76,8 @@ export class ParatiiUsers {
    *  })
    */
   async upsert (options) {
+    const result = joi.validate(options, userSchema, {allowUnknown: true})
+    if (result.error) throw result.error
     let data = null
     let userId = ''
     if (options.id) {
@@ -108,16 +109,6 @@ export class ParatiiUsers {
    * @example let updatedData = await paratii.users.update('some-user-id', {name: 'A new user name'})
    */
   async update (userId, options) {
-    const schema = joi.object({
-      name: joi.string().default(null).empty(''),
-      email: joi.string().default(null).empty('')
-    })
-
-    const result = joi.validate(options, schema)
-    const error = result.error
-    if (error) throw error
-    options = result.value
-
     let data = await this.get(userId)
     for (let key in options) {
       if (options[key] !== null) {
@@ -126,6 +117,9 @@ export class ParatiiUsers {
     }
 
     data['id'] = userId
+
+    const result = joi.validate(data, userSchema, {allowUnknown: true})
+    if (result.error) throw result.error
 
     await this.create(data)
 

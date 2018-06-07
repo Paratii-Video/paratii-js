@@ -77,7 +77,6 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              // FIXME: do some joi validation here
               result = joi.validate(options, _schemas.userSchema, { allowUnknown: true });
 
               if (!result.error) {
@@ -146,39 +145,49 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
   }, {
     key: 'upsert',
     value: function upsert(options) {
-      var data, userId;
+      var result, data, userId;
       return _regenerator2.default.async(function upsert$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
+              result = joi.validate(options, _schemas.userSchema, { allowUnknown: true });
+
+              if (!result.error) {
+                _context2.next = 3;
+                break;
+              }
+
+              throw result.error;
+
+            case 3:
               data = null;
               userId = '';
 
               if (!options.id) {
-                _context2.next = 7;
+                _context2.next = 10;
                 break;
               }
 
               userId = options.id;
-              _context2.next = 6;
+              _context2.next = 9;
               return _regenerator2.default.awrap(this.get(userId));
 
-            case 6:
+            case 9:
               data = _context2.sent;
 
-            case 7:
+            case 10:
               if (data) {
-                _context2.next = 11;
+                _context2.next = 14;
                 break;
               }
 
               return _context2.abrupt('return', this.create(options));
 
-            case 11:
+            case 14:
               delete options.id;
               return _context2.abrupt('return', this.update(userId, options, data));
 
-            case 13:
+            case 16:
             case 'end':
               return _context2.stop();
           }
@@ -209,32 +218,15 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
   }, {
     key: 'update',
     value: function update(userId, options) {
-      var schema, result, error, data, key;
+      var data, key, result;
       return _regenerator2.default.async(function update$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              schema = joi.object({
-                name: joi.string().default(null).empty(''),
-                email: joi.string().default(null).empty('')
-              });
-              result = joi.validate(options, schema);
-              error = result.error;
-
-              if (!error) {
-                _context3.next = 5;
-                break;
-              }
-
-              throw error;
-
-            case 5:
-              options = result.value;
-
-              _context3.next = 8;
+              _context3.next = 2;
               return _regenerator2.default.awrap(this.get(userId));
 
-            case 8:
+            case 2:
               data = _context3.sent;
 
               for (key in options) {
@@ -245,13 +237,23 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
 
               data['id'] = userId;
 
-              _context3.next = 13;
+              result = joi.validate(data, _schemas.userSchema, { allowUnknown: true });
+
+              if (!result.error) {
+                _context3.next = 8;
+                break;
+              }
+
+              throw result.error;
+
+            case 8:
+              _context3.next = 10;
               return _regenerator2.default.awrap(this.create(data));
 
-            case 13:
+            case 10:
               return _context3.abrupt('return', data);
 
-            case 14:
+            case 11:
             case 'end':
               return _context3.stop();
           }
