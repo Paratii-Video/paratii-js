@@ -18,7 +18,7 @@ describe('paratii.core:', function () {
     assert.isOk(paratiiCore.vids)
   })
 
-  it('2migrateAccount should work', async function () {
+  it('migrateAccount should work', async function () {
     // migrate all assets from default account address to address23
     let id1 = searchVidsFixture.results[0].id || searchVidsFixture.results[0]._id
     let id2 = searchVidsFixture.results[1].id || searchVidsFixture.results[1]._id
@@ -26,12 +26,10 @@ describe('paratii.core:', function () {
     let result = await paratii.eth.tcr.checkEligiblityAndApply(id1, paratii.eth.web3.utils.toWei('5'))
     // result = await paratii.eth.tcr.apply(id1, paratii.eth.web3.utils.toWei('5'))
     assert.isOk(result, result)
-    await paratii.eth.users.create({id: address, name: 'Rosencrantz', email: 'someting@dot.com', ipfsData: 'xxx'})
+    await paratii.eth.users.create({id: address, name: 'Rosencrantz', ipfsData: 'xxx'})
     await paratii.eth.vids.create({id: id1, owner: address})
     await paratii.eth.vids.create({id: id2, owner: address})
     const originalUserRecord = await paratii.eth.users.get(address)
-    console.log(originalUserRecord)
-
     let oldBalance = await paratii.eth.balanceOf(address, 'PTI')
     assert.isOk(oldBalance.gt(0), oldBalance)
 
@@ -40,7 +38,6 @@ describe('paratii.core:', function () {
 
     // we should have a new account registered on
     const newUserRecord = await paratii.eth.users.get(address23)
-    console.log(newUserRecord)
     assert.equal(originalUserRecord.name, newUserRecord.name)
 
     // now the owner of the videos (on the contract) should be address23

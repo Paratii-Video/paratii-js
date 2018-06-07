@@ -15,13 +15,11 @@ describe('paratii.eth.users: :', function () {
     let userData = {
       id: userId,
       name: 'Humbert Humbert',
-      email: 'humbert@humbert.ru',
       ipfsData: 'some-hash'
     }
+
     let result = await paratii.eth.users.create(userData)
-
     assert.equal(result, userId)
-
     user = await paratii.eth.users.get(userId)
     assert.deepEqual(user, userData)
 
@@ -35,7 +33,7 @@ describe('paratii.eth.users: :', function () {
     assert.equal(user.ipfsData, '')
   })
 
-  it.skip('missing or wrong arguments in users.create() should trhow meaningful errors', async function () {
+  it.skip('missing or wrong arguments in users.create() should throw meaningful errors', async function () {
     // let result = await paratii.eth.users.create({
     //   id: userId,
     //   owner: address1

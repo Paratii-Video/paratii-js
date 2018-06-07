@@ -1,6 +1,19 @@
 const joi = require('joi')
 
 /**
+  * @typedef {Array} ethUserSchema
+  * @property {string=} id public address of the user
+  * @property {string=} email email of the user
+  * @property {string=} ipfsHash ipfsHash for extra data
+  * @property {string=} name nicename of the user
+ */
+const ethUserSchema = joi.object({
+  id: joi.string().default(null).required(),
+  name: joi.string().empty('').default(''),
+  ipfsData: joi.string().empty('').default('')
+}).default()
+
+/**
   * @typedef {Array} userSchema
   * @property {string=} id public address of the user
   * @property {string=} email email of the user
@@ -146,4 +159,4 @@ const videoSchema = joi.object({
   }).allow(null).default({})
 })
 
-export { accountSchema, ethSchema, ipfsSchema, dbSchema, videoSchema, userSchema }
+export { accountSchema, ethSchema, ipfsSchema, dbSchema, videoSchema, userSchema, ethUserSchema }

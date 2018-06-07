@@ -1,3 +1,4 @@
+import { ethUserSchema } from './schemas.js'
 const joi = require('joi')
 /**
  * The eth.user namespace contains functions to interact with the video registration on the blockchain.
@@ -18,35 +19,26 @@ export class ParatiiEthUsers {
     return this.eth.getContract('Users')
   }
   /**
-   * Creates a user
-   * @param  {Object}  options information about the user
-   * @param {string} options.id valid address
-   * @param {string} options.name name of the user
-   * @param {string} options.email email of the user
-   * @param {string} options.ipfsData ipfs hash
-   * @return {Promise<string>}         the id of the newly created user
-   * See {@link ParatiiCoreUsers#create}
+   * Register the data of this user.
+   * @param  {ethUserSchema}  options information about the user ( id, name ... )
+   * @return {Promise}         information about the user ( id, name, ... )
+   * @example await paratii.eth.users.create({
+   *  id: 'some-video-id',
+   *  name: 'some-nickname',
+   *  ipfsData: 'ipfsHash',
+   * })
    */
   async create (options) {
-    const schema = joi.object({
-      id: joi.string(),
-      name: joi.string().allow('').optional().default(''),
-      email: joi.string().allow('').optional().default(''),
-      ipfsData: joi.string()
-    })
-
     if (!this.eth.web3.utils.isAddress(options.id)) {
       let msg = `The "id" argument should be a valid address, not ${options.id}`
       throw Error(msg)
     }
-
-    const result = joi.validate(options, schema)
+    const result = joi.validate(options, ethUserSchema)
     const error = result.error
     if (error) throw error
     options = result.value
-
     let contract = await this.getRegistry()
-    await contract.methods.create(options.id, options.name, options.email, options.ipfsData).send()
+    await contract.methods.create(options.id, options.name, options.ipfsData).send()
     return options.id
   }
   /**
@@ -62,8 +54,7 @@ export class ParatiiEthUsers {
     let result = {
       id: userId,
       name: userInfo[0],
-      email: userInfo[1],
-      ipfsData: userInfo[2]
+      ipfsData: userInfo[1]
     }
     return result
   }
@@ -77,6 +68,9 @@ export class ParatiiEthUsers {
    */
   async update (userId, options) {
     options.id = userId
+    const result = joi.validate(options, ethUserSchema)
+    const error = result.error
+    if (error) throw error
     let data = await this.get(userId)
     for (let key in options) {
       data[key] = options[key]

@@ -107,7 +107,6 @@ export class ParatiiUsers {
     }
 
     data['id'] = userId
-    console.log(data)
 
     const result = joi.validate(data, userSchema, {allowUnknown: false})
     if (result.error) throw result.error
@@ -131,6 +130,7 @@ export class ParatiiUsers {
     const originalUserRecord = await paratii.eth.users.get(oldAccount)
     const newUserRecord = originalUserRecord
     newUserRecord.id = newAccount
+
     await paratii.eth.users.create(newUserRecord)
     if (vids) {
       for (let i = 0; i < vids.length; i++) {

@@ -226,25 +226,24 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
               }
 
               data['id'] = userId;
-              console.log(data);
 
               result = joi.validate(data, _schemas.userSchema, { allowUnknown: false });
 
               if (!result.error) {
-                _context3.next = 9;
+                _context3.next = 8;
                 break;
               }
 
               throw result.error;
 
-            case 9:
-              _context3.next = 11;
+            case 8:
+              _context3.next = 10;
               return _regenerator2.default.awrap(this.create(data));
 
-            case 11:
+            case 10:
               return _context3.abrupt('return', data);
 
-            case 12:
+            case 11:
             case 'end':
               return _context3.stop();
           }
@@ -283,6 +282,7 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
               newUserRecord = originalUserRecord;
 
               newUserRecord.id = newAccount;
+
               _context4.next = 13;
               return _regenerator2.default.awrap(paratii.eth.users.create(newUserRecord));
 

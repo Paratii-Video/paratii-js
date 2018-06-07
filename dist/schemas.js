@@ -6,6 +6,19 @@ Object.defineProperty(exports, "__esModule", {
 var joi = require('joi');
 
 /**
+  * @typedef {Array} ethUserSchema
+  * @property {string=} id public address of the user
+  * @property {string=} email email of the user
+  * @property {string=} ipfsHash ipfsHash for extra data
+  * @property {string=} name nicename of the user
+ */
+var ethUserSchema = joi.object({
+  id: joi.string().default(null).required(),
+  name: joi.string().empty('').default(''),
+  ipfsData: joi.string().empty('').default('')
+}).default();
+
+/**
   * @typedef {Array} userSchema
   * @property {string=} id public address of the user
   * @property {string=} email email of the user
@@ -148,3 +161,4 @@ exports.ipfsSchema = ipfsSchema;
 exports.dbSchema = dbSchema;
 exports.videoSchema = videoSchema;
 exports.userSchema = userSchema;
+exports.ethUserSchema = ethUserSchema;
