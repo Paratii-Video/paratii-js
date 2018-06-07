@@ -7326,9 +7326,9 @@ pako@~1.0.5:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.6.tgz#0101211baa70c4bca4a0f63f2206e97b7dfaf258"
 
-"paratii-contracts@github:Paratii-Video/paratii-contracts#b876d8dff960842eb77f5788104f29fcfdc21633":
+"paratii-contracts@github:Paratii-Video/paratii-contracts#f2b1f86acb602f0c9dd4ee159a5d8b77d848fb75":
   version "0.0.3"
-  resolved "https://codeload.github.com/Paratii-Video/paratii-contracts/tar.gz/b876d8dff960842eb77f5788104f29fcfdc21633"
+  resolved "https://codeload.github.com/Paratii-Video/paratii-contracts/tar.gz/f2b1f86acb602f0c9dd4ee159a5d8b77d848fb75"
   dependencies:
     async "^2.6.0"
     babel-cli "^6.26.0"

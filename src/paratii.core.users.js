@@ -1,3 +1,4 @@
+import { userSchema } from './schemas.js'
 const joi = require('joi')
 
 /**
@@ -18,27 +19,18 @@ export class ParatiiUsers {
     this.config = config
   }
   /**
-   * @typedef {Array} userSchema
-   * @property {string} id the Ethereum address of the user
-   * @property {string=} name
-   * @property {string=} email
-   */
-
-  /**
-   * Creates a user, fields id, name and email go to the smart contract Users, other fields are stored on IPFS.
-   * @param  {userSchema}  options information about the video ( id, name, email ... )
-   * @return {Promise}         the id of the newly created user
-   * @example let userData = {
-   *                    id: '0x12456....',
-   *                    name: 'Humbert Humbert',
-   *                    email: 'humbert@humbert.ru',
-   *                    ipfsData: 'some-hash'
-   *              }
-   *   let result = await paratii.eth.users.create(userData)
-   *  })
+   * Register the data of this user.
+   * @param  {userSchema}  options information about the user ( id, name, email ... )
+   * @return {Promise}         information about the user ( id, name, email ... )
+   * @example await paratii.core.users.create({
+   *  id: 'some-video-id',
+   *  name: 'some-nickname',
+   *  email: 'some@email.com',
+   * })
    */
   async create (options) {
-    // FIXME: do some joi validation here
+    const result = joi.validate(options, userSchema, {allowUnknown: false})
+    if (result.error) throw result.error
     const paratii = this.config.paratii
     let keysForBlockchain = ['id', 'name']
     let optionsKeys = Object.keys(options)
@@ -74,6 +66,8 @@ export class ParatiiUsers {
    *  })
    */
   async upsert (options) {
+    const result = joi.validate(options, userSchema, {allowUnknown: false})
+    if (result.error) throw result.error
     let data = null
     let userId = ''
     if (options.id) {
@@ -105,16 +99,6 @@ export class ParatiiUsers {
    * @example let updatedData = await paratii.users.update('some-user-id', {name: 'A new user name'})
    */
   async update (userId, options) {
-    const schema = joi.object({
-      name: joi.string().default(null).empty(''),
-      email: joi.string().default(null).empty('')
-    })
-
-    const result = joi.validate(options, schema)
-    const error = result.error
-    if (error) throw error
-    options = result.value
-
     let data = await this.get(userId)
     for (let key in options) {
       if (options[key] !== null) {
@@ -123,6 +107,9 @@ export class ParatiiUsers {
     }
 
     data['id'] = userId
+
+    const result = joi.validate(data, userSchema, {allowUnknown: false})
+    if (result.error) throw result.error
 
     await this.create(data)
 
@@ -143,6 +130,7 @@ export class ParatiiUsers {
     const originalUserRecord = await paratii.eth.users.get(oldAccount)
     const newUserRecord = originalUserRecord
     newUserRecord.id = newAccount
+
     await paratii.eth.users.create(newUserRecord)
     if (vids) {
       for (let i = 0; i < vids.length; i++) {

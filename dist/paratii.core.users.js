@@ -21,6 +21,8 @@ var _createClass2 = require('babel-runtime/helpers/createClass');
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
+var _schemas = require('./schemas.js');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var joi = require('joi');
@@ -46,36 +48,35 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
     this.config = config;
   }
   /**
-   * @typedef {Array} userSchema
-   * @property {string} id the Ethereum address of the user
-   * @property {string=} name
-   * @property {string=} email
-   */
-
-  /**
-   * Creates a user, fields id, name and email go to the smart contract Users, other fields are stored on IPFS.
-   * @param  {userSchema}  options information about the video ( id, name, email ... )
-   * @return {Promise}         the id of the newly created user
-   * @example let userData = {
-   *                    id: '0x12456....',
-   *                    name: 'Humbert Humbert',
-   *                    email: 'humbert@humbert.ru',
-   *                    ipfsData: 'some-hash'
-   *              }
-   *   let result = await paratii.eth.users.create(userData)
-   *  })
+   * Register the data of this user.
+   * @param  {userSchema}  options information about the user ( id, name, email ... )
+   * @return {Promise}         information about the user ( id, name, email ... )
+   * @example await paratii.core.users.create({
+   *  id: 'some-video-id',
+   *  name: 'some-nickname',
+   *  email: 'some@email.com',
+   * })
    */
 
 
   (0, _createClass3.default)(ParatiiUsers, [{
     key: 'create',
     value: function create(options) {
-      var paratii, keysForBlockchain, optionsKeys, optionsBlockchain, optionsIpfs, hash;
+      var result, paratii, keysForBlockchain, optionsKeys, optionsBlockchain, optionsIpfs, hash;
       return _regenerator2.default.async(function create$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              // FIXME: do some joi validation here
+              result = joi.validate(options, _schemas.userSchema, { allowUnknown: false });
+
+              if (!result.error) {
+                _context.next = 3;
+                break;
+              }
+
+              throw result.error;
+
+            case 3:
               paratii = this.config.paratii;
               keysForBlockchain = ['id', 'name'];
               optionsKeys = (0, _keys2.default)(options);
@@ -89,27 +90,27 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
                   optionsIpfs[key] = options[key];
                 }
               });
-              _context.next = 8;
+              _context.next = 11;
               return _regenerator2.default.awrap(paratii.ipfs.local.addJSON(optionsIpfs));
 
-            case 8:
+            case 11:
               hash = _context.sent;
 
               optionsBlockchain['ipfsData'] = hash;
               // FIXME: add error handling if call to db fails.
 
               if (!(options.email !== undefined)) {
-                _context.next = 13;
+                _context.next = 16;
                 break;
               }
 
-              _context.next = 13;
+              _context.next = 16;
               return _regenerator2.default.awrap(paratii.db.users.setEmail(options.id, options.email));
 
-            case 13:
+            case 16:
               return _context.abrupt('return', paratii.eth.users.create(optionsBlockchain));
 
-            case 14:
+            case 17:
             case 'end':
               return _context.stop();
           }
@@ -134,39 +135,49 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
   }, {
     key: 'upsert',
     value: function upsert(options) {
-      var data, userId;
+      var result, data, userId;
       return _regenerator2.default.async(function upsert$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
+              result = joi.validate(options, _schemas.userSchema, { allowUnknown: false });
+
+              if (!result.error) {
+                _context2.next = 3;
+                break;
+              }
+
+              throw result.error;
+
+            case 3:
               data = null;
               userId = '';
 
               if (!options.id) {
-                _context2.next = 7;
+                _context2.next = 10;
                 break;
               }
 
               userId = options.id;
-              _context2.next = 6;
+              _context2.next = 9;
               return _regenerator2.default.awrap(this.get(userId));
 
-            case 6:
+            case 9:
               data = _context2.sent;
 
-            case 7:
+            case 10:
               if (data) {
-                _context2.next = 11;
+                _context2.next = 14;
                 break;
               }
 
               return _context2.abrupt('return', this.create(options));
 
-            case 11:
+            case 14:
               delete options.id;
               return _context2.abrupt('return', this.update(userId, options, data));
 
-            case 13:
+            case 16:
             case 'end':
               return _context2.stop();
           }
@@ -197,32 +208,15 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
   }, {
     key: 'update',
     value: function update(userId, options) {
-      var schema, result, error, data, key;
+      var data, key, result;
       return _regenerator2.default.async(function update$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              schema = joi.object({
-                name: joi.string().default(null).empty(''),
-                email: joi.string().default(null).empty('')
-              });
-              result = joi.validate(options, schema);
-              error = result.error;
-
-              if (!error) {
-                _context3.next = 5;
-                break;
-              }
-
-              throw error;
-
-            case 5:
-              options = result.value;
-
-              _context3.next = 8;
+              _context3.next = 2;
               return _regenerator2.default.awrap(this.get(userId));
 
-            case 8:
+            case 2:
               data = _context3.sent;
 
               for (key in options) {
@@ -233,13 +227,23 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
 
               data['id'] = userId;
 
-              _context3.next = 13;
+              result = joi.validate(data, _schemas.userSchema, { allowUnknown: false });
+
+              if (!result.error) {
+                _context3.next = 8;
+                break;
+              }
+
+              throw result.error;
+
+            case 8:
+              _context3.next = 10;
               return _regenerator2.default.awrap(this.create(data));
 
-            case 13:
+            case 10:
               return _context3.abrupt('return', data);
 
-            case 14:
+            case 11:
             case 'end':
               return _context3.stop();
           }
@@ -278,6 +282,7 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
               newUserRecord = originalUserRecord;
 
               newUserRecord.id = newAccount;
+
               _context4.next = 13;
               return _regenerator2.default.awrap(paratii.eth.users.create(newUserRecord));
 

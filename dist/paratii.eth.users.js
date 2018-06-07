@@ -17,6 +17,8 @@ var _createClass2 = require('babel-runtime/helpers/createClass');
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
+var _schemas = require('./schemas.js');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var joi = require('joi');
@@ -57,65 +59,57 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
       }, null, this);
     }
     /**
-     * Creates a user
-     * @param  {Object}  options information about the user
-     * @param {string} options.id valid address
-     * @param {string} options.name name of the user
-     * @param {string} options.email email of the user
-     * @param {string} options.ipfsData ipfs hash
-     * @return {Promise<string>}         the id of the newly created user
-     * See {@link ParatiiCoreUsers#create}
+     * Register the data of this user.
+     * @param  {ethUserSchema}  options information about the user ( id, name ... )
+     * @return {Promise}         information about the user ( id, name, ... )
+     * @example await paratii.eth.users.create({
+     *  id: 'some-video-id',
+     *  name: 'some-nickname',
+     *  ipfsData: 'ipfsHash',
+     * })
      */
 
   }, {
     key: 'create',
     value: function create(options) {
-      var schema, msg, result, error, contract;
+      var msg, result, error, contract;
       return _regenerator2.default.async(function create$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              schema = joi.object({
-                id: joi.string(),
-                name: joi.string().allow('').optional().default(''),
-                email: joi.string().allow('').optional().default(''),
-                ipfsData: joi.string()
-              });
-
               if (this.eth.web3.utils.isAddress(options.id)) {
-                _context2.next = 4;
+                _context2.next = 3;
                 break;
               }
 
               msg = 'The "id" argument should be a valid address, not ' + options.id;
               throw Error(msg);
 
-            case 4:
-              result = joi.validate(options, schema);
+            case 3:
+              result = joi.validate(options, _schemas.ethUserSchema);
               error = result.error;
 
               if (!error) {
-                _context2.next = 8;
+                _context2.next = 7;
                 break;
               }
 
               throw error;
 
-            case 8:
+            case 7:
               options = result.value;
-
-              _context2.next = 11;
+              _context2.next = 10;
               return _regenerator2.default.awrap(this.getRegistry());
 
-            case 11:
+            case 10:
               contract = _context2.sent;
-              _context2.next = 14;
-              return _regenerator2.default.awrap(contract.methods.create(options.id, options.name, options.email, options.ipfsData).send());
+              _context2.next = 13;
+              return _regenerator2.default.awrap(contract.methods.create(options.id, options.name, options.ipfsData).send());
 
-            case 14:
+            case 13:
               return _context2.abrupt('return', options.id);
 
-            case 15:
+            case 14:
             case 'end':
               return _context2.stop();
           }
@@ -151,8 +145,7 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
               result = {
                 id: userId,
                 name: userInfo[0],
-                email: userInfo[1],
-                ipfsData: userInfo[2]
+                ipfsData: userInfo[1]
               };
               return _context3.abrupt('return', result);
 
@@ -175,28 +168,39 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
   }, {
     key: 'update',
     value: function update(userId, options) {
-      var data, key;
+      var result, error, data, key;
       return _regenerator2.default.async(function update$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
               options.id = userId;
-              _context4.next = 3;
+              result = joi.validate(options, _schemas.ethUserSchema);
+              error = result.error;
+
+              if (!error) {
+                _context4.next = 5;
+                break;
+              }
+
+              throw error;
+
+            case 5:
+              _context4.next = 7;
               return _regenerator2.default.awrap(this.get(userId));
 
-            case 3:
+            case 7:
               data = _context4.sent;
 
               for (key in options) {
                 data[key] = options[key];
               }
-              _context4.next = 7;
+              _context4.next = 11;
               return _regenerator2.default.awrap(this.create(data));
 
-            case 7:
+            case 11:
               return _context4.abrupt('return', data);
 
-            case 8:
+            case 12:
             case 'end':
               return _context4.stop();
           }

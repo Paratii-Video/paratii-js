@@ -187,7 +187,6 @@ describe('paratii.eth.events API: :', function () {
     let userData = {
       id: userId,
       name: 'Humbert Humbert',
-      email: 'humbert@humbert.ru',
       ipfsData: 'some-hash'
     }
 
@@ -207,7 +206,6 @@ describe('paratii.eth.events API: :', function () {
     let userData = {
       id: userId,
       name: 'Humbert Humbert',
-      email: 'humbert@humbert.ru',
       ipfsData: 'some-hash'
     }
 
