@@ -10,6 +10,8 @@ const utils = require('./utils.js')
 
 // Needed to check the DB provider and transcoder drop url status code
 const request = require('request')
+// Needed to open a socket connection
+var net = require('net')
 
 /**
  * Paratii library main object
@@ -136,6 +138,35 @@ class Paratii extends ParatiiCore {
     })
   }
   /**
+   * Checks the bootstrap dns nodes
+   * @param {string} baseUrl url of the web socket server
+   * @param {Number} port the port at which the web socket is listening to
+   * @return {Promise} that resolves in a boolean
+   */
+  async checkBootstrapWebSocketDNS (baseUrl, port) {
+    return new Promise(resolve => {
+      var client = new net.Socket()
+      client.setTimeout(30000) // Arbitrary 30 secondes to be able to reach DNS server
+      client.connect(port, baseUrl, () => {
+        client.end()
+        resolve(true)
+      })
+      client.on('error', (err) => {
+        if (err) {
+          client.end()
+          resolve(false)
+        } else {
+          client.end()
+          resolve(false)
+        }
+      })
+      client.on('timeout', () => {
+        client.end()
+        resolve(false)
+      })
+    })
+  }
+  /**
    * Get some diagnostic info about the state of the system
    * @return {Promise} that resolves in an array of strings with diagnostic info
    * @example let diagnosticInfo = await paratii.diagnose()
@@ -221,6 +252,17 @@ class Paratii extends ParatiiCore {
       isOk = false
       log('Can\'t reach the transcoder.')
     }
+    // Check if the default transcoder is responding
+    log('Check if the default transcoder is responding.')
+    let splitDefaultTranscoder = this.config.ipfs.defaultTranscoder.split('/')
+    let defaultTranscoder = await this.checkBootstrapWebSocketDNS(splitDefaultTranscoder[2], splitDefaultTranscoder[4])
+    if (defaultTranscoder === true) {
+      log('Able to reach the default transcoder dns.')
+    } else {
+      isOk = false
+      log('Can\'t reach the default transcoder dns.')
+    }
+    // Todo Optimize the calls by running all the awaits at the same time
     // Recap
     if (isOk) {
       log('---- everything seems fine -----')
