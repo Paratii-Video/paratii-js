@@ -21,6 +21,8 @@ var _createClass2 = require('babel-runtime/helpers/createClass');
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
+var _schemas = require('./schemas.js');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var joi = require('joi');
@@ -70,12 +72,22 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
   (0, _createClass3.default)(ParatiiUsers, [{
     key: 'create',
     value: function create(options) {
-      var paratii, keysForBlockchain, optionsKeys, optionsBlockchain, optionsIpfs, hash;
+      var result, paratii, keysForBlockchain, optionsKeys, optionsBlockchain, optionsIpfs, hash;
       return _regenerator2.default.async(function create$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               // FIXME: do some joi validation here
+              result = joi.validate(options, _schemas.userSchema, { allowUnknown: true });
+
+              if (!result.error) {
+                _context.next = 3;
+                break;
+              }
+
+              throw result.error;
+
+            case 3:
               paratii = this.config.paratii;
               keysForBlockchain = ['id', 'name'];
               optionsKeys = (0, _keys2.default)(options);
@@ -89,27 +101,27 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
                   optionsIpfs[key] = options[key];
                 }
               });
-              _context.next = 8;
+              _context.next = 11;
               return _regenerator2.default.awrap(paratii.ipfs.local.addJSON(optionsIpfs));
 
-            case 8:
+            case 11:
               hash = _context.sent;
 
               optionsBlockchain['ipfsData'] = hash;
               // FIXME: add error handling if call to db fails.
 
               if (!(options.email !== undefined)) {
-                _context.next = 13;
+                _context.next = 16;
                 break;
               }
 
-              _context.next = 13;
+              _context.next = 16;
               return _regenerator2.default.awrap(paratii.db.users.setEmail(options.id, options.email));
 
-            case 13:
+            case 16:
               return _context.abrupt('return', paratii.eth.users.create(optionsBlockchain));
 
-            case 14:
+            case 17:
             case 'end':
               return _context.stop();
           }

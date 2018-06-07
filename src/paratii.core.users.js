@@ -1,3 +1,4 @@
+import { userSchema } from './schemas.js'
 const joi = require('joi')
 
 /**
@@ -39,6 +40,8 @@ export class ParatiiUsers {
    */
   async create (options) {
     // FIXME: do some joi validation here
+    const result = joi.validate(options, userSchema, {allowUnknown: true})
+    if (result.error) throw result.error
     const paratii = this.config.paratii
     let keysForBlockchain = ['id', 'name']
     let optionsKeys = Object.keys(options)
