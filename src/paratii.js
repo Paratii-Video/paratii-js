@@ -255,12 +255,22 @@ class Paratii extends ParatiiCore {
     // Check if the default transcoder is responding
     log('Check if the default transcoder is responding.')
     let splitDefaultTranscoder = this.config.ipfs.defaultTranscoder.split('/')
-    let defaultTranscoder = await this.checkBootstrapWebSocketDNS(splitDefaultTranscoder[2], splitDefaultTranscoder[4])
-    if (defaultTranscoder === true) {
+    let checkDefaultTranscoder = await this.checkBootstrapWebSocketDNS(splitDefaultTranscoder[2], splitDefaultTranscoder[4])
+    if (checkDefaultTranscoder === true) {
       log('Able to reach the default transcoder dns.')
     } else {
       isOk = false
       log('Can\'t reach the default transcoder dns.')
+    }
+    // Check if the remote IPFS node is responding
+    log('Check if the remote IPFS node is responding.')
+    let splitRemoteIPFSNode = this.config.ipfs.remoteIPFSNode.split('/')
+    let checkRemoteIPFSNode = await this.checkBootstrapWebSocketDNS(splitRemoteIPFSNode[2], splitRemoteIPFSNode[4])
+    if (checkRemoteIPFSNode === true) {
+      log('Able to reach the remote IPFS node dns.')
+    } else {
+      isOk = false
+      log('Can\'t reach the remote IPFS node dns.')
     }
     // Todo Optimize the calls by running all the awaits at the same time
     // Recap

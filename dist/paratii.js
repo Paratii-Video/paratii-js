@@ -290,7 +290,7 @@ var Paratii = function (_ParatiiCore) {
   }, {
     key: 'diagnose',
     value: function diagnose() {
-      var msg, address, msgs, isOk, log, registry, name, pEth, ipfsState, dbProviderStatus, transcoderDropUrlStatus, splitDefaultTranscoder, defaultTranscoder;
+      var msg, address, msgs, isOk, log, registry, name, pEth, ipfsState, dbProviderStatus, transcoderDropUrlStatus, splitDefaultTranscoder, checkDefaultTranscoder, splitRemoteIPFSNode, checkRemoteIPFSNode;
       return _regenerator2.default.async(function diagnose$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
@@ -443,13 +443,28 @@ var Paratii = function (_ParatiiCore) {
               return _regenerator2.default.awrap(this.checkBootstrapWebSocketDNS(splitDefaultTranscoder[2], splitDefaultTranscoder[4]));
 
             case 59:
-              defaultTranscoder = _context5.sent;
+              checkDefaultTranscoder = _context5.sent;
 
-              if (defaultTranscoder === true) {
+              if (checkDefaultTranscoder === true) {
                 log('Able to reach the default transcoder dns.');
               } else {
                 isOk = false;
                 log('Can\'t reach the default transcoder dns.');
+              }
+              // Check if the remote IPFS node is responding
+              log('Check if the remote IPFS node is responding.');
+              splitRemoteIPFSNode = this.config.ipfs.remoteIPFSNode.split('/');
+              _context5.next = 65;
+              return _regenerator2.default.awrap(this.checkBootstrapWebSocketDNS(splitRemoteIPFSNode[2], splitRemoteIPFSNode[4]));
+
+            case 65:
+              checkRemoteIPFSNode = _context5.sent;
+
+              if (checkRemoteIPFSNode === true) {
+                log('Able to reach the remote IPFS node dns.');
+              } else {
+                isOk = false;
+                log('Can\'t reach the remote IPFS node dns.');
               }
               // Todo Optimize the calls by running all the awaits at the same time
               // Recap
@@ -460,7 +475,7 @@ var Paratii = function (_ParatiiCore) {
               }
               return _context5.abrupt('return', msgs);
 
-            case 63:
+            case 69:
             case 'end':
               return _context5.stop();
           }
