@@ -5,6 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ParatiiEth = undefined;
 
+var _promise = require('babel-runtime/core-js/promise');
+
+var _promise2 = _interopRequireDefault(_promise);
+
 var _keys = require('babel-runtime/core-js/object/keys');
 
 var _keys2 = _interopRequireDefault(_keys);
@@ -1373,6 +1377,35 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 6:
             case 'end':
               return _context12.stop();
+          }
+        }
+      }, null, this);
+    }
+    /**
+     * Pings the provider to which the web3 is configured to connect to (see the set up in paratii.eth.js constructor)
+     * @return {Promise} that resolves in a boolean
+     */
+
+  }, {
+    key: 'checkEth',
+    value: function checkEth() {
+      var _this = this;
+
+      return _regenerator2.default.async(function checkEth$(_context13) {
+        while (1) {
+          switch (_context13.prev = _context13.next) {
+            case 0:
+              return _context13.abrupt('return', new _promise2.default(function (resolve) {
+                _this.web3.eth.net.isListening().then(function () {
+                  resolve(true);
+                }).catch(function (e) {
+                  resolve(false);
+                });
+              }));
+
+            case 1:
+            case 'end':
+              return _context13.stop();
           }
         }
       }, null, this);

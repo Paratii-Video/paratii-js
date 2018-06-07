@@ -826,4 +826,19 @@ export class ParatiiEth {
       return this._transferPTI(beneficiary, amount)
     }
   }
+  /**
+   * Pings the provider to which the web3 is configured to connect to (see the set up in paratii.eth.js constructor)
+   * @return {Promise} that resolves in a boolean
+   */
+  async checkEth () {
+    return new Promise(resolve => {
+      this.web3.eth.net.isListening()
+        .then(() => {
+          resolve(true)
+        })
+        .catch(e => {
+          resolve(false)
+        })
+    })
+  }
 }

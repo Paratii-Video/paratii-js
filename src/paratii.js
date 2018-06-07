@@ -86,21 +86,6 @@ class Paratii extends ParatiiCore {
     return this.eth.getAccount()
   }
   /**
-   * Pings the provider to which the web3 is configured to connect to (see the set up in paratii.eth.js constructor)
-   * @return {Promise} that resolves in a boolean
-   */
-  async checkEth () {
-    return new Promise(resolve => {
-      this.eth.web3.eth.net.isListening()
-        .then(() => {
-          resolve(true)
-        })
-        .catch(e => {
-          resolve(false)
-        })
-    })
-  }
-  /**
    * Checks if the IPFS local node is running
    * @return {Promise} that resolves in a boolean
    */
@@ -218,7 +203,7 @@ class Paratii extends ParatiiCore {
     }
     // Pinging Eth provider
     log('Pinging the eth provider')
-    let pEth = await this.checkEth()
+    let pEth = await this.eth.checkEth()
     if (pEth === true) {
       log('The eth provider responds correctly.')
     } else {
