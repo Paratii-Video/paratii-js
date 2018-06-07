@@ -8,9 +8,6 @@ import { ipfsSchema, ethSchema, accountSchema, dbSchema } from './schemas.js'
 const joi = require('joi')
 const utils = require('./utils.js')
 
-// Needed to open a socket connection
-var net = require('net')
-
 /**
  * Paratii library main object
  * The Paratii object serves as the general entry point for interacting with the family of Paratii
@@ -82,35 +79,6 @@ class Paratii extends ParatiiCore {
    */
   getAccount () {
     return this.eth.getAccount()
-  }
-  /**
-   * Checks the bootstrap dns nodes
-   * @param {string} baseUrl url of the web socket server
-   * @param {Number} port the port at which the web socket is listening to
-   * @return {Promise} that resolves in a boolean
-   */
-  async checkBootstrapWebSocketDNS (baseUrl, port) {
-    return new Promise(resolve => {
-      var client = new net.Socket()
-      client.setTimeout(30000) // Arbitrary 30 secondes to be able to reach DNS server
-      client.connect(port, baseUrl, () => {
-        client.end()
-        resolve(true)
-      })
-      client.on('error', (err) => {
-        if (err) {
-          client.end()
-          resolve(false)
-        } else {
-          client.end()
-          resolve(false)
-        }
-      })
-      client.on('timeout', () => {
-        client.end()
-        resolve(false)
-      })
-    })
   }
   /**
    * Get some diagnostic info about the state of the system
@@ -209,9 +177,8 @@ class Paratii extends ParatiiCore {
     }
     // Check if the remote IPFS node is responding
     log('Check if the remote IPFS node is responding.')
-    let splitRemoteIPFSNode = this.config.ipfs.remoteIPFSNode.split('/')
-    let checkRemoteIPFSNode = await this.checkBootstrapWebSocketDNS(splitRemoteIPFSNode[2], splitRemoteIPFSNode[4])
-    if (checkRemoteIPFSNode === true) {
+    let remoteIPFSNodeCheck = await this.ipfs.remote.checkRemoteIPFSNode()
+    if (remoteIPFSNodeCheck === true) {
       log('Able to reach the remote IPFS node dns.')
     } else {
       isOk = false

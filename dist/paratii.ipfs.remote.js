@@ -454,6 +454,34 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
         }
       }, null, this);
     }
+    /**
+     * Checks the remote IPFS node
+     * @return {Promise} that resolves in a boolean
+     */
+
+  }, {
+    key: 'checkRemoteIPFSNode',
+    value: function checkRemoteIPFSNode() {
+      var splitRemoteIPFSNode, remoteIPFSNodeCheck;
+      return _regenerator2.default.async(function checkRemoteIPFSNode$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              splitRemoteIPFSNode = this.config.ipfs.remoteIPFSNode.split('/');
+              _context4.next = 3;
+              return _regenerator2.default.awrap(this.checkBootstrapWebSocketDNS(splitRemoteIPFSNode[2], splitRemoteIPFSNode[4]));
+
+            case 3:
+              remoteIPFSNodeCheck = _context4.sent;
+              return _context4.abrupt('return', remoteIPFSNodeCheck);
+
+            case 5:
+            case 'end':
+              return _context4.stop();
+          }
+        }
+      }, null, this);
+    }
   }]);
   return ParatiiIPFSRemote;
 }(_events.EventEmitter);

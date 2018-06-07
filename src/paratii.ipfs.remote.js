@@ -334,4 +334,13 @@ export class ParatiiIPFSRemote extends EventEmitter {
     let defaultTranscoderCheck = await this.checkBootstrapWebSocketDNS(splitDefaultTranscoder[2], splitDefaultTranscoder[4])
     return defaultTranscoderCheck
   }
+  /**
+   * Checks the remote IPFS node
+   * @return {Promise} that resolves in a boolean
+   */
+  async checkRemoteIPFSNode () {
+    let splitRemoteIPFSNode = this.config.ipfs.remoteIPFSNode.split('/')
+    let remoteIPFSNodeCheck = await this.checkBootstrapWebSocketDNS(splitRemoteIPFSNode[2], splitRemoteIPFSNode[4])
+    return remoteIPFSNodeCheck
+  }
 }
