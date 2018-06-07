@@ -148,11 +148,11 @@ var Paratii = function (_ParatiiCore) {
      */
 
   }, {
-    key: 'pingEth',
-    value: function pingEth() {
+    key: 'checkEth',
+    value: function checkEth() {
       var _this2 = this;
 
-      return _regenerator2.default.async(function pingEth$(_context) {
+      return _regenerator2.default.async(function checkEth$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
@@ -211,9 +211,9 @@ var Paratii = function (_ParatiiCore) {
      */
 
   }, {
-    key: 'requestStatusCode',
-    value: function requestStatusCode(linkToCheck) {
-      return _regenerator2.default.async(function requestStatusCode$(_context3) {
+    key: 'checkLinkStatus',
+    value: function checkLinkStatus(linkToCheck) {
+      return _regenerator2.default.async(function checkLinkStatus$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
@@ -383,7 +383,7 @@ var Paratii = function (_ParatiiCore) {
               // Pinging Eth provider
               log('Pinging the eth provider');
               _context5.next = 38;
-              return _regenerator2.default.awrap(this.pingEth());
+              return _regenerator2.default.awrap(this.checkEth());
 
             case 38:
               pEth = _context5.sent;
@@ -411,7 +411,7 @@ var Paratii = function (_ParatiiCore) {
               // Check if DB provider is up
               log('Check if the DB provider is up.');
               _context5.next = 48;
-              return _regenerator2.default.awrap(this.requestStatusCode(this.config.db.provider));
+              return _regenerator2.default.awrap(this.checkLinkStatus(this.config.db.provider));
 
             case 48:
               dbProviderStatus = _context5.sent;
@@ -425,7 +425,7 @@ var Paratii = function (_ParatiiCore) {
               // Check if transcoder drop url is responding
               log('Check if transcoder drop url is responding.');
               _context5.next = 53;
-              return _regenerator2.default.awrap(this.requestStatusCode(this.config.ipfs.transcoderDropUrl));
+              return _regenerator2.default.awrap(this.checkLinkStatus(this.config.ipfs.transcoderDropUrl));
 
             case 53:
               transcoderDropUrlStatus = _context5.sent;

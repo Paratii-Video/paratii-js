@@ -89,7 +89,7 @@ class Paratii extends ParatiiCore {
    * Pings the provider to which the web3 is configured to connect to (see the set up in paratii.eth.js constructor)
    * @return {Promise} that resolves in a boolean
    */
-  async pingEth () {
+  async checkEth () {
     return new Promise(resolve => {
       this.eth.web3.eth.net.isListening()
         .then(() => {
@@ -124,7 +124,7 @@ class Paratii extends ParatiiCore {
    * @param {string} linkToCheck
    * @return {Promise} that resolves in a boolean
    */
-  async requestStatusCode (linkToCheck) {
+  async checkLinkStatus (linkToCheck) {
     return new Promise(resolve => {
       request(linkToCheck, function (error, response) {
         if (error) {
@@ -218,7 +218,7 @@ class Paratii extends ParatiiCore {
     }
     // Pinging Eth provider
     log('Pinging the eth provider')
-    let pEth = await this.pingEth()
+    let pEth = await this.checkEth()
     if (pEth === true) {
       log('The eth provider responds correctly.')
     } else {
@@ -236,7 +236,7 @@ class Paratii extends ParatiiCore {
     }
     // Check if DB provider is up
     log('Check if the DB provider is up.')
-    let dbProviderStatus = await this.requestStatusCode(this.config.db.provider)
+    let dbProviderStatus = await this.checkLinkStatus(this.config.db.provider)
     if (dbProviderStatus === true) {
       log('Able to reach the DB provder.')
     } else {
@@ -245,7 +245,7 @@ class Paratii extends ParatiiCore {
     }
     // Check if transcoder drop url is responding
     log('Check if transcoder drop url is responding.')
-    let transcoderDropUrlStatus = await this.requestStatusCode(this.config.ipfs.transcoderDropUrl)
+    let transcoderDropUrlStatus = await this.checkLinkStatus(this.config.ipfs.transcoderDropUrl)
     if (transcoderDropUrlStatus === true) {
       log('Able to reach the transcoder.')
     } else {
