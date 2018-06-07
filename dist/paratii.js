@@ -245,7 +245,7 @@ var Paratii = function (_ParatiiCore) {
   }, {
     key: 'diagnose',
     value: function diagnose() {
-      var msg, address, msgs, isOk, log, registry, name, pEth, ipfsState, dbProviderStatus;
+      var msg, address, msgs, isOk, log, registry, name, pEth, ipfsState, dbProviderStatus, transcoderDropUrlStatus;
       return _regenerator2.default.async(function diagnose$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
@@ -377,6 +377,20 @@ var Paratii = function (_ParatiiCore) {
                 isOk = false;
                 log('Can\'t reach the DB provider.');
               }
+              // Check if transcoder drop url is responding
+              log('Check if transcoder drop url is responding.');
+              _context4.next = 53;
+              return _regenerator2.default.awrap(this.requestStatusCode(this.config.ipfs.transcoderDropUrl));
+
+            case 53:
+              transcoderDropUrlStatus = _context4.sent;
+
+              if (transcoderDropUrlStatus === true) {
+                log('Able to reach the transcoder.');
+              } else {
+                isOk = false;
+                log('Can\'t reach the transcoder.');
+              }
               // Recap
               if (isOk) {
                 log('---- everything seems fine -----');
@@ -385,7 +399,7 @@ var Paratii = function (_ParatiiCore) {
               }
               return _context4.abrupt('return', msgs);
 
-            case 52:
+            case 57:
             case 'end':
               return _context4.stop();
           }

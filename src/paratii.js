@@ -212,6 +212,15 @@ class Paratii extends ParatiiCore {
       isOk = false
       log('Can\'t reach the DB provider.')
     }
+    // Check if transcoder drop url is responding
+    log('Check if transcoder drop url is responding.')
+    let transcoderDropUrlStatus = await this.requestStatusCode(this.config.ipfs.transcoderDropUrl)
+    if (transcoderDropUrlStatus === true) {
+      log('Able to reach the transcoder.')
+    } else {
+      isOk = false
+      log('Can\'t reach the transcoder.')
+    }
     // Recap
     if (isOk) {
       log('---- everything seems fine -----')
