@@ -6,6 +6,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ParatiiIPFSRemote = undefined;
 
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
 var _promise = require('babel-runtime/core-js/promise');
 
 var _promise2 = _interopRequireDefault(_promise);
@@ -42,6 +46,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Resumable = require('resumablejs');
 var Multiaddr = require('multiaddr');
+
+// Needed to check the transcoder drop url status code
+var request = require('request');
 
 /**
  * Contains functions to interact with the remote IPFS node
@@ -339,6 +346,40 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
             _this4._ipfs.log('unknown command : ', commandStr);
         }
       };
+    }
+    /**
+     * Requests the transcoderDropUrl to see if it's up (Easily adds a dozen seconds to check the status)
+     * @return {Promise} that resolves in a boolean
+     */
+
+  }, {
+    key: 'checkTranscoderDropUrl',
+    value: function checkTranscoderDropUrl() {
+      var _this5 = this;
+
+      return _regenerator2.default.async(function checkTranscoderDropUrl$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              return _context.abrupt('return', new _promise2.default(function (resolve) {
+                request(_this5.config.ipfs.transcoderDropUrl, function (error, response) {
+                  if (error) {
+                    resolve(false);
+                  } else if (response && response.statusCode === 200) {
+                    // We suppose for now that only 200 is the right status code (see: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
+                    resolve(true);
+                  } else {
+                    resolve(false);
+                  }
+                });
+              }));
+
+            case 1:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, null, this);
     }
   }]);
   return ParatiiIPFSRemote;

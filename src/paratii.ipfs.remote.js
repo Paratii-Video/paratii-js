@@ -6,6 +6,9 @@ import joi from 'joi'
 const Resumable = require('resumablejs')
 const Multiaddr = require('multiaddr')
 
+// Needed to check the transcoder drop url status code
+const request = require('request')
+
 /**
  * Contains functions to interact with the remote IPFS node
  * @extends EventEmitter
@@ -273,5 +276,22 @@ export class ParatiiIPFSRemote extends EventEmitter {
           this._ipfs.log('unknown command : ', commandStr)
       }
     }
+  }
+  /**
+   * Requests the transcoderDropUrl to see if it's up (Easily adds a dozen seconds to check the status)
+   * @return {Promise} that resolves in a boolean
+   */
+  async checkTranscoderDropUrl () {
+    return new Promise(resolve => {
+      request(this.config.ipfs.transcoderDropUrl, function (error, response) {
+        if (error) {
+          resolve(false)
+        } else if (response && response.statusCode === 200) { // We suppose for now that only 200 is the right status code (see: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
+          resolve(true)
+        } else {
+          resolve(false)
+        }
+      })
+    })
   }
 }

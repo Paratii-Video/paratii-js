@@ -8,8 +8,6 @@ import { ipfsSchema, ethSchema, accountSchema, dbSchema } from './schemas.js'
 const joi = require('joi')
 const utils = require('./utils.js')
 
-// Needed to check the DB provider and transcoder drop url status code
-const request = require('request')
 // Needed to open a socket connection
 var net = require('net')
 
@@ -84,24 +82,6 @@ class Paratii extends ParatiiCore {
    */
   getAccount () {
     return this.eth.getAccount()
-  }
-  /**
-   * Requests a link to see if it's up (Easily adds a dozen seconds to check the status)
-   * @param {string} linkToCheck
-   * @return {Promise} that resolves in a boolean
-   */
-  async checkLinkStatus (linkToCheck) {
-    return new Promise(resolve => {
-      request(linkToCheck, function (error, response) {
-        if (error) {
-          resolve(false)
-        } else if (response && response.statusCode === 200) { // We suppose for now that only 200 is the right status code (see: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
-          resolve(true)
-        } else {
-          resolve(false)
-        }
-      })
-    })
   }
   /**
    * Checks the bootstrap dns nodes
@@ -211,7 +191,7 @@ class Paratii extends ParatiiCore {
     }
     // Check if transcoder drop url is responding
     log('Check if transcoder drop url is responding.')
-    let transcoderDropUrlStatus = await this.checkLinkStatus(this.config.ipfs.transcoderDropUrl)
+    let transcoderDropUrlStatus = await this.ipfs.remote.checkTranscoderDropUrl()
     if (transcoderDropUrlStatus === true) {
       log('Able to reach the transcoder.')
     } else {
