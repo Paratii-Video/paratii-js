@@ -193,7 +193,7 @@ var Paratii = function (_ParatiiCore) {
   }, {
     key: 'diagnose',
     value: function diagnose() {
-      var msg, address, msgs, isOk, log, registry, name, pEth, ipfsState, dbProviderStatus, transcoderDropUrlStatus, splitDefaultTranscoder, checkDefaultTranscoder, splitRemoteIPFSNode, checkRemoteIPFSNode;
+      var msg, address, msgs, isOk, log, registry, name, pEth, ipfsState, dbProviderStatus, transcoderDropUrlStatus, defaultTranscoderCheck, splitRemoteIPFSNode, checkRemoteIPFSNode;
       return _regenerator2.default.async(function diagnose$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -341,14 +341,13 @@ var Paratii = function (_ParatiiCore) {
               }
               // Check if the default transcoder is responding
               log('Check if the default transcoder is responding.');
-              splitDefaultTranscoder = this.config.ipfs.defaultTranscoder.split('/');
-              _context2.next = 59;
-              return _regenerator2.default.awrap(this.checkBootstrapWebSocketDNS(splitDefaultTranscoder[2], splitDefaultTranscoder[4]));
+              _context2.next = 58;
+              return _regenerator2.default.awrap(this.ipfs.remote.checkDefaultTranscoder());
 
-            case 59:
-              checkDefaultTranscoder = _context2.sent;
+            case 58:
+              defaultTranscoderCheck = _context2.sent;
 
-              if (checkDefaultTranscoder === true) {
+              if (defaultTranscoderCheck === true) {
                 log('Able to reach the default transcoder dns.');
               } else {
                 isOk = false;
@@ -357,10 +356,10 @@ var Paratii = function (_ParatiiCore) {
               // Check if the remote IPFS node is responding
               log('Check if the remote IPFS node is responding.');
               splitRemoteIPFSNode = this.config.ipfs.remoteIPFSNode.split('/');
-              _context2.next = 65;
+              _context2.next = 64;
               return _regenerator2.default.awrap(this.checkBootstrapWebSocketDNS(splitRemoteIPFSNode[2], splitRemoteIPFSNode[4]));
 
-            case 65:
+            case 64:
               checkRemoteIPFSNode = _context2.sent;
 
               if (checkRemoteIPFSNode === true) {
@@ -378,7 +377,7 @@ var Paratii = function (_ParatiiCore) {
               }
               return _context2.abrupt('return', msgs);
 
-            case 69:
+            case 68:
             case 'end':
               return _context2.stop();
           }

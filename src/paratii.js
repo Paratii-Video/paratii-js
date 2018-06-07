@@ -200,9 +200,8 @@ class Paratii extends ParatiiCore {
     }
     // Check if the default transcoder is responding
     log('Check if the default transcoder is responding.')
-    let splitDefaultTranscoder = this.config.ipfs.defaultTranscoder.split('/')
-    let checkDefaultTranscoder = await this.checkBootstrapWebSocketDNS(splitDefaultTranscoder[2], splitDefaultTranscoder[4])
-    if (checkDefaultTranscoder === true) {
+    let defaultTranscoderCheck = await this.ipfs.remote.checkDefaultTranscoder()
+    if (defaultTranscoderCheck === true) {
       log('Able to reach the default transcoder dns.')
     } else {
       isOk = false

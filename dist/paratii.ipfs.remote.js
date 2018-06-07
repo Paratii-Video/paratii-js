@@ -49,6 +49,8 @@ var Multiaddr = require('multiaddr');
 
 // Needed to check the transcoder drop url status code
 var request = require('request');
+// Needed to open a socket connection
+var net = require('net');
 
 /**
  * Contains functions to interact with the remote IPFS node
@@ -377,6 +379,77 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
             case 1:
             case 'end':
               return _context.stop();
+          }
+        }
+      }, null, this);
+    }
+    /**
+     * Checks the bootstrap dns nodes
+     * @param {string} baseUrl url of the web socket server
+     * @param {Number} port the port at which the web socket is listening to
+     * @return {Promise} that resolves in a boolean
+     */
+
+  }, {
+    key: 'checkBootstrapWebSocketDNS',
+    value: function checkBootstrapWebSocketDNS(baseUrl, port) {
+      return _regenerator2.default.async(function checkBootstrapWebSocketDNS$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              return _context2.abrupt('return', new _promise2.default(function (resolve) {
+                var client = new net.Socket();
+                client.setTimeout(30000); // Arbitrary 30 secondes to be able to reach DNS server
+                client.connect(port, baseUrl, function () {
+                  client.end();
+                  resolve(true);
+                });
+                client.on('error', function (err) {
+                  if (err) {
+                    client.end();
+                    resolve(false);
+                  } else {
+                    client.end();
+                    resolve(false);
+                  }
+                });
+                client.on('timeout', function () {
+                  client.end();
+                  resolve(false);
+                });
+              }));
+
+            case 1:
+            case 'end':
+              return _context2.stop();
+          }
+        }
+      }, null, this);
+    }
+    /**
+     * Checks the default transcoder
+     * @return {Promise} that resolves in a boolean
+     */
+
+  }, {
+    key: 'checkDefaultTranscoder',
+    value: function checkDefaultTranscoder() {
+      var splitDefaultTranscoder, defaultTranscoderCheck;
+      return _regenerator2.default.async(function checkDefaultTranscoder$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              splitDefaultTranscoder = this.config.ipfs.defaultTranscoder.split('/');
+              _context3.next = 3;
+              return _regenerator2.default.awrap(this.checkBootstrapWebSocketDNS(splitDefaultTranscoder[2], splitDefaultTranscoder[4]));
+
+            case 3:
+              defaultTranscoderCheck = _context3.sent;
+              return _context3.abrupt('return', defaultTranscoderCheck);
+
+            case 5:
+            case 'end':
+              return _context3.stop();
           }
         }
       }, null, this);

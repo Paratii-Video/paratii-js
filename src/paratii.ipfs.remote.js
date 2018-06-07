@@ -8,6 +8,8 @@ const Multiaddr = require('multiaddr')
 
 // Needed to check the transcoder drop url status code
 const request = require('request')
+// Needed to open a socket connection
+var net = require('net')
 
 /**
  * Contains functions to interact with the remote IPFS node
@@ -293,5 +295,43 @@ export class ParatiiIPFSRemote extends EventEmitter {
         }
       })
     })
+  }
+  /**
+   * Checks the bootstrap dns nodes
+   * @param {string} baseUrl url of the web socket server
+   * @param {Number} port the port at which the web socket is listening to
+   * @return {Promise} that resolves in a boolean
+   */
+  async checkBootstrapWebSocketDNS (baseUrl, port) {
+    return new Promise(resolve => {
+      var client = new net.Socket()
+      client.setTimeout(30000) // Arbitrary 30 secondes to be able to reach DNS server
+      client.connect(port, baseUrl, () => {
+        client.end()
+        resolve(true)
+      })
+      client.on('error', (err) => {
+        if (err) {
+          client.end()
+          resolve(false)
+        } else {
+          client.end()
+          resolve(false)
+        }
+      })
+      client.on('timeout', () => {
+        client.end()
+        resolve(false)
+      })
+    })
+  }
+  /**
+   * Checks the default transcoder
+   * @return {Promise} that resolves in a boolean
+   */
+  async checkDefaultTranscoder () {
+    let splitDefaultTranscoder = this.config.ipfs.defaultTranscoder.split('/')
+    let defaultTranscoderCheck = await this.checkBootstrapWebSocketDNS(splitDefaultTranscoder[2], splitDefaultTranscoder[4])
+    return defaultTranscoderCheck
   }
 }

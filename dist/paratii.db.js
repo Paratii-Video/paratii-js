@@ -67,7 +67,6 @@ var ParatiiDb = exports.ParatiiDb = function () {
   }
   /**
    * Requests a link to see if it's up (Easily adds a dozen seconds to check the status)
-   * @param {string} linkToCheck
    * @return {Promise} that resolves in a boolean
    */
 
