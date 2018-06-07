@@ -32,7 +32,7 @@ export class ParatiiEthUsers {
       id: joi.string(),
       name: joi.string().allow('').optional().default(''),
       email: joi.string().allow('').optional().default(''),
-      ipfsData: joi.string()
+      ipfsData: joi.string().allow('')
     })
 
     if (!this.eth.web3.utils.isAddress(options.id)) {
@@ -40,6 +40,7 @@ export class ParatiiEthUsers {
       throw Error(msg)
     }
 
+    console.log(options)
     const result = joi.validate(options, schema)
     const error = result.error
     if (error) throw error

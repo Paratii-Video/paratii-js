@@ -79,7 +79,7 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
                 id: joi.string(),
                 name: joi.string().allow('').optional().default(''),
                 email: joi.string().allow('').optional().default(''),
-                ipfsData: joi.string()
+                ipfsData: joi.string().allow('')
               });
 
               if (this.eth.web3.utils.isAddress(options.id)) {
@@ -91,31 +91,33 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
               throw Error(msg);
 
             case 4:
+
+              console.log(options);
               result = joi.validate(options, schema);
               error = result.error;
 
               if (!error) {
-                _context2.next = 8;
+                _context2.next = 9;
                 break;
               }
 
               throw error;
 
-            case 8:
+            case 9:
               options = result.value;
 
-              _context2.next = 11;
+              _context2.next = 12;
               return _regenerator2.default.awrap(this.getRegistry());
 
-            case 11:
+            case 12:
               contract = _context2.sent;
-              _context2.next = 14;
+              _context2.next = 15;
               return _regenerator2.default.awrap(contract.methods.create(options.id, options.name, options.email, options.ipfsData).send());
 
-            case 14:
+            case 15:
               return _context2.abrupt('return', options.id);
 
-            case 15:
+            case 16:
             case 'end':
               return _context2.stop();
           }
