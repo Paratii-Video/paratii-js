@@ -8,6 +8,9 @@ import { ipfsSchema, ethSchema, accountSchema, dbSchema } from './schemas.js'
 const joi = require('joi')
 const utils = require('./utils.js')
 
+// Needed to check the DB provider and transcoder drop url status code
+const request = require('request')
+
 /**
  * Paratii library main object
  * The Paratii object serves as the general entry point for interacting with the family of Paratii
@@ -101,8 +104,30 @@ class Paratii extends ParatiiCore {
    */
   async checkIPFSState () {
     return new Promise(resolve => {
-      this.ipfs.getIPFSInstance().then(function (ipfsInstance) {
-        if (ipfsInstance.state.state() === 'running') {
+      this.ipfs.getIPFSInstance()
+        .then((ipfsInstance) => {
+          if (ipfsInstance.state.state() === 'running') {
+            resolve(true)
+          } else {
+            resolve(false)
+          }
+        })
+        .catch(e => {
+          resolve(false)
+        })
+    })
+  }
+  /**
+   * Requests a link to see if it's up (Easily adds a dozen seconds to check the status)
+   * @param {string} linkToCheck
+   * @return {Promise} that resolves in a boolean
+   */
+  async requestStatusCode (linkToCheck) {
+    return new Promise(resolve => {
+      request(linkToCheck, function (error, response) {
+        if (error) {
+          resolve(false)
+        } else if (response && response.statusCode === 200) { // We suppose for now that only 200 is the right status code (see: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
           resolve(true)
         } else {
           resolve(false)
@@ -162,7 +187,7 @@ class Paratii extends ParatiiCore {
     }
     // Pinging Eth provider
     log('Pinging the eth provider')
-    const pEth = await this.pingEth()
+    let pEth = await this.pingEth()
     if (pEth === true) {
       log('The eth provider responds correctly.')
     } else {
@@ -171,12 +196,21 @@ class Paratii extends ParatiiCore {
     }
     // Check if IPFS node is running
     log('Check if IPFS node is running')
-    const ipfsState = await this.checkIPFSState()
+    let ipfsState = await this.checkIPFSState()
     if (ipfsState === true) {
       log('The IPFS node seems to be running correctly.')
     } else {
       isOk = false
       log('The IPFS node doesn\'t seem to be running.')
+    }
+    // Check if DB provider is up
+    log('Check if the DB provider is up.')
+    let dbProviderStatus = await this.requestStatusCode(this.config.db.provider)
+    if (dbProviderStatus === true) {
+      log('Able to reach the DB provder.')
+    } else {
+      isOk = false
+      log('Can\'t reach the DB provider.')
     }
     // Recap
     if (isOk) {

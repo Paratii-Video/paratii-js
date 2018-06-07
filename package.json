@@ -40,6 +40,7 @@
     "paratii-protocol": "github:Paratii-Video/paratii-protocol#45aadcf300f1ad184d6d3db8f9c4b3d438b6f658",
     "promisify-node": "^0.4.0",
     "pull-filereader": "^1.0.1",
+    "request": "^2.87.0",
     "resumablejs": "^1.1.0",
     "sol-tcr": "github:Paratii-Video/tcr#compiled",
     "stream-to-pull-stream": "^1.7.2",

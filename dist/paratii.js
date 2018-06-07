@@ -50,6 +50,9 @@ var joi = require('joi');
 
 var utils = require('./utils.js');
 
+// Needed to check the DB provider and transcoder drop url status code
+var request = require('request');
+
 /**
  * Paratii library main object
  * The Paratii object serves as the general entry point for interacting with the family of Paratii
@@ -187,12 +190,47 @@ var Paratii = function (_ParatiiCore) {
                   } else {
                     resolve(false);
                   }
+                }).catch(function (e) {
+                  resolve(false);
                 });
               }));
 
             case 1:
             case 'end':
               return _context2.stop();
+          }
+        }
+      }, null, this);
+    }
+    /**
+     * Requests a link to see if it's up (Easily adds a dozen seconds to check the status)
+     * @param {string} linkToCheck
+     * @return {Promise} that resolves in a boolean
+     */
+
+  }, {
+    key: 'requestStatusCode',
+    value: function requestStatusCode(linkToCheck) {
+      return _regenerator2.default.async(function requestStatusCode$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              return _context3.abrupt('return', new _promise2.default(function (resolve) {
+                request(linkToCheck, function (error, response) {
+                  if (error) {
+                    resolve(false);
+                  } else if (response && response.statusCode === 200) {
+                    // We suppose for now that only 200 is the right status code (see: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
+                    resolve(true);
+                  } else {
+                    resolve(false);
+                  }
+                });
+              }));
+
+            case 1:
+            case 'end':
+              return _context3.stop();
           }
         }
       }, null, this);
@@ -207,10 +245,10 @@ var Paratii = function (_ParatiiCore) {
   }, {
     key: 'diagnose',
     value: function diagnose() {
-      var msg, address, msgs, isOk, log, registry, name, pEth, ipfsState;
-      return _regenerator2.default.async(function diagnose$(_context3) {
+      var msg, address, msgs, isOk, log, registry, name, pEth, ipfsState, dbProviderStatus;
+      return _regenerator2.default.async(function diagnose$(_context4) {
         while (1) {
-          switch (_context3.prev = _context3.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
               log = function log(msg) {
                 msgs.push(msg);
@@ -235,23 +273,23 @@ var Paratii = function (_ParatiiCore) {
               address = this.eth.getRegistryAddress();
 
               if (address) {
-                _context3.next = 15;
+                _context4.next = 15;
                 break;
               }
 
               log('*** No registry address found!');
               log('Value of this.config[\'eth.registryAddress\']: ' + this.config['eth.registryAddress']);
               isOk = false;
-              _context3.next = 35;
+              _context4.next = 35;
               break;
 
             case 15:
               log('checking deployed code of Registry...');
-              _context3.next = 18;
+              _context4.next = 18;
               return _regenerator2.default.awrap(this.eth.web3.eth.getCode(address));
 
             case 18:
-              msg = _context3.sent;
+              msg = _context4.sent;
 
               if (msg === '0x') {
                 log('ERROR: no code was found on the registry address ' + address);
@@ -262,48 +300,48 @@ var Paratii = function (_ParatiiCore) {
                 // log(msg)
               }
               log('checking for addresses on registry@' + address);
-              _context3.next = 23;
+              _context4.next = 23;
               return _regenerator2.default.awrap(this.eth.getContract('Registry'));
 
             case 23:
-              registry = _context3.sent;
+              registry = _context4.sent;
 
               log('(registry address is ' + registry.options.address + ')');
-              _context3.t0 = _regenerator2.default.keys(this.eth.contracts);
+              _context4.t0 = _regenerator2.default.keys(this.eth.contracts);
 
             case 26:
-              if ((_context3.t1 = _context3.t0()).done) {
-                _context3.next = 35;
+              if ((_context4.t1 = _context4.t0()).done) {
+                _context4.next = 35;
                 break;
               }
 
-              name = _context3.t1.value;
+              name = _context4.t1.value;
 
               if (!(name !== 'Registry')) {
-                _context3.next = 33;
+                _context4.next = 33;
                 break;
               }
 
-              _context3.next = 31;
+              _context4.next = 31;
               return _regenerator2.default.awrap(registry.methods.getContract(name).call());
 
             case 31:
-              address = _context3.sent;
+              address = _context4.sent;
 
               log('address of ' + name + ': ' + address);
 
             case 33:
-              _context3.next = 26;
+              _context4.next = 26;
               break;
 
             case 35:
               // Pinging Eth provider
               log('Pinging the eth provider');
-              _context3.next = 38;
+              _context4.next = 38;
               return _regenerator2.default.awrap(this.pingEth());
 
             case 38:
-              pEth = _context3.sent;
+              pEth = _context4.sent;
 
               if (pEth === true) {
                 log('The eth provider responds correctly.');
@@ -313,11 +351,11 @@ var Paratii = function (_ParatiiCore) {
               }
               // Check if IPFS node is running
               log('Check if IPFS node is running');
-              _context3.next = 43;
+              _context4.next = 43;
               return _regenerator2.default.awrap(this.checkIPFSState());
 
             case 43:
-              ipfsState = _context3.sent;
+              ipfsState = _context4.sent;
 
               if (ipfsState === true) {
                 log('The IPFS node seems to be running correctly.');
@@ -325,17 +363,31 @@ var Paratii = function (_ParatiiCore) {
                 isOk = false;
                 log('The IPFS node doesn\'t seem to be running.');
               }
+              // Check if DB provider is up
+              log('Check if the DB provider is up.');
+              _context4.next = 48;
+              return _regenerator2.default.awrap(this.requestStatusCode(this.config.db.provider));
+
+            case 48:
+              dbProviderStatus = _context4.sent;
+
+              if (dbProviderStatus === true) {
+                log('Able to reach the DB provder.');
+              } else {
+                isOk = false;
+                log('Can\'t reach the DB provider.');
+              }
               // Recap
               if (isOk) {
                 log('---- everything seems fine -----');
               } else {
                 log('***** Something is wrong *****');
               }
-              return _context3.abrupt('return', msgs);
+              return _context4.abrupt('return', msgs);
 
-            case 47:
+            case 52:
             case 'end':
-              return _context3.stop();
+              return _context4.stop();
           }
         }
       }, null, this);
