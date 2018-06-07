@@ -19,27 +19,17 @@ export class ParatiiUsers {
     this.config = config
   }
   /**
-   * @typedef {Array} userSchema
-   * @property {string} id the Ethereum address of the user
-   * @property {string=} name
-   * @property {string=} email
-   */
-
-  /**
-   * Creates a user, fields id, name and email go to the smart contract Users, other fields are stored on IPFS.
-   * @param  {userSchema}  options information about the video ( id, name, email ... )
-   * @return {Promise}         the id of the newly created user
-   * @example let userData = {
-   *                    id: '0x12456....',
-   *                    name: 'Humbert Humbert',
-   *                    email: 'humbert@humbert.ru',
-   *                    ipfsData: 'some-hash'
-   *              }
-   *   let result = await paratii.eth.users.create(userData)
-   *  })
+   * Register the data of this user.
+   * @param  {userSchema}  options information about the user ( id, name, email ... )
+   * @return {Promise}         information about the user ( id, name, email ... )
+   * @example await paratii.core.users.create({
+   *  id: 'some-video-id',
+   *  name: 'some-nickname',
+   *  email: 'some@email.com',
+   * })
    */
   async create (options) {
-    const result = joi.validate(options, userSchema, {allowUnknown: true})
+    const result = joi.validate(options, userSchema, {allowUnknown: false})
     if (result.error) throw result.error
     const paratii = this.config.paratii
     let keysForBlockchain = ['id', 'name']
@@ -76,7 +66,7 @@ export class ParatiiUsers {
    *  })
    */
   async upsert (options) {
-    const result = joi.validate(options, userSchema, {allowUnknown: true})
+    const result = joi.validate(options, userSchema, {allowUnknown: false})
     if (result.error) throw result.error
     let data = null
     let userId = ''
@@ -117,8 +107,9 @@ export class ParatiiUsers {
     }
 
     data['id'] = userId
+    console.log(data)
 
-    const result = joi.validate(data, userSchema, {allowUnknown: true})
+    const result = joi.validate(data, userSchema, {allowUnknown: false})
     if (result.error) throw result.error
 
     await this.create(data)

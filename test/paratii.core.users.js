@@ -9,7 +9,6 @@ describe('paratii.core.users: ', function () {
   let newUserData = {
     id: '0xa99dBd162ad5E1601E8d8B20703e5A3bA5c00Be7',
     email: 'humbert@humbert.ru',
-    ipfsHash: 'some-hash',
     name: 'Humbert Humbert'
   }
   let newUserId = '0xa99dBd162ad5E1601E8d8B20703e5A3bA5c00Be7'
@@ -17,7 +16,7 @@ describe('paratii.core.users: ', function () {
   before(function () {
     nock('https://db.paratii.video/api/v1')
       .persist()
-      .get('/users/' + users[0]['_id'])
+      .get('/users/' + users[0]['id'])
       .reply(200, users[0])
   })
 
@@ -38,7 +37,7 @@ describe('paratii.core.users: ', function () {
     })
     nock('https://db.paratii.video/api/v1')
       .persist()
-      .post(`/users/${users[0]['_id']}`, expectedBody)
+      .post(`/users/${users[0]['id']}`, expectedBody)
       .reply(200, users[0])
   })
 
@@ -55,6 +54,7 @@ describe('paratii.core.users: ', function () {
   })
 
   it('users.create() should work as expected', async function () {
+    // this is a way to clone
     let result = await paratii.users.create(newUserData)
     assert.equal(result, newUserId)
   })
@@ -65,7 +65,9 @@ describe('paratii.core.users: ', function () {
   })
 
   it('users.update() should work as expected', async function () {
-    await paratii.users.create(newUserData)
+    const data = JSON.parse(JSON.stringify(newUserData))
+    delete data.email
+    await paratii.users.create(data)
     await paratii.users.update(newUserId, {name: 'John Doe'})
     let user = await paratii.eth.users.get(newUserId)
     assert.equal(user.name, 'John Doe')

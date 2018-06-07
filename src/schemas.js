@@ -10,7 +10,6 @@ const joi = require('joi')
 const userSchema = joi.object({
   id: joi.string().default(null).required(),
   email: joi.string().email().default(null).allow(null),
-  ipfsHash: joi.string().default(null).allow(null),
   name: joi.string().empty('').default(null).allow(null)
 }).default()
 
