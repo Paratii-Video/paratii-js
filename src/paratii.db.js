@@ -34,7 +34,7 @@ export class ParatiiDb {
     this.users = new ParatiiDbUsers(this.config)
   }
   /**
-   * Requests a link to see if it's up (Easily adds a dozen seconds to check the status)
+   * Requests the DB provider to see if it's up (Easily adds a dozen seconds to check the status)
    * @return {Promise} that resolves in a boolean
    */
   async checkDBProviderStatus () {
@@ -45,6 +45,40 @@ export class ParatiiDb {
             resolve(true)
           } else {
             resolve(false)
+          }
+        })
+    })
+  }
+  /**
+   * Checks DB provider and returns a detailed object
+   * @return {Promise} that resolves in an object
+   */
+  async serviceCheckDBProviderStatus () {
+    return new Promise(resolve => {
+      let executionStart = new Date().getTime()
+
+      fetch(this.config.db.provider)
+        .then((response) => {
+          let reponseStatus = response.status
+          if (reponseStatus === 200) {
+            let executionEnd = new Date().getTime()
+            let executionTime = executionEnd - executionStart
+
+            let dbServiceCheckObject = {
+              provider: this.config.db.provider,
+              responseTime: executionTime,
+              response: reponseStatus,
+              responsive: true
+            }
+            resolve(dbServiceCheckObject)
+          } else {
+            let dbServiceCheckObject = {
+              provider: this.config.db.provider,
+              responseTime: 0,
+              response: reponseStatus,
+              responsive: false
+            }
+            resolve(dbServiceCheckObject)
           }
         })
     })

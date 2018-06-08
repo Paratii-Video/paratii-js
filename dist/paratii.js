@@ -350,9 +350,14 @@ var Paratii = function (_ParatiiCore) {
 
             case 7:
               response.ipfs.localNode = _context2.sent;
+              _context2.next = 10;
+              return _regenerator2.default.awrap(this.db.serviceCheckDBProviderStatus());
+
+            case 10:
+              response.db = _context2.sent;
               return _context2.abrupt('return', response);
 
-            case 9:
+            case 12:
             case 'end':
               return _context2.stop();
           }

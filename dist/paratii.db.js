@@ -67,7 +67,7 @@ var ParatiiDb = exports.ParatiiDb = function () {
     this.users = new _paratiiDbUsers.ParatiiDbUsers(this.config);
   }
   /**
-   * Requests a link to see if it's up (Easily adds a dozen seconds to check the status)
+   * Requests the DB provider to see if it's up (Easily adds a dozen seconds to check the status)
    * @return {Promise} that resolves in a boolean
    */
 
@@ -94,6 +94,55 @@ var ParatiiDb = exports.ParatiiDb = function () {
             case 1:
             case 'end':
               return _context.stop();
+          }
+        }
+      }, null, this);
+    }
+    /**
+     * Checks DB provider and returns a detailed object
+     * @return {Promise} that resolves in an object
+     */
+
+  }, {
+    key: 'serviceCheckDBProviderStatus',
+    value: function serviceCheckDBProviderStatus() {
+      var _this2 = this;
+
+      return _regenerator2.default.async(function serviceCheckDBProviderStatus$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              return _context2.abrupt('return', new _promise2.default(function (resolve) {
+                var executionStart = new Date().getTime();
+
+                fetch(_this2.config.db.provider).then(function (response) {
+                  var reponseStatus = response.status;
+                  if (reponseStatus === 200) {
+                    var executionEnd = new Date().getTime();
+                    var executionTime = executionEnd - executionStart;
+
+                    var dbServiceCheckObject = {
+                      provider: _this2.config.db.provider,
+                      responseTime: executionTime,
+                      response: reponseStatus,
+                      responsive: true
+                    };
+                    resolve(dbServiceCheckObject);
+                  } else {
+                    var _dbServiceCheckObject = {
+                      provider: _this2.config.db.provider,
+                      responseTime: 0,
+                      response: reponseStatus,
+                      responsive: false
+                    };
+                    resolve(_dbServiceCheckObject);
+                  }
+                });
+              }));
+
+            case 1:
+            case 'end':
+              return _context2.stop();
           }
         }
       }, null, this);

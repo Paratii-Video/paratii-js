@@ -213,6 +213,8 @@ class Paratii extends ParatiiCore {
     // Check local ipfs instance
     response.ipfs = {}
     response.ipfs.localNode = await this.ipfs.serviceCheckIPFSState()
+    // check DB provider
+    response.db = await this.db.serviceCheckDBProviderStatus()
     return response
   }
 }
