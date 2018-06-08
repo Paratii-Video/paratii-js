@@ -297,6 +297,40 @@ export class ParatiiIPFSRemote extends EventEmitter {
     })
   }
   /**
+   * Checks transcoder drop url and returns a detailed object
+   * @return {Promise} that resolves in an object
+   */
+  async serviceCheckTranscoderDropUrl () {
+    return new Promise(resolve => {
+      let executionStart = new Date().getTime()
+
+      fetch(this.config.ipfs.transcoderDropUrl)
+        .then((response) => {
+          let reponseStatus = response.status
+          if (reponseStatus === 200) {
+            let executionEnd = new Date().getTime()
+            let executionTime = executionEnd - executionStart
+
+            let transcoderDropUrlServiceCheckObject = {
+              provider: this.config.ipfs.transcoderDropUrl,
+              responseTime: executionTime,
+              response: reponseStatus,
+              responsive: true
+            }
+            resolve(transcoderDropUrlServiceCheckObject)
+          } else {
+            let transcoderDropUrlServiceCheckObject = {
+              provider: this.config.ipfs.transcoderDropUrl,
+              responseTime: 0,
+              response: reponseStatus,
+              responsive: false
+            }
+            resolve(transcoderDropUrlServiceCheckObject)
+          }
+        })
+    })
+  }
+  /**
    * Checks the bootstrap dns nodes
    * @param {string} baseUrl url of the web socket server
    * @param {Number} port the port at which the web socket is listening to

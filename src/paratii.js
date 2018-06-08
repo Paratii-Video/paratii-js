@@ -209,7 +209,8 @@ class Paratii extends ParatiiCore {
     // Firing all awaits
     const serviceChecks = await Promise.all([this.eth.serviceCheckEth(),
       this.ipfs.serviceCheckIPFSState(),
-      this.db.serviceCheckDBProviderStatus()])
+      this.db.serviceCheckDBProviderStatus(),
+      this.ipfs.remote.serviceCheckTranscoderDropUrl()])
     // the object that will be returned
     let response = {}
     // Check eth provider
@@ -219,6 +220,8 @@ class Paratii extends ParatiiCore {
     response.ipfs.localNode = serviceChecks[1]
     // check DB provider
     response.db = await serviceChecks[2]
+    // check transcoder Drop Url
+    response.ipfs.transcoderDropUrl = await serviceChecks[3]
     return response
   }
 }

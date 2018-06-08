@@ -382,6 +382,55 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
       }, null, this);
     }
     /**
+     * Checks transcoder drop url and returns a detailed object
+     * @return {Promise} that resolves in an object
+     */
+
+  }, {
+    key: 'serviceCheckTranscoderDropUrl',
+    value: function serviceCheckTranscoderDropUrl() {
+      var _this6 = this;
+
+      return _regenerator2.default.async(function serviceCheckTranscoderDropUrl$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              return _context2.abrupt('return', new _promise2.default(function (resolve) {
+                var executionStart = new Date().getTime();
+
+                fetch(_this6.config.ipfs.transcoderDropUrl).then(function (response) {
+                  var reponseStatus = response.status;
+                  if (reponseStatus === 200) {
+                    var executionEnd = new Date().getTime();
+                    var executionTime = executionEnd - executionStart;
+
+                    var transcoderDropUrlServiceCheckObject = {
+                      provider: _this6.config.ipfs.transcoderDropUrl,
+                      responseTime: executionTime,
+                      response: reponseStatus,
+                      responsive: true
+                    };
+                    resolve(transcoderDropUrlServiceCheckObject);
+                  } else {
+                    var _transcoderDropUrlServiceCheckObject = {
+                      provider: _this6.config.ipfs.transcoderDropUrl,
+                      responseTime: 0,
+                      response: reponseStatus,
+                      responsive: false
+                    };
+                    resolve(_transcoderDropUrlServiceCheckObject);
+                  }
+                });
+              }));
+
+            case 1:
+            case 'end':
+              return _context2.stop();
+          }
+        }
+      }, null, this);
+    }
+    /**
      * Checks the bootstrap dns nodes
      * @param {string} baseUrl url of the web socket server
      * @param {Number} port the port at which the web socket is listening to
@@ -391,11 +440,11 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
   }, {
     key: 'checkBootstrapWebSocketDNS',
     value: function checkBootstrapWebSocketDNS(baseUrl, port) {
-      return _regenerator2.default.async(function checkBootstrapWebSocketDNS$(_context2) {
+      return _regenerator2.default.async(function checkBootstrapWebSocketDNS$(_context3) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
-              return _context2.abrupt('return', new _promise2.default(function (resolve) {
+              return _context3.abrupt('return', new _promise2.default(function (resolve) {
                 var client = new net.Socket();
                 client.setTimeout(30000); // Arbitrary 30 secondes to be able to reach DNS server
                 client.connect(port, baseUrl, function () {
@@ -419,7 +468,7 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
 
             case 1:
             case 'end':
-              return _context2.stop();
+              return _context3.stop();
           }
         }
       }, null, this);
@@ -433,21 +482,21 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
     key: 'checkDefaultTranscoder',
     value: function checkDefaultTranscoder() {
       var splitDefaultTranscoder, defaultTranscoderCheck;
-      return _regenerator2.default.async(function checkDefaultTranscoder$(_context3) {
+      return _regenerator2.default.async(function checkDefaultTranscoder$(_context4) {
         while (1) {
-          switch (_context3.prev = _context3.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
               splitDefaultTranscoder = this.config.ipfs.defaultTranscoder.split('/');
-              _context3.next = 3;
+              _context4.next = 3;
               return _regenerator2.default.awrap(this.checkBootstrapWebSocketDNS(splitDefaultTranscoder[2], splitDefaultTranscoder[4]));
 
             case 3:
-              defaultTranscoderCheck = _context3.sent;
-              return _context3.abrupt('return', defaultTranscoderCheck);
+              defaultTranscoderCheck = _context4.sent;
+              return _context4.abrupt('return', defaultTranscoderCheck);
 
             case 5:
             case 'end':
-              return _context3.stop();
+              return _context4.stop();
           }
         }
       }, null, this);
@@ -461,21 +510,21 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
     key: 'checkRemoteIPFSNode',
     value: function checkRemoteIPFSNode() {
       var splitRemoteIPFSNode, remoteIPFSNodeCheck;
-      return _regenerator2.default.async(function checkRemoteIPFSNode$(_context4) {
+      return _regenerator2.default.async(function checkRemoteIPFSNode$(_context5) {
         while (1) {
-          switch (_context4.prev = _context4.next) {
+          switch (_context5.prev = _context5.next) {
             case 0:
               splitRemoteIPFSNode = this.config.ipfs.remoteIPFSNode.split('/');
-              _context4.next = 3;
+              _context5.next = 3;
               return _regenerator2.default.awrap(this.checkBootstrapWebSocketDNS(splitRemoteIPFSNode[2], splitRemoteIPFSNode[4]));
 
             case 3:
-              remoteIPFSNodeCheck = _context4.sent;
-              return _context4.abrupt('return', remoteIPFSNodeCheck);
+              remoteIPFSNodeCheck = _context5.sent;
+              return _context5.abrupt('return', remoteIPFSNodeCheck);
 
             case 5:
             case 'end':
-              return _context4.stop();
+              return _context5.stop();
           }
         }
       }, null, this);
