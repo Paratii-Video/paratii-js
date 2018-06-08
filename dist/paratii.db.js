@@ -33,8 +33,9 @@ var _joi2 = _interopRequireDefault(_joi);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// Needed to check the DB provider status code
-var request = require('request');
+// Needed to check if the DB provider is up
+require('es6-promise').polyfill();
+var fetch = require('isomorphic-fetch');
 
 /**
  * ParatiiDb contains a functionality to interact with the Paratii Index.
@@ -81,11 +82,8 @@ var ParatiiDb = exports.ParatiiDb = function () {
           switch (_context.prev = _context.next) {
             case 0:
               return _context.abrupt('return', new _promise2.default(function (resolve) {
-                request(_this.config.db.provider, function (error, response) {
-                  if (error) {
-                    resolve(false);
-                  } else if (response && response.statusCode === 200) {
-                    // We suppose for now that only 200 is the right status code (see: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
+                fetch(_this.config.db.provider).then(function (response) {
+                  if (response.status === 200) {
                     resolve(true);
                   } else {
                     resolve(false);

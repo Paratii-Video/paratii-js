@@ -48,7 +48,8 @@ var Resumable = require('resumablejs');
 var Multiaddr = require('multiaddr');
 
 // Needed to check the transcoder drop url status code
-var request = require('request');
+require('es6-promise').polyfill();
+var fetch = require('isomorphic-fetch');
 // Needed to open a socket connection
 var net = require('net');
 
@@ -364,11 +365,8 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
           switch (_context.prev = _context.next) {
             case 0:
               return _context.abrupt('return', new _promise2.default(function (resolve) {
-                request(_this5.config.ipfs.transcoderDropUrl, function (error, response) {
-                  if (error) {
-                    resolve(false);
-                  } else if (response && response.statusCode === 200) {
-                    // We suppose for now that only 200 is the right status code (see: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
+                fetch(_this5.config.ipfs.transcoderDropUrl).then(function (response) {
+                  if (response.status === 200) {
                     resolve(true);
                   } else {
                     resolve(false);

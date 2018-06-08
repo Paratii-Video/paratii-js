@@ -3,8 +3,9 @@ import { ParatiiDbUsers } from './paratii.db.users.js'
 import { dbSchema, accountSchema } from './schemas.js'
 import joi from 'joi'
 
-// Needed to check the DB provider status code
-const request = require('request')
+// Needed to check if the DB provider is up
+require('es6-promise').polyfill()
+const fetch = require('isomorphic-fetch')
 
 /**
  * ParatiiDb contains a functionality to interact with the Paratii Index.
@@ -38,15 +39,14 @@ export class ParatiiDb {
    */
   async checkDBProviderStatus () {
     return new Promise(resolve => {
-      request(this.config.db.provider, function (error, response) {
-        if (error) {
-          resolve(false)
-        } else if (response && response.statusCode === 200) { // We suppose for now that only 200 is the right status code (see: https://en.wikipedia.org/wiki/List_of_HTTP_status_codes)
-          resolve(true)
-        } else {
-          resolve(false)
-        }
-      })
+      fetch(this.config.db.provider)
+        .then(function (response) {
+          if (response.status === 200) {
+            resolve(true)
+          } else {
+            resolve(false)
+          }
+        })
     })
   }
 }
