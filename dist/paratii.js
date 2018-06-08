@@ -328,36 +328,34 @@ var Paratii = function (_ParatiiCore) {
   }, {
     key: 'checkServices',
     value: function checkServices() {
-      var response;
+      var serviceChecks, response;
       return _regenerator2.default.async(function checkServices$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
+              _context2.next = 2;
+              return _regenerator2.default.awrap(_promise2.default.all([this.eth.serviceCheckEth(), this.ipfs.serviceCheckIPFSState(), this.db.serviceCheckDBProviderStatus()]));
+
+            case 2:
+              serviceChecks = _context2.sent;
+
               // the object that will be returned
               response = {};
               // Check eth provider
 
-              _context2.next = 3;
-              return _regenerator2.default.awrap(this.eth.serviceCheckEth());
-
-            case 3:
-              response.eth = _context2.sent;
-
+              response.eth = serviceChecks[0];
               // Check local ipfs instance
               response.ipfs = {};
-              _context2.next = 7;
-              return _regenerator2.default.awrap(this.ipfs.serviceCheckIPFSState());
+              response.ipfs.localNode = serviceChecks[1];
+              // check DB provider
+              _context2.next = 9;
+              return _regenerator2.default.awrap(serviceChecks[2]);
 
-            case 7:
-              response.ipfs.localNode = _context2.sent;
-              _context2.next = 10;
-              return _regenerator2.default.awrap(this.db.serviceCheckDBProviderStatus());
-
-            case 10:
+            case 9:
               response.db = _context2.sent;
               return _context2.abrupt('return', response);
 
-            case 12:
+            case 11:
             case 'end':
               return _context2.stop();
           }

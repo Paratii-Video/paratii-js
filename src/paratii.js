@@ -206,15 +206,19 @@ class Paratii extends ParatiiCore {
    * console.log(servicesCheck)
    */
   async checkServices () {
+    // Firing all awaits
+    const serviceChecks = await Promise.all([this.eth.serviceCheckEth(),
+      this.ipfs.serviceCheckIPFSState(),
+      this.db.serviceCheckDBProviderStatus()])
     // the object that will be returned
     let response = {}
     // Check eth provider
-    response.eth = await this.eth.serviceCheckEth()
+    response.eth = serviceChecks[0]
     // Check local ipfs instance
     response.ipfs = {}
-    response.ipfs.localNode = await this.ipfs.serviceCheckIPFSState()
+    response.ipfs.localNode = serviceChecks[1]
     // check DB provider
-    response.db = await this.db.serviceCheckDBProviderStatus()
+    response.db = await serviceChecks[2]
     return response
   }
 }
