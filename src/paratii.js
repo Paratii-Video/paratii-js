@@ -228,6 +228,7 @@ class Paratii extends ParatiiCore {
     response.ipfs.defaultTranscoder = await serviceChecks[4]
     // check remote IPFS Node
     response.ipfs.remoteIPFSNode = await serviceChecks[5]
+    // return the response
     return response
   }
 }
