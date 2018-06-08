@@ -269,7 +269,7 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
 
             case 4:
               search = _context4.sent;
-              vids = search.results;
+              vids = search && search.results;
               _context4.next = 8;
               return _regenerator2.default.awrap(paratii.eth.users.get(oldAccount));
 

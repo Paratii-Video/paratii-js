@@ -139,7 +139,7 @@ export class ParatiiUsers {
     const paratii = this.config.paratii
     const oldAccount = this.config.account.address
     const search = await paratii.vids.search({owner: oldAccount})
-    const vids = search.results
+    const vids = search && search.results
     const originalUserRecord = await paratii.eth.users.get(oldAccount)
     const newUserRecord = originalUserRecord
     newUserRecord.id = newAccount
