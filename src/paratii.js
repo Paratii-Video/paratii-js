@@ -211,7 +211,8 @@ class Paratii extends ParatiiCore {
       this.ipfs.serviceCheckIPFSState(),
       this.db.serviceCheckDBProviderStatus(),
       this.ipfs.remote.serviceCheckTranscoderDropUrl(),
-      this.ipfs.remote.serviceCheckDefaultTranscoder()])
+      this.ipfs.remote.serviceCheckDefaultTranscoder(),
+      this.ipfs.remote.serviceCheckRemoteIPFSNode()])
     // the object that will be returned
     let response = {}
     // Check eth provider
@@ -223,8 +224,10 @@ class Paratii extends ParatiiCore {
     response.db = await serviceChecks[2]
     // check transcoder Drop Url
     response.ipfs.transcoderDropUrl = await serviceChecks[3]
-    // check DefaultTranscoder
+    // check default Transcoder
     response.ipfs.defaultTranscoder = await serviceChecks[4]
+    // check remote IPFS Node
+    response.ipfs.remoteIPFSNode = await serviceChecks[5]
     return response
   }
 }

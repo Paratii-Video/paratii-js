@@ -573,6 +573,50 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
         }
       }, null, this);
     }
+    /**
+     * Checks the remote IPFS node and returns a detailed object
+     * @return {Promise} that resolves in an object
+     */
+
+  }, {
+    key: 'serviceCheckRemoteIPFSNode',
+    value: function serviceCheckRemoteIPFSNode() {
+      var splitRemoteIPFSNode, executionStart, remoteIPFSNodeCheck, executionEnd, executionTime, remoteIPFSNodeObject;
+      return _regenerator2.default.async(function serviceCheckRemoteIPFSNode$(_context7) {
+        while (1) {
+          switch (_context7.prev = _context7.next) {
+            case 0:
+              splitRemoteIPFSNode = this.config.ipfs.remoteIPFSNode.split('/');
+              executionStart = new Date().getTime();
+              _context7.next = 4;
+              return _regenerator2.default.awrap(this.checkBootstrapWebSocketDNS(splitRemoteIPFSNode[2], splitRemoteIPFSNode[4]));
+
+            case 4:
+              remoteIPFSNodeCheck = _context7.sent;
+              executionEnd = new Date().getTime();
+              executionTime = executionEnd - executionStart;
+              remoteIPFSNodeObject = {};
+
+              remoteIPFSNodeObject.provider = this.config.ipfs.remoteIPFSNode;
+              if (remoteIPFSNodeCheck === true) {
+                remoteIPFSNodeObject.responseTime = executionTime;
+                remoteIPFSNodeObject.response = 'can reach';
+                remoteIPFSNodeObject.responsive = remoteIPFSNodeCheck;
+              } else {
+                remoteIPFSNodeObject.responseTime = 0;
+                remoteIPFSNodeObject.response = 'cannot reach';
+                remoteIPFSNodeObject.responsive = remoteIPFSNodeCheck;
+              }
+
+              return _context7.abrupt('return', remoteIPFSNodeObject);
+
+            case 11:
+            case 'end':
+              return _context7.stop();
+          }
+        }
+      }, null, this);
+    }
   }]);
   return ParatiiIPFSRemote;
 }(_events.EventEmitter);

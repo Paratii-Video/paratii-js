@@ -405,4 +405,32 @@ export class ParatiiIPFSRemote extends EventEmitter {
     let remoteIPFSNodeCheck = await this.checkBootstrapWebSocketDNS(splitRemoteIPFSNode[2], splitRemoteIPFSNode[4])
     return remoteIPFSNodeCheck
   }
+  /**
+   * Checks the remote IPFS node and returns a detailed object
+   * @return {Promise} that resolves in an object
+   */
+  async serviceCheckRemoteIPFSNode () {
+    let splitRemoteIPFSNode = this.config.ipfs.remoteIPFSNode.split('/')
+
+    let executionStart = new Date().getTime()
+
+    let remoteIPFSNodeCheck = await this.checkBootstrapWebSocketDNS(splitRemoteIPFSNode[2], splitRemoteIPFSNode[4])
+
+    let executionEnd = new Date().getTime()
+    let executionTime = executionEnd - executionStart
+
+    let remoteIPFSNodeObject = {}
+    remoteIPFSNodeObject.provider = this.config.ipfs.remoteIPFSNode
+    if (remoteIPFSNodeCheck === true) {
+      remoteIPFSNodeObject.responseTime = executionTime
+      remoteIPFSNodeObject.response = 'can reach'
+      remoteIPFSNodeObject.responsive = remoteIPFSNodeCheck
+    } else {
+      remoteIPFSNodeObject.responseTime = 0
+      remoteIPFSNodeObject.response = 'cannot reach'
+      remoteIPFSNodeObject.responsive = remoteIPFSNodeCheck
+    }
+
+    return remoteIPFSNodeObject
+  }
 }
