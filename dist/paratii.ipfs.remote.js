@@ -502,6 +502,50 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
       }, null, this);
     }
     /**
+     * Checks the default transcoder and returns a detailed object
+     * @return {Promise} that resolves in an object
+     */
+
+  }, {
+    key: 'serviceCheckDefaultTranscoder',
+    value: function serviceCheckDefaultTranscoder() {
+      var splitDefaultTranscoder, executionStart, defaultTranscoderCheck, executionEnd, executionTime, defaultTranscoderObject;
+      return _regenerator2.default.async(function serviceCheckDefaultTranscoder$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              splitDefaultTranscoder = this.config.ipfs.defaultTranscoder.split('/');
+              executionStart = new Date().getTime();
+              _context5.next = 4;
+              return _regenerator2.default.awrap(this.checkBootstrapWebSocketDNS(splitDefaultTranscoder[2], splitDefaultTranscoder[4]));
+
+            case 4:
+              defaultTranscoderCheck = _context5.sent;
+              executionEnd = new Date().getTime();
+              executionTime = executionEnd - executionStart;
+              defaultTranscoderObject = {};
+
+              defaultTranscoderObject.provider = this.config.ipfs.defaultTranscoder;
+              if (defaultTranscoderCheck === true) {
+                defaultTranscoderObject.responseTime = executionTime;
+                defaultTranscoderObject.response = 'can reach';
+                defaultTranscoderObject.responsive = defaultTranscoderCheck;
+              } else {
+                defaultTranscoderObject.responseTime = 0;
+                defaultTranscoderObject.response = 'cannot reach';
+                defaultTranscoderObject.responsive = defaultTranscoderCheck;
+              }
+
+              return _context5.abrupt('return', defaultTranscoderObject);
+
+            case 11:
+            case 'end':
+              return _context5.stop();
+          }
+        }
+      }, null, this);
+    }
+    /**
      * Checks the remote IPFS node
      * @return {Promise} that resolves in a boolean
      */
@@ -510,21 +554,21 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
     key: 'checkRemoteIPFSNode',
     value: function checkRemoteIPFSNode() {
       var splitRemoteIPFSNode, remoteIPFSNodeCheck;
-      return _regenerator2.default.async(function checkRemoteIPFSNode$(_context5) {
+      return _regenerator2.default.async(function checkRemoteIPFSNode$(_context6) {
         while (1) {
-          switch (_context5.prev = _context5.next) {
+          switch (_context6.prev = _context6.next) {
             case 0:
               splitRemoteIPFSNode = this.config.ipfs.remoteIPFSNode.split('/');
-              _context5.next = 3;
+              _context6.next = 3;
               return _regenerator2.default.awrap(this.checkBootstrapWebSocketDNS(splitRemoteIPFSNode[2], splitRemoteIPFSNode[4]));
 
             case 3:
-              remoteIPFSNodeCheck = _context5.sent;
-              return _context5.abrupt('return', remoteIPFSNodeCheck);
+              remoteIPFSNodeCheck = _context6.sent;
+              return _context6.abrupt('return', remoteIPFSNodeCheck);
 
             case 5:
             case 'end':
-              return _context5.stop();
+              return _context6.stop();
           }
         }
       }, null, this);

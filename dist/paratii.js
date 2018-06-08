@@ -334,7 +334,7 @@ var Paratii = function (_ParatiiCore) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.next = 2;
-              return _regenerator2.default.awrap(_promise2.default.all([this.eth.serviceCheckEth(), this.ipfs.serviceCheckIPFSState(), this.db.serviceCheckDBProviderStatus(), this.ipfs.remote.serviceCheckTranscoderDropUrl()]));
+              return _regenerator2.default.awrap(_promise2.default.all([this.eth.serviceCheckEth(), this.ipfs.serviceCheckIPFSState(), this.db.serviceCheckDBProviderStatus(), this.ipfs.remote.serviceCheckTranscoderDropUrl(), this.ipfs.remote.serviceCheckDefaultTranscoder()]));
 
             case 2:
               serviceChecks = _context2.sent;
@@ -358,9 +358,14 @@ var Paratii = function (_ParatiiCore) {
 
             case 12:
               response.ipfs.transcoderDropUrl = _context2.sent;
+              _context2.next = 15;
+              return _regenerator2.default.awrap(serviceChecks[4]);
+
+            case 15:
+              response.ipfs.defaultTranscoder = _context2.sent;
               return _context2.abrupt('return', response);
 
-            case 14:
+            case 17:
             case 'end':
               return _context2.stop();
           }

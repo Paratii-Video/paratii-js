@@ -369,6 +369,34 @@ export class ParatiiIPFSRemote extends EventEmitter {
     return defaultTranscoderCheck
   }
   /**
+   * Checks the default transcoder and returns a detailed object
+   * @return {Promise} that resolves in an object
+   */
+  async serviceCheckDefaultTranscoder () {
+    let splitDefaultTranscoder = this.config.ipfs.defaultTranscoder.split('/')
+
+    let executionStart = new Date().getTime()
+
+    let defaultTranscoderCheck = await this.checkBootstrapWebSocketDNS(splitDefaultTranscoder[2], splitDefaultTranscoder[4])
+
+    let executionEnd = new Date().getTime()
+    let executionTime = executionEnd - executionStart
+
+    let defaultTranscoderObject = {}
+    defaultTranscoderObject.provider = this.config.ipfs.defaultTranscoder
+    if (defaultTranscoderCheck === true) {
+      defaultTranscoderObject.responseTime = executionTime
+      defaultTranscoderObject.response = 'can reach'
+      defaultTranscoderObject.responsive = defaultTranscoderCheck
+    } else {
+      defaultTranscoderObject.responseTime = 0
+      defaultTranscoderObject.response = 'cannot reach'
+      defaultTranscoderObject.responsive = defaultTranscoderCheck
+    }
+
+    return defaultTranscoderObject
+  }
+  /**
    * Checks the remote IPFS node
    * @return {Promise} that resolves in a boolean
    */
