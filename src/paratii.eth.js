@@ -857,6 +857,7 @@ export class ParatiiEth {
           let ethServiceCheckObject = {
             provider: this.config.eth.provider,
             responseTime: executionTime,
+            response: 'listening',
             responsive: true
           }
           resolve(ethServiceCheckObject)
@@ -865,6 +866,7 @@ export class ParatiiEth {
           let ethServiceCheckObject = {
             provider: this.config.eth.provider,
             responseTime: 0,
+            response: 'not listening',
             responsive: false
           }
           resolve(ethServiceCheckObject)

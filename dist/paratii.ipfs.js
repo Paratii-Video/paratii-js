@@ -423,13 +423,15 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
                 var executionStart = new Date().getTime();
 
                 _this7.getIPFSInstance().then(function (ipfsInstance) {
-                  if (ipfsInstance.state.state() === 'running') {
+                  var currentState = ipfsInstance.state.state();
+                  if (currentState === 'running') {
                     var executionEnd = new Date().getTime();
                     var executionTime = executionEnd - executionStart;
 
                     var ipfsInstanceCheckObject = {
                       provider: 'self',
                       responseTime: executionTime,
+                      response: currentState,
                       responsive: true
                     };
 
@@ -438,6 +440,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
                     var _ipfsInstanceCheckObject = {
                       provider: 'self',
                       responseTime: 0,
+                      response: currentState,
                       responsive: false
                     };
                     resolve(_ipfsInstanceCheckObject);
@@ -446,6 +449,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
                   var ipfsInstanceCheckObject = {
                     provider: 'self',
                     responseTime: 0,
+                    response: 'error',
                     responsive: false
                   };
                   resolve(ipfsInstanceCheckObject);

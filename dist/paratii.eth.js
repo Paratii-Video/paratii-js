@@ -1434,6 +1434,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
                   var ethServiceCheckObject = {
                     provider: _this2.config.eth.provider,
                     responseTime: executionTime,
+                    response: 'listening',
                     responsive: true
                   };
                   resolve(ethServiceCheckObject);
@@ -1441,6 +1442,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
                   var ethServiceCheckObject = {
                     provider: _this2.config.eth.provider,
                     responseTime: 0,
+                    response: 'not listening',
                     responsive: false
                   };
                   resolve(ethServiceCheckObject);

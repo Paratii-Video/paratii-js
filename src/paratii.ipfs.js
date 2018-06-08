@@ -272,13 +272,15 @@ export class ParatiiIPFS extends EventEmitter {
 
       this.getIPFSInstance()
         .then((ipfsInstance) => {
-          if (ipfsInstance.state.state() === 'running') {
+          let currentState = ipfsInstance.state.state()
+          if (currentState === 'running') {
             let executionEnd = new Date().getTime()
             let executionTime = executionEnd - executionStart
 
             let ipfsInstanceCheckObject = {
               provider: 'self',
               responseTime: executionTime,
+              response: currentState,
               responsive: true
             }
 
@@ -287,6 +289,7 @@ export class ParatiiIPFS extends EventEmitter {
             let ipfsInstanceCheckObject = {
               provider: 'self',
               responseTime: 0,
+              response: currentState,
               responsive: false
             }
             resolve(ipfsInstanceCheckObject)
@@ -296,6 +299,7 @@ export class ParatiiIPFS extends EventEmitter {
           let ipfsInstanceCheckObject = {
             provider: 'self',
             responseTime: 0,
+            response: 'error',
             responsive: false
           }
           resolve(ipfsInstanceCheckObject)
