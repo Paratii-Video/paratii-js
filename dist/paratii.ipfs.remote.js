@@ -6,6 +6,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ParatiiIPFSRemote = undefined;
 
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
 var _promise = require('babel-runtime/core-js/promise');
 
 var _promise2 = _interopRequireDefault(_promise);
@@ -42,6 +46,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Resumable = require('resumablejs');
 var Multiaddr = require('multiaddr');
+
+// Needed to check the transcoder drop url status code
+require('es6-promise').polyfill();
+var fetch = require('isomorphic-fetch');
+// Needed to open a socket connection
+var net = require('net');
 
 /**
  * Contains functions to interact with the remote IPFS node
@@ -339,6 +349,273 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
             _this4._ipfs.log('unknown command : ', commandStr);
         }
       };
+    }
+    /**
+     * Requests the transcoderDropUrl to see if it's up (Easily adds a dozen seconds to check the status)
+     * @return {Promise} that resolves in a boolean
+     */
+
+  }, {
+    key: 'checkTranscoderDropUrl',
+    value: function checkTranscoderDropUrl() {
+      var _this5 = this;
+
+      return _regenerator2.default.async(function checkTranscoderDropUrl$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              return _context.abrupt('return', new _promise2.default(function (resolve) {
+                fetch(_this5.config.ipfs.transcoderDropUrl).then(function (response) {
+                  if (response.status === 200) {
+                    resolve(true);
+                  } else {
+                    resolve(false);
+                  }
+                });
+              }));
+
+            case 1:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, null, this);
+    }
+    /**
+     * Checks transcoder drop url and returns a detailed object
+     * @return {Promise} that resolves in an object
+     */
+
+  }, {
+    key: 'serviceCheckTranscoderDropUrl',
+    value: function serviceCheckTranscoderDropUrl() {
+      var _this6 = this;
+
+      return _regenerator2.default.async(function serviceCheckTranscoderDropUrl$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              return _context2.abrupt('return', new _promise2.default(function (resolve) {
+                var executionStart = new Date().getTime();
+
+                fetch(_this6.config.ipfs.transcoderDropUrl).then(function (response) {
+                  var reponseStatus = response.status;
+                  if (reponseStatus === 200) {
+                    var executionEnd = new Date().getTime();
+                    var executionTime = executionEnd - executionStart;
+
+                    var transcoderDropUrlServiceCheckObject = {
+                      provider: _this6.config.ipfs.transcoderDropUrl,
+                      responseTime: executionTime,
+                      response: reponseStatus,
+                      responsive: true
+                    };
+                    resolve(transcoderDropUrlServiceCheckObject);
+                  } else {
+                    var _transcoderDropUrlServiceCheckObject = {
+                      provider: _this6.config.ipfs.transcoderDropUrl,
+                      responseTime: 0,
+                      response: reponseStatus,
+                      responsive: false
+                    };
+                    resolve(_transcoderDropUrlServiceCheckObject);
+                  }
+                });
+              }));
+
+            case 1:
+            case 'end':
+              return _context2.stop();
+          }
+        }
+      }, null, this);
+    }
+    /**
+     * Checks the bootstrap dns nodes
+     * @param {string} baseUrl url of the web socket server
+     * @param {Number} port the port at which the web socket is listening to
+     * @return {Promise} that resolves in a boolean
+     */
+
+  }, {
+    key: 'checkBootstrapWebSocketDNS',
+    value: function checkBootstrapWebSocketDNS(baseUrl, port) {
+      return _regenerator2.default.async(function checkBootstrapWebSocketDNS$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              return _context3.abrupt('return', new _promise2.default(function (resolve) {
+                var client = new net.Socket();
+                client.setTimeout(30000); // Arbitrary 30 secondes to be able to reach DNS server
+                client.connect(port, baseUrl, function () {
+                  client.end();
+                  resolve(true);
+                });
+                client.on('error', function (err) {
+                  if (err) {
+                    client.end();
+                    resolve(false);
+                  } else {
+                    client.end();
+                    resolve(false);
+                  }
+                });
+                client.on('timeout', function () {
+                  client.end();
+                  resolve(false);
+                });
+              }));
+
+            case 1:
+            case 'end':
+              return _context3.stop();
+          }
+        }
+      }, null, this);
+    }
+    /**
+     * Checks the default transcoder
+     * @return {Promise} that resolves in a boolean
+     */
+
+  }, {
+    key: 'checkDefaultTranscoder',
+    value: function checkDefaultTranscoder() {
+      var splitDefaultTranscoder, defaultTranscoderCheck;
+      return _regenerator2.default.async(function checkDefaultTranscoder$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              splitDefaultTranscoder = this.config.ipfs.defaultTranscoder.split('/');
+              _context4.next = 3;
+              return _regenerator2.default.awrap(this.checkBootstrapWebSocketDNS(splitDefaultTranscoder[2], splitDefaultTranscoder[4]));
+
+            case 3:
+              defaultTranscoderCheck = _context4.sent;
+              return _context4.abrupt('return', defaultTranscoderCheck);
+
+            case 5:
+            case 'end':
+              return _context4.stop();
+          }
+        }
+      }, null, this);
+    }
+    /**
+     * Checks the default transcoder and returns a detailed object
+     * @return {Promise} that resolves in an object
+     */
+
+  }, {
+    key: 'serviceCheckDefaultTranscoder',
+    value: function serviceCheckDefaultTranscoder() {
+      var splitDefaultTranscoder, executionStart, defaultTranscoderCheck, executionEnd, executionTime, defaultTranscoderObject;
+      return _regenerator2.default.async(function serviceCheckDefaultTranscoder$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              splitDefaultTranscoder = this.config.ipfs.defaultTranscoder.split('/');
+              executionStart = new Date().getTime();
+              _context5.next = 4;
+              return _regenerator2.default.awrap(this.checkBootstrapWebSocketDNS(splitDefaultTranscoder[2], splitDefaultTranscoder[4]));
+
+            case 4:
+              defaultTranscoderCheck = _context5.sent;
+              executionEnd = new Date().getTime();
+              executionTime = executionEnd - executionStart;
+              defaultTranscoderObject = {};
+
+              defaultTranscoderObject.provider = this.config.ipfs.defaultTranscoder;
+              if (defaultTranscoderCheck === true) {
+                defaultTranscoderObject.responseTime = executionTime;
+                defaultTranscoderObject.response = 'can reach';
+                defaultTranscoderObject.responsive = defaultTranscoderCheck;
+              } else {
+                defaultTranscoderObject.responseTime = 0;
+                defaultTranscoderObject.response = 'cannot reach';
+                defaultTranscoderObject.responsive = defaultTranscoderCheck;
+              }
+
+              return _context5.abrupt('return', defaultTranscoderObject);
+
+            case 11:
+            case 'end':
+              return _context5.stop();
+          }
+        }
+      }, null, this);
+    }
+    /**
+     * Checks the remote IPFS node
+     * @return {Promise} that resolves in a boolean
+     */
+
+  }, {
+    key: 'checkRemoteIPFSNode',
+    value: function checkRemoteIPFSNode() {
+      var splitRemoteIPFSNode, remoteIPFSNodeCheck;
+      return _regenerator2.default.async(function checkRemoteIPFSNode$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              splitRemoteIPFSNode = this.config.ipfs.remoteIPFSNode.split('/');
+              _context6.next = 3;
+              return _regenerator2.default.awrap(this.checkBootstrapWebSocketDNS(splitRemoteIPFSNode[2], splitRemoteIPFSNode[4]));
+
+            case 3:
+              remoteIPFSNodeCheck = _context6.sent;
+              return _context6.abrupt('return', remoteIPFSNodeCheck);
+
+            case 5:
+            case 'end':
+              return _context6.stop();
+          }
+        }
+      }, null, this);
+    }
+    /**
+     * Checks the remote IPFS node and returns a detailed object
+     * @return {Promise} that resolves in an object
+     */
+
+  }, {
+    key: 'serviceCheckRemoteIPFSNode',
+    value: function serviceCheckRemoteIPFSNode() {
+      var splitRemoteIPFSNode, executionStart, remoteIPFSNodeCheck, executionEnd, executionTime, remoteIPFSNodeObject;
+      return _regenerator2.default.async(function serviceCheckRemoteIPFSNode$(_context7) {
+        while (1) {
+          switch (_context7.prev = _context7.next) {
+            case 0:
+              splitRemoteIPFSNode = this.config.ipfs.remoteIPFSNode.split('/');
+              executionStart = new Date().getTime();
+              _context7.next = 4;
+              return _regenerator2.default.awrap(this.checkBootstrapWebSocketDNS(splitRemoteIPFSNode[2], splitRemoteIPFSNode[4]));
+
+            case 4:
+              remoteIPFSNodeCheck = _context7.sent;
+              executionEnd = new Date().getTime();
+              executionTime = executionEnd - executionStart;
+              remoteIPFSNodeObject = {};
+
+              remoteIPFSNodeObject.provider = this.config.ipfs.remoteIPFSNode;
+              if (remoteIPFSNodeCheck === true) {
+                remoteIPFSNodeObject.responseTime = executionTime;
+                remoteIPFSNodeObject.response = 'can reach';
+                remoteIPFSNodeObject.responsive = remoteIPFSNodeCheck;
+              } else {
+                remoteIPFSNodeObject.responseTime = 0;
+                remoteIPFSNodeObject.response = 'cannot reach';
+                remoteIPFSNodeObject.responsive = remoteIPFSNodeCheck;
+              }
+
+              return _context7.abrupt('return', remoteIPFSNodeObject);
+
+            case 11:
+            case 'end':
+              return _context7.stop();
+          }
+        }
+      }, null, this);
     }
   }]);
   return ParatiiIPFSRemote;
