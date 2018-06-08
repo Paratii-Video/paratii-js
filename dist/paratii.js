@@ -318,6 +318,39 @@ var Paratii = function (_ParatiiCore) {
         }
       }, null, this);
     }
+    /**
+     * Get services info about the state and responsiveness of the system
+     * @return {Promise} that resolves in an object containing diagnostic info
+     * @example let servicesCheck = await paratii.checkServices()
+     * console.log(servicesCheck)
+     */
+
+  }, {
+    key: 'checkServices',
+    value: function checkServices() {
+      var response;
+      return _regenerator2.default.async(function checkServices$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              // the object that will be returned
+              response = {};
+              // Check eth provider
+
+              _context2.next = 3;
+              return _regenerator2.default.awrap(this.eth.serviceCheckEth());
+
+            case 3:
+              response.eth = _context2.sent;
+              return _context2.abrupt('return', response);
+
+            case 5:
+            case 'end':
+              return _context2.stop();
+          }
+        }
+      }, null, this);
+    }
   }]);
   return Paratii;
 }(_paratiiCore.ParatiiCore);

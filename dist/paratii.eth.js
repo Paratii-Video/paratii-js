@@ -1410,6 +1410,50 @@ var ParatiiEth = exports.ParatiiEth = function () {
         }
       }, null, this);
     }
+    /**
+     * Pings the provider to which the web3 is configured to connect to (see the set up in paratii.eth.js constructor)
+     * @return {Promise} that resolves in an object
+     */
+
+  }, {
+    key: 'serviceCheckEth',
+    value: function serviceCheckEth() {
+      var _this2 = this;
+
+      return _regenerator2.default.async(function serviceCheckEth$(_context14) {
+        while (1) {
+          switch (_context14.prev = _context14.next) {
+            case 0:
+              return _context14.abrupt('return', new _promise2.default(function (resolve) {
+                var executionStart = new Date().getTime();
+
+                _this2.web3.eth.net.isListening().then(function () {
+                  var executionEnd = new Date().getTime();
+                  var executionTime = executionEnd - executionStart;
+
+                  var ethServiceCheckObject = {
+                    provider: _this2.config.eth.provider,
+                    responseTime: executionTime,
+                    responsive: true
+                  };
+                  resolve(ethServiceCheckObject);
+                }).catch(function (e) {
+                  var ethServiceCheckObject = {
+                    provider: _this2.config.eth.provider,
+                    responseTime: 0,
+                    responsive: false
+                  };
+                  resolve(ethServiceCheckObject);
+                });
+              }));
+
+            case 1:
+            case 'end':
+              return _context14.stop();
+          }
+        }
+      }, null, this);
+    }
   }]);
   return ParatiiEth;
 }();

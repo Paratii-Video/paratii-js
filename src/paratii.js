@@ -199,6 +199,19 @@ class Paratii extends ParatiiCore {
     }
     return msgs
   }
+  /**
+   * Get services info about the state and responsiveness of the system
+   * @return {Promise} that resolves in an object containing diagnostic info
+   * @example let servicesCheck = await paratii.checkServices()
+   * console.log(servicesCheck)
+   */
+  async checkServices () {
+    // the object that will be returned
+    let response = {}
+    // Check eth provider
+    response.eth = await this.eth.serviceCheckEth()
+    return response
+  }
 }
 
 export default Paratii

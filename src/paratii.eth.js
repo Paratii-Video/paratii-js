@@ -841,4 +841,34 @@ export class ParatiiEth {
         })
     })
   }
+  /**
+   * Pings the provider to which the web3 is configured to connect to (see the set up in paratii.eth.js constructor)
+   * @return {Promise} that resolves in an object
+   */
+  async serviceCheckEth () {
+    return new Promise(resolve => {
+      let executionStart = new Date().getTime()
+
+      this.web3.eth.net.isListening()
+        .then(() => {
+          let executionEnd = new Date().getTime()
+          let executionTime = executionEnd - executionStart
+
+          let ethServiceCheckObject = {
+            provider: this.config.eth.provider,
+            responseTime: executionTime,
+            responsive: true
+          }
+          resolve(ethServiceCheckObject)
+        })
+        .catch(e => {
+          let ethServiceCheckObject = {
+            provider: this.config.eth.provider,
+            responseTime: 0,
+            responsive: false
+          }
+          resolve(ethServiceCheckObject)
+        })
+    })
+  }
 }
