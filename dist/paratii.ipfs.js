@@ -405,10 +405,64 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
         }
       }, null, this);
     }
+    /**
+     * Checks if the IPFS local node is running and returns an object
+     * @return {Promise} that resolves in an object
+     */
+
+  }, {
+    key: 'serviceCheckIPFSState',
+    value: function serviceCheckIPFSState() {
+      var _this7 = this;
+
+      return _regenerator2.default.async(function serviceCheckIPFSState$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              return _context4.abrupt('return', new _promise2.default(function (resolve) {
+                var executionStart = new Date().getTime();
+
+                _this7.getIPFSInstance().then(function (ipfsInstance) {
+                  if (ipfsInstance.state.state() === 'running') {
+                    var executionEnd = new Date().getTime();
+                    var executionTime = executionEnd - executionStart;
+
+                    var ipfsInstanceCheckObject = {
+                      provider: 'self',
+                      responseTime: executionTime,
+                      responsive: true
+                    };
+
+                    resolve(ipfsInstanceCheckObject);
+                  } else {
+                    var _ipfsInstanceCheckObject = {
+                      provider: 'self',
+                      responseTime: 0,
+                      responsive: false
+                    };
+                    resolve(_ipfsInstanceCheckObject);
+                  }
+                }).catch(function (e) {
+                  var ipfsInstanceCheckObject = {
+                    provider: 'self',
+                    responseTime: 0,
+                    responsive: false
+                  };
+                  resolve(ipfsInstanceCheckObject);
+                });
+              }));
+
+            case 1:
+            case 'end':
+              return _context4.stop();
+          }
+        }
+      }, null, this);
+    }
   }, {
     key: 'initProtocol',
     value: function initProtocol(ipfs) {
-      var _this7 = this;
+      var _this8 = this;
 
       var ptiAddress = this.config.account.address || 'no_address';
       this.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
@@ -419,12 +473,12 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
       this.remote._node = ipfs;
 
       this.protocol.notifications.on('message:new', function (peerId, msg) {
-        _this7.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
+        _this8.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
       });
       // emit all commands.
       // NOTE : this will be changed once protocol upgrades are ready.
       this.protocol.notifications.on('command', function (peerId, command) {
-        _this7.emit('protocol:incoming', peerId, command);
+        _this8.emit('protocol:incoming', peerId, command);
       });
     }
   }]);

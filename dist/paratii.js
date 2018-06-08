@@ -342,9 +342,17 @@ var Paratii = function (_ParatiiCore) {
 
             case 3:
               response.eth = _context2.sent;
+
+              // Check local ipfs instance
+              response.ipfs = {};
+              _context2.next = 7;
+              return _regenerator2.default.awrap(this.ipfs.serviceCheckIPFSState());
+
+            case 7:
+              response.ipfs.localNode = _context2.sent;
               return _context2.abrupt('return', response);
 
-            case 5:
+            case 9:
             case 'end':
               return _context2.stop();
           }

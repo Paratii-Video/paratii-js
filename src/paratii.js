@@ -210,6 +210,9 @@ class Paratii extends ParatiiCore {
     let response = {}
     // Check eth provider
     response.eth = await this.eth.serviceCheckEth()
+    // Check local ipfs instance
+    response.ipfs = {}
+    response.ipfs.localNode = await this.ipfs.serviceCheckIPFSState()
     return response
   }
 }
