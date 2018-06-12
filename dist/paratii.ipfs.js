@@ -59,11 +59,10 @@ var _paratiiIpfsLocal = require('./paratii.ipfs.local.js');
 
 var _paratiiTranscoder = require('./paratii.transcoder.js');
 
-var _utils = require('./utils.js');
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/* global ArrayBuffer */
+// import { PromiseEventEmitter } from './utils.js'
+
 global.Buffer = global.Buffer || require('buffer').Buffer;
 
 /**
@@ -72,6 +71,7 @@ global.Buffer = global.Buffer || require('buffer').Buffer;
  * @property {ParatiiIPFSLocal} local operations on the local node
  * @property {ParatiiIPFSRemote} remote operations on remote node
  */
+/* global ArrayBuffer */
 
 var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   (0, _inherits3.default)(ParatiiIPFS, _EventEmitter);
@@ -90,7 +90,8 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     var schema = _joi2.default.object({
       ipfs: _schemas.ipfsSchema,
       account: _schemas.accountSchema,
-      verbose: _joi2.default.bool().default(true)
+      verbose: _joi2.default.bool().default(true),
+      expressUploading: _joi2.default.bool().default(true)
     });
 
     var result = _joi2.default.validate(config, schema, { allowUnknown: true });
@@ -98,12 +99,13 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     _this.config = config;
     _this.config.ipfs = result.value.ipfs;
     _this.config.account = result.value.account;
+    _this.config.expressUploading = result.value.expressUploading;
     // TODO change this to some other name. this is wrong.
     // because `this` isn't an ipfs instance.
     _this.config.ipfsInstance = _this;
-
-    _this.local = new _paratiiIpfsLocal.ParatiiIPFSLocal(config);
     _this.remote = new _paratiiIpfsRemote.ParatiiIPFSRemote({ ipfs: _this.config.ipfs, paratiiIPFS: _this });
+    _this.local = new _paratiiIpfsLocal.ParatiiIPFSLocal({ config: config, ParatiiIPFS: _this });
+    _this.local.remote = _this.remote;
     _this.transcoder = new _paratiiTranscoder.ParatiiTranscoder({ ipfs: _this.config.ipfs, paratiiIPFS: _this });
     return _this;
   }
@@ -173,57 +175,42 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     value: function addAndPinJSON(data) {
       var _this4 = this;
 
+      var hash, pinEv;
       return _regenerator2.default.async(function addAndPinJSON$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              return _context2.abrupt('return', new _utils.PromiseEventEmitter(function _callee(resolve, reject) {
-                var hash, pinFile, pinEv;
+              _context2.next = 2;
+              return _regenerator2.default.awrap(this.local.addJSON(data));
+
+            case 2:
+              hash = _context2.sent;
+              pinEv = this.remote.pinFile(hash, { author: this._getAccount() });
+
+
+              pinEv.on('pin:error', function (err) {
+                console.warn('pin:error:', hash, ' : ', err);
+                console.log('trying again');
+                // pinEv = pinFile()
+              });
+
+              pinEv.on('pin:done', function _callee(hash) {
                 return _regenerator2.default.async(function _callee$(_context) {
                   while (1) {
                     switch (_context.prev = _context.next) {
                       case 0:
-                        _context.next = 2;
-                        return _regenerator2.default.awrap(_this4.local.addJSON(data));
-
-                      case 2:
-                        hash = _context.sent;
-
-                        pinFile = function pinFile() {
-                          var pinEv = _this4.remote.pinFile(hash, { author: _this4._getAccount() });
-                          pinEv.on('pin:error', function (err) {
-                            console.warn('pin:error:', hash, ' : ', err);
-                            pinEv.removeAllListeners();
-                          });
-                          pinEv.on('pin:done', function (hash) {
-                            _this4.log('pin:done:', hash);
-                            pinEv.removeAllListeners();
-                          });
-                          return pinEv;
-                        };
-
-                        pinEv = pinFile();
-
-
-                        pinEv.on('pin:error', function (err) {
-                          console.warn('pin:error:', hash, ' : ', err);
-                          console.log('trying again');
-                          pinEv = pinFile();
-                        });
-
-                        pinEv.on('pin:done', function (hash) {
-                          resolve(hash);
-                        });
-
-                      case 7:
                       case 'end':
                         return _context.stop();
                     }
                   }
                 }, null, _this4);
-              }));
+              }
+              // resolve(hash)
+              );
 
-            case 1:
+              return _context2.abrupt('return', hash);
+
+            case 7:
             case 'end':
               return _context2.stop();
           }

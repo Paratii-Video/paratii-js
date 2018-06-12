@@ -6,7 +6,7 @@ import { EventEmitter } from 'events'
 import { ParatiiIPFSRemote } from './paratii.ipfs.remote.js'
 import { ParatiiIPFSLocal } from './paratii.ipfs.local.js'
 import { ParatiiTranscoder } from './paratii.transcoder.js'
-import { PromiseEventEmitter } from './utils.js'
+// import { PromiseEventEmitter } from './utils.js'
 
 global.Buffer = global.Buffer || require('buffer').Buffer
 
@@ -28,7 +28,8 @@ export class ParatiiIPFS extends EventEmitter {
     const schema = joi.object({
       ipfs: ipfsSchema,
       account: accountSchema,
-      verbose: joi.bool().default(true)
+      verbose: joi.bool().default(true),
+      expressUploading: joi.bool().default(true)
     })
 
     const result = joi.validate(config, schema, {allowUnknown: true})
@@ -36,12 +37,13 @@ export class ParatiiIPFS extends EventEmitter {
     this.config = config
     this.config.ipfs = result.value.ipfs
     this.config.account = result.value.account
+    this.config.expressUploading = result.value.expressUploading
     // TODO change this to some other name. this is wrong.
     // because `this` isn't an ipfs instance.
     this.config.ipfsInstance = this
-
-    this.local = new ParatiiIPFSLocal(config)
     this.remote = new ParatiiIPFSRemote({ipfs: this.config.ipfs, paratiiIPFS: this})
+    this.local = new ParatiiIPFSLocal({config: config, ParatiiIPFS: this})
+    this.local.remote = this.remote
     this.transcoder = new ParatiiTranscoder({ipfs: this.config.ipfs, paratiiIPFS: this})
   }
 
@@ -93,35 +95,55 @@ export class ParatiiIPFS extends EventEmitter {
    * @example let result = await paratiiIPFS.addAndPinJSON(data)
    */
   async addAndPinJSON (data) {
-    return new PromiseEventEmitter(async (resolve, reject) => {
-      let hash = await this.local.addJSON(data)
-      let pinFile = () => {
-        let pinEv = this.remote.pinFile(hash,
-          { author: this._getAccount() }
-        )
-        pinEv.on('pin:error', (err) => {
-          console.warn('pin:error:', hash, ' : ', err)
-          pinEv.removeAllListeners()
-        })
-        pinEv.on('pin:done', (hash) => {
-          this.log('pin:done:', hash)
-          pinEv.removeAllListeners()
-        })
-        return pinEv
-      }
+    // return new Promise(async (resolve, reject) => {
+    let hash = await this.local.addJSON(data)
+    let pinEv = this.remote.pinFile(hash,
+      { author: this._getAccount() }
+    )
 
-      let pinEv = pinFile()
-
-      pinEv.on('pin:error', (err) => {
-        console.warn('pin:error:', hash, ' : ', err)
-        console.log('trying again')
-        pinEv = pinFile()
-      })
-
-      pinEv.on('pin:done', (hash) => {
-        resolve(hash)
-      })
+    pinEv.on('pin:error', (err) => {
+      console.warn('pin:error:', hash, ' : ', err)
+      console.log('trying again')
+      // pinEv = pinFile()
     })
+
+    pinEv.on('pin:done', async (hash) => {
+      // resolve(hash)
+    })
+
+    return hash
+    // return pinEv
+    // })
+    // see me after class vvvvvvvvvvv
+    // return new PromiseEventEmitter(async (resolve, reject) => {
+    //   let hash = await this.local.addJSON(data)
+    //   let pinFile = () => {
+    //     let pinEv = this.remote.pinFile(hash,
+    //       { author: this._getAccount() }
+    //     )
+    //     pinEv.on('pin:error', (err) => {
+    //       console.warn('pin:error:', hash, ' : ', err)
+    //       pinEv.removeAllListeners()
+    //     })
+    //     pinEv.on('pin:done', (hash) => {
+    //       this.log('pin:done:', hash)
+    //       pinEv.removeAllListeners()
+    //     })
+    //     return pinEv
+    //   }
+    //
+    //   let pinEv = pinFile()
+    //
+    //   pinEv.on('pin:error', (err) => {
+    //     console.warn('pin:error:', hash, ' : ', err)
+    //     console.log('trying again')
+    //     pinEv = pinFile()
+    //   })
+    //
+    //   pinEv.on('pin:done', (hash) => {
+    //     resolve(hash)
+    //   })
+    // })
   }
 
   /**

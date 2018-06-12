@@ -227,7 +227,9 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
       var _this4 = this;
 
       var ev = this._ipfs.local.add(files);
+      // let ev2 = this._ipfs.remote.addAndUpload(files)
       ev.on('done', function (files) {
+        console.log('signaling transcoder....');
         _this4._signalTranscoder(files, ev);
       });
       return ev;
