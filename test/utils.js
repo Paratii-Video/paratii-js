@@ -35,7 +35,7 @@ const testAccount = {
 const testConfig = {
   eth: {
     provider: 'http://localhost:8545',
-    tcrConfigFile: 'sol-tcr/conf/devConfig.json'
+    tcrConfig: require('sol-tcr/conf/devConfig.json')
   },
   account: {
     address: address,

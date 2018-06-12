@@ -265,6 +265,69 @@ export class ParatiiIPFS extends EventEmitter {
       }
     })
   }
+  /**
+   * Checks if the IPFS local node is running
+   * @return {Promise} that resolves in a boolean
+   */
+  async checkIPFSState () {
+    return new Promise(resolve => {
+      this.getIPFSInstance()
+        .then((ipfsInstance) => {
+          if (ipfsInstance.state.state() === 'running') {
+            resolve(true)
+          } else {
+            resolve(false)
+          }
+        })
+        .catch(e => {
+          resolve(false)
+        })
+    })
+  }
+  /**
+   * Checks if the IPFS local node is running and returns an object
+   * @return {Promise} that resolves in an object
+   */
+  async serviceCheckIPFSState () {
+    return new Promise(resolve => {
+      let executionStart = new Date().getTime()
+
+      this.getIPFSInstance()
+        .then((ipfsInstance) => {
+          let currentState = ipfsInstance.state.state()
+          if (currentState === 'running') {
+            let executionEnd = new Date().getTime()
+            let executionTime = executionEnd - executionStart
+
+            let ipfsInstanceCheckObject = {
+              provider: 'self',
+              responseTime: executionTime,
+              response: currentState,
+              responsive: true
+            }
+
+            resolve(ipfsInstanceCheckObject)
+          } else {
+            let ipfsInstanceCheckObject = {
+              provider: 'self',
+              responseTime: 0,
+              response: currentState,
+              responsive: false
+            }
+            resolve(ipfsInstanceCheckObject)
+          }
+        })
+        .catch(e => {
+          let ipfsInstanceCheckObject = {
+            provider: 'self',
+            responseTime: 0,
+            response: 'error',
+            responsive: false
+          }
+          resolve(ipfsInstanceCheckObject)
+        })
+    })
+  }
 
   initProtocol (ipfs) {
     let ptiAddress = this.config.account.address || 'no_address'

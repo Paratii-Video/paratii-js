@@ -359,10 +359,101 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
         }
       });
     }
+    /**
+     * Checks if the IPFS local node is running
+     * @return {Promise} that resolves in a boolean
+     */
+
+  }, {
+    key: 'checkIPFSState',
+    value: function checkIPFSState() {
+      var _this6 = this;
+
+      return _regenerator2.default.async(function checkIPFSState$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              return _context3.abrupt('return', new _promise2.default(function (resolve) {
+                _this6.getIPFSInstance().then(function (ipfsInstance) {
+                  if (ipfsInstance.state.state() === 'running') {
+                    resolve(true);
+                  } else {
+                    resolve(false);
+                  }
+                }).catch(function (e) {
+                  resolve(false);
+                });
+              }));
+
+            case 1:
+            case 'end':
+              return _context3.stop();
+          }
+        }
+      }, null, this);
+    }
+    /**
+     * Checks if the IPFS local node is running and returns an object
+     * @return {Promise} that resolves in an object
+     */
+
+  }, {
+    key: 'serviceCheckIPFSState',
+    value: function serviceCheckIPFSState() {
+      var _this7 = this;
+
+      return _regenerator2.default.async(function serviceCheckIPFSState$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              return _context4.abrupt('return', new _promise2.default(function (resolve) {
+                var executionStart = new Date().getTime();
+
+                _this7.getIPFSInstance().then(function (ipfsInstance) {
+                  var currentState = ipfsInstance.state.state();
+                  if (currentState === 'running') {
+                    var executionEnd = new Date().getTime();
+                    var executionTime = executionEnd - executionStart;
+
+                    var ipfsInstanceCheckObject = {
+                      provider: 'self',
+                      responseTime: executionTime,
+                      response: currentState,
+                      responsive: true
+                    };
+
+                    resolve(ipfsInstanceCheckObject);
+                  } else {
+                    var _ipfsInstanceCheckObject = {
+                      provider: 'self',
+                      responseTime: 0,
+                      response: currentState,
+                      responsive: false
+                    };
+                    resolve(_ipfsInstanceCheckObject);
+                  }
+                }).catch(function (e) {
+                  var ipfsInstanceCheckObject = {
+                    provider: 'self',
+                    responseTime: 0,
+                    response: 'error',
+                    responsive: false
+                  };
+                  resolve(ipfsInstanceCheckObject);
+                });
+              }));
+
+            case 1:
+            case 'end':
+              return _context4.stop();
+          }
+        }
+      }, null, this);
+    }
   }, {
     key: 'initProtocol',
     value: function initProtocol(ipfs) {
-      var _this6 = this;
+      var _this8 = this;
 
       var ptiAddress = this.config.account.address || 'no_address';
       this.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
@@ -373,12 +464,12 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
       this.remote._node = ipfs;
 
       this.protocol.notifications.on('message:new', function (peerId, msg) {
-        _this6.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
+        _this8.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
       });
       // emit all commands.
       // NOTE : this will be changed once protocol upgrades are ready.
       this.protocol.notifications.on('command', function (peerId, command) {
-        _this6.emit('protocol:incoming', peerId, command);
+        _this8.emit('protocol:incoming', peerId, command);
       });
     }
   }]);
