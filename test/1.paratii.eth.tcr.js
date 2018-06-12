@@ -9,7 +9,7 @@ describe('paratii.eth.tcr:', function () {
 
   before(async function () {
     paratii = new Paratii(testConfig)
-    tcrConfig = require(paratii.config.eth.tcrConfigFile)
+    tcrConfig = paratii.config.eth.tcrConfig
     await paratii.eth.deployContracts()
     // console.log('tcrConfig: ', tcrConfig)
   })
