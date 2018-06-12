@@ -10,6 +10,65 @@ import { patchWallet } from './paratii.eth.wallet.js'
 import { ethSchema, accountSchema } from './schemas.js'
 import joi from 'joi'
 
+const CONTRACTS = {
+  ParatiiToken: {
+    artifact: require(`paratii-contracts/build/contracts/ParatiiToken.json`)
+  },
+  Avatar: {
+    artifact: require(`paratii-contracts/build/contracts/Avatar.json`)
+  },
+  Registry: {
+    artifact: require(`paratii-contracts/build/contracts/Registry.json`)
+  },
+  SendEther: {
+    artifact: require(`paratii-contracts/build/contracts/SendEther.json`)
+  },
+  Users: {
+    artifact: require(`paratii-contracts/build/contracts/Users.json`)
+  },
+  Videos: {
+    artifact: require(`paratii-contracts/build/contracts/Videos.json`)
+
+  },
+  Store: {
+    artifact: require(`paratii-contracts/build/contracts/Store.json`)
+
+  },
+  Likes: {
+    artifact: require(`paratii-contracts/build/contracts/Likes.json`)
+
+  },
+  Views: {
+    artifact: require(`paratii-contracts/build/contracts/Views.json`)
+
+  },
+  Vouchers: {
+    artifact: require(`paratii-contracts/build/contracts/Vouchers.json`)
+
+  },
+  PTIDistributor: {
+    artifact: require(`paratii-contracts/build/contracts/PTIDistributor.json`)
+
+  },
+  TcrPlaceholder: {
+    artifact: require(`paratii-contracts/build/contracts/TcrPlaceholder.json`)
+  },
+  'sol-tcr/Registry': {
+    artifact: require(`sol-tcr/build/contracts/Registry.json`)
+  },
+  'sol-tcr/PLCRVoting': {
+    artifact: require(`sol-tcr/build/contracts/PLCRVoting.json`)
+  },
+  'sol-tcr/Parameterizer': {
+    artifact: require(`sol-tcr/build/contracts/Parameterizer.json`)
+  },
+  'sol-tcr/DLL': {
+    artifact: require(`sol-tcr/build/contracts/DLL.json`)
+  },
+  'sol-tcr/AttributeStore': {
+    artifact: require(`sol-tcr/build/contracts/AttributeStore.json`)
+  }
+}
 const Web3 = require('web3')
 // const joi = require('joi')
 /**
@@ -165,17 +224,9 @@ export class ParatiiEth {
     let artifact, contract
     let from = this.config.account.address
 
-    let contractArr = contractName.split('/')
-    if (contractArr[0] === 'sol-tcr') {
-      artifact = require(`sol-tcr/build/contracts/${contractArr[1]}.json`)
-      // contract = truffleContract(artifact)
-      // contract.setProvider(this._provider)
-      // contract.defaults({
-      //   from: from,
-      //   gas: this.web3.utils.toHex(4e6)
-      // })
-    } else {
-      artifact = require(`paratii-contracts/build/contracts/${contractName}.json`)
+    artifact = CONTRACTS[contractName].artifact
+    if (!artifact) {
+      throw Error(`Unknown Paratii contract: ${contractName}`)
     }
 
     contract = new this.web3.eth.Contract(
@@ -224,116 +275,6 @@ export class ParatiiEth {
     return deployedContract
   }
 
-  // async deployTcr (paratiiRegistry, paratiiToken) {
-  //   // Deployment steps.
-  //   // 1. deploy DLL and AttributeStore
-  //   // 2. deploy PLCRVoting and link the DLL and AttributeStore
-  //   // 3. deploy Parameterizer with default configs for now.
-  //   // 4. deploy TcrRegistry
-  //   // 5. register TcrRegistry to Registry (lol)
-  //   let tcrConfig = require('sol-tcr/conf/config.json')
-  //   let parameterizerConfig = tcrConfig.paramDefaults
-  //   // this.truffleContracts = {}
-  //   // this.truffleContracts.TcrRegistry = this.requireTruffleContract('sol-tcr/Registry')
-  //   // this.truffleContracts.TcrPLCRVoting = this.requireTruffleContract('sol-tcr/PLCRVoting')
-  //   // this.truffleContracts.TcrParameterizer = this.requireTruffleContract('sol-tcr/Parameterizer')
-  //   // this.truffleContracts.TcrDLL = this.requireTruffleContract('sol-tcr/DLL')
-  //   // this.truffleContracts.TcrAttributeStore = this.requireTruffleContract('sol-tcr/AttributeStore')
-  //   //
-  //   // this.truffleContracts.TcrDLL.new({from: this.config.account.address}).then((instance) => {
-  //   //   console.log('DLL: ', instance)
-  //   //   resolve(instance)
-  //   // }).catch((e) => {
-  //   //   console.log('gotcha : ', e)
-  //   //   reject(e)
-  //   // })
-  //   // console.log('TcrDLL: ', this.contracts.TcrDLL)
-  //   // console.log('TcrAttributeStore: ', this.contracts.TcrAttributeStore)
-  //   // console.log('TcrPLCR: ', this.contracts.TcrPLCRVoting)
-  //   // console.log('Avatar: ', this.contracts.Avatar)
-  //   // console.log('Registry Address: ', this.contracts.Registry.options.address)
-  //   // let deployedDLL = await this.contracts.TcrDLL.deploy({arguments: []}).send()
-  //   // deployedDLL.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
-  //   // this.contracts.TcrDLL = deployedDLL
-  //   //
-  //   // let deployedAttributeStore = await this.contracts.TcrAttributeStore.deploy({arguments: []}).send()
-  //   // deployedAttributeStore.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
-  //   // this.contracts.TcrAttributeStore = deployedAttributeStore
-  //
-  //   // link both libs to PLCRVoting and deploy it.
-  //   let linkedByteCode = this.linkByteCode(
-  //     this.contracts.TcrPLCRVoting.options.data, {
-  //       DLL: this.contracts.TcrDLL.options.address,
-  //       AttributeStore: this.contracts.TcrAttributeStore.options.address
-  //     })
-  //
-  //   this.contracts.TcrPLCRVoting.options.data = linkedByteCode
-  //
-  //   let deployedPLCRVoting = await this.contracts.TcrPLCRVoting.deploy({
-  //     arguments: [paratiiToken]
-  //   }).send()
-  //   deployedPLCRVoting.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
-  //   this.contracts.TcrPLCRVoting = deployedPLCRVoting
-  //
-  //   // ---------------------------------------------
-  //
-  //   linkedByteCode = null
-  //   linkedByteCode = this.linkByteCode(
-  //     this.contracts.TcrParameterizer.options.data,
-  //     {
-  //       DLL: this.contracts.TcrDLL.options.address,
-  //       AttributeStore: this.contracts.TcrAttributeStore.options.address
-  //     }
-  //   )
-  //   this.contracts.TcrParameterizer.options.data = linkedByteCode
-  //   let deployedParameterizer = await this.contracts.TcrParameterizer.deploy({
-  //     arguments: [
-  //       paratiiToken,
-  //       this.contracts.TcrPLCRVoting.options.address,
-  //       parameterizerConfig.minDeposit,
-  //       parameterizerConfig.pMinDeposit,
-  //       parameterizerConfig.applyStageLength,
-  //       parameterizerConfig.pApplyStageLength,
-  //       parameterizerConfig.commitStageLength,
-  //       parameterizerConfig.pCommitStageLength,
-  //       parameterizerConfig.revealStageLength,
-  //       parameterizerConfig.pRevealStageLength,
-  //       parameterizerConfig.dispensationPct,
-  //       parameterizerConfig.pDispensationPct,
-  //       parameterizerConfig.voteQuorum,
-  //       parameterizerConfig.pVoteQuorum
-  //     ]
-  //   }).send()
-  //
-  //   deployedParameterizer.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
-  //   this.contracts.TcrParameterizer = deployedParameterizer
-  //
-  //   // --------------------------------------------------
-  //
-  //   linkedByteCode = null
-  //   linkedByteCode = this.linkByteCode(
-  //     this.contracts.TcrRegistry.options.data,
-  //     {
-  //       DLL: this.contracts.TcrDLL.options.address,
-  //       AttributeStore: this.contracts.TcrAttributeStore.options.address
-  //     }
-  //   )
-  //   this.contracts.TcrRegistry.options.data = linkedByteCode
-  //   let deployedRegistry = await this.contracts.TcrRegistry.deploy({
-  //     arguments: [
-  //       paratiiToken,
-  //       this.contracts.TcrPLCRVoting.options.address,
-  //       this.contracts.TcrParameterizer.options.address,
-  //       'paratii test TCR integration'
-  //     ]
-  //   }).send()
-  //
-  //   deployedRegistry.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
-  //   this.contracts.TcrRegistry = deployedRegistry
-  //
-  //   return {deployedRegistry, deployedPLCRVoting, deployedParameterizer}
-  // }
-
   async deployWithLinks (name, links, ...args) {
     let linkedByteCode = this.linkByteCode(
       this.contracts[name].options.data, links)
@@ -348,115 +289,6 @@ export class ParatiiEth {
     // console.log('deployed ', name)
     return deployedContract
   }
-  // async deployTcr (paratiiRegistry, paratiiToken) {
-  //   // Deployment steps.
-  //   // 1. deploy DLL and AttributeStore
-  //   // 2. deploy PLCRVoting and link the DLL and AttributeStore
-  //   // 3. deploy Parameterizer with default configs for now.
-  //   // 4. deploy TcrRegistry
-  //   // 5. register TcrRegistry to Registry (lol)
-  //   let tcrConfig = require('sol-tcr/conf/config.json')
-  //   let parameterizerConfig = tcrConfig.paramDefaults
-  //   // this.truffleContracts = {}
-  //   // this.truffleContracts.TcrRegistry = this.requireTruffleContract('sol-tcr/Registry')
-  //   // this.truffleContracts.TcrPLCRVoting = this.requireTruffleContract('sol-tcr/PLCRVoting')
-  //   // this.truffleContracts.TcrParameterizer = this.requireTruffleContract('sol-tcr/Parameterizer')
-  //   // this.truffleContracts.TcrDLL = this.requireTruffleContract('sol-tcr/DLL')
-  //   // this.truffleContracts.TcrAttributeStore = this.requireTruffleContract('sol-tcr/AttributeStore')
-  //   //
-  //   // this.truffleContracts.TcrDLL.new({from: this.config.account.address}).then((instance) => {
-  //   //   console.log('DLL: ', instance)
-  //   //   resolve(instance)
-  //   // }).catch((e) => {
-  //   //   console.log('gotcha : ', e)
-  //   //   reject(e)
-  //   // })
-  //   // console.log('TcrDLL: ', this.contracts.TcrDLL)
-  //   // console.log('TcrAttributeStore: ', this.contracts.TcrAttributeStore)
-  //   // console.log('TcrPLCR: ', this.contracts.TcrPLCRVoting)
-  //   // console.log('Avatar: ', this.contracts.Avatar)
-  //   // console.log('Registry Address: ', this.contracts.Registry.options.address)
-  //   // let deployedDLL = await this.contracts.TcrDLL.deploy({arguments: []}).send()
-  //   // deployedDLL.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
-  //   // this.contracts.TcrDLL = deployedDLL
-  //   //
-  //   // let deployedAttributeStore = await this.contracts.TcrAttributeStore.deploy({arguments: []}).send()
-  //   // deployedAttributeStore.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
-  //   // this.contracts.TcrAttributeStore = deployedAttributeStore
-  //
-  //   // link both libs to PLCRVoting and deploy it.
-  //   let linkedByteCode = this.linkByteCode(
-  //     this.contracts.TcrPLCRVoting.options.data, {
-  //       DLL: this.contracts.TcrDLL.options.address,
-  //       AttributeStore: this.contracts.TcrAttributeStore.options.address
-  //     })
-  //
-  //   this.contracts.TcrPLCRVoting.options.data = linkedByteCode
-  //
-  //   let deployedPLCRVoting = await this.contracts.TcrPLCRVoting.deploy({
-  //     arguments: [paratiiToken]
-  //   }).send()
-  //   deployedPLCRVoting.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
-  //   this.contracts.TcrPLCRVoting = deployedPLCRVoting
-  //
-  //   // ---------------------------------------------
-  //
-  //   linkedByteCode = null
-  //   linkedByteCode = this.linkByteCode(
-  //     this.contracts.TcrParameterizer.options.data,
-  //     {
-  //       DLL: this.contracts.TcrDLL.options.address,
-  //       AttributeStore: this.contracts.TcrAttributeStore.options.address
-  //     }
-  //   )
-  //   this.contracts.TcrParameterizer.options.data = linkedByteCode
-  //   let deployedParameterizer = await this.contracts.TcrParameterizer.deploy({
-  //     arguments: [
-  //       paratiiToken,
-  //       this.contracts.TcrPLCRVoting.options.address,
-  //       parameterizerConfig.minDeposit,
-  //       parameterizerConfig.pMinDeposit,
-  //       parameterizerConfig.applyStageLength,
-  //       parameterizerConfig.pApplyStageLength,
-  //       parameterizerConfig.commitStageLength,
-  //       parameterizerConfig.pCommitStageLength,
-  //       parameterizerConfig.revealStageLength,
-  //       parameterizerConfig.pRevealStageLength,
-  //       parameterizerConfig.dispensationPct,
-  //       parameterizerConfig.pDispensationPct,
-  //       parameterizerConfig.voteQuorum,
-  //       parameterizerConfig.pVoteQuorum
-  //     ]
-  //   }).send()
-  //
-  //   deployedParameterizer.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
-  //   this.contracts.TcrParameterizer = deployedParameterizer
-  //
-  //   // --------------------------------------------------
-  //
-  //   linkedByteCode = null
-  //   linkedByteCode = this.linkByteCode(
-  //     this.contracts.TcrRegistry.options.data,
-  //     {
-  //       DLL: this.contracts.TcrDLL.options.address,
-  //       AttributeStore: this.contracts.TcrAttributeStore.options.address
-  //     }
-  //   )
-  //   this.contracts.TcrRegistry.options.data = linkedByteCode
-  //   let deployedRegistry = await this.contracts.TcrRegistry.deploy({
-  //     arguments: [
-  //       paratiiToken,
-  //       this.contracts.TcrPLCRVoting.options.address,
-  //       this.contracts.TcrParameterizer.options.address,
-  //       'paratii test TCR integration'
-  //     ]
-  //   }).send()
-  //
-  //   deployedRegistry.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
-  //   this.contracts.TcrRegistry = deployedRegistry
-  //
-  //   return {deployedRegistry, deployedPLCRVoting, deployedParameterizer}
-  // }
 
   /**
    * deploy all Paratii contracts on the blockchain, and register them the registry contract
@@ -465,7 +297,7 @@ export class ParatiiEth {
    * for (contractName in contracts) { console.log(contracts[contractName])}
    */
   async deployContracts () {
-    let tcrConfig = require(this.config.eth.tcrConfigFile)
+    let tcrConfig = this.config.eth.tcrConfig
     let parameterizerConfig = tcrConfig.paramDefaults
 
     let paratiiRegistry = await this.deployContract('Registry')

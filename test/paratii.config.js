@@ -17,7 +17,7 @@ describe('Paratii configuration:', function () {
       eth: {
         provider: 'http://localhost:8545',
         registryAddress: null,
-        tcrConfigFile: 'sol-tcr/conf/config.json',
+        tcrConfig: require('sol-tcr/conf/config.json'),
         isTestNet: true
       }
     }
@@ -42,7 +42,7 @@ describe('Paratii configuration:', function () {
       eth: {
         provider: 'http://localhost:8545',
         registryAddress: paratii.config.eth.registryAddress,
-        tcrConfigFile: paratii.config.eth.tcrConfigFile
+        tcrConfig: paratii.config.eth.tcrConfig
       }
     })
 
@@ -69,7 +69,7 @@ describe('Paratii configuration:', function () {
         provider: 'http://chain.paratii.video/',
         isTestNet: false,
         registryAddress: null,
-        tcrConfigFile: 'sol-tcr/conf/config.json'
+        tcrConfig: require('sol-tcr/conf/config.json')
       }
     }
     assert.deepInclude(paratii.config, expected)
