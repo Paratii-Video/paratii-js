@@ -42,6 +42,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Resumable = require('resumablejs');
 var Multiaddr = require('multiaddr');
+var once = require('once');
 
 /**
  * Contains functions to interact with the remote IPFS node
@@ -89,6 +90,7 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
       ev = this._ipfs.local.upload(files, ev);
       ev.on('local:fileReady', function (file, hashedFile) {
         if (file._html5File) {
+          console.log('using xhrUpload .....');
           this._ipfs.remote.xhrUpload(file, hashedFile, ev);
         } else {
           this._ipfs.remote.pinFile(hashedFile);
@@ -254,6 +256,8 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
         transcoderId: _joi2.default.any().default(Multiaddr(this.config.ipfs.defaultTranscoder).getPeerId()),
         size: _joi2.default.number().default(0)
       }).unknown();
+
+      this._pinResponseHandler = once(this._pinResponseHandler);
 
       this._ipfs.log('Signaling transcoder to pin ' + fileHash);
 

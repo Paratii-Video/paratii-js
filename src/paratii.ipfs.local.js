@@ -15,10 +15,11 @@ const once = require('once')
  * @extends EventEmitter
  */
 export class ParatiiIPFSLocal extends EventEmitter {
-  constructor (config) {
+  constructor (opts) {
     super()
-    this.config = config
+    this.config = opts.config
     this._ipfs = this.config.ipfsInstance
+    this.paratiiIPFS = opts.paratiiIPFS
   }
 
   /**
@@ -70,7 +71,9 @@ export class ParatiiIPFSLocal extends EventEmitter {
     if (!ev) {
       ev = new EventEmitter()
     }
-
+    console.log('this: ', this)
+    console.log('this.paratiiIPFS: ', this.paratiiIPFS)
+    console.log('this.remote: ', this.remote)
     this._ipfs.start().then(() => {
       // trigger onStart callback
       ev.emit('start')
@@ -103,8 +106,15 @@ export class ParatiiIPFSLocal extends EventEmitter {
             const hashedFile = res[0]
             this._ipfs.log('Adding %s finished as %s, size: %s', hashedFile.path, hashedFile.hash, hashedFile.size)
 
-            ev.emit('local:fileReady', file, hashedFile)
-            cb(null, hashedFile)
+            let remoteEv = new EventEmitter()
+            this.remote.xhrUpload(file, hashedFile, remoteEv)
+            remoteEv.on('progress', (progress) => {
+              ev.emit('progress', progress)
+            })
+            remoteEv.once('fileReady', (readyHash) => {
+              ev.emit('local:fileReady', file, hashedFile)
+              cb(null, hashedFile)
+            })
           })
         )),
         pull.collect((err, hashedFiles) => {

@@ -102,8 +102,9 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     // because `this` isn't an ipfs instance.
     _this.config.ipfsInstance = _this;
 
-    _this.local = new _paratiiIpfsLocal.ParatiiIPFSLocal(config);
     _this.remote = new _paratiiIpfsRemote.ParatiiIPFSRemote({ ipfs: _this.config.ipfs, paratiiIPFS: _this });
+    _this.local = new _paratiiIpfsLocal.ParatiiIPFSLocal({ config: config, ParatiiIPFS: _this });
+    _this.local.remote = _this.remote;
     _this.transcoder = new _paratiiTranscoder.ParatiiTranscoder({ ipfs: _this.config.ipfs, paratiiIPFS: _this });
     return _this;
   }

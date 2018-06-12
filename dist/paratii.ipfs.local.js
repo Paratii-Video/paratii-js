@@ -62,13 +62,14 @@ var once = require('once');
 var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
   (0, _inherits3.default)(ParatiiIPFSLocal, _EventEmitter);
 
-  function ParatiiIPFSLocal(config) {
+  function ParatiiIPFSLocal(opts) {
     (0, _classCallCheck3.default)(this, ParatiiIPFSLocal);
 
     var _this = (0, _possibleConstructorReturn3.default)(this, (ParatiiIPFSLocal.__proto__ || (0, _getPrototypeOf2.default)(ParatiiIPFSLocal)).call(this));
 
-    _this.config = config;
+    _this.config = opts.config;
     _this._ipfs = _this.config.ipfsInstance;
+    _this.paratiiIPFS = opts.paratiiIPFS;
     return _this;
   }
 
@@ -128,7 +129,9 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
       if (!ev) {
         ev = new _events.EventEmitter();
       }
-
+      console.log('this: ', this);
+      console.log('this.paratiiIPFS: ', this.paratiiIPFS);
+      console.log('this.remote: ', this.remote);
       this._ipfs.start().then(function () {
         // trigger onStart callback
         ev.emit('start');
@@ -156,8 +159,15 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
             var hashedFile = res[0];
             _this2._ipfs.log('Adding %s finished as %s, size: %s', hashedFile.path, hashedFile.hash, hashedFile.size);
 
-            ev.emit('local:fileReady', file, hashedFile);
-            cb(null, hashedFile);
+            var remoteEv = new _events.EventEmitter();
+            _this2.remote.xhrUpload(file, hashedFile, remoteEv);
+            remoteEv.on('progress', function (progress) {
+              ev.emit('progress', progress);
+            });
+            remoteEv.once('fileReady', function (readyHash) {
+              ev.emit('local:fileReady', file, hashedFile);
+              cb(null, hashedFile);
+            });
           }));
         }), pull.collect(function (err, hashedFiles) {
           if (err) {
