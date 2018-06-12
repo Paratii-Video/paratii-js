@@ -20,6 +20,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
     this.config = opts.config
     this._ipfs = this.config.ipfsInstance
     this.paratiiIPFS = opts.paratiiIPFS
+    this.express = opts.config.expressUploading || true
   }
 
   /**
@@ -105,7 +106,7 @@ export class ParatiiIPFSLocal extends EventEmitter {
 
             const hashedFile = res[0]
             this._ipfs.log('Adding %s finished as %s, size: %s', hashedFile.path, hashedFile.hash, hashedFile.size)
-            if (file._html5File) {
+            if (file._html5File && this.express) {
               let remoteEv = new EventEmitter()
               this.remote.xhrUpload(file, hashedFile, remoteEv)
               remoteEv.on('progress', (progress) => {

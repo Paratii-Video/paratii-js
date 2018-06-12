@@ -70,6 +70,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
     _this.config = opts.config;
     _this._ipfs = _this.config.ipfsInstance;
     _this.paratiiIPFS = opts.paratiiIPFS;
+    _this.express = opts.config.expressUploading || true;
     return _this;
   }
 
@@ -158,7 +159,7 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
 
             var hashedFile = res[0];
             _this2._ipfs.log('Adding %s finished as %s, size: %s', hashedFile.path, hashedFile.hash, hashedFile.size);
-            if (file._html5File) {
+            if (file._html5File && _this2.express) {
               var remoteEv = new _events.EventEmitter();
               _this2.remote.xhrUpload(file, hashedFile, remoteEv);
               remoteEv.on('progress', function (progress) {

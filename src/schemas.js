@@ -69,7 +69,8 @@ const ipfsSchema = joi.object({
   defaultTranscoder: joi.string().default('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'),
   remoteIPFSNode: joi.string().default('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'),
   transcoderDropUrl: joi.string().default('https://uploader.paratii.video/api/v1/transcode'),
-  instance: joi.any().default(null)
+  instance: joi.any().default(null),
+  expressUploading: joi.bool().default(true)
 }).default()
 
 /**

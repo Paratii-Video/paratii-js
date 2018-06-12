@@ -59,11 +59,10 @@ var _paratiiIpfsLocal = require('./paratii.ipfs.local.js');
 
 var _paratiiTranscoder = require('./paratii.transcoder.js');
 
-var _utils = require('./utils.js');
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/* global ArrayBuffer */
+// import { PromiseEventEmitter } from './utils.js'
+
 global.Buffer = global.Buffer || require('buffer').Buffer;
 
 /**
@@ -72,6 +71,7 @@ global.Buffer = global.Buffer || require('buffer').Buffer;
  * @property {ParatiiIPFSLocal} local operations on the local node
  * @property {ParatiiIPFSRemote} remote operations on remote node
  */
+/* global ArrayBuffer */
 
 var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   (0, _inherits3.default)(ParatiiIPFS, _EventEmitter);
@@ -90,7 +90,8 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     var schema = _joi2.default.object({
       ipfs: _schemas.ipfsSchema,
       account: _schemas.accountSchema,
-      verbose: _joi2.default.bool().default(true)
+      verbose: _joi2.default.bool().default(true),
+      expressUploading: _joi2.default.bool().default(true)
     });
 
     var result = _joi2.default.validate(config, schema, { allowUnknown: true });
@@ -98,10 +99,10 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     _this.config = config;
     _this.config.ipfs = result.value.ipfs;
     _this.config.account = result.value.account;
+    _this.config.expressUploading = result.value.expressUploading;
     // TODO change this to some other name. this is wrong.
     // because `this` isn't an ipfs instance.
     _this.config.ipfsInstance = _this;
-
     _this.remote = new _paratiiIpfsRemote.ParatiiIPFSRemote({ ipfs: _this.config.ipfs, paratiiIPFS: _this });
     _this.local = new _paratiiIpfsLocal.ParatiiIPFSLocal({ config: config, ParatiiIPFS: _this });
     _this.local.remote = _this.remote;
@@ -172,61 +173,63 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   }, {
     key: 'addAndPinJSON',
     value: function addAndPinJSON(data) {
-      var _this4 = this;
-
-      return _regenerator2.default.async(function addAndPinJSON$(_context2) {
+      var hash, pinEv;
+      return _regenerator2.default.async(function addAndPinJSON$(_context) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context.prev = _context.next) {
             case 0:
-              return _context2.abrupt('return', new _utils.PromiseEventEmitter(function _callee(resolve, reject) {
-                var hash, pinFile, pinEv;
-                return _regenerator2.default.async(function _callee$(_context) {
-                  while (1) {
-                    switch (_context.prev = _context.next) {
-                      case 0:
-                        _context.next = 2;
-                        return _regenerator2.default.awrap(_this4.local.addJSON(data));
+              _context.next = 2;
+              return _regenerator2.default.awrap(this.local.addJSON(data));
 
-                      case 2:
-                        hash = _context.sent;
-
-                        pinFile = function pinFile() {
-                          var pinEv = _this4.remote.pinFile(hash, { author: _this4._getAccount() });
-                          pinEv.on('pin:error', function (err) {
-                            console.warn('pin:error:', hash, ' : ', err);
-                            pinEv.removeAllListeners();
-                          });
-                          pinEv.on('pin:done', function (hash) {
-                            _this4.log('pin:done:', hash);
-                            pinEv.removeAllListeners();
-                          });
-                          return pinEv;
-                        };
-
-                        pinEv = pinFile();
+            case 2:
+              hash = _context.sent;
+              pinEv = this.remote.pinFile(hash, { author: this._getAccount() });
 
 
-                        pinEv.on('pin:error', function (err) {
-                          console.warn('pin:error:', hash, ' : ', err);
-                          console.log('trying again');
-                          pinEv = pinFile();
-                        });
+              pinEv.on('pin:error', function (err) {
+                console.warn('pin:error:', hash, ' : ', err);
+                console.log('trying again');
+                // pinEv = pinFile()
+              });
 
-                        pinEv.on('pin:done', function (hash) {
-                          resolve(hash);
-                        });
+              pinEv.on('pin:done', function (hash) {
+                // resolve(hash)
+                return hash;
+              });
+              // see me after class vvvvvvvvvvv
+              // return new PromiseEventEmitter(async (resolve, reject) => {
+              //   let hash = await this.local.addJSON(data)
+              //   let pinFile = () => {
+              //     let pinEv = this.remote.pinFile(hash,
+              //       { author: this._getAccount() }
+              //     )
+              //     pinEv.on('pin:error', (err) => {
+              //       console.warn('pin:error:', hash, ' : ', err)
+              //       pinEv.removeAllListeners()
+              //     })
+              //     pinEv.on('pin:done', (hash) => {
+              //       this.log('pin:done:', hash)
+              //       pinEv.removeAllListeners()
+              //     })
+              //     return pinEv
+              //   }
+              //
+              //   let pinEv = pinFile()
+              //
+              //   pinEv.on('pin:error', (err) => {
+              //     console.warn('pin:error:', hash, ' : ', err)
+              //     console.log('trying again')
+              //     pinEv = pinFile()
+              //   })
+              //
+              //   pinEv.on('pin:done', (hash) => {
+              //     resolve(hash)
+              //   })
+              // })
 
-                      case 7:
-                      case 'end':
-                        return _context.stop();
-                    }
-                  }
-                }, null, _this4);
-              }));
-
-            case 1:
+            case 6:
             case 'end':
-              return _context2.stop();
+              return _context.stop();
           }
         }
       }, null, this);
@@ -293,38 +296,38 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   }, {
     key: 'getIPFSInstance',
     value: function getIPFSInstance() {
-      var _this5 = this;
+      var _this4 = this;
 
       return new _promise2.default(function (resolve, reject) {
-        if (_this5.ipfs) {
-          resolve(_this5.ipfs);
+        if (_this4.ipfs) {
+          resolve(_this4.ipfs);
         } else {
-          var config = _this5.config;
+          var config = _this4.config;
           // there will be no joi in IPFS (pun indended)
           _promise2.default.resolve().then(function () {
             return require('ipfs');
           }) // eslint-disable-line
           .then(function (Ipfs) {
             var ipfs = void 0;
-            if (_this5.config.ipfs.instance) {
-              ipfs = _this5.config.ipfs.instance;
+            if (_this4.config.ipfs.instance) {
+              ipfs = _this4.config.ipfs.instance;
             } else {
               ipfs = new Ipfs({
                 bitswap: {
                   // maxMessageSize: 256 * 1024
-                  maxMessageSize: _this5.config.ipfs['bitswap.maxMessageSize']
+                  maxMessageSize: _this4.config.ipfs['bitswap.maxMessageSize']
                 },
                 start: true,
                 repo: config.ipfs.repo || '/tmp/test-repo-' + String(Math.random()),
                 config: {
                   Addresses: {
-                    Swarm: _this5.config.ipfs.swarm
+                    Swarm: _this4.config.ipfs.swarm
                     // [
                     //   '/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star',
                     //   '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/'
                     // ]
                   },
-                  Bootstrap: _this5.config.ipfs.bootstrap
+                  Bootstrap: _this4.config.ipfs.bootstrap
                   // [
                   //   '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
                   // ]
@@ -332,29 +335,29 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
               });
             }
 
-            _this5.ipfs = ipfs;
+            _this4.ipfs = ipfs;
 
             ipfs.on('ready', function () {
-              _this5.log('[IPFS] node Ready.');
+              _this4.log('[IPFS] node Ready.');
 
               ipfs._bitswap.notifications.on('receivedNewBlock', function (peerId, block) {
-                _this5.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length);
-                _this5.log('---------[IPFS] bitswap LedgerMap ---------------------');
+                _this4.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length);
+                _this4.log('---------[IPFS] bitswap LedgerMap ---------------------');
                 ipfs._bitswap.engine.ledgerMap.forEach(function (ledger, peerId, ledgerMap) {
-                  _this5.log(peerId + ' : ' + (0, _stringify2.default)(ledger.accounting) + '\n');
+                  _this4.log(peerId + ' : ' + (0, _stringify2.default)(ledger.accounting) + '\n');
                 });
-                _this5.log('-------------------------------------------------------');
+                _this4.log('-------------------------------------------------------');
               });
 
               ipfs.id().then(function (id) {
                 var peerInfo = id;
-                _this5.id = id;
-                _this5.log('[IPFS] id:  ' + peerInfo);
+                _this4.id = id;
+                _this4.log('[IPFS] id:  ' + peerInfo);
 
-                _this5.initProtocol(ipfs);
+                _this4.initProtocol(ipfs);
 
-                _this5.ipfs = ipfs;
-                _this5.protocol.start(function () {
+                _this4.ipfs = ipfs;
+                _this4.protocol.start(function () {
                   setTimeout(function () {
                     resolve(ipfs);
                   }, 10);
@@ -365,7 +368,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
             ipfs.on('error', function (err) {
               if (err) {
                 // this.log('IPFS node ', ipfs)
-                _this5.error('[IPFS] Error ', err);
+                _this4.error('[IPFS] Error ', err);
                 reject(err);
               }
             });
@@ -376,7 +379,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   }, {
     key: 'initProtocol',
     value: function initProtocol(ipfs) {
-      var _this6 = this;
+      var _this5 = this;
 
       var ptiAddress = this.config.account.address || 'no_address';
       this.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
@@ -387,12 +390,12 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
       this.remote._node = ipfs;
 
       this.protocol.notifications.on('message:new', function (peerId, msg) {
-        _this6.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
+        _this5.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
       });
       // emit all commands.
       // NOTE : this will be changed once protocol upgrades are ready.
       this.protocol.notifications.on('command', function (peerId, command) {
-        _this6.emit('protocol:incoming', peerId, command);
+        _this5.emit('protocol:incoming', peerId, command);
       });
     }
   }]);
