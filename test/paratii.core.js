@@ -30,7 +30,6 @@ describe('paratii.core:', function () {
     await paratii.eth.vids.create({id: id1, owner: address})
     await paratii.eth.vids.create({id: id2, owner: address})
     const originalUserRecord = await paratii.eth.users.get(address)
-    console.log(originalUserRecord)
 
     let oldBalance = await paratii.eth.balanceOf(address, 'PTI')
     assert.isOk(oldBalance.gt(0), oldBalance)
@@ -40,7 +39,6 @@ describe('paratii.core:', function () {
 
     // we should have a new account registered on
     const newUserRecord = await paratii.eth.users.get(address23)
-    console.log(newUserRecord)
     assert.equal(originalUserRecord.name, newUserRecord.name)
 
     // now the owner of the videos (on the contract) should be address23
