@@ -173,16 +173,18 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   }, {
     key: 'addAndPinJSON',
     value: function addAndPinJSON(data) {
+      var _this4 = this;
+
       var hash, pinEv;
-      return _regenerator2.default.async(function addAndPinJSON$(_context) {
+      return _regenerator2.default.async(function addAndPinJSON$(_context2) {
         while (1) {
-          switch (_context.prev = _context.next) {
+          switch (_context2.prev = _context2.next) {
             case 0:
-              _context.next = 2;
+              _context2.next = 2;
               return _regenerator2.default.awrap(this.local.addJSON(data));
 
             case 2:
-              hash = _context.sent;
+              hash = _context2.sent;
               pinEv = this.remote.pinFile(hash, { author: this._getAccount() });
 
 
@@ -192,44 +194,25 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
                 // pinEv = pinFile()
               });
 
-              pinEv.on('pin:done', function (hash) {
-                // resolve(hash)
-                return hash;
-              });
-              // see me after class vvvvvvvvvvv
-              // return new PromiseEventEmitter(async (resolve, reject) => {
-              //   let hash = await this.local.addJSON(data)
-              //   let pinFile = () => {
-              //     let pinEv = this.remote.pinFile(hash,
-              //       { author: this._getAccount() }
-              //     )
-              //     pinEv.on('pin:error', (err) => {
-              //       console.warn('pin:error:', hash, ' : ', err)
-              //       pinEv.removeAllListeners()
-              //     })
-              //     pinEv.on('pin:done', (hash) => {
-              //       this.log('pin:done:', hash)
-              //       pinEv.removeAllListeners()
-              //     })
-              //     return pinEv
-              //   }
-              //
-              //   let pinEv = pinFile()
-              //
-              //   pinEv.on('pin:error', (err) => {
-              //     console.warn('pin:error:', hash, ' : ', err)
-              //     console.log('trying again')
-              //     pinEv = pinFile()
-              //   })
-              //
-              //   pinEv.on('pin:done', (hash) => {
-              //     resolve(hash)
-              //   })
-              // })
+              pinEv.on('pin:done', function _callee(hash) {
+                return _regenerator2.default.async(function _callee$(_context) {
+                  while (1) {
+                    switch (_context.prev = _context.next) {
+                      case 0:
+                      case 'end':
+                        return _context.stop();
+                    }
+                  }
+                }, null, _this4);
+              }
+              // resolve(hash)
+              );
 
-            case 6:
+              return _context2.abrupt('return', hash);
+
+            case 7:
             case 'end':
-              return _context.stop();
+              return _context2.stop();
           }
         }
       }, null, this);
@@ -296,38 +279,38 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   }, {
     key: 'getIPFSInstance',
     value: function getIPFSInstance() {
-      var _this4 = this;
+      var _this5 = this;
 
       return new _promise2.default(function (resolve, reject) {
-        if (_this4.ipfs) {
-          resolve(_this4.ipfs);
+        if (_this5.ipfs) {
+          resolve(_this5.ipfs);
         } else {
-          var config = _this4.config;
+          var config = _this5.config;
           // there will be no joi in IPFS (pun indended)
           _promise2.default.resolve().then(function () {
             return require('ipfs');
           }) // eslint-disable-line
           .then(function (Ipfs) {
             var ipfs = void 0;
-            if (_this4.config.ipfs.instance) {
-              ipfs = _this4.config.ipfs.instance;
+            if (_this5.config.ipfs.instance) {
+              ipfs = _this5.config.ipfs.instance;
             } else {
               ipfs = new Ipfs({
                 bitswap: {
                   // maxMessageSize: 256 * 1024
-                  maxMessageSize: _this4.config.ipfs['bitswap.maxMessageSize']
+                  maxMessageSize: _this5.config.ipfs['bitswap.maxMessageSize']
                 },
                 start: true,
                 repo: config.ipfs.repo || '/tmp/test-repo-' + String(Math.random()),
                 config: {
                   Addresses: {
-                    Swarm: _this4.config.ipfs.swarm
+                    Swarm: _this5.config.ipfs.swarm
                     // [
                     //   '/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star',
                     //   '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/'
                     // ]
                   },
-                  Bootstrap: _this4.config.ipfs.bootstrap
+                  Bootstrap: _this5.config.ipfs.bootstrap
                   // [
                   //   '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
                   // ]
@@ -335,29 +318,29 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
               });
             }
 
-            _this4.ipfs = ipfs;
+            _this5.ipfs = ipfs;
 
             ipfs.on('ready', function () {
-              _this4.log('[IPFS] node Ready.');
+              _this5.log('[IPFS] node Ready.');
 
               ipfs._bitswap.notifications.on('receivedNewBlock', function (peerId, block) {
-                _this4.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length);
-                _this4.log('---------[IPFS] bitswap LedgerMap ---------------------');
+                _this5.log('[IPFS] receivedNewBlock | peer: ', peerId.toB58String(), ' block length: ', block.data.length);
+                _this5.log('---------[IPFS] bitswap LedgerMap ---------------------');
                 ipfs._bitswap.engine.ledgerMap.forEach(function (ledger, peerId, ledgerMap) {
-                  _this4.log(peerId + ' : ' + (0, _stringify2.default)(ledger.accounting) + '\n');
+                  _this5.log(peerId + ' : ' + (0, _stringify2.default)(ledger.accounting) + '\n');
                 });
-                _this4.log('-------------------------------------------------------');
+                _this5.log('-------------------------------------------------------');
               });
 
               ipfs.id().then(function (id) {
                 var peerInfo = id;
-                _this4.id = id;
-                _this4.log('[IPFS] id:  ' + peerInfo);
+                _this5.id = id;
+                _this5.log('[IPFS] id:  ' + peerInfo);
 
-                _this4.initProtocol(ipfs);
+                _this5.initProtocol(ipfs);
 
-                _this4.ipfs = ipfs;
-                _this4.protocol.start(function () {
+                _this5.ipfs = ipfs;
+                _this5.protocol.start(function () {
                   setTimeout(function () {
                     resolve(ipfs);
                   }, 10);
@@ -368,7 +351,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
             ipfs.on('error', function (err) {
               if (err) {
                 // this.log('IPFS node ', ipfs)
-                _this4.error('[IPFS] Error ', err);
+                _this5.error('[IPFS] Error ', err);
                 reject(err);
               }
             });
@@ -379,7 +362,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
   }, {
     key: 'initProtocol',
     value: function initProtocol(ipfs) {
-      var _this5 = this;
+      var _this6 = this;
 
       var ptiAddress = this.config.account.address || 'no_address';
       this.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
@@ -390,12 +373,12 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
       this.remote._node = ipfs;
 
       this.protocol.notifications.on('message:new', function (peerId, msg) {
-        _this5.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
+        _this6.log('[paratii-protocol] ', peerId.toB58String(), ' new Msg: ', msg);
       });
       // emit all commands.
       // NOTE : this will be changed once protocol upgrades are ready.
       this.protocol.notifications.on('command', function (peerId, command) {
-        _this5.emit('protocol:incoming', peerId, command);
+        _this6.emit('protocol:incoming', peerId, command);
       });
     }
   }]);

@@ -95,6 +95,7 @@ export class ParatiiIPFS extends EventEmitter {
    * @example let result = await paratiiIPFS.addAndPinJSON(data)
    */
   async addAndPinJSON (data) {
+    // return new Promise(async (resolve, reject) => {
     let hash = await this.local.addJSON(data)
     let pinEv = this.remote.pinFile(hash,
       { author: this._getAccount() }
@@ -106,10 +107,13 @@ export class ParatiiIPFS extends EventEmitter {
       // pinEv = pinFile()
     })
 
-    pinEv.on('pin:done', (hash) => {
+    pinEv.on('pin:done', async (hash) => {
       // resolve(hash)
-      return hash
     })
+
+    return hash
+    // return pinEv
+    // })
     // see me after class vvvvvvvvvvv
     // return new PromiseEventEmitter(async (resolve, reject) => {
     //   let hash = await this.local.addJSON(data)

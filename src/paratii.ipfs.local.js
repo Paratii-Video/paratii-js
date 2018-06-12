@@ -72,9 +72,9 @@ export class ParatiiIPFSLocal extends EventEmitter {
     if (!ev) {
       ev = new EventEmitter()
     }
-    console.log('this: ', this)
-    console.log('this.paratiiIPFS: ', this.paratiiIPFS)
-    console.log('this.remote: ', this.remote)
+    // console.log('this: ', this)
+    // console.log('this.paratiiIPFS: ', this.paratiiIPFS)
+    // console.log('this.remote: ', this.remote)
     this._ipfs.start().then(() => {
       // trigger onStart callback
       ev.emit('start')

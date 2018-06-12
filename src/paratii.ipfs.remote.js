@@ -5,7 +5,7 @@ import { EventEmitter } from 'events'
 import joi from 'joi'
 const Resumable = require('resumablejs')
 const Multiaddr = require('multiaddr')
-const once = require('once')
+// const once = require('once')
 
 /**
  * Contains functions to interact with the remote IPFS node
@@ -196,7 +196,7 @@ export class ParatiiIPFSRemote extends EventEmitter {
       size: joi.number().default(0)
     }).unknown()
 
-    this._pinResponseHandler = once(this._pinResponseHandler)
+    // this._pinResponseHandler = once(this._pinResponseHandler)
 
     this._ipfs.log(`Signaling transcoder to pin ${fileHash}`)
 

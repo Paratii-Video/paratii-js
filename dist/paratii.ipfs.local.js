@@ -130,9 +130,9 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
       if (!ev) {
         ev = new _events.EventEmitter();
       }
-      console.log('this: ', this);
-      console.log('this.paratiiIPFS: ', this.paratiiIPFS);
-      console.log('this.remote: ', this.remote);
+      // console.log('this: ', this)
+      // console.log('this.paratiiIPFS: ', this.paratiiIPFS)
+      // console.log('this.remote: ', this.remote)
       this._ipfs.start().then(function () {
         // trigger onStart callback
         ev.emit('start');
