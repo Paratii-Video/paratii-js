@@ -251,7 +251,6 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: 'requireContract',
     value: function requireContract(contractName) {
-      // console.log('requiring ', contractName)
       var artifact = void 0,
           contract = void 0;
       var from = this.config.account.address;
@@ -274,45 +273,8 @@ var ParatiiEth = exports.ParatiiEth = function () {
         gas: this.web3.utils.toHex(4e6),
         data: artifact.bytecode
       });
-      // contract.setProvider(this.web3.currentProvider, this.web3.eth.accounts)
-      // if (contractArr[1] === 'DLL') {
-      //   console.log('DLL required!')
-      // }
       return contract;
     }
-
-    // requireTruffleContract (contractName) {
-    //   let artifact, contract
-    //   let from = this.config.account.address
-    //
-    //   let contractArr = contractName.split('/')
-    //   if (contractArr[0] === 'sol-tcr') {
-    //     artifact = require(`sol-tcr/build/contracts/${contractArr[1]}.json`)
-    //   } else {
-    //     artifact = require(`paratii-contracts/build/contracts/${contractName}.json`)
-    //   }
-    //   // console.log('artifact: ', this.web3.currentProvider)
-    //   contract = truffleContract(artifact)
-    //   contract.setProvider(this.web3.currentProvider)
-    //
-    //   // dirty hack for web3@1.0.0 support for localhost testrpc, see https://github.com/trufflesuite/truffle-contract/issues/56#issuecomment-331084530
-    //   // thanks https://github.com/trufflesuite/truffle-contract/issues/57#issuecomment-331300494
-    //   if (typeof contract.currentProvider.sendAsync !== 'function') {
-    //     contract.currentProvider.sendAsync = function () {
-    //       return contract.currentProvider.send.apply(
-    //         contract.currentProvider, arguments
-    //       )
-    //     }
-    //   }
-    //
-    //   contract.defaults({
-    //     from: from,
-    //     gas: this.web3.utils.toHex(4e6)
-    //   })
-    //
-    //   return contract
-    // }
-
   }, {
     key: 'linkByteCode',
     value: function linkByteCode(bytecode, links) {
@@ -885,38 +847,37 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
             case 1:
               if ((_context5.t1 = _context5.t0()).done) {
-                _context5.next = 12;
+                _context5.next = 11;
                 break;
               }
 
               name = _context5.t1.value;
               contract = this.contracts[name];
-
-              console.log('[' + name + '] = ' + contract.options.address);
+              // console.log(`[${name}] = ${contract.options.address}`)
 
               if (contract.options.address) {
-                _context5.next = 10;
+                _context5.next = 9;
                 break;
               }
 
-              _context5.next = 8;
+              _context5.next = 7;
               return _regenerator2.default.awrap(this.getContractAddress(name));
 
-            case 8:
+            case 7:
               address = _context5.sent;
 
               if (address && address !== '0x0') {
                 contract.options.address = address;
               }
 
-            case 10:
+            case 9:
               _context5.next = 1;
               break;
 
-            case 12:
+            case 11:
               return _context5.abrupt('return', this.contracts);
 
-            case 13:
+            case 12:
             case 'end':
               return _context5.stop();
           }
@@ -1032,7 +993,6 @@ var ParatiiEth = exports.ParatiiEth = function () {
     value: function setRegistryAddress(registryAddress) {
       this.config.eth.registryAddress = registryAddress;
       for (var name in this.contracts) {
-        // console.log('contractName: ', name)
         var contract = this.contracts[name];
         contract.options.address = undefined;
       }
