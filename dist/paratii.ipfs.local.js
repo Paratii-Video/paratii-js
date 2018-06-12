@@ -158,16 +158,20 @@ var ParatiiIPFSLocal = exports.ParatiiIPFSLocal = function (_EventEmitter) {
 
             var hashedFile = res[0];
             _this2._ipfs.log('Adding %s finished as %s, size: %s', hashedFile.path, hashedFile.hash, hashedFile.size);
-
-            var remoteEv = new _events.EventEmitter();
-            _this2.remote.xhrUpload(file, hashedFile, remoteEv);
-            remoteEv.on('progress', function (progress) {
-              ev.emit('progress', progress);
-            });
-            remoteEv.once('fileReady', function (readyHash) {
+            if (file._html5File) {
+              var remoteEv = new _events.EventEmitter();
+              _this2.remote.xhrUpload(file, hashedFile, remoteEv);
+              remoteEv.on('progress', function (progress) {
+                ev.emit('progress', progress);
+              });
+              remoteEv.once('fileReady', function (readyHash) {
+                ev.emit('local:fileReady', file, hashedFile);
+                cb(null, hashedFile);
+              });
+            } else {
               ev.emit('local:fileReady', file, hashedFile);
               cb(null, hashedFile);
-            });
+            }
           }));
         }), pull.collect(function (err, hashedFiles) {
           if (err) {

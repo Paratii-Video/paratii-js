@@ -105,16 +105,20 @@ export class ParatiiIPFSLocal extends EventEmitter {
 
             const hashedFile = res[0]
             this._ipfs.log('Adding %s finished as %s, size: %s', hashedFile.path, hashedFile.hash, hashedFile.size)
-
-            let remoteEv = new EventEmitter()
-            this.remote.xhrUpload(file, hashedFile, remoteEv)
-            remoteEv.on('progress', (progress) => {
-              ev.emit('progress', progress)
-            })
-            remoteEv.once('fileReady', (readyHash) => {
+            if (file._html5File) {
+              let remoteEv = new EventEmitter()
+              this.remote.xhrUpload(file, hashedFile, remoteEv)
+              remoteEv.on('progress', (progress) => {
+                ev.emit('progress', progress)
+              })
+              remoteEv.once('fileReady', (readyHash) => {
+                ev.emit('local:fileReady', file, hashedFile)
+                cb(null, hashedFile)
+              })
+            } else {
               ev.emit('local:fileReady', file, hashedFile)
               cb(null, hashedFile)
-            })
+            }
           })
         )),
         pull.collect((err, hashedFiles) => {
