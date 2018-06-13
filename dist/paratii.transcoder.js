@@ -6,6 +6,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ParatiiTranscoder = undefined;
 
+var _stringify = require('babel-runtime/core-js/json/stringify');
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
 var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -175,7 +179,7 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
           _this3._ipfs.error('couldn\'t parse args, ', command.args.toString());
         }
 
-        console.log('RECEIVED EVENT ' + commandStr);
+        console.log('RECEIVED EVENT ' + commandStr + ': ' + (0, _stringify2.default)(argsObj));
         switch (commandStr) {
           case 'transcoding:error':
             console.log('DEBUG TRANSCODER ERROR: fileHash: ', fileHash, ' , errHash: ', argsObj.hash);
@@ -227,7 +231,9 @@ var ParatiiTranscoder = exports.ParatiiTranscoder = function (_EventEmitter) {
       var _this4 = this;
 
       var ev = this._ipfs.local.add(files);
+      // let ev2 = this._ipfs.remote.addAndUpload(files)
       ev.on('done', function (files) {
+        console.log('signaling transcoder....');
         _this4._signalTranscoder(files, ev);
       });
       return ev;

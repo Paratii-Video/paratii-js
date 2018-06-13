@@ -11,6 +11,7 @@ reseal_on_uncle = true
 force_sealing = true
 [rpc]
 cors = []
+
 [websockets]
 disable = false
 port = 8546

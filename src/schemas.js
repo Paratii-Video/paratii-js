@@ -17,12 +17,12 @@ const accountSchema = joi.object({
   * @property {string=} provider provider of the parity node
   * @property {string=} registryAddress address of the TCR
   * @property {boolean=} isTestNet true if it's on test net, false otherwise
-  * @property {string=} tcrConfigFile path of the config file chosen for the tcr
+  * @property {string=} tcrConfig the configuration for the tcr
  */
 const ethSchema = joi.object({
   provider: joi.string().default('http://localhost:8545'),
   registryAddress: joi.string().default(null).allow(null),
-  tcrConfigFile: joi.string().default('sol-tcr/conf/config.json')
+  tcrConfig: joi.object().default(require('sol-tcr/conf/config.json'))
 }).default()
 
 /**
@@ -69,7 +69,8 @@ const ipfsSchema = joi.object({
   defaultTranscoder: joi.string().default('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'),
   remoteIPFSNode: joi.string().default('/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'),
   transcoderDropUrl: joi.string().default('https://uploader.paratii.video/api/v1/transcode'),
-  instance: joi.any().default(null)
+  instance: joi.any().default(null),
+  expressUploading: joi.bool().default(true)
 }).default()
 
 /**
@@ -85,6 +86,7 @@ const dbSchema = joi.object({
   * @typedef {Array} videoSchema
   * @property {string=} id id of the video
   * @property {string=} author author of the video
+  * @property {string=} ownershipProof ownership proof for the video
   * @property {string=} description description of the video
   * @property {string=} duration duration of the video
   * @property {string=} filename filename of the video
@@ -105,6 +107,7 @@ const dbSchema = joi.object({
 const videoSchema = joi.object({
   id: joi.string().default(null),
   author: joi.string().empty('').default('').allow(null),
+  ownershipProof: joi.string().empty('').default('').allow(null),
   description: joi.string().empty('').default(''),
   duration: joi.string().empty('').default('').allow(null),
   filename: joi.string().empty('').default('').allow(null).allow(''),

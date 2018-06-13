@@ -17,7 +17,7 @@ describe('Paratii configuration:', function () {
       eth: {
         provider: 'http://localhost:8545',
         registryAddress: null,
-        tcrConfigFile: 'sol-tcr/conf/config.json',
+        tcrConfig: require('sol-tcr/conf/config.json'),
         isTestNet: true
       }
     }
@@ -42,7 +42,7 @@ describe('Paratii configuration:', function () {
       eth: {
         provider: 'http://localhost:8545',
         registryAddress: paratii.config.eth.registryAddress,
-        tcrConfigFile: paratii.config.eth.tcrConfigFile
+        tcrConfig: paratii.config.eth.tcrConfig
       }
     })
 
@@ -69,7 +69,7 @@ describe('Paratii configuration:', function () {
         provider: 'http://chain.paratii.video/',
         isTestNet: false,
         registryAddress: null,
-        tcrConfigFile: 'sol-tcr/conf/config.json'
+        tcrConfig: require('sol-tcr/conf/config.json')
       }
     }
     assert.deepInclude(paratii.config, expected)
@@ -135,6 +135,42 @@ describe('Paratii configuration:', function () {
     assert.equal(paratii.config.account.address, address)
     assert.equal(paratii.eth.config.account.address, address)
     assert.equal(paratii.eth.web3.eth.accounts.wallet[0].address, address)
+  })
+
+  it('setAccount should throw if address and private key do not match', async function () {
+    const privateKeyWithout0x = '399b141d0cc2b863b2f514ffe53edc6afc9416d5899da4d9bd2350074c38f1c6'
+    const anotherPrivateKey = '0x399b141d0cc2b863b2f514ffe53edc6afc9416d5899da4d9bd2350074c38f1c7'
+    const anotherAddress = '0xCbe4f07b343171ac37055B25a5266f48f6945b7e'
+    const addressWithout0x = 'Cbe4f07b343171ac37055B25a5266f48f6945b7d'
+    // matching address and pk should work fine
+    const paratii = new Paratii({
+      eth: {provider: 'http://127.0.0.1:8545'}
+    })
+
+    let assertWillThrowNoCompatibility = (address, privateKey) => {
+      assert.throws(
+        () => {
+          return new Paratii({
+            account: {
+              address: address,
+              privateKey: privateKey
+            },
+            eth: {provider: 'http://127.0.0.1:8545'}
+          })
+        },
+        Error,
+        /not compatible/g
+      )
+      assert.throws(
+        () => { paratii.eth.setAccount({address, privateKey}) },
+        Error,
+        /not compatible/g
+      )
+    }
+    assertWillThrowNoCompatibility(address, anotherPrivateKey)
+    assertWillThrowNoCompatibility(address, privateKeyWithout0x)
+    assertWillThrowNoCompatibility(anotherAddress, privateKey)
+    assertWillThrowNoCompatibility(addressWithout0x, privateKey)
   })
 
   it('paratii.eth.web3 should be available', async function () {

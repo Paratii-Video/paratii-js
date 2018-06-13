@@ -180,6 +180,7 @@ export class ParatiiEthTcr {
    * @param  {string}  videoId univocal video id
    * @param  {number}  amount  amount of token to be deposited
    * @return {Promise}         tx of the deposit
+   * @example let tx = await paratii.eth.tcr.approveAndDeposit('some-video-id',paratii.eth.web3.utils.toWei('5'))
    */
   async approveAndDeposit (videoId, amount) {
     let tcrRegistry = await this.getTcrContract()
@@ -198,6 +199,7 @@ export class ParatiiEthTcr {
    * @param  {string}  videoId id of the video
    * @param  {number}  amount  amount to be deposited
    * @return {Promise}         the deposit tx
+   * @example let tx = await paratii.eth.tcr.deposit('some-video-id',paratii.eth.web3.utils.toWei('5'))
    */
   async deposit (videoId, amount) {
     // check if user is the listing owner.
@@ -226,6 +228,7 @@ export class ParatiiEthTcr {
    * @param  {string}  videoId id of the video
    * @param  {number}  amount  amount to withdraw.
    * @return {Promise}         withdraw tx.
+   * @example let tx = await paratii.eth.tcr.withdraw('some-video-id',paratii.eth.web3.utils.toWei('5'))
    */
   async withdraw (videoId, amount) {
     let tcrRegistry = await this.getTcrContract()
@@ -287,6 +290,7 @@ export class ParatiiEthTcr {
    * @param  {string}  videoId video to challenge
    * @param  {string}  _data   additional data
    * @return {Promise}         challenge tx
+   * @example let tx = await paratii.eth.tcr.approveAndStartChallenge('some-video-id',"optional data")
    */
   async approveAndStartChallenge (videoId, _data) {
     let listing = await this.getListing(videoId)
@@ -305,6 +309,8 @@ export class ParatiiEthTcr {
    * @param  {string}  videoId univocal video id
    * @param  {string}  _data   additional data
    * @return {Promise}         challenge tx
+   * @example let tx = await paratii.eth.tcr.startChallenge('some-video-id',"optional data")
+
    */
   async startChallenge (videoId, _data) {
     if (!_data) {
@@ -356,6 +362,7 @@ export class ParatiiEthTcr {
    * this is required to be able to use claimReward.
    * @param  {string}  videoId id of the video
    * @return {Promise}         tx of the updateStatus
+   * @example let tx = await paratii.eth.tcr.updateStatus('some-video-id')
    */
   async updateStatus (videoId) {
     let hash = this.getAndStoreHash(videoId)
@@ -366,9 +373,11 @@ export class ParatiiEthTcr {
 
   /**
    * claim reward. nuff said.
-   * @param  {string}  videoId id of the video.
+   * @param  {string}  challengeId id of the challenge.
    * @param  {string}  salt    salt used in that vote.
    * @return {Promise}         the claimReward tx
+   * @example let challengeID = await paratii.eth.tcr.getChallengeId('some-video-id')
+   * let tx = await paratii.eth.tcr.claimReward(challengeID,paratii.eth.getSalt('some-video-id'))
    */
   async claimReward (challengeID, salt) {
     let tcrRegistry = await this.getTcrContract()
@@ -404,6 +413,7 @@ export class ParatiiEthTcr {
    * @param  {integer}  vote        1 vote for, 0 vote against
    * @param  {number}  amountInWei amount for the vote
    * @return {Promise}             commit tx
+   * @example let tx = await paratii.eth.tcr.approveAndGetRightsAndCommitVote('some-video-id',1,paratii.eth.web3.utils.toWei('5'))
    */
   async approveAndGetRightsAndCommitVote (videoId, vote, amountInWei) {
     let tcrPLCRVoting = await this.getPLCRVotingContract()
@@ -431,6 +441,7 @@ export class ParatiiEthTcr {
    * @param  {integer}  vote    1 = yes, 0 = no
    * @param  {number}  amount  amount of tokens to vote with.
    * @return {Promise}         commitVote tx
+   * @example let tx = await paratii.eth.tcr.commitVote('some-video-id',1,paratii.eth.web3.utils.toWei('5'))
    */
   async commitVote (videoId, vote, amountInWei) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
@@ -492,6 +503,8 @@ export class ParatiiEthTcr {
    * @param  {uint}  voteOption 1 for yes, 0 or other for no.
    * @param  {string}  salt       salt used when commiting the vote.
    * @return {Promise}            revealVote tx
+   * @example let challengeID = paratii.eth.tcr.getChallengeId('some-video-id')
+   * let tx = await paratii.eth.tcr.revealVote(challengeID,1,paratii.eth.tcr.getSalt('some-video-id'))
    */
   async revealVote (pollID, voteOption, salt) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
@@ -531,6 +544,7 @@ export class ParatiiEthTcr {
    * Loads amount ERC20 tokens into the voting contract for one-to-one voting rights
    * @param  {number}  amount amount to deposit into voting contract.
    * @return {Promise}        `requestVotingRights` tx
+   * @example let tx = await paratii.eth.tcr.requestVotingRights(5)
    */
   async requestVotingRights (amount) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
@@ -555,6 +569,7 @@ export class ParatiiEthTcr {
    * Withdraw amount ERC20 tokens from the voting contract, revoking these voting rights
    * @param  {number}  amount amount to withdraw
    * @return {Promise}        withdrawVotingRights tx
+   * @example let tx = await paratii.eth.tcr.withdrawVotingRights(5)
    */
   async withdrawVotingRights (amount) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
@@ -576,6 +591,8 @@ export class ParatiiEthTcr {
    * Unlocks tokens locked in unrevealed vote where poll has ended
    * @param  {uint}  pollID the pollID , aka challengeID
    * @return {Promise}        rescueTokens tx
+   * @example let challengeID = await paratii.eth.tcr.getChallengeId('some-video-id')
+   * let tx = await paratii.eth.tcr.rescueTokens(challengeID)
    */
   async rescueTokens (pollID) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
@@ -614,6 +631,7 @@ export class ParatiiEthTcr {
    * Determines whether the given videoId be whitelisted.
    * @param  {string}  videoId id of the video
    * @return {Promise}         true if it can be whitelisted.
+   * @example let canBeWhitelisted = await paratii.eth.tcr.canBeWhitelisted('some-id')
    */
   async canBeWhitelisted (videoId) {
     let hash = this.getHash(videoId)
@@ -655,6 +673,7 @@ export class ParatiiEthTcr {
 * videoId. Throws if no challenge exists.
 * @param  {string}  videoId univocal video id
 * @return {Promise}         true if voting has concluded,false otherwise
+* @example let challengeCanBeResolved = await paratii.eth.tcr.challengeCanBeResolved('some-video-id')
 */
   async challengeCanBeResolved (videoId) {
     let contract = await this.getTcrContract()
@@ -676,7 +695,7 @@ export class ParatiiEthTcr {
     let hash = this.getHash(videoId)
     let listing = await contract.methods.listings(hash).call()
 
-    if (listing.owner === '0x0000000000000000000000000000000000000000') { throw Error(`Listing with videoId ${videoId} doesn't exists`) }
+    if (listing.owner === '0x0000000000000000000000000000000000000000') { throw Error(`Listing with videoId ${videoId} doesn't exist`) }
     return listing
   }
 
@@ -691,14 +710,16 @@ export class ParatiiEthTcr {
 
     let challenge = await contract.methods.challenges(challengeId).call()
 
-    if (challenge.challenger === '0x0000000000000000000000000000000000000000') { throw Error(`Challenge with challengeId ${challengeId} doesn't exists`) }
+    if (challenge.challenger === '0x0000000000000000000000000000000000000000') { throw Error(`Challenge with challengeId ${challengeId} doesn't exist`) }
     return challenge
   }
   /**
    * check if an address has already claimed for a challenge
    * @param  {integer}  challengeID  id of the challenge
-   * @param  {address}  voterAddress address of the voter
+   * @param  {address}  voterAddress address of the vote. if not inserted, the default address is used
    * @return {Promise}              true if already claimed, false otherwise
+   * @example let challengeID = await paratii.eth.tcr.getChallengeId('some-id')
+   * let areTokenClaimed = await paratii.eth.tcr.tokenClaims(challengeID)
    */
   async tokenClaims (challengeID, voterAddress) {
     if (!voterAddress) {
@@ -712,6 +733,7 @@ export class ParatiiEthTcr {
  * get the challenge Id of that video
  * @param  {string}  videoId univocal id of the video
  * @return {Promise}         id of the challenge of that video
+ * @example let challengeID = await paratii.eth.tcr.getChallengeId('some-video-id')
  */
   async getChallengeId (videoId) {
     let listing = await this.getListing(videoId)
@@ -722,6 +744,7 @@ export class ParatiiEthTcr {
  * get the hash of the video Id to be inserted in the TCR contract
  * @param  {string} videoId univocal id of the video
  * @return {string}         sha3 of the id
+ * @example paratii.eth.tcr.getHash('some-video-id')
  */
   getHash (videoId) {
     return this.eth.web3.utils.soliditySha3(videoId)
@@ -735,6 +758,7 @@ export class ParatiiEthTcr {
    * check if the deadline is already passed
    * @param  {integer}  deadline deadline to check (timestamp)
    * @return {Promise}          true if already passed, false otherwise
+   * @example let isExpired = await paratii.eth.tcr.isExpired(10000)
    */
   async isExpired (deadline) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
@@ -744,8 +768,9 @@ export class ParatiiEthTcr {
 
   /**
    * get the number of locked tokens for a specified address
-   * @param  {address}  voterAddress address of the voter
+   * @param  {address}  voterAddress address of the voter. If not inserted, the default account is used
    * @return {Promise}              number of locked tokens in BN format
+   * @example let numLockedTokens = await paratii.eth.tcr.getLockedTokens()
    */
   async getLockedTokens (voterAddress) {
     if (!voterAddress) {
@@ -760,6 +785,8 @@ export class ParatiiEthTcr {
    * check if the commit period is still active for a specified challenge
    * @param  {integer}  pollID id of the challenge
    * @return {Promise}        true if still active, false otherwise
+   * @example let challengeID = await paratii.eth.tcr.getChallengeId('some-video-id')
+   * let isCommitPeriodActive = await paratii.eth.tcr.commitPeriodActive(challengeID)
    */
   async commitPeriodActive (pollID) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
@@ -770,6 +797,8 @@ export class ParatiiEthTcr {
    * check if the reveal period is still active for a specified challenge
    * @param  {integer}  pollID id of the challenge
    * @return {Promise}        true if still active, false otherwise
+   * @example let challengeID = await paratii.eth.tcr.getChallengeId('some-video-id')
+   * let isCommitPeriodActive = await paratii.eth.tcr.revealPeriodActive(challengeID)
    */
   async revealPeriodActive (pollID) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
@@ -782,6 +811,8 @@ export class ParatiiEthTcr {
    * @param  {address}  voterAddress address of the voter
    * @param  {integer}  pollID       id of the challenge
    * @return {Promise}              true if he has already committed, false otherwise
+   * @example let challengeID = await paratii.eth.tcr.getChallengeId('some-video-id')
+   * let didCommit = await paratii.eth.tcr.didCommit(paratii.eth.getAccount(),challengeID)
    */
   async didCommit (voterAddress, pollID) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
@@ -794,6 +825,8 @@ export class ParatiiEthTcr {
    * @param  {address}  voterAddress address of the voter
    * @param  {integer}  pollID       id of the challenge
    * @return {Promise}              true if he has already revealed, false otherwise
+   * @example let challengeID = await paratii.eth.tcr.getChallengeId('some-video-id')
+   * let didCommit = await paratii.eth.tcr.didReveal(paratii.eth.getAccount(),challengeID)
    */
   async didReveal (voterAddress, pollID) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
@@ -808,6 +841,8 @@ export class ParatiiEthTcr {
      * @param  {uint}  challengeID  challengeID ( in hex )
      * @param  {string}  salt         the salt used for that vote.
      * @return {Number}              returns the voterReward in BN format.
+     * @example let challengeID = await paratii.eth.tcr.getChallengeId('some-video-id')
+     * let reward = await paratii.eth.tcr.voterReward(paratii.eth.getAccount(),challengeID,paratii.eth.tcr.getSalt('some-video-id'))
      */
   async voterReward (voterAddress, challengeID, salt) {
     let tcrRegistry = await this.getTcrContract()
@@ -819,6 +854,7 @@ export class ParatiiEthTcr {
    * check if a video is still in apply stage
    * @param  {string}  videoId univocal video identifier
    * @return {Promise}         true if it's in apply stage, false otherwise
+   * @example let isInApplyStage = await paratii.eth.tcr.isInApplyStage('some-video-id')
    */
   async isInApplyStage (videoId) {
     let listing = await this.getListing(videoId)
@@ -830,6 +866,7 @@ export class ParatiiEthTcr {
    * Gets top element of sorted poll-linked-list
    * @param  {address}  voter the address of the voter
    * @return {Promise}       [description]
+   * @private
    */
   async getLastNode (voter) {
     if (!voter) {
@@ -844,6 +881,8 @@ export class ParatiiEthTcr {
    * @param  {address}  voterAddress address of the voter
    * @param  {integer}  pollID       id of the challenge
    * @return {Promise}              hash of the vote
+   * @example let challengeID = await paratii.eth.tcr.getChallengeId('some-video-id')
+   * let commitHash = await paratii.eth.tcr.getCommitHash(paratii.eth.getAccount(),challengeID)
    */
   async getCommitHash (voterAddress, pollID) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
@@ -855,6 +894,8 @@ export class ParatiiEthTcr {
    * check if a challenge has succeeded
    * @param  {integer}  pollID id of the challenge
    * @return {Promise}        true if the challenge succeeded, false otherwise
+   * @example let challengeID = await paratii.eth.tcr.getChallengeId('some-video-id')
+   * let isPassed = await paratii.eth.tcr.isPassed(challengeID)
    */
   async isPassed (pollID) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
@@ -869,6 +910,8 @@ export class ParatiiEthTcr {
    * @param  {integer}  pollID       id of the challenge
    * @param  {hex}  salt         salt of the vote
    * @return {Promise}              Number of tokens voted for winning option in BN format
+   * @example let challengeID = await paratii.eth.tcr.getChallengeId('some-video-id')
+   * let isPassed = await paratii.eth.tcr.isPassed(paratii.eth.getAccount(),challengeID,paratii.eth.getSalt('some-video-id'))
    */
   async getNumPassingTokens (voterAddress, pollID, salt) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
@@ -889,6 +932,7 @@ export class ParatiiEthTcr {
    * @param  {address}  voter      eth address of the voter
    * @param  {number}  amount     the amount to commit to the current vote.
    * @return {Promise}            returns true if both prev and next positions are valid.
+   * @private
    */
   async validPosition (prevPollID, nextPollID, voter, amount) {
     // check the validity of the prevPollID
@@ -914,6 +958,8 @@ export class ParatiiEthTcr {
    * @param  {address}  voterAddress eth voter address
    * @param  {integer}  pollID       uint of the pollID
    * @return {Promise}              BN of commited tokens.
+   * @example let challengeID = await paratii.eth.tcr.getChallengeId('some-video-id')
+   * let numTokens = await paratii.eth.tcr.getNumTokens(paratii.eth.tcr.getAccount(),challengeID)
    */
   async getNumTokens (voterAddress, pollID) {
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
@@ -928,6 +974,7 @@ export class ParatiiEthTcr {
    * checks if a user has >= amount voting rights
    * @param  {number}  amount amount of token to check
    * @return {Promise}        true if >= amount, false otherwise
+   * @example let hasVotingRights = await paratii.eth.trc.hasVotingRights(5)
    */
   async hasVotingRights (amount) {
     let PLCRVoting = await this.getPLCRVotingContract()
@@ -946,6 +993,7 @@ export class ParatiiEthTcr {
   /**
    * utility function to get the right localStorage
    * @return {Object} localStorage
+   * @example let localStorage = paratii.eth.tcr.getLocalStorage()
    */
   getLocalStorage () {
     if (localStorage) {
@@ -976,6 +1024,7 @@ export class ParatiiEthTcr {
   }
   /**
    * clear the nodeLocalstorage
+   * @example paratii.eth.tcr.clearNodeLocalStorage()
    */
   clearNodeLocalStorage () {
     let localStorage = this.getLocalStorage()
@@ -987,6 +1036,7 @@ export class ParatiiEthTcr {
    * get the hash to be inserted in the tcr and save it in localStorage
    * @param  {string} videoId univocal id of the video
    * @return {string}         hash of the id
+   * @example let hash = paratii.eth.tcr.getAndStoreHash('some-video-id')
    */
   getAndStoreHash (videoId) {
     let hash = this.getHash(videoId)
@@ -1001,6 +1051,7 @@ export class ParatiiEthTcr {
    * generates random salt
    * @param  {integer} size size of the generated salt (default 32)
    * @return {hex}      random salt (hexadecimal)
+   * @example let salt = paratii.eth.tcr.generateSalt()
    */
   generateSalt (size) {
     if (!size) {
@@ -1014,6 +1065,7 @@ export class ParatiiEthTcr {
    * store salt
    * @param  {string} videoId univocal video id
    * @param  {hex} salt    hexadecimal salt
+   * @example paratii.eth.tcr.storeSalt('some-video-id',paratii.eth.tcr.generateSalt())
    */
   storeSalt (videoId, salt) {
     let localStorage = this.getLocalStorage()
@@ -1025,6 +1077,7 @@ export class ParatiiEthTcr {
    * get the salt related to that videoId
    * @param  {string} videoId univocal videoId
    * @return {hex}          hexadecimal salt
+   * @example let salt = paratii.eth.tcr.getSalt('some-video-id')
    */
   getSalt (videoId) {
     let localStorage = this.getLocalStorage()
@@ -1036,6 +1089,7 @@ export class ParatiiEthTcr {
    * get the videoId related to that hash
    * @param  {string} hash hash of the videoId
    * @return {string}      the videoId
+   * @example let videoId = paratii.eth.tcr.hashToId(hashedVideoId)
    */
   hashToId (hash) {
     let localStorage = this.getLocalStorage()

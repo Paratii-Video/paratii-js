@@ -5,6 +5,13 @@ import { EventEmitter } from 'events'
 import joi from 'joi'
 const Resumable = require('resumablejs')
 const Multiaddr = require('multiaddr')
+// const once = require('once')
+
+// Needed to check the transcoder drop url status code
+require('es6-promise').polyfill()
+const fetch = require('isomorphic-fetch')
+// Needed to open a socket connection
+var net = require('net')
 
 /**
  * Contains functions to interact with the remote IPFS node
@@ -41,6 +48,7 @@ export class ParatiiIPFSRemote extends EventEmitter {
     ev = this._ipfs.local.upload(files, ev)
     ev.on('local:fileReady', function (file, hashedFile) {
       if (file._html5File) {
+        console.log('using xhrUpload .....')
         this._ipfs.remote.xhrUpload(file, hashedFile, ev)
       } else {
         this._ipfs.remote.pinFile(hashedFile)
@@ -194,6 +202,8 @@ export class ParatiiIPFSRemote extends EventEmitter {
       size: joi.number().default(0)
     }).unknown()
 
+    // this._pinResponseHandler = once(this._pinResponseHandler)
+
     this._ipfs.log(`Signaling transcoder to pin ${fileHash}`)
 
     const result = joi.validate(options, schema)
@@ -273,5 +283,158 @@ export class ParatiiIPFSRemote extends EventEmitter {
           this._ipfs.log('unknown command : ', commandStr)
       }
     }
+  }
+  /**
+   * Requests the transcoderDropUrl to see if it's up (Easily adds a dozen seconds to check the status)
+   * @return {Promise} that resolves in a boolean
+   */
+  async checkTranscoderDropUrl () {
+    return new Promise(resolve => {
+      fetch(this.config.ipfs.transcoderDropUrl)
+        .then(function (response) {
+          if (response.status === 200) {
+            resolve(true)
+          } else {
+            resolve(false)
+          }
+        })
+    })
+  }
+  /**
+   * Checks transcoder drop url and returns a detailed object
+   * @return {Promise} that resolves in an object
+   */
+  async serviceCheckTranscoderDropUrl () {
+    return new Promise(resolve => {
+      let executionStart = new Date().getTime()
+
+      fetch(this.config.ipfs.transcoderDropUrl)
+        .then((response) => {
+          let reponseStatus = response.status
+          if (reponseStatus === 200) {
+            let executionEnd = new Date().getTime()
+            let executionTime = executionEnd - executionStart
+
+            let transcoderDropUrlServiceCheckObject = {
+              provider: this.config.ipfs.transcoderDropUrl,
+              responseTime: executionTime,
+              response: reponseStatus,
+              responsive: true
+            }
+            resolve(transcoderDropUrlServiceCheckObject)
+          } else {
+            let transcoderDropUrlServiceCheckObject = {
+              provider: this.config.ipfs.transcoderDropUrl,
+              responseTime: 0,
+              response: reponseStatus,
+              responsive: false
+            }
+            resolve(transcoderDropUrlServiceCheckObject)
+          }
+        })
+    })
+  }
+  /**
+   * Checks the bootstrap dns nodes
+   * @param {string} baseUrl url of the web socket server
+   * @param {Number} port the port at which the web socket is listening to
+   * @return {Promise} that resolves in a boolean
+   */
+  async checkBootstrapWebSocketDNS (baseUrl, port) {
+    return new Promise(resolve => {
+      var client = new net.Socket()
+      client.setTimeout(30000) // Arbitrary 30 secondes to be able to reach DNS server
+      client.connect(port, baseUrl, () => {
+        client.end()
+        resolve(true)
+      })
+      client.on('error', (err) => {
+        if (err) {
+          client.end()
+          resolve(false)
+        } else {
+          client.end()
+          resolve(false)
+        }
+      })
+      client.on('timeout', () => {
+        client.end()
+        resolve(false)
+      })
+    })
+  }
+  /**
+   * Checks the default transcoder
+   * @return {Promise} that resolves in a boolean
+   */
+  async checkDefaultTranscoder () {
+    let splitDefaultTranscoder = this.config.ipfs.defaultTranscoder.split('/')
+    let defaultTranscoderCheck = await this.checkBootstrapWebSocketDNS(splitDefaultTranscoder[2], splitDefaultTranscoder[4])
+    return defaultTranscoderCheck
+  }
+  /**
+   * Checks the default transcoder and returns a detailed object
+   * @return {Promise} that resolves in an object
+   */
+  async serviceCheckDefaultTranscoder () {
+    let splitDefaultTranscoder = this.config.ipfs.defaultTranscoder.split('/')
+
+    let executionStart = new Date().getTime()
+
+    let defaultTranscoderCheck = await this.checkBootstrapWebSocketDNS(splitDefaultTranscoder[2], splitDefaultTranscoder[4])
+
+    let executionEnd = new Date().getTime()
+    let executionTime = executionEnd - executionStart
+
+    let defaultTranscoderObject = {}
+    defaultTranscoderObject.provider = this.config.ipfs.defaultTranscoder
+    if (defaultTranscoderCheck === true) {
+      defaultTranscoderObject.responseTime = executionTime
+      defaultTranscoderObject.response = 'can reach'
+      defaultTranscoderObject.responsive = defaultTranscoderCheck
+    } else {
+      defaultTranscoderObject.responseTime = 0
+      defaultTranscoderObject.response = 'cannot reach'
+      defaultTranscoderObject.responsive = defaultTranscoderCheck
+    }
+
+    return defaultTranscoderObject
+  }
+  /**
+   * Checks the remote IPFS node
+   * @return {Promise} that resolves in a boolean
+   */
+  async checkRemoteIPFSNode () {
+    let splitRemoteIPFSNode = this.config.ipfs.remoteIPFSNode.split('/')
+    let remoteIPFSNodeCheck = await this.checkBootstrapWebSocketDNS(splitRemoteIPFSNode[2], splitRemoteIPFSNode[4])
+    return remoteIPFSNodeCheck
+  }
+  /**
+   * Checks the remote IPFS node and returns a detailed object
+   * @return {Promise} that resolves in an object
+   */
+  async serviceCheckRemoteIPFSNode () {
+    let splitRemoteIPFSNode = this.config.ipfs.remoteIPFSNode.split('/')
+
+    let executionStart = new Date().getTime()
+
+    let remoteIPFSNodeCheck = await this.checkBootstrapWebSocketDNS(splitRemoteIPFSNode[2], splitRemoteIPFSNode[4])
+
+    let executionEnd = new Date().getTime()
+    let executionTime = executionEnd - executionStart
+
+    let remoteIPFSNodeObject = {}
+    remoteIPFSNodeObject.provider = this.config.ipfs.remoteIPFSNode
+    if (remoteIPFSNodeCheck === true) {
+      remoteIPFSNodeObject.responseTime = executionTime
+      remoteIPFSNodeObject.response = 'can reach'
+      remoteIPFSNodeObject.responsive = remoteIPFSNodeCheck
+    } else {
+      remoteIPFSNodeObject.responseTime = 0
+      remoteIPFSNodeObject.response = 'cannot reach'
+      remoteIPFSNodeObject.responsive = remoteIPFSNodeCheck
+    }
+
+    return remoteIPFSNodeObject
   }
 }

@@ -35,7 +35,7 @@ const testAccount = {
 const testConfig = {
   eth: {
     provider: 'http://localhost:8545',
-    tcrConfigFile: 'sol-tcr/conf/devConfig.json'
+    tcrConfig: require('sol-tcr/conf/devConfig.json')
   },
   account: {
     address: address,
@@ -62,14 +62,15 @@ const vidsFixture = [
     description: 'A long description',
     // published: false,
     price: 0,
-    ipfsData: 'QmTtwZ1sLncFqmcP6YZfB6hJCCau5jgkCgT1GF3n2Qnd4h',
+    ipfsData: 'QmT7tAEP9C6MqaP2KBszyYijxda14arzqY3qdbCi55CYyU',
     ipfsHash: '',
     ipfsHashOrig: '',
     duration: '2h 32m',
     storageStatus: {},
     transcodingStatus: {},
     uploadStatus: {},
-    owner: address1
+    owner: address1,
+    ownershipProof: 'this my video'
         // published: false
   },
   {

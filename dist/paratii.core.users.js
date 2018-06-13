@@ -65,18 +65,19 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
    *   let result = await paratii.eth.users.create(userData)
    *  })
    */
-  // FIXME: do some joi validation here
 
 
   (0, _createClass3.default)(ParatiiUsers, [{
     key: 'create',
     value: function create(options) {
-      var keysForBlockchain, optionsKeys, optionsBlockchain, optionsIpfs, hash;
+      var paratii, keysForBlockchain, optionsKeys, optionsBlockchain, optionsIpfs, hash;
       return _regenerator2.default.async(function create$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              keysForBlockchain = ['id', 'name', 'email'];
+              // FIXME: do some joi validation here
+              paratii = this.config.paratii;
+              keysForBlockchain = ['id', 'name'];
               optionsKeys = (0, _keys2.default)(options);
               optionsBlockchain = {};
               optionsIpfs = {};
@@ -88,16 +89,27 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
                   optionsIpfs[key] = options[key];
                 }
               });
-              _context.next = 7;
-              return _regenerator2.default.awrap(this.config.paratii.ipfs.local.addJSON(optionsIpfs));
+              _context.next = 8;
+              return _regenerator2.default.awrap(paratii.ipfs.local.addJSON(optionsIpfs));
 
-            case 7:
+            case 8:
               hash = _context.sent;
 
               optionsBlockchain['ipfsData'] = hash;
-              return _context.abrupt('return', this.config.paratii.eth.users.create(optionsBlockchain));
+              // FIXME: add error handling if call to db fails.
 
-            case 10:
+              if (!(options.email !== undefined)) {
+                _context.next = 13;
+                break;
+              }
+
+              _context.next = 13;
+              return _regenerator2.default.awrap(paratii.db.users.setEmail(options.id, options.email));
+
+            case 13:
+              return _context.abrupt('return', paratii.eth.users.create(optionsBlockchain));
+
+            case 14:
             case 'end':
               return _context.stop();
           }
@@ -244,7 +256,7 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
   }, {
     key: 'migrateAccount',
     value: function migrateAccount(newAccount) {
-      var paratii, oldAccount, search, vids, i, vid, videoId, didVideoApply, ptiBalance;
+      var paratii, oldAccount, search, vids, originalUserRecord, newUserRecord, i, vid, videoId, didVideoApply, ptiBalance;
       return _regenerator2.default.async(function migrateAccount$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
@@ -257,56 +269,67 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
 
             case 4:
               search = _context4.sent;
-              vids = search.results;
+              vids = search && search.results;
+              _context4.next = 8;
+              return _regenerator2.default.awrap(paratii.eth.users.get(oldAccount));
 
+            case 8:
+              originalUserRecord = _context4.sent;
+              newUserRecord = originalUserRecord;
+
+              newUserRecord.id = newAccount;
+              _context4.next = 13;
+              return _regenerator2.default.awrap(paratii.eth.users.create(newUserRecord));
+
+            case 13:
               if (!vids) {
-                _context4.next = 22;
+                _context4.next = 29;
                 break;
               }
 
               i = 0;
 
-            case 8:
+            case 15:
               if (!(i < vids.length)) {
-                _context4.next = 22;
+                _context4.next = 29;
                 break;
               }
 
               vid = vids[i];
               videoId = vid.id || vid._id;
-              _context4.next = 13;
+              _context4.next = 20;
               return _regenerator2.default.awrap(paratii.vids.update(videoId, { owner: newAccount }));
 
-            case 13:
-              _context4.next = 15;
+            case 20:
+              _context4.next = 22;
               return _regenerator2.default.awrap(paratii.eth.tcrPlaceholder.didVideoApply(videoId));
 
-            case 15:
+            case 22:
               didVideoApply = _context4.sent;
 
               if (!didVideoApply) {
-                _context4.next = 19;
+                _context4.next = 26;
                 break;
               }
 
-              _context4.next = 19;
+              _context4.next = 26;
               return _regenerator2.default.awrap(paratii.eth.tcrPlaceholder.exit(videoId));
 
-            case 19:
+            case 26:
               i++;
-              _context4.next = 8;
+              _context4.next = 15;
               break;
 
-            case 22:
-              _context4.next = 24;
+            case 29:
+              _context4.next = 31;
               return _regenerator2.default.awrap(paratii.eth.balanceOf(oldAccount, 'PTI'));
 
-            case 24:
+            case 31:
               ptiBalance = _context4.sent;
-              _context4.next = 27;
+              _context4.next = 34;
               return _regenerator2.default.awrap(paratii.eth.transfer(newAccount, ptiBalance, 'PTI'));
 
-            case 27:
+            case 34:
             case 'end':
               return _context4.stop();
           }

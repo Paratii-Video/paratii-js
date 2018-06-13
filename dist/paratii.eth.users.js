@@ -79,7 +79,7 @@ var ParatiiEthUsers = exports.ParatiiEthUsers = function () {
                 id: joi.string(),
                 name: joi.string().allow('').optional().default(''),
                 email: joi.string().allow('').optional().default(''),
-                ipfsData: joi.string()
+                ipfsData: joi.string().allow('').optional().default('')
               });
 
               if (this.eth.web3.utils.isAddress(options.id)) {

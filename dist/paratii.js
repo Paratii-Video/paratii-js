@@ -9,6 +9,10 @@ var _regenerator = require('babel-runtime/regenerator');
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
 
+var _promise = require('babel-runtime/core-js/promise');
+
+var _promise2 = _interopRequireDefault(_promise);
+
 var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -143,7 +147,7 @@ var Paratii = function (_ParatiiCore) {
   }, {
     key: 'diagnose',
     value: function diagnose() {
-      var msg, address, msgs, isOk, log, registry, name;
+      var msg, address, msgs, isOk, log, registry, name, checks, pEth, ipfsState, dbProviderStatus, transcoderDropUrlStatus, defaultTranscoderCheck, remoteIPFSNodeCheck;
       return _regenerator2.default.async(function diagnose$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -157,14 +161,17 @@ var Paratii = function (_ParatiiCore) {
 
               msgs = [];
 
+              // Displaying the configuration
               log('Paratii was initialized with the following options:');
               log(this.config);
+              // Main account check
               log('Checking main account');
               if (this.config.account.address && this.config.account.privateKey) {
                 log('Your private key: ' + this.config.account.privateKey);
                 log('Your private key: ' + this.config.account.privateKey);
                 log('First wallet account: ' + this.eth.web3.eth.accounts.wallet[0].address);
               }
+              // Test registry address
               address = this.eth.getRegistryAddress();
 
               if (address) {
@@ -230,6 +237,73 @@ var Paratii = function (_ParatiiCore) {
               break;
 
             case 35:
+              _context.next = 37;
+              return _regenerator2.default.awrap(_promise2.default.all([this.eth.checkEth(), this.ipfs.checkIPFSState(), this.db.checkDBProviderStatus(), this.ipfs.remote.checkTranscoderDropUrl(), this.ipfs.remote.checkDefaultTranscoder(), this.ipfs.remote.checkRemoteIPFSNode()]));
+
+            case 37:
+              checks = _context.sent;
+
+              // Pinging Eth provider
+              log('Pinging the eth provider');
+              pEth = checks[0];
+
+              if (pEth === true) {
+                log('The eth provider responds correctly.');
+              } else {
+                isOk = false;
+                log('There seems to be a problem reaching the eth provider.');
+              }
+              // Check if IPFS node is running
+              log('Check if IPFS node is running');
+              ipfsState = checks[1];
+
+              if (ipfsState === true) {
+                log('The IPFS node seems to be running correctly.');
+              } else {
+                isOk = false;
+                log('The IPFS node doesn\'t seem to be running.');
+              }
+              // Check if DB provider is up
+              log('Check if the DB provider is up.');
+              dbProviderStatus = checks[2];
+
+              if (dbProviderStatus === true) {
+                log('Able to reach the DB provder.');
+              } else {
+                isOk = false;
+                log('Can\'t reach the DB provider.');
+              }
+              // Check if transcoder drop url is responding
+              log('Check if transcoder drop url is responding.');
+              transcoderDropUrlStatus = checks[3];
+
+              if (transcoderDropUrlStatus === true) {
+                log('Able to reach the transcoder.');
+              } else {
+                isOk = false;
+                log('Can\'t reach the transcoder.');
+              }
+              // Check if the default transcoder is responding
+              log('Check if the default transcoder is responding.');
+              defaultTranscoderCheck = checks[4];
+
+              if (defaultTranscoderCheck === true) {
+                log('Able to reach the default transcoder dns.');
+              } else {
+                isOk = false;
+                log('Can\'t reach the default transcoder dns.');
+              }
+              // Check if the remote IPFS node is responding
+              log('Check if the remote IPFS node is responding.');
+              remoteIPFSNodeCheck = checks[5];
+
+              if (remoteIPFSNodeCheck === true) {
+                log('Able to reach the remote IPFS node dns.');
+              } else {
+                isOk = false;
+                log('Can\'t reach the remote IPFS node dns.');
+              }
+              // Recap
               if (isOk) {
                 log('---- everything seems fine -----');
               } else {
@@ -237,9 +311,68 @@ var Paratii = function (_ParatiiCore) {
               }
               return _context.abrupt('return', msgs);
 
-            case 37:
+            case 58:
             case 'end':
               return _context.stop();
+          }
+        }
+      }, null, this);
+    }
+    /**
+     * Get services info about the state and responsiveness of the system
+     * @return {Promise} that resolves in an object containing diagnostic info
+     * @example let servicesCheck = await paratii.checkServices()
+     * console.log(servicesCheck)
+     */
+
+  }, {
+    key: 'checkServices',
+    value: function checkServices() {
+      var serviceChecks, response;
+      return _regenerator2.default.async(function checkServices$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.next = 2;
+              return _regenerator2.default.awrap(_promise2.default.all([this.eth.serviceCheckEth(), this.ipfs.serviceCheckIPFSState(), this.db.serviceCheckDBProviderStatus(), this.ipfs.remote.serviceCheckTranscoderDropUrl(), this.ipfs.remote.serviceCheckDefaultTranscoder(), this.ipfs.remote.serviceCheckRemoteIPFSNode()]));
+
+            case 2:
+              serviceChecks = _context2.sent;
+
+              // the object that will be returned
+              response = {};
+              // Check eth provider
+
+              response.eth = serviceChecks[0];
+              // Check local ipfs instance
+              response.ipfs = {};
+              response.ipfs.localNode = serviceChecks[1];
+              // check DB provider
+              _context2.next = 9;
+              return _regenerator2.default.awrap(serviceChecks[2]);
+
+            case 9:
+              response.db = _context2.sent;
+              _context2.next = 12;
+              return _regenerator2.default.awrap(serviceChecks[3]);
+
+            case 12:
+              response.ipfs.transcoderDropUrl = _context2.sent;
+              _context2.next = 15;
+              return _regenerator2.default.awrap(serviceChecks[4]);
+
+            case 15:
+              response.ipfs.defaultTranscoder = _context2.sent;
+              _context2.next = 18;
+              return _regenerator2.default.awrap(serviceChecks[5]);
+
+            case 18:
+              response.ipfs.remoteIPFSNode = _context2.sent;
+              return _context2.abrupt('return', response);
+
+            case 20:
+            case 'end':
+              return _context2.stop();
           }
         }
       }, null, this);

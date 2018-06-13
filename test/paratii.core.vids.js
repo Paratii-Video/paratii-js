@@ -20,7 +20,10 @@ describe('paratii.vids:', function () {
     paratii = new Paratii({
       eth: {provider: 'http://localhost:8545/rpc/'},
       account: testAccount,
-      db: {provider: DB_PROVIDER}
+      db: {provider: DB_PROVIDER},
+      ipfs: {
+        expressUploading: false
+      }
     })
     await paratii.eth.deployContracts()
   })
@@ -30,6 +33,7 @@ describe('paratii.vids:', function () {
     videoFromCreate = await paratii.vids.create({
       id: 'some-id',
       owner: address1,
+      ownershipProof: 'this my video',
       title: 'some Title',
       author: 'Steven Spielberg',
       duration: '2h 32m',
@@ -61,7 +65,6 @@ describe('paratii.vids:', function () {
         }
       }
     })
-
     assert.equal(data.ipfsHash, ipfsHash)
 
     data = await paratii.vids.get(videoId2)
