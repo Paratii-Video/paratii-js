@@ -137,7 +137,7 @@ export class ParatiiUsers {
   async migrateAccount (newAccount) {
     // migrate the videos
     const paratii = this.config.paratii
-    const oldAccount = this.getAccount()
+    const oldAccount = this.config.paratii.getAccount()
     const search = await paratii.vids.search({owner: oldAccount})
     const vids = search && search.results
     const originalUserRecord = await paratii.eth.users.get(oldAccount)

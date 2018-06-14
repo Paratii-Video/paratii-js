@@ -263,7 +263,7 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
             case 0:
               // migrate the videos
               paratii = this.config.paratii;
-              oldAccount = this.getAccount();
+              oldAccount = this.config.paratii.getAccount();
               _context4.next = 4;
               return _regenerator2.default.awrap(paratii.vids.search({ owner: oldAccount }));
 

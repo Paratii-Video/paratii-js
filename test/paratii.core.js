@@ -18,7 +18,7 @@ describe('paratii.core:', function () {
     assert.isOk(paratiiCore.vids)
   })
 
-  it('2migrateAccount should work', async function () {
+  it('migrateAccount should work', async function () {
     // migrate all assets from default account address to address23
     let id1 = searchVidsFixture.results[0].id || searchVidsFixture.results[0]._id
     let id2 = searchVidsFixture.results[1].id || searchVidsFixture.results[1]._id
