@@ -369,7 +369,7 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
           switch (_context.prev = _context.next) {
             case 0:
               return _context.abrupt('return', new _promise2.default(function (resolve) {
-                fetch(_this5.config.ipfs.transcoderDropUrl).then(function (response) {
+                fetch(_this5.config.ipfs.transcoderDropUrl + '/fakehash').then(function (response) {
                   if (response.status === 200) {
                     resolve(true);
                   } else {
@@ -401,15 +401,17 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
             case 0:
               return _context2.abrupt('return', new _promise2.default(function (resolve) {
                 var executionStart = new Date().getTime();
+                var url = _this6.config.ipfs.transcoderDropUrl + '/fakehash';
+                console.log(url);
 
-                fetch(_this6.config.ipfs.transcoderDropUrl).then(function (response) {
+                fetch(url).then(function (response) {
                   var reponseStatus = response.status;
                   if (reponseStatus === 200) {
                     var executionEnd = new Date().getTime();
                     var executionTime = executionEnd - executionStart;
 
                     var transcoderDropUrlServiceCheckObject = {
-                      provider: _this6.config.ipfs.transcoderDropUrl,
+                      provider: url,
                       responseTime: executionTime,
                       response: reponseStatus,
                       responsive: true
@@ -417,7 +419,7 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
                     resolve(transcoderDropUrlServiceCheckObject);
                   } else {
                     var _transcoderDropUrlServiceCheckObject = {
-                      provider: _this6.config.ipfs.transcoderDropUrl,
+                      provider: url,
                       responseTime: 0,
                       response: reponseStatus,
                       responsive: false

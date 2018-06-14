@@ -18,23 +18,22 @@ var bip39 = require('bip39'); // this code is lifted and adapted from ethereumjs
 
 var hdkey = require('hdkey');
 /**
- * overrides some web3js wallet functionalties
+ * extends the native web3 wallet object with some new operations
  * @param  {Object} wallet wallet to patch
- * @param  {Object} config configuration object to initialize Paratii object
  * @return {Object}        patched wallet
  * @private
  */
-function patchWallet(wallet, config) {
+function patchWallet(wallet) {
   /**
    * Create a wallet with a given number of accounts from a BIP39 mnemonic
    * @param  {number} numberOfAccounts number of accounts to be created
-   * @param  {string=} mnemonic         mnemonic of the wallet, if not specified a random one is generated
-   * @return {Object}                  the created wallet
+   * @param  {string=} mnemonic mnemonic of the wallet, if not specified a random one is generated
+   * @return {Object} the created wallet
    * @example wallet = await wallet.create(5, 'some long mnemonic phrase')
    */
-  function create(numberOfAccounts, mnemonic) {
+  function createFromMnemonic(numberOfAccounts, mnemonic) {
     var seed, masternode, i, child, privkeyHex, privateKey;
-    return _regenerator2.default.async(function create$(_context) {
+    return _regenerator2.default.async(function createFromMnemonic$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
@@ -106,41 +105,8 @@ function patchWallet(wallet, config) {
     return bip39.generateMnemonic();
   }
 
-  /* function getMnemonic () {
-    return this._mnemonic
-  }
-   function setPassphrase (passphrase) {
-    this._passphrase = passphrase
-    return this._passphrase
-  } */
-
-  var origDecrypt = wallet.decrypt.bind(wallet);
-  /**
-   * decrypts the wallet
-   * @param       {Object} data     encrypted wallet
-   * @param       {string} password password to decrypt
-   * @return      {Object}          decrypted wallet
-   * @example let decryptedWallet = paratii.eth.wallet._decrypt(encryptedWallet,'some-psw')
-    */
-  function _decrypt(data, password) {
-    var newWallet = origDecrypt(data, password);
-    if (newWallet) {
-      config.paratii.eth.setAccount({
-        address: newWallet['0'].address,
-        privateKey: newWallet['0'].privateKey
-      });
-    }
-    return newWallet;
-  }
-
-  // wallet._mnemonic = undefined
-  // testing purpose
-  // wallet._passphrase = ''
-  // wallet.setPassphrase = setPassphrase
-  wallet.create = create;
-  wallet.decrypt = _decrypt;
+  wallet.createFromMnemonic = createFromMnemonic;
   wallet.isValidMnemonic = isValidMnemonic;
   wallet.newMnemonic = newMnemonic;
-  // wallet.getMnemonic = getMnemonic
   return wallet;
 }

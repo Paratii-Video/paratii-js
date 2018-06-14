@@ -4,21 +4,20 @@ import {add0x} from './utils.js'
 var bip39 = require('bip39')
 var hdkey = require('hdkey')
 /**
- * overrides some web3js wallet functionalties
+ * extends the native web3 wallet object with some new operations
  * @param  {Object} wallet wallet to patch
- * @param  {Object} config configuration object to initialize Paratii object
  * @return {Object}        patched wallet
  * @private
  */
-export function patchWallet (wallet, config) {
+export function patchWallet (wallet) {
   /**
    * Create a wallet with a given number of accounts from a BIP39 mnemonic
    * @param  {number} numberOfAccounts number of accounts to be created
-   * @param  {string=} mnemonic         mnemonic of the wallet, if not specified a random one is generated
-   * @return {Object}                  the created wallet
+   * @param  {string=} mnemonic mnemonic of the wallet, if not specified a random one is generated
+   * @return {Object} the created wallet
    * @example wallet = await wallet.create(5, 'some long mnemonic phrase')
    */
-  async function create (numberOfAccounts, mnemonic) {
+  async function createFromMnemonic (numberOfAccounts, mnemonic) {
     if (this.length > 0) {
       throw Error('This wallet has already been created!')
     }
@@ -66,43 +65,8 @@ export function patchWallet (wallet, config) {
     return bip39.generateMnemonic()
   }
 
-  /* function getMnemonic () {
-    return this._mnemonic
-  }
-
-  function setPassphrase (passphrase) {
-    this._passphrase = passphrase
-    return this._passphrase
-  } */
-
-  let origDecrypt = wallet.decrypt.bind(wallet)
-  /**
-   * decrypts the wallet
-   * @param       {Object} data     encrypted wallet
-   * @param       {string} password password to decrypt
-   * @return      {Object}          decrypted wallet
-   * @example let decryptedWallet = paratii.eth.wallet._decrypt(encryptedWallet,'some-psw')
-
-   */
-  function _decrypt (data, password) {
-    let newWallet = origDecrypt(data, password)
-    if (newWallet) {
-      config.paratii.eth.setAccount({
-        address: newWallet['0'].address,
-        privateKey: newWallet['0'].privateKey
-      })
-    }
-    return newWallet
-  }
-
-  // wallet._mnemonic = undefined
-  // testing purpose
-  // wallet._passphrase = ''
-  // wallet.setPassphrase = setPassphrase
-  wallet.create = create
-  wallet.decrypt = _decrypt
+  wallet.createFromMnemonic = createFromMnemonic
   wallet.isValidMnemonic = isValidMnemonic
   wallet.newMnemonic = newMnemonic
-  // wallet.getMnemonic = getMnemonic
   return wallet
 }

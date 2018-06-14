@@ -224,7 +224,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
         this.config.account.privateKey = privateKey;
       } else if (mnemonic) {
         wallet.clear();
-        wallet.create(1, mnemonic);
+        wallet.createFromMnemonic(1, mnemonic);
         if (address && wallet[0].address !== address) {
           throw Error('Mnemonic ' + mnemonic + ' and account address ' + address + ' are not compatible!');
         }
