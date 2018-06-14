@@ -86,7 +86,7 @@ describe('paratii.eth API: :', function () {
     let balance
 
     paratii.eth.web3.eth.accounts.wallet.clear()
-    let accounts = await paratii.eth.wallet.create(5)
+    let accounts = await paratii.eth.wallet.createFromMnemonic(5)
     let beneficiary = accounts[0].address
     // test ETH balance
     balance = await paratii.eth.balanceOf(address, 'ETH')

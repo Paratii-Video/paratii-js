@@ -290,7 +290,7 @@ export class ParatiiIPFSRemote extends EventEmitter {
    */
   async checkTranscoderDropUrl () {
     return new Promise(resolve => {
-      fetch(this.config.ipfs.transcoderDropUrl)
+      fetch(this.config.ipfs.transcoderDropUrl + '/fakehash')
         .then(function (response) {
           if (response.status === 200) {
             resolve(true)
@@ -307,8 +307,10 @@ export class ParatiiIPFSRemote extends EventEmitter {
   async serviceCheckTranscoderDropUrl () {
     return new Promise(resolve => {
       let executionStart = new Date().getTime()
+      const url = this.config.ipfs.transcoderDropUrl + '/fakehash'
+      console.log(url)
 
-      fetch(this.config.ipfs.transcoderDropUrl)
+      fetch(url)
         .then((response) => {
           let reponseStatus = response.status
           if (reponseStatus === 200) {
@@ -316,7 +318,7 @@ export class ParatiiIPFSRemote extends EventEmitter {
             let executionTime = executionEnd - executionStart
 
             let transcoderDropUrlServiceCheckObject = {
-              provider: this.config.ipfs.transcoderDropUrl,
+              provider: url,
               responseTime: executionTime,
               response: reponseStatus,
               responsive: true
@@ -324,7 +326,7 @@ export class ParatiiIPFSRemote extends EventEmitter {
             resolve(transcoderDropUrlServiceCheckObject)
           } else {
             let transcoderDropUrlServiceCheckObject = {
-              provider: this.config.ipfs.transcoderDropUrl,
+              provider: url,
               responseTime: 0,
               response: reponseStatus,
               responsive: false
