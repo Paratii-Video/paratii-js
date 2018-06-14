@@ -189,12 +189,6 @@ async function challengeFromDifferentAccount (privateKey, videoId, amountToFund,
   // console.log('amountToFund', privateKey.slice(0, 6), amountToTransferInWei.toString(), 'balance: ', balanceOfAddress1.toString())
   chai.assert.equal(Number(balanceOfAddress1), Number(amount.plus(startingFund)))
 
-  // console.log('tcrRegistry Address: ', tcrRegistry.options.address,
-  //   'challengerAccount: ', challengerAccount.address,
-  //   'wallet:', paratii.eth.web3.eth.accounts.wallet[index].address,
-  //   'token: ', token.options.address)
-
-  // await paratii.eth.setAccount(challengerAccount)
   // approve the tcr to spend address1 tokens ------------------------------------
   let approval = await token.methods.approve(
     tcrRegistry.options.address,

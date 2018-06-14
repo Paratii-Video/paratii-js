@@ -1,5 +1,5 @@
 import { Paratii } from '../src/paratii.js'
-import { testAccount, address, address1 } from './utils.js'
+import { testAccount, address, address1, address17, privateKey17 } from './utils.js'
 import { assert } from 'chai'
 
 describe('paratii.eth API: :', function () {
@@ -67,9 +67,10 @@ describe('paratii.eth API: :', function () {
     let contract
     contract = await paratii.eth.getContract('ParatiiToken')
     assert.equal(contract.options.from, address)
-    await paratii.setAccount({address: address1})
+    await paratii.setAccount({address: address17, privateKey: privateKey17})
+    assert.equal(paratii.getAccount(), address17)
     contract = await paratii.eth.getContract('ParatiiToken')
-    assert.equal(contract.options.from, address1)
+    assert.equal(contract.options.from, address17)
   })
 
   it.skip('getcontract() should return a meaningful error if the address of the contract is not known', async function () {

@@ -163,6 +163,7 @@ export class ParatiiEth {
     this.config.account.privateKey = privateKey
     this.web3.eth.testAccount = address
     if (privateKey) {
+      wallet.clear()
       let walletAccount = wallet.add(privateKey)
       if (address && walletAccount.address !== address) {
         throw Error('Private Key and Account address are not compatible! ')
@@ -170,6 +171,7 @@ export class ParatiiEth {
       this.config.account.address = walletAccount.address
       this.config.account.privateKey = privateKey
     } else if (mnemonic) {
+      wallet.clear()
       wallet.create(1, mnemonic)
       if (address && wallet[0].address !== address) {
         throw Error(`Mnemonic ${mnemonic} and account address ${address} are not compatible!`)
@@ -211,7 +213,8 @@ export class ParatiiEth {
     if (!contract.methods.constructor._ethAccounts) {
       contract.methods.constructor._ethAccounts = this.web3.eth.accounts
     }
-    contract.options.from = this.getAccount()
+    contract.options.from = this.config.account.address
+    // contract.options.from = this.getAccount()
 
     return contract
   }
