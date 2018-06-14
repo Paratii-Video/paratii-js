@@ -330,7 +330,7 @@ export class ParatiiIPFS extends EventEmitter {
   }
 
   initProtocol (ipfs) {
-    let ptiAddress = this.config.account.address || 'no_address'
+    let ptiAddress = this._getAccount() || 'no_address'
     this.protocol = new Protocol(
       ipfs._libp2pNode,
       ipfs._repo.blocks,

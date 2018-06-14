@@ -288,7 +288,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
               if (!contract.methods.constructor._ethAccounts) {
                 contract.methods.constructor._ethAccounts = this.web3.eth.accounts;
               }
-              contract.options.from = this.config.account.address;
+              contract.options.from = this.getAccount();
 
               return _context.abrupt('return', contract);
 
@@ -312,7 +312,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
     value: function requireContract(contractName) {
       var artifact = void 0,
           contract = void 0;
-      var from = this.config.account.address;
+      var from = this.getAccount();
 
       artifact = CONTRACTS[contractName].artifact;
       if (!artifact) {
@@ -361,7 +361,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              if (this.config.account.address) {
+              if (this.getAccount()) {
                 _context2.next = 3;
                 break;
               }
@@ -1039,7 +1039,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
               throw Error('No SendEther contract known - please run paratii.diagnose()');
 
             case 5:
-              from = this.config.account.address;
+              from = this.getAccount();
 
               if (from) {
                 _context10.next = 8;
@@ -1106,7 +1106,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
               throw Error('No ParatiiToken contract known - please run paratii.diagnose()');
 
             case 5:
-              from = this.config.account.address;
+              from = this.getAccount();
 
               if (from) {
                 _context11.next = 8;

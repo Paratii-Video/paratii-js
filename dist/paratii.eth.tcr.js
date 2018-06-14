@@ -759,7 +759,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
             case 7:
               minDeposit = _context11.sent;
               _context11.next = 10;
-              return _regenerator2.default.awrap(this.eth.balanceOf(this.eth.config.account.address, 'PTI'));
+              return _regenerator2.default.awrap(this.eth.balanceOf(this.eth.getAccount(), 'PTI'));
 
             case 10:
               balance = _context11.sent;

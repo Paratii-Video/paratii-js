@@ -42,7 +42,6 @@ describe('paratii.eth.vouchers:', function () {
     await paratii.eth.vouchers.create({ voucherCode: voucherCode11, amount: voucherAmount11 })
     await paratii.eth.vouchers.redeem(voucherCode11)
     await assert.isRejected(paratii.eth.vouchers.redeem(voucherCode11), Error, /This voucher was already used/g)
-    console.log('THIS ONE:')
     await assert.isRejected(paratii.eth.vouchers.redeem('blah-blah-blah'), Error, /This voucher doesn't exist/g)
   })
 

@@ -455,7 +455,7 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
     value: function initProtocol(ipfs) {
       var _this8 = this;
 
-      var ptiAddress = this.config.account.address || 'no_address';
+      var ptiAddress = this._getAccount() || 'no_address';
       this.protocol = new _paratiiProtocol2.default(ipfs._libp2pNode, ipfs._repo.blocks,
       // add ETH Address here.
       ptiAddress);

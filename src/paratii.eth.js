@@ -209,7 +209,7 @@ export class ParatiiEth {
     if (!contract.methods.constructor._ethAccounts) {
       contract.methods.constructor._ethAccounts = this.web3.eth.accounts
     }
-    contract.options.from = this.config.account.address
+    contract.options.from = this.getAccount()
 
     return contract
   }
@@ -222,7 +222,7 @@ export class ParatiiEth {
    */
   requireContract (contractName) {
     let artifact, contract
-    let from = this.config.account.address
+    let from = this.getAccount()
 
     artifact = CONTRACTS[contractName].artifact
     if (!artifact) {
@@ -260,7 +260,7 @@ export class ParatiiEth {
    * let likes = await this.deployContract('Likes', paratiiRegistryAddress)
    */
   async deployContract (name, ...args) {
-    if (!this.config.account.address) {
+    if (!this.getAccount()) {
       let msg = 'You need an Ethereum account to write information to the blockchain - you can use .setAccount(address, [privateKey]) or specify it when creating the object'
       throw Error(msg)
     }
@@ -561,7 +561,7 @@ export class ParatiiEth {
       throw Error('No SendEther contract known - please run paratii.diagnose()')
     }
 
-    let from = this.config.account.address
+    let from = this.getAccount()
     if (!from) {
       throw Error('No account set! Cannot send transactions')
     }
@@ -592,7 +592,7 @@ export class ParatiiEth {
     if (!contract.options || !contract.options.address) {
       throw Error('No ParatiiToken contract known - please run paratii.diagnose()')
     }
-    let from = this.config.account.address
+    let from = this.getAccount()
     if (!from) {
       throw Error('No account set! Cannot send transactions')
     }

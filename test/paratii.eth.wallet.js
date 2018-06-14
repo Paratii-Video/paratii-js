@@ -49,12 +49,11 @@ describe('paratii.eth.wallet: :', function () {
     assert.equal(wallet.length, 1)
   })
 
-  it.skip('wallet.create() sets config.account.address and privatekey', async function () {
+  it('wallet.create() sets getAccount() address', async function () {
     paratii = await new Paratii()
     let wallet = paratii.eth.wallet
     await wallet.create()
-    assert.equal(wallet[0].address, paratii.config.account.address)
-    assert.isOk(paratii.config.account.privateKey)
+    assert.equal(wallet[0].address, paratii.getAccount())
   })
 
   it('wallet.create(), wallet.encrypt() and wallet.decrypt() play nicely together', async function () {
@@ -102,26 +101,30 @@ describe('paratii.eth.wallet: :', function () {
     assert.equal(wallet[0].address, addresses[0])
   })
 
-  it.skip('[THIS TEST SHOULD PASS] send() should fail if no wallet is present', async function () {
+  it('send() should fail if no wallet is present', async function () {
     paratii = new Paratii({ account: testAccount })
     await paratii.eth.deployContracts()
 
-    // instantiate paratii with an unlocked account
+    // instantiate paratii with no account at all
     paratii = new Paratii({
       eth: {
         provider: 'http://localhost:8545',
-        registryAddress: paratii.config['eth.registryAddress']
+        registryAddress: paratii.config.eth.registryAddress
+      }
+    })
+    await assert.isRejected(paratii.eth.transfer(address1, 2e18, 'ETH'), 'No account set')
+    paratii = new Paratii({
+      eth: {
+        provider: 'http://localhost:8545',
+        registryAddress: paratii.config.eth.registryAddress
       },
       account: {address: address17}
     })
-    // console.log(paratii.config)
-    // set the account but not the private key
-    // paratii.setAccount(address17)
-    await paratii.eth.transfer(address1, 2e18, 'ETH')
-    // await assert.isRejected(paratii.eth.transfer(address1, 2e18, 'ETH'), 'could not unlock signer account')
+    await assert.isRejected(paratii.eth.transfer(address1, 2e18, 'PTI'), 'No account set')
+    await assert.isRejected(paratii.eth.transfer(address1, 2e18, 'ETH'), 'No account set')
   })
 
-  it('send() should succeed if a  private key is passed to the constructor', async function () {
+  it('send() should succeed if a private key is passed to the constructor', async function () {
     paratii = new Paratii(
       {
         eth: {provider: 'http://localhost:8545'},

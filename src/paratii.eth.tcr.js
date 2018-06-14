@@ -323,7 +323,7 @@ export class ParatiiEthTcr {
     // 1. check if challenger has enough minDeposit and approved the
     // contract to spend that
     let minDeposit = await this.getMinDeposit()
-    let balance = await this.eth.balanceOf(this.eth.config.account.address, 'PTI')
+    let balance = await this.eth.balanceOf(this.eth.getAccount(), 'PTI')
     let allowance = await this.eth.allowance(this.eth.getAccount(), tcrRegistry.options.address)
 
     if (allowance.lt(minDeposit)) {
