@@ -292,8 +292,8 @@ var ParatiiEth = exports.ParatiiEth = function () {
               if (!contract.methods.constructor._ethAccounts) {
                 contract.methods.constructor._ethAccounts = this.web3.eth.accounts;
               }
-              contract.options.from = this.config.account.address;
-              // contract.options.from = this.getAccount()
+              // contract.options.from = this.config.account.address
+              contract.options.from = this.getAccount();
 
               return _context.abrupt('return', contract);
 

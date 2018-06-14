@@ -15,7 +15,7 @@ export function patchWallet (wallet) {
    * @param  {number} numberOfAccounts number of accounts to be created
    * @param  {string=} mnemonic mnemonic of the wallet, if not specified a random one is generated
    * @return {Object} the created wallet
-   * @example wallet = await wallet.createFromMnemonic(5, 'some long mnemonic phrase')
+   * @example wallet = await wallet.create(5, 'some long mnemonic phrase')
    */
   async function createFromMnemonic (numberOfAccounts, mnemonic) {
     if (this.length > 0) {
@@ -45,6 +45,7 @@ export function patchWallet (wallet) {
     }
     return this
   }
+
   /**
    * check if the passed mnemonic is bip39 valid
    * @param  {string}  mnemonic mnemonic to check
