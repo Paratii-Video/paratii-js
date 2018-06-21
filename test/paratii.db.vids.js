@@ -2,7 +2,7 @@ import { assert } from 'chai'
 import { Paratii } from '../src/paratii.js'
 import { DB_PROVIDER } from './utils.js'
 import nock from 'nock'
-const videos = require('./data/fixtures')
+const { videos } = require('./data/fixtures')
 
 describe('paratii.db API: :', function () {
   let paratii
@@ -12,6 +12,7 @@ describe('paratii.db API: :', function () {
     nock('https://db.paratii.video/api/v1')
     .persist()
     .get('/videos/?keyword=keyword')
+    // TODO: use videosResponse (from ./data/fixtures) instead of "videos" here
     .reply(200, videos)
     .get('/videos/')
     .reply(200, videos)

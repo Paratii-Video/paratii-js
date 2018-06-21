@@ -2,6 +2,8 @@ import { Paratii } from '../src/paratii.js'
 import { address, testConfig, privateKey17, address17, challengeFromDifferentAccount, voteFromDifferentAccount, revealVoteFromDifferentAccount } from './utils.js'
 import { assert } from 'chai'
 import { BigNumber } from 'bignumber.js'
+import nock from 'nock'
+import { videosResponse, videosResponseEmpty } from './data/fixtures'
 
 describe('paratii.eth.tcr:', function () {
   let paratii
@@ -860,5 +862,17 @@ describe('paratii.eth.tcr:', function () {
     assert.equal(voterReward, reward)
 
     assert.equal(balanceBefore.plus(reward).toString(), balanceAfter.toString())
+  })
+
+  it('getTotalStaked should work', async function () {
+    nock.cleanAll()
+    nock('https://db.paratii.video/api/v1')
+      .get(`/videos/?owner=${address17}`)
+      .reply(200, videosResponseEmpty)
+      .get(`/videos/?owner=${paratii.eth.getAccount()}`)
+      .reply(200, videosResponse)
+    assert.equal(await paratii.eth.tcr.getTotalStaked(address17), 0)
+    let amount = new BigNumber(paratii.eth.web3.utils.toWei('5'))
+    assert.equal((await paratii.eth.tcr.getTotalStaked(paratii.eth.getAccount())).toNumber(), amount.toNumber())
   })
 })
