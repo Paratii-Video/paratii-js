@@ -1,4 +1,5 @@
 'use strict'
+import { BigNumber } from 'bignumber.js'
 import { getInfoFromLogs } from './utils.js'
 
  /**
@@ -164,5 +165,22 @@ export class ParatiiEthTcrPlaceholder {
   async exit (videoId) {
     let contract = await this.getTcrContract()
     return contract.methods.exit(videoId).send()
+  }
+
+  /**
+   * get the sum of all stkeds
+   * @param address  the ethereum address that is staked
+   * @return {integer}  total of all statkes
+   */
+  async getTotalStaked (address) {
+    // this is now implemented by getting all vids for this user, and counting all the stakes
+    const vids = await this.eth.config.paratii.vids.search({owner: address})
+    if (vids.total === 0) {
+      return new BigNumber(0)
+    } else {
+      const stakes = vids.results.map((a) => ((a.staked && a.staked.deposit) || 0))
+      const total = stakes.reduce((a, b) => a + b)
+      return BigNumber(total)
+    }
   }
 }

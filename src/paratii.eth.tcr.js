@@ -1227,12 +1227,11 @@ export class ParatiiEthTcr {
     let value = await contract.methods.get(param).call()
     return value
   }
+
   /**
    * get the sum of all stkeds
    * @param address  the ethereum address that is staked
-   * @return {integer} percentage needed for success in parametrizer
-   * @example let pVoteQuorum = await paratii.eth.tcr.getpVoteQuo
-   *
+   * @return {integer}  total of all statkes
    */
   async getTotalStaked (address) {
     // this is now implemented by getting all vids for this user, and counting all the stakes

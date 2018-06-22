@@ -17,6 +17,8 @@ var _createClass2 = require('babel-runtime/helpers/createClass');
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
+var _bignumber = require('bignumber.js');
+
 var _utils = require('./utils.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -400,6 +402,50 @@ var ParatiiEthTcrPlaceholder = exports.ParatiiEthTcrPlaceholder = function () {
             case 4:
             case 'end':
               return _context7.stop();
+          }
+        }
+      }, null, this);
+    }
+
+    /**
+     * get the sum of all stkeds
+     * @param address  the ethereum address that is staked
+     * @return {integer}  total of all statkes
+     */
+
+  }, {
+    key: 'getTotalStaked',
+    value: function getTotalStaked(address) {
+      var vids, stakes, total;
+      return _regenerator2.default.async(function getTotalStaked$(_context8) {
+        while (1) {
+          switch (_context8.prev = _context8.next) {
+            case 0:
+              _context8.next = 2;
+              return _regenerator2.default.awrap(this.eth.config.paratii.vids.search({ owner: address }));
+
+            case 2:
+              vids = _context8.sent;
+
+              if (!(vids.total === 0)) {
+                _context8.next = 7;
+                break;
+              }
+
+              return _context8.abrupt('return', new _bignumber.BigNumber(0));
+
+            case 7:
+              stakes = vids.results.map(function (a) {
+                return a.staked && a.staked.deposit || 0;
+              });
+              total = stakes.reduce(function (a, b) {
+                return a + b;
+              });
+              return _context8.abrupt('return', (0, _bignumber.BigNumber)(total));
+
+            case 10:
+            case 'end':
+              return _context8.stop();
           }
         }
       }, null, this);
