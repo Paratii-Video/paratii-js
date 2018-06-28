@@ -225,6 +225,11 @@ export class ParatiiIPFS extends EventEmitter {
                   //   '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/'
                   // ]
                 },
+                Discovery: {
+                  webRTCStar: {
+                    Enabled: true
+                  }
+                },
                 Bootstrap: this.config.ipfs.bootstrap
                 // [
                 //   '/dns4/bootstrap.paratii.video/tcp/443/wss/ipfs/QmeUmy6UtuEs91TH6bKnfuU1Yvp63CkZJWm624MjBEBazW'
