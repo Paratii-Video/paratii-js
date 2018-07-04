@@ -332,19 +332,20 @@ export class ParatiiEth {
       DLL: tcrDLL.options.address,
       AttributeStore: tcrAttributeStore.options.address
     }, paratiiToken.options.address,
-    tcrPLCRVoting.options.address,
-    parameterizerConfig.minDeposit,
-    parameterizerConfig.pMinDeposit,
-    parameterizerConfig.applyStageLength,
-    parameterizerConfig.pApplyStageLength,
-    parameterizerConfig.commitStageLength,
-    parameterizerConfig.pCommitStageLength,
-    parameterizerConfig.revealStageLength,
-    parameterizerConfig.pRevealStageLength,
-    parameterizerConfig.dispensationPct,
-    parameterizerConfig.pDispensationPct,
-    parameterizerConfig.voteQuorum,
-    parameterizerConfig.pVoteQuorum)
+      tcrPLCRVoting.options.address,
+      parameterizerConfig.minDeposit,
+      parameterizerConfig.pMinDeposit,
+      parameterizerConfig.applyStageLength,
+      parameterizerConfig.pApplyStageLength,
+      parameterizerConfig.commitStageLength,
+      parameterizerConfig.pCommitStageLength,
+      parameterizerConfig.revealStageLength,
+      parameterizerConfig.pRevealStageLength,
+      parameterizerConfig.dispensationPct,
+      parameterizerConfig.pDispensationPct,
+      parameterizerConfig.voteQuorum,
+      parameterizerConfig.pVoteQuorum
+    )
 
     let tcrRegistry = await this.deployWithLinks('TcrRegistry', {
       DLL: tcrDLL.options.address,
