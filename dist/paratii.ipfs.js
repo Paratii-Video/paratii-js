@@ -300,6 +300,15 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
                   // maxMessageSize: 256 * 1024
                   maxMessageSize: _this5.config.ipfs['bitswap.maxMessageSize']
                 },
+                EXPERIMENTAL: {
+                  pubsub: true,
+                  relay: {
+                    enabled: true,
+                    hop: {
+                      enabled: true
+                    }
+                  }
+                },
                 start: true,
                 repo: config.ipfs.repo || '/tmp/test-repo-' + String(Math.random()),
                 config: {
@@ -309,6 +318,11 @@ var ParatiiIPFS = exports.ParatiiIPFS = function (_EventEmitter) {
                     //   '/dns4/star.paratii.video/tcp/443/wss/p2p-webrtc-star',
                     //   '/dns4/ws.star.paratii.video/tcp/443/wss/p2p-websocket-star/'
                     // ]
+                  },
+                  Discovery: {
+                    webRTCStar: {
+                      Enabled: true
+                    }
                   },
                   Bootstrap: _this5.config.ipfs.bootstrap
                   // [
