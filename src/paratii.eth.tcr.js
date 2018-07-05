@@ -1240,7 +1240,7 @@ export class ParatiiEthTcr {
       return new BigNumber(0)
     } else {
       const stakes = vids.results.map((a) => ((a.staked && a.staked.deposit) || 0))
-      const total = stakes.reduce((a, b) => a + b)
+      const total = stakes.reduce((a, b) => Number(a) + Number(b))
       return BigNumber(total)
     }
   }
