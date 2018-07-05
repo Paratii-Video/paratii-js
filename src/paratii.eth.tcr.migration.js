@@ -32,8 +32,8 @@ export class ParatiiEthTcrMigration {
   }
 
   async _inTcrPlaceholder (videoId) {
-    let isWhitelisted = await this.eth.tcrPlaceholder.isWhitelisted(videoId)
-    if (isWhitelisted) {
+    let appWasMade = await this.eth.tcrPlaceholder.didVideoApply(videoId)
+    if (appWasMade) {
       return true
     } else {
       return false
@@ -53,5 +53,43 @@ export class ParatiiEthTcrMigration {
     // get info from Placeholder
     // check if user is owner of the video
     // start a new whitelisting process on the new TCR
+    let hash = this.eth.tcr.getHash(videoId)
+    let placeHolderContract = await this.eth.tcrPlaceholder.getTcrContract()
+    let listing = await placeHolderContract.methods.listings(hash).call()
+    if (listing) {
+      // console.log('listing', listing)
+      // return listing
+
+      // check if whitelisted or not.
+      let isWhitelisted = await this.eth.tcrPlaceholder.isWhitelisted(videoId)
+      if (isWhitelisted) {
+        // exit the old Tcr
+        let exitTx = await this.eth.tcrPlaceholder.exit(videoId)
+        if (exitTx) {
+          // TODO check for token transfer event here.
+          let minDeposit = await this.eth.tcr.getMinDeposit()
+          let applyTx = await this.eth.tcr.checkEligiblityAndApply(videoId, this.eth.web3.utils.toWei(minDeposit.toString()))
+          console.log('applyTx: ', applyTx)
+          return applyTx
+        } else {
+          // no token transfer, whats up with that ?
+        }
+      } else {
+        // can it be whitelisted?
+        let updateStatus = await this.eth.tcrPlaceholder.updateStatus(videoId)
+        if (updateStatus) {
+          // check for _NewVideoWhitelisted event
+        } else {
+          // no event. can't be whitelisted... now what ??
+        }
+      }
+      // init resetListing to get back the staked tokens.
+      // let resetListing = await placeHolderContract.methods.resetListing(videoId)
+      //   .send({from: this.eth.getAccount()})
+      // console.log('resetListing: ', resetListing)
+      // return resetListing
+    } else {
+      throw new Error('listing is null')
+    }
   }
 }

@@ -27,6 +27,8 @@ describe('paratii.eth.tcr:', function () {
 
   let id = 'some-new-id'
 
+  let legacyId = 'some-placeholder-id'
+
   // to avoid problem with interaction with other tests
   let myPrivateKey = '0x55e23c060d7d5e836b776852772d7de52d1756fc857d0493b4374a21e03d9c18'
   // let myAddress = '0x77Db6De1baD96E52492A25e0e86480F3a0A24Ae1'
@@ -874,5 +876,39 @@ describe('paratii.eth.tcr:', function () {
     assert.equal(await paratii.eth.tcr.getTotalStaked(address17), 0)
     let amount = new BigNumber(paratii.eth.web3.utils.toWei('5'))
     assert.equal((await paratii.eth.tcr.getTotalStaked(paratii.eth.getAccount())).toNumber(), amount.toNumber())
+  })
+
+  it('shoulld be able to migrate videos', async function () {
+    let amount = 5
+    let app = await paratii.eth.tcrPlaceholder.checkEligiblityAndApply(legacyId, paratii.eth.web3.utils.toWei(amount.toString()))
+    assert.isTrue(app)
+
+    // applied
+    let appWasMade = await paratii.eth.tcrPlaceholder.didVideoApply(legacyId)
+    assert.isTrue(appWasMade)
+
+    // make tx so that the apply stage length is passed
+    let i
+    let n = 100
+    for (i = 0; i <= n; i++) {
+      await paratii.eth.transfer(address17, 1, 'PTI')
+    }
+
+    let updateStatus = await paratii.eth.tcrPlaceholder.updateStatus(legacyId)
+    // console.log('updateStatus ', updateStatus)
+    assert.isOk(updateStatus)
+    //
+    // let isWhitelisted = await paratii.eth.tcrPlaceholder.isWhitelisted(legacyId)
+    // assert.isTrue(isWhitelisted)
+    //
+    // let exitOldTcr = await paratii.eth.tcrPlaceholder.exit(videoId)
+    // console.log('exitOldTcr: ', exitOldTcr)
+    // assert.isOk(exitOldTcr)
+
+    let eligibleForMigration = await paratii.eth.tcrMigration.eligibleForMigration(legacyId)
+    assert.isTrue(eligibleForMigration)
+
+    let migrate = await paratii.eth.tcrMigration.migrate(legacyId)
+    assert.isOk(migrate)
   })
 })
