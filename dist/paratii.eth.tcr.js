@@ -2890,7 +2890,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
                 return a.staked && a.staked.deposit || 0;
               });
               total = stakes.reduce(function (a, b) {
-                return a + b;
+                return Number(a) + Number(b);
               });
               return _context57.abrupt('return', (0, _bignumber.BigNumber)(total));
 
