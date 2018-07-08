@@ -332,19 +332,20 @@ export class ParatiiEth {
       DLL: tcrDLL.options.address,
       AttributeStore: tcrAttributeStore.options.address
     }, paratiiToken.options.address,
-    tcrPLCRVoting.options.address,
-    parameterizerConfig.minDeposit,
-    parameterizerConfig.pMinDeposit,
-    parameterizerConfig.applyStageLength,
-    parameterizerConfig.pApplyStageLength,
-    parameterizerConfig.commitStageLength,
-    parameterizerConfig.pCommitStageLength,
-    parameterizerConfig.revealStageLength,
-    parameterizerConfig.pRevealStageLength,
-    parameterizerConfig.dispensationPct,
-    parameterizerConfig.pDispensationPct,
-    parameterizerConfig.voteQuorum,
-    parameterizerConfig.pVoteQuorum)
+      tcrPLCRVoting.options.address,
+      parameterizerConfig.minDeposit,
+      parameterizerConfig.pMinDeposit,
+      parameterizerConfig.applyStageLength,
+      parameterizerConfig.pApplyStageLength,
+      parameterizerConfig.commitStageLength,
+      parameterizerConfig.pCommitStageLength,
+      parameterizerConfig.revealStageLength,
+      parameterizerConfig.pRevealStageLength,
+      parameterizerConfig.dispensationPct,
+      parameterizerConfig.pDispensationPct,
+      parameterizerConfig.voteQuorum,
+      parameterizerConfig.pVoteQuorum
+    )
 
     let tcrRegistry = await this.deployWithLinks('TcrRegistry', {
       DLL: tcrDLL.options.address,
@@ -611,11 +612,11 @@ export class ParatiiEth {
   /**
    * Use this to send ETH or PTI from paratii.config.address
    * @param  {string}  beneficiary ETH address
-   * @param  {number}  amount      amount of ETH/PTI to be sent
+   * @param  {number}  amount      amount of ETH/PTI to be sent, value in Wei
    * @param  {string}  symbol      symbol of the token to send (ETH,PTI)
    * @param  {string=}  description description to be inserted in the blockchain
    * @return {Promise}             information about the transaction recording the transfer
-   * @example let result = await paratii.eth.transfer('some-address', 20, 'ETH', 'thanks for all the fish')
+   * @example let result = await paratii.eth.transfer('some-address', 20000000000000000000, 'ETH', 'thanks for all the fish')
    */
   async transfer (beneficiary, amount, symbol, description) {
     if (symbol === 'ETH') {

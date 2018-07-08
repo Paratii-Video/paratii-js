@@ -1239,7 +1239,7 @@ export class ParatiiEthTcr {
     if (vids.total === 0) {
       return new BigNumber(0)
     } else {
-      const totalStaked = vids.results.reduce((total, video) => total + ((video.staked && video.staked.deposit) || 0), 0)
+      const totalStaked = vids.results.reduce((total, video) => Number(total) + Number(((video.staked && video.staked.deposit) || 0)), 0)
       return BigNumber(totalStaked)
     }
   }

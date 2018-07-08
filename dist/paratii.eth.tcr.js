@@ -2887,7 +2887,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 7:
               totalStaked = vids.results.reduce(function (total, video) {
-                return total + (video.staked && video.staked.deposit || 0);
+                return Number(total) + Number(video.staked && video.staked.deposit || 0);
               }, 0);
               return _context57.abrupt('return', (0, _bignumber.BigNumber)(totalStaked));
 
