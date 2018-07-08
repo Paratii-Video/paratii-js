@@ -2867,7 +2867,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'getTotalStaked',
     value: function getTotalStaked(address) {
-      var vids, stakes, total;
+      var vids, totalStaked;
       return _regenerator2.default.async(function getTotalStaked$(_context57) {
         while (1) {
           switch (_context57.prev = _context57.next) {
@@ -2886,15 +2886,12 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
               return _context57.abrupt('return', new _bignumber.BigNumber(0));
 
             case 7:
-              stakes = vids.results.map(function (a) {
-                return a.staked && a.staked.deposit || 0;
-              });
-              total = stakes.reduce(function (a, b) {
-                return a + b;
-              });
-              return _context57.abrupt('return', (0, _bignumber.BigNumber)(total));
+              totalStaked = vids.results.reduce(function (total, video) {
+                return total + (video.staked && video.staked.deposit || 0);
+              }, 0);
+              return _context57.abrupt('return', (0, _bignumber.BigNumber)(totalStaked));
 
-            case 10:
+            case 9:
             case 'end':
               return _context57.stop();
           }
