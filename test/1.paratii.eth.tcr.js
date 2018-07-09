@@ -878,7 +878,7 @@ describe('paratii.eth.tcr:', function () {
     assert.equal((await paratii.eth.tcr.getTotalStaked(paratii.eth.getAccount())).toNumber(), amount.toNumber())
   })
 
-  it('shoulld be able to migrate videos', async function () {
+  it('shoulld be able to migrate a whitelisted videos', async function () {
     let amount = 5
     let app = await paratii.eth.tcrPlaceholder.checkEligiblityAndApply(legacyId, paratii.eth.web3.utils.toWei(amount.toString()))
     assert.isTrue(app)
@@ -889,7 +889,7 @@ describe('paratii.eth.tcr:', function () {
 
     // make tx so that the apply stage length is passed
     let i
-    let n = 100
+    let n = 100 // default number of blocks for tcrPlaceholder
     for (i = 0; i <= n; i++) {
       await paratii.eth.transfer(address17, 1, 'PTI')
     }
@@ -897,6 +897,41 @@ describe('paratii.eth.tcr:', function () {
     let updateStatus = await paratii.eth.tcrPlaceholder.updateStatus(legacyId)
     // console.log('updateStatus ', updateStatus)
     assert.isOk(updateStatus)
+
+    let isWhitelisted = await paratii.eth.tcrPlaceholder.isWhitelisted(legacyId)
+    assert.isTrue(isWhitelisted)
+
+    // let exitOldTcr = await paratii.eth.tcrPlaceholder.exit(videoId)
+    // console.log('exitOldTcr: ', exitOldTcr)
+    // assert.isOk(exitOldTcr)
+
+    let eligibleForMigration = await paratii.eth.tcrMigration.eligibleForMigration(legacyId)
+    assert.isTrue(eligibleForMigration)
+
+    let migrate = await paratii.eth.tcrMigration.migrate(legacyId)
+    assert.isOk(migrate)
+  })
+
+  it('should be able to update a placeholderTCR vid status and migrate it', async function () {
+    let amount = 5
+    legacyId = legacyId + '_2'
+    let app = await paratii.eth.tcrPlaceholder.checkEligiblityAndApply(legacyId, paratii.eth.web3.utils.toWei(amount.toString()))
+    assert.isTrue(app)
+
+    // applied
+    let appWasMade = await paratii.eth.tcrPlaceholder.didVideoApply(legacyId)
+    assert.isTrue(appWasMade)
+
+    // make tx so that the apply stage length is passed
+    let i
+    let n = 100 // default number of blocks for tcrPlaceholder
+    for (i = 0; i <= n; i++) {
+      await paratii.eth.transfer(address17, 1, 'PTI')
+    }
+
+    // let updateStatus = await paratii.eth.tcrPlaceholder.updateStatus(legacyId)
+    // console.log('updateStatus ', updateStatus)
+    // assert.isOk(updateStatus)
     //
     // let isWhitelisted = await paratii.eth.tcrPlaceholder.isWhitelisted(legacyId)
     // assert.isTrue(isWhitelisted)

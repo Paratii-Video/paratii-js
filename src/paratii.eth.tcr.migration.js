@@ -53,6 +53,7 @@ export class ParatiiEthTcrMigration {
     // get info from Placeholder
     // check if user is owner of the video
     // start a new whitelisting process on the new TCR
+    let minDeposit = await this.eth.tcr.getMinDeposit()
     let hash = this.eth.tcr.getHash(videoId)
     let placeHolderContract = await this.eth.tcrPlaceholder.getTcrContract()
     let listing = await placeHolderContract.methods.listings(hash).call()
@@ -67,27 +68,27 @@ export class ParatiiEthTcrMigration {
         let exitTx = await this.eth.tcrPlaceholder.exit(videoId)
         if (exitTx) {
           // TODO check for token transfer event here.
-          let minDeposit = await this.eth.tcr.getMinDeposit()
           let applyTx = await this.eth.tcr.checkEligiblityAndApply(videoId, this.eth.web3.utils.toWei(minDeposit.toString()))
-          console.log('applyTx: ', applyTx)
+          // console.log('applyTx: ', applyTx)
           return applyTx
         } else {
           // no token transfer, whats up with that ?
+          throw new Error(`Video ${videoId} is whitelisted but can't exit placeHolderContract`)
         }
       } else {
         // can it be whitelisted?
         let updateStatus = await this.eth.tcrPlaceholder.updateStatus(videoId)
-        if (updateStatus) {
+        if (updateStatus && updateStatus.events && updateStatus.events._NewVideoWhitelisted) {
           // check for _NewVideoWhitelisted event
+          // console.log('updateStatus: ', updateStatus)
+          let applyTx = await this.eth.tcr.checkEligiblityAndApply(videoId, this.eth.web3.utils.toWei(minDeposit.toString()))
+          // console.log('applyTx: ', applyTx)
+          return applyTx
         } else {
           // no event. can't be whitelisted... now what ??
+          throw new Error(`Video ${videoId} is still in applying process`)
         }
       }
-      // init resetListing to get back the staked tokens.
-      // let resetListing = await placeHolderContract.methods.resetListing(videoId)
-      //   .send({from: this.eth.getAccount()})
-      // console.log('resetListing: ', resetListing)
-      // return resetListing
     } else {
       throw new Error('listing is null')
     }
