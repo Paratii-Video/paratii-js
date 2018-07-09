@@ -27,13 +27,20 @@ var ParatiiEthTcrMigration = exports.ParatiiEthTcrMigration = function () {
     this.eth = opts;
   }
 
+  /**
+   * get object with all of the owners videos and their migration status
+   * @param  {string}  address owners ETH address
+   * @return {object}         {videoid: true}
+   */
+
+
   (0, _createClass3.default)(ParatiiEthTcrMigration, [{
-    key: 'getMigrationStatuss',
-    value: function getMigrationStatuss(address) {
+    key: 'getMigrationStatus',
+    value: function getMigrationStatus(address) {
       var _this = this;
 
       var vids, ids, idArray;
-      return _regenerator2.default.async(function getMigrationStatuss$(_context2) {
+      return _regenerator2.default.async(function getMigrationStatus$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
@@ -79,6 +86,13 @@ var ParatiiEthTcrMigration = exports.ParatiiEthTcrMigration = function () {
         }
       }, null, this);
     }
+
+    /**
+     * check whether a video requires a migration or not
+     * @param  {string}  videoId id of the video
+     * @return {boolean}         returns true if video requires migration
+     */
+
   }, {
     key: 'eligibleForMigration',
     value: function eligibleForMigration(videoId) {
@@ -217,6 +231,13 @@ var ParatiiEthTcrMigration = exports.ParatiiEthTcrMigration = function () {
         }
       }, null, this);
     }
+
+    /**
+     * migrate from tcrPlaceholder to TcrRegistry
+     * @param  {string}  videoId id of the video to migrate
+     * @return {boolean}         returns true if migrated successfully
+     */
+
   }, {
     key: 'migrate',
     value: function migrate(videoId) {

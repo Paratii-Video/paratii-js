@@ -6,7 +6,12 @@ export class ParatiiEthTcrMigration {
     this.eth = opts
   }
 
-  async getMigrationStatuss (address) {
+  /**
+   * get object with all of the owners videos and their migration status
+   * @param  {string}  address owners ETH address
+   * @return {object}         {videoid: true}
+   */
+  async getMigrationStatus (address) {
     const vids = await this.eth.config.paratii.vids.search({owner: address})
     let ids = {}
     if (vids) {
@@ -20,6 +25,11 @@ export class ParatiiEthTcrMigration {
     return ids
   }
 
+  /**
+   * check whether a video requires a migration or not
+   * @param  {string}  videoId id of the video
+   * @return {boolean}         returns true if video requires migration
+   */
   async eligibleForMigration (videoId) {
     let didMigrate = await this._didMigrate(videoId)
     if (didMigrate) {
@@ -63,6 +73,11 @@ export class ParatiiEthTcrMigration {
     }
   }
 
+  /**
+   * migrate from tcrPlaceholder to TcrRegistry
+   * @param  {string}  videoId id of the video to migrate
+   * @return {boolean}         returns true if migrated successfully
+   */
   async migrate (videoId) {
     // get info from Placeholder
     // check if user is owner of the video
