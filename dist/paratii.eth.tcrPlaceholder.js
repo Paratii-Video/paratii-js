@@ -406,6 +406,28 @@ var ParatiiEthTcrPlaceholder = exports.ParatiiEthTcrPlaceholder = function () {
         }
       }, null, this);
     }
+  }, {
+    key: 'updateStatus',
+    value: function updateStatus(videoId) {
+      var contract;
+      return _regenerator2.default.async(function updateStatus$(_context8) {
+        while (1) {
+          switch (_context8.prev = _context8.next) {
+            case 0:
+              _context8.next = 2;
+              return _regenerator2.default.awrap(this.getTcrContract());
+
+            case 2:
+              contract = _context8.sent;
+              return _context8.abrupt('return', contract.methods.updateStatus(videoId).send());
+
+            case 4:
+            case 'end':
+              return _context8.stop();
+          }
+        }
+      }, null, this);
+    }
 
     /**
      * get the sum of all stkeds
@@ -417,22 +439,22 @@ var ParatiiEthTcrPlaceholder = exports.ParatiiEthTcrPlaceholder = function () {
     key: 'getTotalStaked',
     value: function getTotalStaked(address) {
       var vids, stakes, total;
-      return _regenerator2.default.async(function getTotalStaked$(_context8) {
+      return _regenerator2.default.async(function getTotalStaked$(_context9) {
         while (1) {
-          switch (_context8.prev = _context8.next) {
+          switch (_context9.prev = _context9.next) {
             case 0:
-              _context8.next = 2;
+              _context9.next = 2;
               return _regenerator2.default.awrap(this.eth.config.paratii.vids.search({ owner: address }));
 
             case 2:
-              vids = _context8.sent;
+              vids = _context9.sent;
 
               if (!(vids.total === 0)) {
-                _context8.next = 7;
+                _context9.next = 7;
                 break;
               }
 
-              return _context8.abrupt('return', new _bignumber.BigNumber(0));
+              return _context9.abrupt('return', new _bignumber.BigNumber(0));
 
             case 7:
               stakes = vids.results.map(function (a) {
@@ -441,11 +463,11 @@ var ParatiiEthTcrPlaceholder = exports.ParatiiEthTcrPlaceholder = function () {
               total = stakes.reduce(function (a, b) {
                 return Number(a) + Number(b);
               });
-              return _context8.abrupt('return', (0, _bignumber.BigNumber)(total));
+              return _context9.abrupt('return', (0, _bignumber.BigNumber)(total));
 
             case 10:
             case 'end':
-              return _context8.stop();
+              return _context9.stop();
           }
         }
       }, null, this);
