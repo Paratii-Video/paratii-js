@@ -604,9 +604,15 @@ export class ParatiiEth {
     }
     from = add0x(from)
     beneficiary = add0x(beneficiary)
+    const balanceFrom = await this.balanceOf(from, 'PTI')
 
     let result = await contract.methods.transfer(beneficiary, amount).send()
-
+    if (!result.events.Transfer) {
+      // something has gone wrong: if successful, the transaction should contain a Transfer event
+      if (amount > balanceFrom) {
+        throw Error(`Insufficient balance! Cannot transfer ${amount} PTI`)
+      }
+    }
     return result
   }
   /**

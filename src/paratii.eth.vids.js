@@ -78,8 +78,7 @@ export class ParatiiEthVids {
       price: joi.any().default(0),
       ipfsHashOrig: joi.string().empty('').default(''),
       ipfsHash: joi.string().empty('').default(''),
-      ipfsData: joi.string().default(''),
-      registrar: joi.string().empty('').default('')
+      ipfsData: joi.string().default('')
     })
 
     const result = joi.validate(options, schema)
