@@ -6,6 +6,20 @@ export class ParatiiEthTcrMigration {
     this.eth = opts
   }
 
+  async getMigrationStatuss (address) {
+    const vids = await this.eth.config.paratii.vids.search({owner: address})
+    let ids = {}
+    if (vids) {
+      console.log('all vids:', vids.results)
+    }
+
+    let idArray = vids.results.map((vid) => { return vid.id })
+    idArray.forEach(async id => {
+      ids[id] = await this.eligibleForMigration(id)
+    })
+    return ids
+  }
+
   async eligibleForMigration (videoId) {
     let didMigrate = await this._didMigrate(videoId)
     if (didMigrate) {
