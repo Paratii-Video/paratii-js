@@ -41,6 +41,8 @@ var _paratiiEthTcr = require('./paratii.eth.tcr.js');
 
 var _paratiiEthTcrPlaceholder = require('./paratii.eth.tcrPlaceholder.js');
 
+var _paratiiEthTcrMigration = require('./paratii.eth.tcr.migration.js');
+
 var _paratiiEthWallet = require('./paratii.eth.wallet.js');
 
 var _schemas = require('./schemas.js');
@@ -193,6 +195,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
     this.tcr = new _paratiiEthTcr.ParatiiEthTcr(this);
     this.distributor = new _paratiiEthDistributor.ParatiiEthPTIDistributor(this);
     this.tcrPlaceholder = new _paratiiEthTcrPlaceholder.ParatiiEthTcrPlaceholder(this);
+    this.tcrMigration = new _paratiiEthTcrMigration.ParatiiEthTcrMigration(this);
   }
   /**
    * [paratii.setAccount()](./Paratii.html#setAccount__anchor)
