@@ -1,5 +1,6 @@
-import { ParatiiDbVids } from './paratii.db.vids.js'
+import { ParatiiDbTcr } from './paratii.db.tcr.js'
 import { ParatiiDbUsers } from './paratii.db.users.js'
+import { ParatiiDbVids } from './paratii.db.vids.js'
 import { dbSchema, accountSchema } from './schemas.js'
 import joi from 'joi'
 
@@ -31,6 +32,7 @@ export class ParatiiDb {
     this.config.db = result.value.db
     this.config.account = result.value.account
     this.vids = new ParatiiDbVids(this.config)
+    this.tcr = new ParatiiDbTcr(this.config)
     this.users = new ParatiiDbUsers(this.config)
   }
   /**

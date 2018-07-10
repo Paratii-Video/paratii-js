@@ -21,9 +21,11 @@ var _createClass2 = require('babel-runtime/helpers/createClass');
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
-var _paratiiDbVids = require('./paratii.db.vids.js');
+var _paratiiDbTcr = require('./paratii.db.tcr.js');
 
 var _paratiiDbUsers = require('./paratii.db.users.js');
+
+var _paratiiDbVids = require('./paratii.db.vids.js');
 
 var _schemas = require('./schemas.js');
 
@@ -64,6 +66,7 @@ var ParatiiDb = exports.ParatiiDb = function () {
     this.config.db = result.value.db;
     this.config.account = result.value.account;
     this.vids = new _paratiiDbVids.ParatiiDbVids(this.config);
+    this.tcr = new _paratiiDbTcr.ParatiiDbTcr(this.config);
     this.users = new _paratiiDbUsers.ParatiiDbUsers(this.config);
   }
   /**
