@@ -1239,9 +1239,8 @@ export class ParatiiEthTcr {
     if (vids.total === 0) {
       return new BigNumber(0)
     } else {
-      const stakes = vids.results.map((a) => ((a.staked && a.staked.deposit) || 0))
-      const total = stakes.reduce((a, b) => Number(a) + Number(b))
-      return BigNumber(total)
+      const totalStaked = vids.results.reduce((total, video) => Number(total) + Number(((video.staked && video.staked.deposit) || 0)), 0)
+      return BigNumber(totalStaked)
     }
   }
 }
