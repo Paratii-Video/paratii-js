@@ -341,4 +341,56 @@ describe('paratii.eth.events API: :', function () {
       paratii.eth.distributor.distribute({address: address1, amount, salt, reason, v, r, s})
     })
   })
+
+  it.skip('TBI subscription to tcrRegistry Challenge should work as expected', function (done) {
+    done()
+  })
+  it.skip('TBI subscription to tcrRegistry Deposit should work as expected', function (done) {
+    done()
+  })
+  it.skip('TBI subscription to tcrRegistry Withdrawal should work as expected', function (done) {
+    done()
+  })
+  it.skip('TBI subscription to tcrRegistry ApplicationWhitelisted should work as expected', function (done) {
+    done()
+  })
+  it.skip('TBI subscription to tcrRegistry ApplicationRemoved should work as expected', function (done) {
+    done()
+  })
+  it.skip('TBI subscription to tcrRegistry ListingRemoved should work as expected', function (done) {
+    done()
+  })
+  it.skip('TBI subscription to tcrRegistry ListingWithdrawn should work as expected', function (done) {
+    done()
+  })
+  it.skip('TBI subscription to tcrRegistry TouchAndRemoved should work as expected', function (done) {
+    done()
+  })
+  it.skip('TBI subscription to tcrRegistry ChallengeFailed should work as expected', function (done) {
+    done()
+  })
+  it.skip('TBI subscription to tcrRegistry ChallengeSucceeded should work as expected', function (done) {
+    done()
+  })
+  it.skip('TBI subscription to tcrRegistry RewardClaimed should work as expected', function (done) {
+    done()
+  })
+  it.skip('TBI subscription to tcrPLCRVoting VoteCommitted should work as expected', function (done) {
+    done()
+  })
+  it.skip('TBI subscription to tcrPLCRVoting VoteRevealed should work as expected', function (done) {
+    done()
+  })
+  it.skip('TBI subscription to tcrPLCRVoting PollCreated should work as expected', function (done) {
+    done()
+  })
+  it.skip('TBI subscription to tcrPLCRVoting VotingRightsGranted should work as expected', function (done) {
+    done()
+  })
+  it.skip('TBI subscription to tcrPLCRVoting VotingRightsWithdrawn should work as expected', function (done) {
+    done()
+  })
+  it.skip('TBI subscription to tcrPLCRVoting TokensRescued should work as expected', function (done) {
+    done()
+  })
 })

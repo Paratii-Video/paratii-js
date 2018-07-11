@@ -167,6 +167,11 @@ export class ParatiiEthTcrPlaceholder {
     return contract.methods.exit(videoId).send()
   }
 
+  async updateStatus (videoId) {
+    let contract = await this.getTcrContract()
+    return contract.methods.updateStatus(videoId).send()
+  }
+
   /**
    * get the sum of all stkeds
    * @param address  the ethereum address that is staked
