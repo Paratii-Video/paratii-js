@@ -93,7 +93,7 @@ var ParatiiDbTcrChallenges = exports.ParatiiDbTcrChallenges = function () {
     }
 
     /**
-     * Get the data of the video. See {@link ParatiiCoreVids#search}
+     *  Search for challenges Search for challenges Search for challenges Search for challenges
      */
 
   }, {
@@ -104,7 +104,6 @@ var ParatiiDbTcrChallenges = exports.ParatiiDbTcrChallenges = function () {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              // FIXME: does not handle combinations of parameters yet
               schema = joi.object({
                 'videoId': joi.string().empty(),
                 'offset': joi.number().integer().empty(),

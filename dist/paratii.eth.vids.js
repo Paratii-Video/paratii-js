@@ -299,8 +299,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
                 price: videoInfo[1],
                 ipfsHashOrig: videoInfo[2],
                 ipfsHash: videoInfo[3],
-                ipfsData: videoInfo[4],
-                registrar: videoInfo[5]
+                ipfsData: videoInfo[4]
               };
 
               if (!(result.owner === _utils.NULL_ADDRESS)) {
