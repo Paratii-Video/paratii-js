@@ -109,6 +109,74 @@ var ParatiiEthEvents = exports.ParatiiEthEvents = function () {
       Distribute: {
         contract: 'PTIDistributor',
         event: 'LogDistribute'
+      },
+      Challenge: {
+        contract: 'TcrRegistry',
+        event: '_Challenge'
+      },
+      Deposit: {
+        contract: 'TcrRegistry',
+        event: '_Deposit'
+      },
+      Withdrawal: {
+        contract: 'TcrRegistry',
+        event: '_Withdrawal'
+      },
+      ApplicationWhitelisted: {
+        contract: 'TcrRegistry',
+        event: '_ApplicationWhitelisted'
+      },
+      ApplicationRemoved: {
+        contract: 'TcrRegistry',
+        event: '_ApplicationRemoved'
+      },
+      ListingRemoved: {
+        contract: 'TcrRegistry',
+        event: '_ListingRemoved'
+      },
+      ListingWithdrawn: {
+        contract: 'TcrRegistry',
+        event: '_ListingWithdrawn'
+      },
+      TouchAndRemoved: {
+        contract: 'TcrRegistry',
+        event: '_TouchAndRemoved'
+      },
+      ChallengeFailed: {
+        contract: 'TcrRegistry',
+        event: '_ChallengeFailed'
+      },
+      ChallengeSucceeded: {
+        contract: 'TcrRegistry',
+        event: '_ChallengeSucceeded'
+      },
+      RewardClaimed: {
+        contract: 'TcrRegistry',
+        event: '_RewardClaimed'
+      },
+      VoteCommitted: {
+        contract: 'TcrPLCRVoting',
+        event: '_VoteCommitted'
+      },
+      VoteRevealed: {
+        contract: 'TcrPLCRVoting',
+        event: '_VoteRevealed'
+      },
+      PollCreated: {
+        contract: 'TcrPLCRVoting',
+        event: '_PollCreated'
+      },
+      VotingRightsGranted: {
+        contract: 'TcrPLCRVoting',
+        event: '_VotingRightsGranted'
+      },
+      VotingRightsWithdrawn: {
+        contract: 'TcrPLCRVoting',
+        event: '_VotingRightsWithdrawn'
+      },
+      TokensRescued: {
+        contract: 'TcrPLCRVoting',
+        event: '_TokensRescued'
       }
     };
   }
