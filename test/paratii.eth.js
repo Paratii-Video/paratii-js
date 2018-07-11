@@ -123,6 +123,16 @@ describe('paratii.eth API: :', function () {
     assert.equal(balance1 - balance0, amount)
   })
 
+  it('transfer PTI should throw an error if the user balance is too low', async function () {
+    let beneficiary = address1
+    let amount = paratii.eth.web3.utils.toWei('210000001', 'ether')
+    let balance = await paratii.eth.balanceOf(paratii.getAccount(), 'PTI')
+    console.log(balance.toString())
+    await assert.isRejected(paratii.eth.transfer(beneficiary, amount, 'PTI'), Error, /Insufficient balance/g)
+    let balance1 = await paratii.eth.balanceOf(beneficiary, 'PTI')
+    assert.equal(balance1, 0)
+  })
+
   it('deployContracts should update the contract information', async function () {
     let contracts = await paratii.eth.deployContracts()
     assert.equal(contracts.Registry.options.address, (await paratii.eth.getContract('Registry')).options.address)

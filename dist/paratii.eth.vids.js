@@ -189,8 +189,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
                 price: joi.any().default(0),
                 ipfsHashOrig: joi.string().empty('').default(''),
                 ipfsHash: joi.string().empty('').default(''),
-                ipfsData: joi.string().default(''),
-                registrar: joi.string().empty('').default('')
+                ipfsData: joi.string().default('')
               });
               result = joi.validate(options, schema);
 
@@ -300,8 +299,7 @@ var ParatiiEthVids = exports.ParatiiEthVids = function () {
                 price: videoInfo[1],
                 ipfsHashOrig: videoInfo[2],
                 ipfsHash: videoInfo[3],
-                ipfsData: videoInfo[4],
-                registrar: videoInfo[5]
+                ipfsData: videoInfo[4]
               };
 
               if (!(result.owner === _utils.NULL_ADDRESS)) {

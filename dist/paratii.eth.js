@@ -1095,7 +1095,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: '_transferPTI',
     value: function _transferPTI(beneficiary, amount) {
-      var contract, from, result;
+      var contract, from, balanceFrom, result;
       return _regenerator2.default.async(function _transferPTI$(_context11) {
         while (1) {
           switch (_context11.prev = _context11.next) {
@@ -1126,15 +1126,33 @@ var ParatiiEth = exports.ParatiiEth = function () {
             case 8:
               from = (0, _utils.add0x)(from);
               beneficiary = (0, _utils.add0x)(beneficiary);
-
               _context11.next = 12;
-              return _regenerator2.default.awrap(contract.methods.transfer(beneficiary, amount).send());
+              return _regenerator2.default.awrap(this.balanceOf(from, 'PTI'));
 
             case 12:
+              balanceFrom = _context11.sent;
+              _context11.next = 15;
+              return _regenerator2.default.awrap(contract.methods.transfer(beneficiary, amount).send());
+
+            case 15:
               result = _context11.sent;
+
+              if (result.events.Transfer) {
+                _context11.next = 19;
+                break;
+              }
+
+              if (!(amount > balanceFrom)) {
+                _context11.next = 19;
+                break;
+              }
+
+              throw Error('Insufficient balance! Cannot transfer ' + amount + ' PTI');
+
+            case 19:
               return _context11.abrupt('return', result);
 
-            case 14:
+            case 20:
             case 'end':
               return _context11.stop();
           }

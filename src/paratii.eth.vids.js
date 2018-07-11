@@ -78,8 +78,7 @@ export class ParatiiEthVids {
       price: joi.any().default(0),
       ipfsHashOrig: joi.string().empty('').default(''),
       ipfsHash: joi.string().empty('').default(''),
-      ipfsData: joi.string().default(''),
-      registrar: joi.string().empty('').default('')
+      ipfsData: joi.string().default('')
     })
 
     const result = joi.validate(options, schema)
@@ -143,8 +142,7 @@ export class ParatiiEthVids {
       price: videoInfo[1],
       ipfsHashOrig: videoInfo[2],
       ipfsHash: videoInfo[3],
-      ipfsData: videoInfo[4],
-      registrar: videoInfo[5]
+      ipfsData: videoInfo[4]
     }
     if (result.owner === NULL_ADDRESS) {
       throw Error(`No video with id '${videoId}' was registered`)
