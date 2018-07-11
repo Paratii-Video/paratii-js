@@ -3,59 +3,57 @@ const joi = require('joi')
 const fetch = require('isomorphic-fetch')
 
 /**
- * ParatiiDbUsers contains functionalities regarding the videos to interact with the Paratii Blockchain Index
+ * ParatiiDbTcrVotes contains functionalities regarding the videos to interact with the Paratii Blockchain Index
  * @param {Object} config object to initialize Paratii object
  */
 export class ParatiiDbTcrVotes {
   constructor (config) {
     this.config = config
-    this.api = 'tcr/'
+    this.api = 'votes/'
   }
   /**
-   * Get informatino about any currently active challenge
-   * @param  {string}  videoId id of the video
-   * @return {Promise}         data about the video
+   * Get information about this particular vote
+   * @param  {string}  challengeId id of the challenge
+   * @param  {string}  account address of the user that has submitted the vote
+   * @return {Promise<Object>}         data about the video
    * @example await paratii.db.vids.get('some-video-id')
    */
-  async getChallenge (videoId) {
-    let response = await fetch(this.config.db.provider + this.apiVideos + videoId, {
-      method: 'get'
-    })
-    let videoInfo = response.json()
-    return videoInfo
+  async get (challengeId, account) {
+    let response = await this.search({ challengeId, account })
+    // we should have just one result
+    if (response.total === 0) {
+      throw Error(`Did not find a vote for challenge ${challengeId} and account ${account}`)
+    } else if (response.total > 1) {
+      throw Error(`Something unexpected occurred: found ${response.total} votes challenge ${challengeId} and account ${account} (expected 0 or 1)`)
+    }
+    return response.results[0]
   }
 
   /**
-   * Get the data of the video. See {@link ParatiiCoreVids#search}
+   *  Search for challenges Search for challenges Search for challenges Search for challenges
    */
   async search (options) {
-    // FIXME: does not handle combinations of parameters yet
     const schema = joi.object({
-      'owner': joi.string().empty(),
-      'keyword': joi.string().empty(),
+      'challengeId': joi.string().empty(),
+      'account': joi.string().empty(),
       'offset': joi.number().integer().empty(),
-      'limit': joi.number().integer().empty(),
-      'staked': joi.boolean().empty()
+      'limit': joi.number().integer().empty()
     })
 
-    const result = joi.validate(options, schema)
-    const error = result.error
+    const parsedOptions = joi.validate(options, schema)
+    const error = parsedOptions.error
     if (error) throw error
-    let k = ''
+    let queryString = ''
     for (let keyword in options) {
-      k += `${keyword}=${options[keyword]}`
-      k += '&'
+      queryString += `${keyword}=${parsedOptions.value[keyword]}`
+      queryString += '&'
     }
-    if (k !== '') {
-      k = `?${k}`
-      k = k.slice(0, -1)
+    if (queryString !== '') {
+      queryString = queryString.slice(0, -1) // remove the last &
+      queryString = `?${queryString}`
     }
-    let videos = await fetch(this.config.db.provider + this.apiVideos + k, {
-      method: 'get'
-    }).then(function (response) {
-      return response.json()
-    })
-
-    return videos
+    const url = this.config.db.provider + this.api + queryString
+    const response = await fetch(url, { method: 'get' })
+    return response.json()
   }
 }

@@ -19,16 +19,6 @@ var _createClass3 = _interopRequireDefault(_createClass2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//
-//
-//
-// WE FAKE THE DB RESPONSE WITH THE FIXTURES, UNTIL THE DB IS READY
-var USE_FIXTURES = true;
-
-var _require = require('../test/data/fixtures.js'),
-    challengesResponse = _require.challengesResponse,
-    challengesResponseForVideoId = _require.challengesResponseForVideoId;
-
 var joi = require('joi');
 var fetch = require('isomorphic-fetch');
 
@@ -42,13 +32,13 @@ var ParatiiDbTcrChallenges = exports.ParatiiDbTcrChallenges = function () {
     (0, _classCallCheck3.default)(this, ParatiiDbTcrChallenges);
 
     this.config = config;
-    this.api = 'tcr/challenges/';
+    this.api = 'challenges/';
   }
   /**
    * Get informatino about any currently active challenge
    * @param  {string}  videoId id of the video
    * @return {Promise}         data about the video
-   * @example await paratii.db.vids.get('some-video-id')
+   * @example await paratii.db.challenges.get('some-video-id')
    */
 
 
@@ -93,7 +83,12 @@ var ParatiiDbTcrChallenges = exports.ParatiiDbTcrChallenges = function () {
     }
 
     /**
-     *  Search for challenges Search for challenges Search for challenges Search for challenges
+     *  Search for challenges
+     * Valid search options are:
+     * - videoId
+     * - offset
+     * - limit
+     * @example await paratii.db.challenges.search({videoId: 'some-video-id', limit:100})
      */
 
   }, {
@@ -131,31 +126,14 @@ var ParatiiDbTcrChallenges = exports.ParatiiDbTcrChallenges = function () {
                 queryString = '?' + queryString;
               }
               url = this.config.db.provider + this.api + queryString;
-
-              if (!USE_FIXTURES) {
-                _context2.next = 15;
-                break;
-              }
-
-              if (!(parsedOptions.value && parsedOptions.value.videoId)) {
-                _context2.next = 14;
-                break;
-              }
-
-              return _context2.abrupt('return', challengesResponseForVideoId);
-
-            case 14:
-              return _context2.abrupt('return', challengesResponse);
-
-            case 15:
-              _context2.next = 17;
+              _context2.next = 11;
               return _regenerator2.default.awrap(fetch(url, { method: 'get' }));
 
-            case 17:
+            case 11:
               response = _context2.sent;
               return _context2.abrupt('return', response.json());
 
-            case 19:
+            case 13:
             case 'end':
               return _context2.stop();
           }

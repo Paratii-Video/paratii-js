@@ -1383,4 +1383,60 @@ const challengesResponseForVideoId = {
   results: [challengesResponse.results[0]]
 }
 
-module.exports = { videos, videosResponse, videosResponseEmpty, challengesResponse, challengesResponseForVideoId }
+const votesResponse = {
+  total: 2,
+  hasNext: false,
+  query: {},
+  results: [
+    {
+      id: 0x1234,
+      listingHash: 0x12345,
+      rewardPool: 5e18,
+      challenger: 0x12345,
+      resolved: true,
+      stake: 10e18,
+      totalTokens: 14e18,
+      voterCanClaimReward: false,
+      commitStartDate: 1530741082,
+      commitEndDate: 1530741182,
+      // revealStartDate (aka commitEndDate)
+      revealEndDate: 1530741282,
+      voteQuorum: 30,
+      votesFor: 3e18,
+      votesAgainst: 4e18
+    },
+    {
+      id: 0x1235,
+      listingHash: 0x12345,
+      rewardPool: 5e18,
+      challenger: 0x12345,
+      resolved: true,
+      stake: 10e18,
+      totalTokens: 14e18,
+      voterCanClaimReward: false,
+      commitStartDate: 1530741082,
+      commitEndDate: 1530741182,
+      // revealStartDate (aka commitEndDate)
+      revealEndDate: 1530741282,
+      voteQuorum: 30,
+      votesFor: 3e18,
+      votesAgainst: 4e18
+    }
+  ]
+}
+
+const votesResponseOneResult = {
+  total: 1,
+  hasNext: false,
+  query: {},
+  results: [challengesResponse.results[0]]
+}
+
+module.exports = { videos,
+  videosResponse,
+  videosResponseEmpty,
+  challengesResponse,
+  challengesResponseForVideoId,
+  votesResponse,
+  votesResponseOneResult
+}

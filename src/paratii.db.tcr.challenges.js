@@ -1,10 +1,3 @@
-//
-//
-//
-// WE FAKE THE DB RESPONSE WITH THE FIXTURES, UNTIL THE DB IS READY
-const USE_FIXTURES = true
-const { challengesResponse, challengesResponseForVideoId } = require('../test/data/fixtures.js')
-
 const joi = require('joi')
 const fetch = require('isomorphic-fetch')
 
@@ -15,13 +8,13 @@ const fetch = require('isomorphic-fetch')
 export class ParatiiDbTcrChallenges {
   constructor (config) {
     this.config = config
-    this.api = 'tcr/challenges/'
+    this.api = 'challenges/'
   }
   /**
    * Get informatino about any currently active challenge
    * @param  {string}  videoId id of the video
    * @return {Promise}         data about the video
-   * @example await paratii.db.vids.get('some-video-id')
+   * @example await paratii.db.challenges.get('some-video-id')
    */
   async get (videoId) {
     let response = await this.search({ videoId })
@@ -35,10 +28,15 @@ export class ParatiiDbTcrChallenges {
   }
 
   /**
-   * Get the data of the video. See {@link ParatiiCoreVids#search}
+   *  Search for challenges
+   * Valid search options are:
+   * - videoId
+   * - offset
+   * - limit
+   * @example await paratii.db.challenges.search({videoId: 'some-video-id', limit:100})
    */
+
   async search (options) {
-    // FIXME: does not handle combinations of parameters yet
     const schema = joi.object({
       'videoId': joi.string().empty(),
       'offset': joi.number().integer().empty(),
@@ -58,10 +56,6 @@ export class ParatiiDbTcrChallenges {
       queryString = `?${queryString}`
     }
     const url = this.config.db.provider + this.api + queryString
-    if (USE_FIXTURES) {
-      if (parsedOptions.value && parsedOptions.value.videoId) return challengesResponseForVideoId
-      else return challengesResponse
-    }
     const response = await fetch(url, { method: 'get' })
     return response.json()
   }
