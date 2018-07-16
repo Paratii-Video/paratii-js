@@ -36,6 +36,8 @@ export class ParatiiIPFSRemote extends EventEmitter {
     if (result.error) throw result.error
     this.config = result.value
     this._ipfs = this.config.paratiiIPFS // this is the paratii.ipfs.js
+
+    this._rFiles = {}
   }
 
   /*
@@ -69,7 +71,7 @@ export class ParatiiIPFSRemote extends EventEmitter {
       ev = new EventEmitter()
     }
 
-    let r = new Resumable({
+    this._rFiles[hashedFile] = new Resumable({
       target: `${this.config.ipfs.transcoderDropUrl}/${hashedFile.hash}`,
       chunkSize: this.config.ipfs.xhrChunkSize,
       simultaneousUploads: 4,
@@ -78,23 +80,43 @@ export class ParatiiIPFSRemote extends EventEmitter {
       maxFileSize: this.config.ipfs.maxFileSize
     })
 
-    r.on('fileProgress', (file) => {
-      ev.emit('progress', r.progress() * 100)
+    this._rFiles[hashedFile].on('fileProgress', (file) => {
+      ev.emit('progress', this._rFiles[hashedFile].progress() * 100)
     })
 
-    r.on('complete', () => {
+    this._rFiles[hashedFile].on('complete', () => {
       ev.emit('fileReady', hashedFile)
     })
 
-    r.on('error', (err, file) => {
+    this._rFiles[hashedFile].on('error', (err, file) => {
       console.error('file ', file, 'err ', err)
     })
 
-    r.addFile(file._html5File)
+    this._rFiles[hashedFile].on('cancel', () => {
+      console.log(`file ${hashedFile} upload was canceled`)
+      ev.emit('cancel', hashedFile)
+    })
+
+    this._rFiles[hashedFile].addFile(file._html5File)
 
     setTimeout(() => {
-      r.upload()
+      this._rFiles[hashedFile].upload()
     }, 1)
+  }
+
+  /**
+   * cancels an XHR upload
+   * @param  {string} hash IPFS hash of the video to stop
+   */
+  cancel (hash) {
+    if (this._rFiles[hash]) {
+      this._rFiles.cancel()
+      setTimeout(() => {
+        delete this._rFiles[hash]
+      }, 1)
+    } else {
+      console.log(`file ${hash} isn't currently uploading`)
+    }
   }
 
   // TODO add getMetadata doc
