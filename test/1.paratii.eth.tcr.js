@@ -543,9 +543,10 @@ describe('paratii.eth.tcr:', function () {
     assert.isTrue(isCommitPeriodActive)
 
     // one vote for
-    let commitVoteTx = await paratii.eth.tcr.approveAndGetRightsAndCommitVote(id, vote, paratii.eth.web3.utils.toWei('1'))
-    assert.isOk(commitVoteTx)
-    assert.isOk(commitVoteTx.events._VoteCommitted)
+    let { tx, salt } = await paratii.eth.tcr.approveAndGetRightsAndCommitVote(id, vote, paratii.eth.web3.utils.toWei('1'))
+    assert.isOk(tx)
+    assert.isOk(salt)
+    assert.isOk(tx.events._VoteCommitted)
 
     let hasVotingRights = await paratii.eth.tcr.hasVotingRights(paratii.eth.web3.utils.toWei('1'))
     assert.isTrue(hasVotingRights)
@@ -744,9 +745,10 @@ describe('paratii.eth.tcr:', function () {
 
     let balanceBeforeVoting = new BigNumber(await paratii.eth.balanceOf(paratii.eth.getAccount(), 'PTI'))
 
-    let commitVoteTx = await paratii.eth.tcr.approveAndGetRightsAndCommitVote(id, 1, 1)
-    assert.isOk(commitVoteTx)
-    assert.isOk(commitVoteTx.events._VoteCommitted)
+    let commitVoteResult = await paratii.eth.tcr.approveAndGetRightsAndCommitVote(id, 1, 1)
+    assert.isOk(commitVoteResult.tx)
+    assert.isOk(commitVoteResult.salt)
+    assert.isOk(commitVoteResult.tx.events._VoteCommitted)
 
     let didCommit = await paratii.eth.tcr.didCommit(paratii.eth.getAccount(), challengeID)
     assert.isTrue(didCommit)
@@ -803,9 +805,10 @@ describe('paratii.eth.tcr:', function () {
 
     let challengeID = await challengeFromDifferentAccount(myPrivateKey, id, 10, paratii)
 
-    let commitVoteTx = await paratii.eth.tcr.approveAndGetRightsAndCommitVote(id, 1, paratii.eth.web3.utils.toWei('3'))
-    assert.isOk(commitVoteTx)
-    assert.isOk(commitVoteTx.events._VoteCommitted)
+    let commitVoteResult = await paratii.eth.tcr.approveAndGetRightsAndCommitVote(id, 1, paratii.eth.web3.utils.toWei('3'))
+    assert.isOk(commitVoteResult.tx)
+    assert.isOk(commitVoteResult.salt)
+    assert.isOk(commitVoteResult.tx.events._VoteCommitted)
 
     let numTokens = await paratii.eth.tcr.getNumTokens(paratii.eth.getAccount(), challengeID)
     assert.equal(numTokens, paratii.eth.web3.utils.toWei('3'))
