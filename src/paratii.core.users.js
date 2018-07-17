@@ -149,10 +149,10 @@ export class ParatiiUsers {
         const vid = vids[i]
         let videoId = vid.id || vid._id
         await paratii.vids.update(videoId, {owner: newAccount})
-        let didVideoApply = await paratii.eth.tcrPlaceholder.didVideoApply(videoId)
+        let didVideoApply = await paratii.eth.tcr.didVideoApply(videoId)
         if (didVideoApply) {
           // removing video from stake
-          await paratii.eth.tcrPlaceholder.exit(videoId)
+          await paratii.eth.tcr.exit(videoId)
         }
       }
     }

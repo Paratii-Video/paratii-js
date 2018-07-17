@@ -433,7 +433,7 @@ export class ParatiiEthTcr {
     if (!tx.events._VotingRightsGranted) { throw new Error('Rights request failed') }
 
     let commitVoteTx = await this.commitVote(videoId, vote, amountInWei)
-
+    console.log(commitVoteTx)
     return commitVoteTx
   }
   /**

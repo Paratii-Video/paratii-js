@@ -18,7 +18,7 @@ describe('paratii.db.tcr API: :', function () {
     .get('/votes/')
     // TODO: use videosResponse (from ./data/fixtures) instead of "videos" here
     .reply(200, votesResponse)
-    .get(`/votes/?challengeId=0x12244&account=0x122344`)
+    .get(`/votes/?pollID=0x12244&voter=0x122344`)
     .reply(200, votesResponseOneResult)
   })
 

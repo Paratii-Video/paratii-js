@@ -461,7 +461,6 @@ export class ParatiiEth {
 
   /**
    * Gets the address of the ParatiiRegistry contract
-   * @param {string} address address of the ParatiiRegistry contract
    * @example paratii.getRegistryAddress()
   */
   getRegistryAddress () {

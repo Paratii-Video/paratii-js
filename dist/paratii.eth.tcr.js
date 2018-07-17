@@ -1040,9 +1040,11 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 28:
               commitVoteTx = _context14.sent;
+
+              console.log(commitVoteTx);
               return _context14.abrupt('return', commitVoteTx);
 
-            case 30:
+            case 31:
             case 'end':
               return _context14.stop();
           }
