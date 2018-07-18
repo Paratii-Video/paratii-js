@@ -413,7 +413,7 @@ export class ParatiiEthTcr {
    * @param  {string}  videoId     univocal video identifier
    * @param  {integer}  vote        1 vote for, 0 vote against
    * @param  {number}  amountInWei amount for the vote
-   * @return {Promise}             commit tx
+   * @return {Promise}             commit tx, salt
    * @example let tx = await paratii.eth.tcr.approveAndGetRightsAndCommitVote('some-video-id',1,paratii.eth.web3.utils.toWei('5'))
    */
   async approveAndGetRightsAndCommitVote (videoId, vote, amountInWei) {
@@ -432,9 +432,12 @@ export class ParatiiEthTcr {
     let tx = await this.requestVotingRights(amountInWei)
     if (!tx.events._VotingRightsGranted) { throw new Error('Rights request failed') }
 
-    let commitVoteTx = await this.commitVote(videoId, vote, amountInWei)
-    console.log(commitVoteTx)
-    return commitVoteTx
+    let results = await this.commitVote(videoId, vote, amountInWei)
+    // let commitVoteTx = results.tx
+    // let salt = results.salt
+    // console.log('commitVoteTx', commitVoteTx)
+    // console.log('salt', salt)
+    return results
   }
   /**
    * Commits vote using hash of choice and secret salt to conceal vote until reveal
@@ -495,7 +498,7 @@ export class ParatiiEthTcr {
       prevNode
     ).send()
 
-    return tx
+    return { tx, salt }
   }
 
   /**

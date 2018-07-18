@@ -149,10 +149,16 @@ export class ParatiiUsers {
         const vid = vids[i]
         let videoId = vid.id || vid._id
         await paratii.vids.update(videoId, {owner: newAccount})
-        let didVideoApply = await paratii.eth.tcr.didVideoApply(videoId)
+        let didVideoApply = await paratii.eth.tcr.appWasMade(videoId)
         if (didVideoApply) {
           // removing video from stake
-          await paratii.eth.tcr.exit(videoId)
+          let isWhitelisted = await paratii.eth.tcr.isWhitelisted(videoId)
+          if (isWhitelisted) {
+            await paratii.eth.tcr.exit(videoId)
+          } else {
+            // video applied but not yet whitelisted....
+            // TODO : figure out if it can be updated (listed or not)
+          }
         }
       }
     }

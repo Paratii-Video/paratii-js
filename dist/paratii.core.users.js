@@ -256,7 +256,7 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
   }, {
     key: 'migrateAccount',
     value: function migrateAccount(newAccount) {
-      var paratii, oldAccount, search, vids, originalUserRecord, newUserRecord, i, vid, videoId, didVideoApply, ptiBalance;
+      var paratii, oldAccount, search, vids, originalUserRecord, newUserRecord, i, vid, videoId, didVideoApply, isWhitelisted, ptiBalance;
       return _regenerator2.default.async(function migrateAccount$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
@@ -283,7 +283,7 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
 
             case 13:
               if (!vids) {
-                _context4.next = 29;
+                _context4.next = 35;
                 break;
               }
 
@@ -291,7 +291,7 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
 
             case 15:
               if (!(i < vids.length)) {
-                _context4.next = 29;
+                _context4.next = 35;
                 break;
               }
 
@@ -302,34 +302,49 @@ var ParatiiUsers = exports.ParatiiUsers = function () {
 
             case 20:
               _context4.next = 22;
-              return _regenerator2.default.awrap(paratii.eth.tcr.didVideoApply(videoId));
+              return _regenerator2.default.awrap(paratii.eth.tcr.appWasMade(videoId));
 
             case 22:
               didVideoApply = _context4.sent;
 
               if (!didVideoApply) {
-                _context4.next = 26;
+                _context4.next = 32;
                 break;
               }
 
               _context4.next = 26;
-              return _regenerator2.default.awrap(paratii.eth.tcr.exit(videoId));
+              return _regenerator2.default.awrap(paratii.eth.tcr.isWhitelisted(videoId));
 
             case 26:
+              isWhitelisted = _context4.sent;
+
+              if (!isWhitelisted) {
+                _context4.next = 32;
+                break;
+              }
+
+              _context4.next = 30;
+              return _regenerator2.default.awrap(paratii.eth.tcr.exit(videoId));
+
+            case 30:
+              _context4.next = 32;
+              break;
+
+            case 32:
               i++;
               _context4.next = 15;
               break;
 
-            case 29:
-              _context4.next = 31;
+            case 35:
+              _context4.next = 37;
               return _regenerator2.default.awrap(paratii.eth.balanceOf(oldAccount, 'PTI'));
 
-            case 31:
+            case 37:
               ptiBalance = _context4.sent;
-              _context4.next = 34;
+              _context4.next = 40;
               return _regenerator2.default.awrap(paratii.eth.transfer(newAccount, ptiBalance, 'PTI'));
 
-            case 34:
+            case 40:
             case 'end':
               return _context4.stop();
           }

@@ -957,14 +957,14 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
      * @param  {string}  videoId     univocal video identifier
      * @param  {integer}  vote        1 vote for, 0 vote against
      * @param  {number}  amountInWei amount for the vote
-     * @return {Promise}             commit tx
+     * @return {Promise}             commit tx, salt
      * @example let tx = await paratii.eth.tcr.approveAndGetRightsAndCommitVote('some-video-id',1,paratii.eth.web3.utils.toWei('5'))
      */
 
   }, {
     key: 'approveAndGetRightsAndCommitVote',
     value: function approveAndGetRightsAndCommitVote(videoId, vote, amountInWei) {
-      var tcrPLCRVoting, listing, challengeExists, isCommitPeriodActive, approved, tx, commitVoteTx;
+      var tcrPLCRVoting, listing, challengeExists, isCommitPeriodActive, approved, tx, results;
       return _regenerator2.default.async(function approveAndGetRightsAndCommitVote$(_context14) {
         while (1) {
           switch (_context14.prev = _context14.next) {
@@ -1039,12 +1039,10 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
               return _regenerator2.default.awrap(this.commitVote(videoId, vote, amountInWei));
 
             case 28:
-              commitVoteTx = _context14.sent;
+              results = _context14.sent;
+              return _context14.abrupt('return', results);
 
-              console.log(commitVoteTx);
-              return _context14.abrupt('return', commitVoteTx);
-
-            case 31:
+            case 30:
             case 'end':
               return _context14.stop();
           }
@@ -1173,7 +1171,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 40:
               tx = _context15.sent;
-              return _context15.abrupt('return', tx);
+              return _context15.abrupt('return', { tx: tx, salt: salt });
 
             case 42:
             case 'end':
