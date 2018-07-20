@@ -173,6 +173,10 @@ export class ParatiiEthTcr {
     }
 
     let result = await this.apply(videoId, amountToStake)
+    let applyStageLen = await this.getApplyStageLen()
+    if (applyStageLen === 0) {
+      await this.updateStatus(videoId)
+    }
     return result
   }
 
@@ -296,6 +300,8 @@ export class ParatiiEthTcr {
   async approveAndStartChallenge (videoId, _data) {
     let listing = await this.getListing(videoId)
     let unstakedDeposit = listing.unstakedDeposit
+    // let     let minDeposit = await this.getMinDeposit()
+
     let tcrRegistry = await this.getTcrContract()
 
     // give approval to tcr

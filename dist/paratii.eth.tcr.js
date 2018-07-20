@@ -297,7 +297,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'checkEligiblityAndApply',
     value: function checkEligiblityAndApply(videoId, amountToStake) {
-      var minDeposit, amountToStakeBN, isWhitelisted, appWasMade, token, tcr, balance, tx2, allowance, result;
+      var minDeposit, amountToStakeBN, isWhitelisted, appWasMade, token, tcr, balance, tx2, allowance, result, applyStageLen;
       return _regenerator2.default.async(function checkEligiblityAndApply$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
@@ -398,9 +398,24 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 38:
               result = _context5.sent;
+              _context5.next = 41;
+              return _regenerator2.default.awrap(this.getApplyStageLen());
+
+            case 41:
+              applyStageLen = _context5.sent;
+
+              if (!(applyStageLen === 0)) {
+                _context5.next = 45;
+                break;
+              }
+
+              _context5.next = 45;
+              return _regenerator2.default.awrap(this.updateStatus(videoId));
+
+            case 45:
               return _context5.abrupt('return', result);
 
-            case 40:
+            case 46:
             case 'end':
               return _context5.stop();
           }
@@ -701,6 +716,8 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
             case 2:
               listing = _context10.sent;
               unstakedDeposit = listing.unstakedDeposit;
+              // let     let minDeposit = await this.getMinDeposit()
+
               _context10.next = 6;
               return _regenerator2.default.awrap(this.getTcrContract());
 

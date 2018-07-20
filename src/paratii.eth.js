@@ -322,6 +322,7 @@ export class ParatiiEth {
     let vouchers = await this.deployContract('Vouchers', paratiiRegistryAddress)
     let distributor = await this.deployContract('PTIDistributor', paratiiRegistryAddress)
     let tcrPlaceholder = await this.deployContract('TcrPlaceholder', paratiiRegistryAddress, paratiiToken.options.address, this.web3.utils.toWei('5'), 100)
+
     let tcrDLL = await this.deployContract('TcrDLL')
     let tcrAttributeStore = await this.deployContract('TcrAttributeStore')
 
@@ -356,8 +357,6 @@ export class ParatiiEth {
     tcrPLCRVoting.options.address,
     tcrParameterizer.options.address,
     'paratii test TCR integration')
-    // TcrPLCRVoting, TcrParameterizer = await this.deployTcr(paratiiRegistry.options.address, paratiiToken.options.address)
-    // console.log('tcrTEST address: ', tcrTest.options.address)
 
     paratiiRegistry = await this.getContract('Registry')
 
