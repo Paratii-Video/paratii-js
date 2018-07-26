@@ -22,7 +22,8 @@ export class ParatiiDbTcrVotes {
     let response = await this.search({ pollID, voter })
     // we should have just one result
     if (response.total === 0) {
-      throw Error(`Did not find a vote for challenge ${pollID} and account ${voter}`)
+      return null
+      // throw Error(`Did not find a vote for challenge ${pollID} and account ${voter}`)
     } else if (response.total > 1) {
       throw Error(`Something unexpected occurred: found ${response.total} votes challenge ${pollID} and account ${voter} (expected 0 or 1)`)
     }

@@ -63,7 +63,7 @@ var ParatiiDbTcrVotes = exports.ParatiiDbTcrVotes = function () {
                 break;
               }
 
-              throw Error('Did not find a vote for challenge ' + pollID + ' and account ' + voter);
+              return _context.abrupt('return', null);
 
             case 7:
               if (!(response.total > 1)) {
