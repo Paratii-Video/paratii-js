@@ -810,7 +810,6 @@ var ParatiiEth = exports.ParatiiEth = function () {
 
     /**
      * Gets the address of the ParatiiRegistry contract
-     * @param {string} address address of the ParatiiRegistry contract
      * @example paratii.getRegistryAddress()
     */
 

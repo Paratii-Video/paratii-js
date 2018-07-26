@@ -37,8 +37,8 @@ var ParatiiDbTcrVotes = exports.ParatiiDbTcrVotes = function () {
   }
   /**
    * Get information about this particular vote
-   * @param  {string}  challengeId id of the challenge
-   * @param  {string}  account address of the user that has submitted the vote
+   * @param  {string}  pollID id of the challenge
+   * @param  {string}  voter address of the user that has submitted the vote
    * @return {Promise<Object>}         data about the video
    * @example await paratii.db.vids.get('some-video-id')
    */
@@ -46,14 +46,14 @@ var ParatiiDbTcrVotes = exports.ParatiiDbTcrVotes = function () {
 
   (0, _createClass3.default)(ParatiiDbTcrVotes, [{
     key: 'get',
-    value: function get(challengeId, account) {
+    value: function get(pollID, voter) {
       var response;
       return _regenerator2.default.async(function get$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.next = 2;
-              return _regenerator2.default.awrap(this.search({ challengeId: challengeId, account: account }));
+              return _regenerator2.default.awrap(this.search({ pollID: pollID, voter: voter }));
 
             case 2:
               response = _context.sent;
@@ -63,7 +63,7 @@ var ParatiiDbTcrVotes = exports.ParatiiDbTcrVotes = function () {
                 break;
               }
 
-              throw Error('Did not find a vote for challenge ' + challengeId + ' and account ' + account);
+              return _context.abrupt('return', null);
 
             case 7:
               if (!(response.total > 1)) {
@@ -71,7 +71,7 @@ var ParatiiDbTcrVotes = exports.ParatiiDbTcrVotes = function () {
                 break;
               }
 
-              throw Error('Something unexpected occurred: found ' + response.total + ' votes challenge ' + challengeId + ' and account ' + account + ' (expected 0 or 1)');
+              throw Error('Something unexpected occurred: found ' + response.total + ' votes challenge ' + pollID + ' and account ' + voter + ' (expected 0 or 1)');
 
             case 9:
               return _context.abrupt('return', response.results[0]);
@@ -97,8 +97,8 @@ var ParatiiDbTcrVotes = exports.ParatiiDbTcrVotes = function () {
           switch (_context2.prev = _context2.next) {
             case 0:
               schema = joi.object({
-                'challengeId': joi.string().empty(),
-                'account': joi.string().empty(),
+                'pollID': joi.string().empty(),
+                'voter': joi.string().empty(),
                 'offset': joi.number().integer().empty(),
                 'limit': joi.number().integer().empty()
               });

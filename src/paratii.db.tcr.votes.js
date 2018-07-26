@@ -13,18 +13,19 @@ export class ParatiiDbTcrVotes {
   }
   /**
    * Get information about this particular vote
-   * @param  {string}  challengeId id of the challenge
-   * @param  {string}  account address of the user that has submitted the vote
+   * @param  {string}  pollID id of the challenge
+   * @param  {string}  voter address of the user that has submitted the vote
    * @return {Promise<Object>}         data about the video
    * @example await paratii.db.vids.get('some-video-id')
    */
-  async get (challengeId, account) {
-    let response = await this.search({ challengeId, account })
+  async get (pollID, voter) {
+    let response = await this.search({ pollID, voter })
     // we should have just one result
     if (response.total === 0) {
-      throw Error(`Did not find a vote for challenge ${challengeId} and account ${account}`)
+      return null
+      // throw Error(`Did not find a vote for challenge ${pollID} and account ${voter}`)
     } else if (response.total > 1) {
-      throw Error(`Something unexpected occurred: found ${response.total} votes challenge ${challengeId} and account ${account} (expected 0 or 1)`)
+      throw Error(`Something unexpected occurred: found ${response.total} votes challenge ${pollID} and account ${voter} (expected 0 or 1)`)
     }
     return response.results[0]
   }
@@ -34,8 +35,8 @@ export class ParatiiDbTcrVotes {
    */
   async search (options) {
     const schema = joi.object({
-      'challengeId': joi.string().empty(),
-      'account': joi.string().empty(),
+      'pollID': joi.string().empty(),
+      'voter': joi.string().empty(),
       'offset': joi.number().integer().empty(),
       'limit': joi.number().integer().empty()
     })

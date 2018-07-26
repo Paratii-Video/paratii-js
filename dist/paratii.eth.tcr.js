@@ -297,7 +297,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
   }, {
     key: 'checkEligiblityAndApply',
     value: function checkEligiblityAndApply(videoId, amountToStake) {
-      var minDeposit, amountToStakeBN, isWhitelisted, appWasMade, token, tcr, balance, tx2, allowance, result;
+      var minDeposit, amountToStakeBN, isWhitelisted, appWasMade, token, tcr, balance, tx2, allowance, result, applyStageLen;
       return _regenerator2.default.async(function checkEligiblityAndApply$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
@@ -398,9 +398,24 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 38:
               result = _context5.sent;
+              _context5.next = 41;
+              return _regenerator2.default.awrap(this.getApplyStageLen());
+
+            case 41:
+              applyStageLen = _context5.sent;
+
+              if (!(applyStageLen === 0)) {
+                _context5.next = 45;
+                break;
+              }
+
+              _context5.next = 45;
+              return _regenerator2.default.awrap(this.updateStatus(videoId));
+
+            case 45:
               return _context5.abrupt('return', result);
 
-            case 40:
+            case 46:
             case 'end':
               return _context5.stop();
           }
@@ -701,6 +716,8 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
             case 2:
               listing = _context10.sent;
               unstakedDeposit = listing.unstakedDeposit;
+              // let     let minDeposit = await this.getMinDeposit()
+
               _context10.next = 6;
               return _regenerator2.default.awrap(this.getTcrContract());
 
@@ -957,14 +974,14 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
      * @param  {string}  videoId     univocal video identifier
      * @param  {integer}  vote        1 vote for, 0 vote against
      * @param  {number}  amountInWei amount for the vote
-     * @return {Promise}             commit tx
+     * @return {Promise}             commit tx, salt
      * @example let tx = await paratii.eth.tcr.approveAndGetRightsAndCommitVote('some-video-id',1,paratii.eth.web3.utils.toWei('5'))
      */
 
   }, {
     key: 'approveAndGetRightsAndCommitVote',
     value: function approveAndGetRightsAndCommitVote(videoId, vote, amountInWei) {
-      var tcrPLCRVoting, listing, challengeExists, isCommitPeriodActive, approved, tx, commitVoteTx;
+      var tcrPLCRVoting, listing, challengeExists, isCommitPeriodActive, approved, tx, results;
       return _regenerator2.default.async(function approveAndGetRightsAndCommitVote$(_context14) {
         while (1) {
           switch (_context14.prev = _context14.next) {
@@ -1039,8 +1056,8 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
               return _regenerator2.default.awrap(this.commitVote(videoId, vote, amountInWei));
 
             case 28:
-              commitVoteTx = _context14.sent;
-              return _context14.abrupt('return', commitVoteTx);
+              results = _context14.sent;
+              return _context14.abrupt('return', results);
 
             case 30:
             case 'end':
@@ -1171,7 +1188,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
 
             case 40:
               tx = _context15.sent;
-              return _context15.abrupt('return', tx);
+              return _context15.abrupt('return', { tx: tx, salt: salt });
 
             case 42:
             case 'end':
@@ -2477,8 +2494,11 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
       if (!size) {
         size = 32;
       }
-
-      return this.eth.web3.utils.randomHex(size);
+      var salt = '';
+      while (salt.length !== 64) {
+        salt = this.eth.web3.utils.randomHex(size);
+      }
+      return salt;
     }
 
     /**
