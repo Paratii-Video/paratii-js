@@ -1067,8 +1067,11 @@ export class ParatiiEthTcr {
     if (!size) {
       size = 32
     }
-
-    return this.eth.web3.utils.randomHex(size)
+    let salt = ''
+    while (salt.length !== 64) {
+      salt = this.eth.web3.utils.randomHex(size)
+    }
+    return salt
   }
 
   /**

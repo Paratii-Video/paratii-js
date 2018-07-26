@@ -2494,8 +2494,11 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
       if (!size) {
         size = 32;
       }
-
-      return this.eth.web3.utils.randomHex(size);
+      var salt = '';
+      while (salt.length !== 64) {
+        salt = this.eth.web3.utils.randomHex(size);
+      }
+      return salt;
     }
 
     /**
