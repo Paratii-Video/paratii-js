@@ -1219,7 +1219,7 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
           switch (_context16.prev = _context16.next) {
             case 0:
               _context16.next = 2;
-              return _regenerator2.default.awrap(utils.mineABlock());
+              return _regenerator2.default.awrap(utils.mineABlock(this));
 
             case 2:
               _context16.next = 4;
