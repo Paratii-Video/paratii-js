@@ -2498,12 +2498,10 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     key: 'generateSalt',
     value: function generateSalt(size) {
       if (!size) {
-        size = 32;
+        size = 64;
       }
       var salt = '';
-      while (salt.length !== 64) {
-        salt = this.eth.web3.utils.randomHex(size);
-      }
+      salt = this.eth.web3.utils.randomHex(size);
       return salt;
     }
 
@@ -2533,7 +2531,6 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
     key: 'getSalt',
     value: function getSalt(videoId) {
       var localStorage = this.getLocalStorage();
-
       return localStorage.getItem(SALT_KEY_PREFIX + videoId);
     }
 

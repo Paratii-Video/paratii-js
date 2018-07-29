@@ -1067,12 +1067,10 @@ export class ParatiiEthTcr {
    */
   generateSalt (size) {
     if (!size) {
-      size = 32
+      size = 64
     }
     let salt = ''
-    while (salt.length !== 64) {
-      salt = this.eth.web3.utils.randomHex(size)
-    }
+    salt = this.eth.web3.utils.randomHex(size)
     return salt
   }
 
@@ -1096,7 +1094,6 @@ export class ParatiiEthTcr {
    */
   getSalt (videoId) {
     let localStorage = this.getLocalStorage()
-
     return localStorage.getItem(SALT_KEY_PREFIX + videoId)
   }
 
