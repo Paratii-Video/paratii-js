@@ -104,3 +104,30 @@ export class PromiseEventEmitter extends EventEmitter {
     this.on('reject', handler)
   }
 }
+
+export async function createDummyVideo (paratii) {
+  let tx = await paratii.eth.vids.create({
+    id: 'dummy_vid',
+    owner: paratii.eth.getAccount(),
+    ipfsData: 'QmDummy'
+  })
+  return tx
+}
+
+export async function mineABlock (paratii) {
+  // let tx = await paratii.eth.transfer('0x0', '0x01', 'ETH', 'dummy_tx')
+  // return tx
+  let tx
+  try {
+    tx = await paratii.eth.vids.get('dummy_vid')
+  } catch (e) {
+    if (e) {
+      // console.log('no video was created')
+      tx = await createDummyVideo(paratii)
+    }
+  }
+
+  tx = await paratii.eth.vids.update('dummy_vid', {price: Math.floor(Math.random() * 10)})
+  tx = await paratii.eth.web3.eth.getBlock('latest')
+  return tx
+}

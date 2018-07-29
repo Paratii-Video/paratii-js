@@ -23,6 +23,8 @@ var _utils = require('./utils.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var utils = require('./utils');
+
 var localStorage = null;
 var HASH_TO_KEY_PREFIX = 'HASH_KEY_';
 var SALT_KEY_PREFIX = 'SALT_KEY_';
@@ -1217,75 +1219,79 @@ var ParatiiEthTcr = exports.ParatiiEthTcr = function () {
           switch (_context16.prev = _context16.next) {
             case 0:
               _context16.next = 2;
-              return _regenerator2.default.awrap(this.eth.getContract('TcrPLCRVoting'));
+              return _regenerator2.default.awrap(utils.mineABlock());
 
             case 2:
+              _context16.next = 4;
+              return _regenerator2.default.awrap(this.eth.getContract('TcrPLCRVoting'));
+
+            case 4:
               tcrPLCRVoting = _context16.sent;
-              _context16.next = 5;
+              _context16.next = 7;
               return _regenerator2.default.awrap(this.revealPeriodActive(pollID));
 
-            case 5:
+            case 7:
               isRevealPeriodActive = _context16.sent;
 
               if (isRevealPeriodActive) {
-                _context16.next = 8;
+                _context16.next = 10;
                 break;
               }
 
               throw new Error('Reveal Period for poll ' + pollID.toString() + ' is not active');
 
-            case 8:
-              _context16.next = 10;
+            case 10:
+              _context16.next = 12;
               return _regenerator2.default.awrap(this.didCommit(this.eth.getAccount(), pollID));
 
-            case 10:
+            case 12:
               didCommit = _context16.sent;
 
               if (didCommit) {
-                _context16.next = 13;
+                _context16.next = 15;
                 break;
               }
 
               throw new Error('user ' + this.eth.getAccount() + ' didn\'t commit to vote ' + pollID.toString());
 
-            case 13:
-              _context16.next = 15;
+            case 15:
+              _context16.next = 17;
               return _regenerator2.default.awrap(this.didReveal(this.eth.getAccount(), pollID));
 
-            case 15:
+            case 17:
               didReveal = _context16.sent;
 
               if (!didReveal) {
-                _context16.next = 18;
+                _context16.next = 20;
                 break;
               }
 
               throw new Error('user ' + this.eth.getAccount() + ' already revealed vote ' + pollID.toString());
 
-            case 18:
+            case 20:
               secretHash = this.eth.web3.utils.soliditySha3(voteOption, salt);
-              _context16.next = 21;
+              _context16.next = 23;
               return _regenerator2.default.awrap(this.getCommitHash(this.eth.getAccount(), pollID));
 
-            case 21:
+            case 23:
               commitHash = _context16.sent;
 
               if (!(commitHash !== secretHash)) {
-                _context16.next = 24;
+                _context16.next = 26;
                 break;
               }
 
               throw new Error('commitHash ' + commitHash + ' !== secretHash ' + secretHash);
 
-            case 24:
-              _context16.next = 26;
+            case 26:
+              _context16.next = 28;
               return _regenerator2.default.awrap(tcrPLCRVoting.methods.revealVote(pollID, voteOption, salt).send());
 
-            case 26:
+            case 28:
               tx = _context16.sent;
               return _context16.abrupt('return', tx);
 
-            case 28:
+            case 30:
             case 'end':
               return _context16.stop();
           }

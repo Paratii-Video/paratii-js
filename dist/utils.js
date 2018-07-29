@@ -5,6 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.PromiseEventEmitter = exports.NULL_ADDRESS = undefined;
 
+var _regenerator = require('babel-runtime/regenerator');
+
+var _regenerator2 = _interopRequireDefault(_regenerator);
+
 var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -28,6 +32,8 @@ var _inherits3 = _interopRequireDefault(_inherits2);
 exports.add0x = add0x;
 exports.getInfoFromLogs = getInfoFromLogs;
 exports.makeId = makeId;
+exports.createDummyVideo = createDummyVideo;
+exports.mineABlock = mineABlock;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -161,3 +167,82 @@ var PromiseEventEmitter = exports.PromiseEventEmitter = function (_EventEmitter)
   }]);
   return PromiseEventEmitter;
 }(EventEmitter);
+
+function createDummyVideo(paratii) {
+  var tx;
+  return _regenerator2.default.async(function createDummyVideo$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          _context.next = 2;
+          return _regenerator2.default.awrap(paratii.eth.vids.create({
+            id: 'dummy_vid',
+            owner: paratii.eth.getAccount(),
+            ipfsData: 'QmDummy'
+          }));
+
+        case 2:
+          tx = _context.sent;
+          return _context.abrupt('return', tx);
+
+        case 4:
+        case 'end':
+          return _context.stop();
+      }
+    }
+  }, null, this);
+}
+
+function mineABlock(paratii) {
+  var tx;
+  return _regenerator2.default.async(function mineABlock$(_context2) {
+    while (1) {
+      switch (_context2.prev = _context2.next) {
+        case 0:
+          // let tx = await paratii.eth.transfer('0x0', '0x01', 'ETH', 'dummy_tx')
+          // return tx
+          tx = void 0;
+          _context2.prev = 1;
+          _context2.next = 4;
+          return _regenerator2.default.awrap(paratii.eth.vids.get('dummy_vid'));
+
+        case 4:
+          tx = _context2.sent;
+          _context2.next = 13;
+          break;
+
+        case 7:
+          _context2.prev = 7;
+          _context2.t0 = _context2['catch'](1);
+
+          if (!_context2.t0) {
+            _context2.next = 13;
+            break;
+          }
+
+          _context2.next = 12;
+          return _regenerator2.default.awrap(createDummyVideo(paratii));
+
+        case 12:
+          tx = _context2.sent;
+
+        case 13:
+          _context2.next = 15;
+          return _regenerator2.default.awrap(paratii.eth.vids.update('dummy_vid', { price: Math.floor(Math.random() * 10) }));
+
+        case 15:
+          tx = _context2.sent;
+          _context2.next = 18;
+          return _regenerator2.default.awrap(paratii.eth.web3.eth.getBlock('latest'));
+
+        case 18:
+          tx = _context2.sent;
+          return _context2.abrupt('return', tx);
+
+        case 20:
+        case 'end':
+          return _context2.stop();
+      }
+    }
+  }, null, this, [[1, 7]]);
+}

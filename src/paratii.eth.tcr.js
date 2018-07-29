@@ -1,6 +1,7 @@
 'use strict'
 import { BigNumber } from 'bignumber.js'
 import { getInfoFromLogs } from './utils.js'
+const utils = require('./utils')
 
 var localStorage = null
 const HASH_TO_KEY_PREFIX = 'HASH_KEY_'
@@ -517,6 +518,7 @@ export class ParatiiEthTcr {
    * let tx = await paratii.eth.tcr.revealVote(challengeID,1,paratii.eth.tcr.getSalt('some-video-id'))
    */
   async revealVote (pollID, voteOption, salt) {
+    await utils.mineABlock() // make sure the blockchain has a fresh block
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
 
     // check if reveal Period is active
