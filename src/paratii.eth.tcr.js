@@ -1,6 +1,7 @@
 'use strict'
 import { BigNumber } from 'bignumber.js'
 import { getInfoFromLogs } from './utils.js'
+const utils = require('./utils')
 
 var localStorage = null
 const HASH_TO_KEY_PREFIX = 'HASH_KEY_'
@@ -517,6 +518,7 @@ export class ParatiiEthTcr {
    * let tx = await paratii.eth.tcr.revealVote(challengeID,1,paratii.eth.tcr.getSalt('some-video-id'))
    */
   async revealVote (pollID, voteOption, salt) {
+    await utils.mineABlock(this) // make sure the blockchain has a fresh block
     let tcrPLCRVoting = await this.eth.getContract('TcrPLCRVoting')
 
     // check if reveal Period is active
@@ -1065,12 +1067,10 @@ export class ParatiiEthTcr {
    */
   generateSalt (size) {
     if (!size) {
-      size = 32
+      size = 64
     }
     let salt = ''
-    while (salt.length !== 64) {
-      salt = this.eth.web3.utils.randomHex(size)
-    }
+    salt = this.eth.web3.utils.randomHex(size)
     return salt
   }
 
@@ -1094,7 +1094,6 @@ export class ParatiiEthTcr {
    */
   getSalt (videoId) {
     let localStorage = this.getLocalStorage()
-
     return localStorage.getItem(SALT_KEY_PREFIX + videoId)
   }
 

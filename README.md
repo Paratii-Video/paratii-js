@@ -19,6 +19,7 @@ You can install `paratii-js` from npmjs.org using:
 
 Here is a code snippet which will upload a video to Paratii and transcode it:
 
+```javascript
     // import the Paratii object
     const Paratii  = require('paratii-js')
     // create a new instance of Paratii with default values
@@ -32,6 +33,7 @@ Here is a code snippet which will upload a video to Paratii and transcode it:
       file: YOURVID,
       title: 'Paratii for fun and profit'
       })
+```
 
 ## Where to find more documentation
 
