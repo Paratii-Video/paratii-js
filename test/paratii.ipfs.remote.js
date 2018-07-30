@@ -9,14 +9,14 @@ describe('ParatiiIPFSRemote:', function () {
   let paratiiIPFS
   this.timeout(30000)
 
-  beforeEach(() => {
+  before(() => {
     paratiiIPFS = new ParatiiIPFS({
       ipfs: {repo: '/tmp/paratii-alpha-' + String(Math.random())},
       verbose: false
     })
   })
 
-  afterEach(async () => {
+  after(async () => {
     await paratiiIPFS.stop()
     delete paratiiIPFS.ipfs
     assert.isNotOk(paratiiIPFS.ipfs)
