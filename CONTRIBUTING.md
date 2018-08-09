@@ -29,20 +29,37 @@ If you are on a Mac, you may need to set the path to parity:
 The package comes bundled with the `parity` ethereum client.
 To run the test locally, first  run:
 
-    yarn parity
+    $ yarn parity
 
 In a second terminal, you can now run the tests:
 
-    yarn test
+    $ yarn test
 
 ## Style
 
 Code should survive Javascript Standard linting:
 
-    yarn lint
+    $ yarn lint
 
 # Contribute
 
 Look at the issues https://github.com/Paratii-Video/paratii-js/issues
 
 Or reach out on Gitter: https://gitter.im/Paratii-Video/dev
+
+# Deploying
+
+Run the following commands:
+
+  ```
+  $ git checkout master && git pull
+  $ yarn version --new-version <patch|minor|major>
+  $ git push --follow-tags
+  ```
+This will tell `CircleCI` to build and then publish a new version `x.x.x` to the `npm` registry
+
+# Generating documentation
+
+  ```
+  $ yarn docs
+  ```

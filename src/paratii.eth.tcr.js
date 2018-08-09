@@ -8,8 +8,11 @@ const HASH_TO_KEY_PREFIX = 'HASH_KEY_'
 const SALT_KEY_PREFIX = 'SALT_KEY_'
 
  /**
-  * Token Curated Registry functionalities.
-  * Work in progress: this class does not yet implement all TCR functionality
+  * A Javascript wrapper around the canonical Token Curated Registry contracts.
+  * This module adds precondition checking and error handling to most native TCR
+  * functions. It also defines an number of convenience functions that
+  * combine useful sequences of commands (such as `checkEligiblityAndApply`)
+  * This is work in progress: this class does not yet implement all TCR functionality
   * @param  {ParatiiEth} context ParatiiEth instance
   * @property {ParatiiEth} eth ParatiiEth instance
   * @example let paratii = new Paratii()

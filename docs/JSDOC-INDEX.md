@@ -1,6 +1,10 @@
 # `paratii.js`: the Paratii Library
 
-The Paratii javascript library is the place where developers can interact with the [Paratii platform](https://paratii.video/). It providers functions for writing information about vidoes and ownership to the Ethereum blockchain, share and upload videos over IPFS, requesting and receiving the result of transcoding jobs, and access to a blockchain index that allows for access and search of video information.
+# The Paratii Library
+
+`paratii.js` is a Javascript library and a toolbox to build decentralized video-powered web applications. At it core, you can use to **put** a video stream and **get** a playable url for it. It will get ingested, stored, transcoded and distributed behind the scenes. The goal (although we are not there yet) is to do this all through non-centralised means. It has early functionalities for **handling tokens** too, meaning one ll soon be able to use it to set monetisation models for videos, collect earnings, participate in curation, and else. The library also has an interface for interacting with **Token Curated Registries** for curating list of videos.
+
+`paratii.js` is the engine behind the [Paratii Portal](https://portal.paratii.video).
 
 All this is very much work in progress. Please be patient.
 
@@ -19,6 +23,7 @@ For more advanced usage, developers may be interested in the following modules:
 * [`paratii.db`](./ParatiiDb.html) for interaction with the Paratii blockchain index
 * [`paratii.transcoder`](./ParatiiTranscoder.html) for interaction with transcoding service
 * [`paratii.vouchers`](./ParatiiEthVouchers.html) interact with a simple contract for distributing vouchers.
+* [`paratii.eth.tcr`](./ParatiiEthTcr.html) interact the [Token Curated Registry contracts of Consensys](https://github.com/skmgoldin/tcr)
 
 # Usage
 
