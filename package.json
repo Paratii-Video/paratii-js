@@ -30,7 +30,7 @@
     "chai-bignumber": "^2.0.2",
     "es6-promise": "^4.2.4",
     "hdkey": "^0.8.0",
-    "ipfs": "github:Paratii-Video/js-ipfs#6ac523764c7737273e0d6639a2cdaa582615eb38",
+    "ipfs": "github:Paratii-Video/js-ipfs#5adc315476877e0236bf163e226087268c8dde9c",
     "isomorphic-fetch": "^2.2.1",
     "joi": "^13.1.2",
     "multiaddr": "^3.0.2",
