@@ -1027,7 +1027,7 @@ var ParatiiEth = exports.ParatiiEth = function () {
   }, {
     key: '_transferETH',
     value: function _transferETH(beneficiary, amount, description) {
-      var contract, from;
+      var contract, from, balance;
       return _regenerator2.default.async(function _transferETH$(_context10) {
         while (1) {
           switch (_context10.prev = _context10.next) {
@@ -1063,24 +1063,38 @@ var ParatiiEth = exports.ParatiiEth = function () {
               from = (0, _utils.add0x)(from);
               beneficiary = (0, _utils.add0x)(beneficiary);
 
-              _context10.prev = 11;
-              _context10.next = 14;
+              _context10.next = 13;
+              return _regenerator2.default.awrap(this.web3.eth.getBalance(from));
+
+            case 13:
+              balance = _context10.sent;
+
+              if (!this.web3.utils.toBN(balance).lt(this.web3.utils.toBN(amount))) {
+                _context10.next = 16;
+                break;
+              }
+
+              throw new Error('Insufficient balance! Cannot transfer ' + amount + ' ETH');
+
+            case 16:
+              _context10.prev = 16;
+              _context10.next = 19;
               return _regenerator2.default.awrap(contract.methods.transfer(beneficiary, description).send({ value: amount }));
 
-            case 14:
+            case 19:
               return _context10.abrupt('return', _context10.sent);
 
-            case 17:
-              _context10.prev = 17;
-              _context10.t0 = _context10['catch'](11);
+            case 22:
+              _context10.prev = 22;
+              _context10.t0 = _context10['catch'](16);
               throw _context10.t0;
 
-            case 20:
+            case 25:
             case 'end':
               return _context10.stop();
           }
         }
-      }, null, this, [[11, 17]]);
+      }, null, this, [[16, 22]]);
     }
     /**
      * send PTI from current account to beneficiary
