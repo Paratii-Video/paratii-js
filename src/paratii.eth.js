@@ -578,6 +578,11 @@ export class ParatiiEth {
     from = add0x(from)
     beneficiary = add0x(beneficiary)
 
+    const balance = await this.web3.eth.getBalance(from)
+    if (this.web3.utils.toBN(balance).lt(this.web3.utils.toBN(amount))) {
+      throw new Error(`Insufficient balance! Cannot transfer ${amount} ETH`)
+    }
+
     try {
       return await contract.methods.transfer(beneficiary, description).send({value: amount})
     } catch (err) {
