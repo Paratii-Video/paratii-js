@@ -338,7 +338,7 @@ var ParatiiIPFSRemote = exports.ParatiiIPFSRemote = function (_EventEmitter) {
           });
 
           // paratii pinning response.
-          _this5._ipfs.on('protocol:incoming', _this5._pinResponseHandler(ev));
+          _this5._ipfs.once('protocol:incoming', _this5._pinResponseHandler(ev));
         });
       });
 

@@ -266,7 +266,7 @@ export class ParatiiIPFSRemote extends EventEmitter {
         })
 
         // paratii pinning response.
-        this._ipfs.on('protocol:incoming', this._pinResponseHandler(ev))
+        this._ipfs.once('protocol:incoming', this._pinResponseHandler(ev))
       })
     })
 
