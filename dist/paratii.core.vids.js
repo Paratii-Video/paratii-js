@@ -372,7 +372,7 @@ var ParatiiVids = exports.ParatiiVids = function () {
         while (1) {
           switch (_context5.prev = _context5.next) {
             case 0:
-              return _context5.abrupt('return', this.config.paratii.db.vids.get(videoId));
+              return _context5.abrupt('return', this.config.paratii.eth.vids.get(videoId));
 
             case 1:
             case 'end':
