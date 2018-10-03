@@ -2,9 +2,9 @@
 
 <img align="center" src="https://i.imgur.com/iBoFbb2.png" height="250px" />
 
-`paratii.js` is a Javascript library and a toolbox to build decentralized video-powered web applications. At it core, you can use to **put** a video stream and **get** a playable url for it. It will get ingested, stored, transcoded and distributed behind the scenes. The goal (although we are not there yet) is to do this all through non-centralised means. It has early functionalities for **handling tokens** too, meaning one ll soon be able to use it to set monetisation models for videos, collect earnings, participate in curation, and else. The library also has an interface for interacting with **Token Curated Registries** for curating list of videos.
+`paratii.js` is a Javascript library and a toolbox to build decentralized video-powered web applications. At it core, you can use to **put** a video stream and **get** a playable url for it. It will get ingested, stored, transcoded and distributed behind the scenes. The goal (although we are not there yet) is to do this all through non-centralised means. It has early functionalities for **handling tokens** too, meaning one can use it as a starting point to set monetisation models for videos, collect earnings, participate in curation, and else. The library also has an interface for interacting with **Token Curated Registries** for curating list of videos.
 
-`paratii.js` is the engine behind the [Paratii Portal](https://portal.paratii.video). It is a work in progress, built in function of the needs of the Paratii project.
+`paratii.js` is the engine behind the [Lab](https://lab.paratii.video) - a repository for high-quality crypto content that doesn’t spy on you and relies on IPFS.
 
 Documentation on `paratii.js` can be found [here](https://docs.paratii.video/).
 
