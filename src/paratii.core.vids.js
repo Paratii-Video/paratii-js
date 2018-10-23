@@ -201,7 +201,8 @@ export class ParatiiVids {
    * @example await paratii.core.vids.get('some-video-id')
    */
   async get (videoId) {
-    return this.config.paratii.db.vids.get(videoId)
+    // return this.config.paratii.db.vids.get(videoId)
+    return this.config.paratii.eth.vids.get(videoId)
   }
   /**
    * Get the data of the video
