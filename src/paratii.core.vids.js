@@ -248,3 +248,34 @@ export class ParatiiVids {
     return this.config.paratii.transcoder.uploadAndTranscode(files)
   }
 }
+
+  /**
+   * Returns a URL to a resized version of the video's thumbnail.
+   * @param {string} videoId - id of the video
+   * @param {number|string} size - image width (e.g. 720) or bounding box (e.g. '100:200')
+   * @return {string} resized thumbnail URL
+   * @example await paratii.vids.thumbnailUrl('some-video-id', 720)
+   */
+  async thumbnailUrl (videoId, size) {
+    const base = 'https://uploader.paratii.video/api/v1/thumbnail/resize'
+    const video = await this.get(videoId)
+    let sourceUrl = video.thumbnails
+    if (!sourceUrl) {
+      sourceUrl = video.ipfsData ? `https://ipfs.paratii.video/ipfs/${video.ipfsData}` : null
+    }
+    if (!sourceUrl) {
+      throw new Error('No thumbnail URL available for video: ' + videoId)
+    }
+    let sizeParam
+    if (typeof size === 'number') {
+      sizeParam = size + ':-1'
+    } else if (typeof size === 'string' && size.includes(':')) {
+      sizeParam = size
+    } else if (size) {
+      sizeParam = size + ':-1'
+    } else {
+      sizeParam = '720:-1'
+    }
+    return base + '?url=' + encodeURIComponent(sourceUrl) + '&size=' + sizeParam
+  }
+
